@@ -1,0 +1,27 @@
+Koolshare Hnd router software center Let's Encrypt Changelog
+===========================================
+2.5
+   - add	修复GoDaddy接口申请证书失败
+
+2.4
+   - add	修复Aicloud重启问题
+
+2.3
+   - add	增加为Aicloud安装证书
+
+2.2
+   - add	增加CloudFlare和GoDaddy支持；
+   - update	优化web；
+   - update	更新acme.sh 到v2.7.9。
+
+1.3 - 2.1
+   - fix	修复一系列问题。
+
+1.2
+   - fix	修复日志显示。
+
+1.1
+   - fix	修复定时任务。
+
+1.0
+   - fix	添加插件。

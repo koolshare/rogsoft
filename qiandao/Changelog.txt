@@ -1,0 +1,10 @@
+Koolshare Hnd router software center Let's Encrypt Changelog
+===========================================
+1.2
+   - fix	修复GT-AC5300皮肤不正确。
+
+1.1
+   - fix	修复日志链接。
+
+1.0
+   - add	添加自动签到插件。
