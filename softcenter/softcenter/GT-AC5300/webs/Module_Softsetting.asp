@@ -151,7 +151,7 @@ function get_log(s) {
 										<div style="margin-left:5px;margin-top:10px;margin-bottom:10px"><img src="/images/New_ui/export/line_export.png"></div>
 										<div class="formfontdesc" style="padding-top:5px;margin-top:0px;float: left;" id="cmdDesc"></div>
 										<div style="padding-top:5px;margin-top:0px;float: left;" id="NoteBox" >
-											<li>通过本页面，你可以上传插件的离线安装包来安装插件,此功能需要在7.0及以上的固件才能使用; </li>
+											<li>通过本页面，你可以上传插件的离线安装包来安装插件; </li>
 											<li>离线安装会自动解压tar.gz后缀的压缩包，识别压缩包一级目录下的install.sh文件并执行； </li>
 										</div>
 										<div class="formfontdesc" id="cmdDesc"></div>
@@ -172,7 +172,7 @@ function get_log(s) {
 											</tr>
                                     	</table>
                                     	<div id="log_content" style="margin-top:10px;display: block;">
-											<textarea cols="63" rows="15" wrap="off" readonly="readonly" id="soft_log" style="width:99%; font-family:'Courier New', Courier, mono; font-size:11px;background:none;color:#FFFFFF;"></textarea>
+											<textarea cols="63" rows="40" wrap="off" readonly="readonly" id="soft_log" style="width:99%; font-family:'Lucida Console'; font-size:12px;background:transparent;border:1px solid #91071f;color:#FFFFFF;"></textarea>
 										</div>
 										<div class="KoolshareBottom">
 											<br/>论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>www.koolshare.cn</u></i> </a> <br/>
