@@ -23,15 +23,15 @@
             "version": "1.3"
         }, 
         {
-            "build_date": "2018-09-01_16:31:21", 
+            "build_date": "2018-09-15_10:20:31", 
             "changelog": "", 
             "description": "超强的SSH网页客户端，webshell替代品~", 
             "home_url": "Module_shellinabox.asp", 
-            "md5": "b4774a23bcbe8f5f1af54bc19460a720", 
+            "md5": "77e7610a688f9c4b3d32c4fc16c737e7", 
             "name": "shellinabox", 
             "tar_url": "shellinabox/shellinabox.tar.gz", 
             "title": "shellinabox", 
-            "version": "1.2"
+            "version": "1.3"
         }, 
         {
             "build_date": "2018-03-23_11:57:08", 
