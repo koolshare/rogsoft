@@ -89,15 +89,15 @@
             "version": "1.4"
         }, 
         {
-            "build_date": "2018-08-19_13:52:20", 
+            "build_date": "2018-09-21_23:09:10", 
             "changelog": "", 
             "description": "EasyExplorer 跨设备文件同步+DLNA流媒体", 
             "home_url": "Module_easyexplorer.asp", 
-            "md5": "b75217329fc5340385b899d7be2f3bd6", 
+            "md5": "4d15d8b141af09a168250c8c28407895", 
             "name": "easyexplorer", 
             "tar_url": "easyexplorer/easyexplorer.tar.gz", 
             "title": "easyexplorer", 
-            "version": "1.2"
+            "version": "1.3"
         }, 
         {
             "build_date": "2018-04-08_00:16:33", 
@@ -122,15 +122,15 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2018-09-21_21:20:58", 
+            "build_date": "2018-09-21_23:12:37", 
             "changelog": "", 
             "description": "ddnsto内网穿透", 
             "home_url": "Module_ddnsto.asp", 
-            "md5": "d887e59ba49df3d9bf8b121157cfbcd4", 
+            "md5": "fb438f104f72623f45d0a196626ccf48", 
             "name": "ddnsto", 
             "tar_url": "ddnsto/ddnsto.tar.gz", 
             "title": "ddnsto", 
-            "version": "1.8"
+            "version": "1.9"
         }, 
         {
             "build_date": "2018-08-19_13:56:42", 

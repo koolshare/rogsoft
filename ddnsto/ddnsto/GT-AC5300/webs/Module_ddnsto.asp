@@ -310,7 +310,7 @@ function reload_Soft_Center() {
 											<tr>
 												<th>ddnsto Token</th>
 												<td>
-													<input style="width:300px;" type="text" class="input_ss_table" id="ddnsto_token" name="ddnsto_token" maxlength="100" value="">
+													<input style="width:300px;" type="password" class="input_ss_table" id="ddnsto_token" name="ddnsto_token" maxlength="100" value="" autocomplete="new-password" autocorrect="off" autocapitalize="off" onBlur="switchType(this, false);" onFocus="switchType(this, true);">
 												</td>
 											</tr>
 											<tr id="rule_update_switch">

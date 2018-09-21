@@ -4,7 +4,7 @@ source $KSROOT/scripts/base.sh
 eval `dbus export ddnsto_`
 MODULE=ddnsto
 title="DDNSTO远程控制"
-VERSION="1.8"
+VERSION="1.9"
 
 cd /
 rm -rf /koolshare/init.d/S70ddnsto.sh

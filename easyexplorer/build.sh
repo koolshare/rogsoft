@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="easyexplorer"
-VERSION=1.2
+VERSION=1.3
 TITLE="easyexplorer"
 DESCRIPTION="EasyExplorer 跨设备文件同步+DLNA流媒体"
 HOME_URL=Module_easyexplorer.asp
