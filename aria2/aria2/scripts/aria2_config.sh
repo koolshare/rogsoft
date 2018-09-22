@@ -14,7 +14,7 @@ perpare(){
 		dbus set aria2_ddnsto_token=$aria2_rpc_secret
 	else
 		echo_date 开启aria2的远程穿透连接失败！开启传统非穿透模式！
-		dbus set dbus get aria2_ddnsto=0
+		dbus set aria2_ddnsto=0
 	fi
 	# check disk
 	usb_disk1=`/bin/mount | grep -E 'mnt' | sed -n 1p | cut -d" " -f3`

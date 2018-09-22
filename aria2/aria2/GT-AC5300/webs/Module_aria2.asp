@@ -72,7 +72,7 @@
 		}
 		.show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5, .show-btn6 {
 			border: 1px solid #222;
-			background: linear-gradient(to bottom, #919fa4  0%, #67767d 100%); /* W3C */
+			/*background: linear-gradient(to bottom, #919fa4  0%, #67767d 100%);*/ /* W3C */
 			background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C */
 			font-size:10pt;
 			color: #fff;
@@ -84,7 +84,6 @@
 		}
 		.active {
 			background: #2f3a3e;
-			background: #91071f;
 			background: linear-gradient(to bottom, #61b5de  0%, #279fd9 100%); /* W3C */
 			background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C */
 			border: 1px solid #91071f;
@@ -109,16 +108,19 @@
 			width:100%;
 			height:100%;
 			z-index:99;
-			/*background-color: #444F53;*/
 			filter:alpha(opacity=90);  /*IE5、IE5.5、IE6、IE7*/
 			background-repeat: repeat;
 			visibility:hidden;
 			overflow:hidden;
+			/*background-color: #444F53;*/
 			/*background:rgba(68, 79, 83, 0.9) none repeat scroll 0 0 !important;*/
 			background: url(/images/New_ui/login_bg.png);
 			background-position: 0 0;
 			background-size: cover;
 			opacity: .94;
+		}
+		#aria2_switch, #aria2_install_table, #aria2_base_table, #aria2_rpc_table, #aria2_limit_table, #aria2_bt_table, #aria2_log, #aria2_help {
+			border:1px solid #91071f;
 		}
 		#log_content3, #loading_block2, #log_content1 {
 			line-height:1.5
@@ -1420,7 +1422,7 @@
 										</div>
 										<div class="SimpleNote" id="head_illustrate"><em>Aria2是一个轻量级的跨平台下载工具，支持HTTP/HTTPS、FTP、SFTP、BitTorrent等协议，支持多线程下载，占用cpu、内存资源少。</em></div>
 										<div class="formfontdesc" id="cmdDesc"></div>
-										<div id="aria2_switch" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;">
+										<div id="aria2_switch" style="margin:-1px 0px 0px 0px;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
 													<thead>
@@ -1446,7 +1448,7 @@
 											</table>
 										</div>
 										<!--beginning of aria2 install table-->
-										<div id="aria2_install_table" style="margin:10px 0px 0px 0px;border:1px solid #91071f;">
+										<div id="aria2_install_table" style="margin:10px 0px 0px 0px;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<thead>
 													<tr>
@@ -1507,7 +1509,7 @@
 													</tr>
 											</table>
 										</div>
-										<div id="aria2_base_table" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;display: none;">
+										<div id="aria2_base_table" style="margin:-1px 0px 0px 0px;display: none;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
 													<td style="width:25%;">
@@ -1600,11 +1602,12 @@
 													</td>
 													<td>
 														<textarea rows=6 name="aria2_custom" id="aria2_custom" title="">ca-certificate=/etc/ssl/certs/ca-certificates.crt</textarea>
+														<small></br>请一行输入一个参数，已经在界面上定义的参数不能在此输入！</small>
 													</td>
 												</tr>
 											</table>
 										</div>
-										<div id="aria2_rpc_table" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;display: none;">
+										<div id="aria2_rpc_table" style="margin:-1px 0px 0px 0px;display: none;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
 													<td style="width:25%;">
@@ -1675,7 +1678,7 @@
 												</tr>
 											</table>
 										</div>
-										<div id="aria2_limit_table" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;display: none;">
+										<div id="aria2_limit_table" style="margin:-1px 0px 0px 0px;display: none;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
 													<td style="width:25%;">
@@ -1752,7 +1755,7 @@
 												</tr>
 											</table>
 										</div>
-										<div id="aria2_bt_table" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;display: none;">
+										<div id="aria2_bt_table" style="margin:-1px 0px 0px 0px;display: none;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
 													<td style="width:25%;">
@@ -1921,12 +1924,12 @@
 												</tr>
 											</table>
 										</div>
-										<div id="aria2_log" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;display: none;">
+										<div id="aria2_log" style="margin:-1px 0px 0px 0px;display: none;">
 											<div id="log_content" style="margin-top:-1px;display:block;overflow:hidden;">
 												<textarea cols="63" rows="36" wrap="on" readonly="readonly" id="log_content1" style="margin-top:-1px;width:97%; padding-left:4px;padding-right:37px;border:0px solid #222;font-family:'Lucida Console';font-size:11px;color:#FFFFFF;outline:none;overflow-x:hidden;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
 										</div>	
-										<div id="aria2_help" style="margin:-1px 0px 0px 0px;border:1px solid #91071f;display: none;">
+										<div id="aria2_help" style="margin:-1px 0px 0px 0px;display: none;">
 											<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
 												<td>
