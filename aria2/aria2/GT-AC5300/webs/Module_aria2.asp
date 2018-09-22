@@ -507,7 +507,9 @@
 			}
 			function save() {
 				aria2_action = 0;
-				alert_custom();
+				if(alert_custom() == false){
+					return false;
+				}
 				showLoadingBar();
 				var dbus = {};
 				// 如果ddnsto进程被关闭了，那么关闭穿透开关
@@ -762,6 +764,10 @@
 				var s = E('aria2_custom').value;
 				if (s.search(/enable-rpc=/) != -1) {
 					alert("不能在此设置 enable-rpc 选项! 请在图形界面设置");
+					return false;
+				}
+				if (s.search(/max-tries=/) != -1) {
+					alert("不能在此设置 max-tries 选项! 请在图形界面设置");
 					return false;
 				}
 				if (s.search(/rpc-allow-origin-all=/) != -1) {
