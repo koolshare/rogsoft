@@ -1,6 +1,6 @@
 {
 "title":"<em>软件中心&nbsp;-&nbsp;by&nbsp;koolshare</em>",
-"content1":"1.3.5更新日志：修复离线安装的一些问题; 修复在网络情况差的情况下可能无法访问软件中心服务器的问题。",
+"content1":"1.3.6更新日志：修复未安装里出现图标出走的问题。",
 "content2":"<font color='#1E90FF'>交流反馈:&nbsp;&nbsp;</font>\
 <a href='https://github.com/koolshare/rogsoft' target='_blank'><em>1.软件中心GitHub项目</em></a>&nbsp;&nbsp;&nbsp;&nbsp;\
 <a href='https://t.me/xbchat' target='_blank'><em>2.加入telegram群</em></a>&nbsp;&nbsp;&nbsp;&nbsp;\

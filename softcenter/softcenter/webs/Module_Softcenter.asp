@@ -495,6 +495,12 @@ function init(cb) {
 					}
 				});
 
+				for (var field in result) {
+					if (!result[field].install){
+						delete(result[field]);
+					}
+				}
+				//console.log(result)
 				return result;
 			}
 		//将本地和远程进行一次对比合并

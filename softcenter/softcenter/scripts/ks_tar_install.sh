@@ -12,7 +12,9 @@ clean(){
 	[ -n "$name" ] && rm -rf /tmp/$name >/dev/null 2>&1
 	[ -n "$MODULE_NAME" ] && rm -rf /tmp/$MODULE_NAME >/dev/null 2>&1
 	[ -n "$soft_name" ] && rm -rf /tmp/$soft_name >/dev/null 2>&1
-	find /tmp -name "*.tar.gz"|xargs rm -rf >/dev/null 2>&1
+	rm -rf /tmp/*.tar.gz >/dev/null 2>&1
+	dbus remove soft_install_version
+	dbus remove soft_name
 }
 
 install_tar(){
@@ -31,9 +33,20 @@ install_tar(){
 		echo_date 尝试解压离线安装包离线安装包
 		sleep 1
 		tar -zxvf $soft_name >/dev/null 2>&1
-		echo_date 解压完成！
-		sleep 1
-		cd /tmp
+		if [ "$?" == "0" ];then
+			echo_date 解压完成！
+			sleep 1
+			cd /tmp
+		else
+			echo_date 解压错误，错误代码："$?"！
+			echo_date 估计是错误或者不完整的的离线安装包！
+			echo_date 删除相关文件并退出...
+			clean
+			dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
+			echo_date ======================== end ============================
+			echo XU6J03M6
+			exit		
+		fi
 		
 		if [ -f /tmp/$name/install.sh ];then
 			INSTALL_SCRIPT=/tmp/$name/install.sh
@@ -110,9 +123,6 @@ install_tar(){
 		echo_date 删除相关文件并退出...
 		clean
 	fi
-	sleep 1
-	dbus remove soft_install_version
-	dbus remove soft_name
 	clean
 	echo_date ======================== end ============================
 	echo XU6J03M6
