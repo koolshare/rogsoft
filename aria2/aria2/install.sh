@@ -5,6 +5,11 @@ MODEL=`nvram get model`
 aria2_enable=`dbus get aria2_enable`
 aria2_version=`dbus get aria2_version`
 
+#重建 /dev/null
+rm /dev/null 
+mknod /dev/null c 1 3 
+chmod 666 /dev/null
+
 if [ "$aria2_enable" == "1" ];then
 	[ -f "/koolshare/scripts/aria2_config.sh" ] && sh /koolshare/scripts/aria2_config.sh stop
 fi

@@ -1,9 +1,9 @@
 {
-"version":"1.9",
-"md5":"0343d1ac575a568bad1d35ecb44eac6c",
+"version":"2.0",
+"md5":"931f00287312c074b5fcb21f2bc73078",
 "home_url":"Module_aria2.asp",
 "title":"aria2",
 "description":"linux下载利器",
 "changelog":"",
-"build_date":"2018-09-22_21:35:04"
+"build_date":"2018-09-29_11:48:11"
 }

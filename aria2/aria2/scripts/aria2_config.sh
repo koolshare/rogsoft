@@ -10,8 +10,8 @@ perpare(){
 	if [ "`dbus get aria2_ddnsto`" == "1" ] && [ -f "/koolshare/bin/ddnsto" ] && [ -n "`pidof ddnsto`" ]; then
 		echo_date 开启aria2的远程穿透连接!
 		ddnsto_route_id=`/koolshare/bin/ddnsto -w | awk '{print $2}'`
-		aria2_rpc_secret=`echo $(dbus get ddnsto_token)-${ddnsto_route_id}`
-		dbus set aria2_ddnsto_token=$aria2_rpc_secret
+		aria2_ddnsto_token=`echo $(dbus get ddnsto_token)-${ddnsto_route_id}`
+		dbus set aria2_ddnsto_token=$aria2_ddnsto_token
 	else
 		echo_date 开启aria2的远程穿透连接失败！开启传统非穿透模式！
 		dbus set aria2_ddnsto=0
@@ -37,7 +37,7 @@ perpare(){
 	# generate conf
 	echo_date 生成aria2c配置文件到/koolshare/aria2/aria2.conf
 	cat > /tmp/aria2.conf <<-EOF
-	`dbus list aria2 | grep -vw aria2_enable | grep -vw aria2_version | grep -vw aria2_title | grep -vw aria2_cpulimit_enable | grep -vw aria2_rpc_secret | grep -vw aria2_ddnsto_token | grep -vw aria2_cpulimit_value | grep -vw aria2_custom | grep -vw aria2_bt_tracker | grep -vw aria2_dir| sed 's/aria2_//g' | sed 's/_/-/g'`
+	`dbus list aria2 | grep -vw aria2_enable | grep -vw aria2_version | grep -vw aria2_title | grep -vw aria2_cpulimit_enable | grep -vw aria2_rpc_secret | grep -vw aria2_ddnsto | grep -vw aria2_ddnsto_token | grep -vw aria2_cpulimit_value | grep -vw aria2_custom | grep -vw aria2_bt_tracker | grep -vw aria2_dir| sed 's/aria2_//g' | sed 's/_/-/g'`
 	`dbus list aria2|grep -w aria2_dir|sed 's/aria2_//g'`
 	`dbus get aria2_custom|base64_decode`
 	EOF
@@ -48,27 +48,29 @@ perpare(){
 	fi
 	if [ "`dbus get aria2_ddnsto`" == "1" ] && [ -f "/koolshare/bin/ddnsto" ]; then
 		cat >> /tmp/aria2.conf <<-EOF
-			rpc-secret=$aria2_rpc_secret
+			rpc-secret=$aria2_ddnsto_token
 		EOF
 	else
-		`dbus get aria2_rpc_secret`
+		cat >> /tmp/aria2.conf <<-EOF
+			rpc-secret=$aria2_rpc_secret
+		EOF
 	fi
 	cat /tmp/aria2.conf|sort > /koolshare/aria2/aria2.conf
 }
 
 start_aria2(){
 	echo_date 开启aria2c主进程！
-	/koolshare/aria2/aria2c --conf-path=/koolshare/aria2/aria2.conf -D >/dev/null 2>&1 &
+	/koolshare/aria2/aria2c --conf-path=/koolshare/aria2/aria2.conf >/dev/null 2>&1 &
 }
 
 stop_aria2(){
-	if [ "`pidof aria2c`" ];then
+	if [ "$(pidof aria2c)" ];then
 		echo_date 关闭aria2c进程！
-		killall aria2c >/dev/null 2>&1
+		killall -9 $(pidof aria2c) >/dev/null 2>&1
 	fi
-	if [ "`pidof cpulimit`" ];then
+	if [ "$(pidof cpulimit)" ];then
 		echo_date 关闭cpulimit进程！
-		killall cpulimit >/dev/null 2>&1
+		killall -9 $(pidof cpulimit) >/dev/null 2>&1
 	fi
 }
 
