@@ -66,11 +66,11 @@ start_aria2(){
 stop_aria2(){
 	if [ "$(pidof aria2c)" ];then
 		echo_date 关闭aria2c进程！
-		killall -9 $(pidof aria2c) >/dev/null 2>&1
+		kill -9 $(pidof aria2c) >/dev/null 2>&1
 	fi
 	if [ "$(pidof cpulimit)" ];then
 		echo_date 关闭cpulimit进程！
-		killall -9 $(pidof cpulimit) >/dev/null 2>&1
+		kill -9 $(pidof cpulimit) >/dev/null 2>&1
 	fi
 }
 
