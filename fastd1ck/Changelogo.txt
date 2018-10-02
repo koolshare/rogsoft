@@ -1,0 +1,5 @@
+fastd1ck for asuswrt/merlin hnd platform
+----------------------
+1.0
+   - add 添加迅雷快鸟插件，从https://github.com/sensec/luci-app-xlnetacc移植，感谢原作sensec！
+   	特色：支持下行，上行提速；支持快鸟协议选择；良好的日志支持。
