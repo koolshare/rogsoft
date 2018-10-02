@@ -1,6 +1,6 @@
 #!/bin/sh
-export KSROOT=/koolshare
-source $KSROOT/scripts/base.sh
+
+source /koolshare/scripts/base.sh
 eval `dbus export aliddns`
 
 start_aliddns(){
