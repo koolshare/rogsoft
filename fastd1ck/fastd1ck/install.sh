@@ -1,7 +1,6 @@
 #!/bin/sh
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
-MODEL=`nvram get model`
 fastd1ck_enable=`dbus get fastd1ck_enable`
 
 find /koolshare/init.d/ -name "*fastd1ck*" | xargs rm -rf
@@ -15,7 +14,7 @@ cp -rf /tmp/fastd1ck/scripts/* /koolshare/scripts/
 cp -rf /tmp/fastd1ck/webs/* /koolshare/webs/
 cp -rf /tmp/fastd1ck/res/* /koolshare/res/
 cp -rf /tmp/fastd1ck/uninstall.sh /koolshare/scripts/uninstall_fastd1ck.sh
-if [ "$MODEL" == "GT-AC5300" ];then
+if [ "`nvram get model`" == "GT-AC5300" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
 	cp -rf /tmp/fastd1ck/GT-AC5300/webs/* /koolshare/webs/
 fi
 rm -fr /tmp/fastd1ck* >/dev/null 2>&1
@@ -24,8 +23,8 @@ chmod +x /koolshare/scripts/uninstall_fastd1ck.sh
 [ ! -L "/koolshare/init.d/S99fastd1ck.sh" ] && ln -sf /koolshare/scripts/fastd1ck_config.sh /koolshare/init.d/S99fastd1ck.sh
 
 
-dbus set fastd1ck_version="1.2"
-dbus set softcenter_module_fastd1ck_version="1.2"
+dbus set fastd1ck_version="1.3"
+dbus set softcenter_module_fastd1ck_version="1.3"
 dbus set softcenter_module_fastd1ck_description=迅雷快鸟，上网必备神器
 dbus set softcenter_module_fastd1ck_install=1
 dbus set softcenter_module_fastd1ck_name=fastd1ck

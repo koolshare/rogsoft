@@ -1,5 +1,7 @@
 fastd1ck for asuswrt/merlin hnd platform
 ----------------------
+1.3
+   - fix	修复可能的皮肤错乱，更新后请使用ctrl + f5强制刷新一次网页。
 1.1 - 1.2
    - fix	修复因为缺少js库导致无法生成设备标识的问题。
 1.0
