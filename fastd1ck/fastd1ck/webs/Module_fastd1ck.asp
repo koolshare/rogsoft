@@ -287,7 +287,12 @@ function get_log() {
 					setTimeout("get_log();",200);
 				}
 			}
-			retArea.value = response.replace("XU6J03M7", "");
+			//retArea.value = response.replace("XU6J03M7", "");
+			if (response.search("XU6J03M7") != -1) {
+				retArea.value = response.split("XU6J03M7").join("");
+			}else{
+				retArea.value = response;
+			}
 			retArea.scrollTop = retArea.scrollHeight;
 			_responseLen = response.length;
 		},
