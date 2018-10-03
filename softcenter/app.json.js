@@ -78,15 +78,15 @@
             "version": "1.4"
         }, 
         {
-            "build_date": "2018-10-03_10:06:56", 
+            "build_date": "2018-10-03_10:07:55", 
             "changelog": "", 
             "description": "迅雷快鸟，上网必备神器", 
             "home_url": "Module_fastd1ck.asp", 
-            "md5": "a9fd5a1cf6408d0c77b9c5b0fe24dd16", 
+            "md5": "af330395854734eacc698334544e81ba", 
             "name": "fastd1ck", 
             "tar_url": "fastd1ck/fastd1ck.tar.gz", 
             "title": "迅雷快鸟", 
-            "version": "1.1"
+            "version": "1.2"
         }, 
         {
             "build_date": "2018-09-01_16:25:41", 
