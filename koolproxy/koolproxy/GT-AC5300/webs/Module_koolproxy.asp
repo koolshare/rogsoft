@@ -212,7 +212,7 @@ function hook_event(){
 			E("policy_tr").style.display = "";
 			E("kp_status").style.display = "";
 			E("auto_reboot_switch").style.display = "";
-			//E("rule_update_switch").style.display = "";
+			E("rule_table_div").style.display = "";
 			E("cert_download_tr").style.display = "";
 			E("klloproxy_com").style.display = "";
 			E("acl_method_tr").style.display = "";
@@ -224,7 +224,7 @@ function hook_event(){
 			E("policy_tr").style.display = "none";
 			E("kp_status").style.display = "none";
 			E("auto_reboot_switch").style.display = "none";
-			//E("rule_update_switch").style.display = "none";
+			E("rule_table_div").style.display = "none";
 			E("cert_download_tr").style.display = "none";
 			E("klloproxy_com").style.display = "none";
 			E("acl_method_tr").style.display = "none";
@@ -323,7 +323,7 @@ function update_visibility(r){
 		E("policy_tr").style.display = "";
 		E("kp_status").style.display = "";
 		E("auto_reboot_switch").style.display = "";
-		//E("rule_update_switch").style.display = "";
+		E("rule_table_div").style.display = "";
 		E("cert_download_tr").style.display = "";
 		E("klloproxy_com").style.display = "";
 		E("acl_method_tr").style.display = "";
@@ -333,7 +333,7 @@ function update_visibility(r){
 		E("policy_tr").style.display = "none";
 		E("kp_status").style.display = "none";
 		E("auto_reboot_switch").style.display = "none";
-		//E("rule_update_switch").style.display = "none";
+		E("rule_table_div").style.display = "none";
 		E("cert_download_tr").style.display = "none";
 		E("klloproxy_com").style.display = "none";
 		E("acl_method_tr").style.display = "none";
