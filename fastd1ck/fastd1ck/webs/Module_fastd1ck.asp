@@ -281,13 +281,13 @@ function get_log() {
 				//retArea.value = "当前日志文件为空";
 				return false;
 			} else {
-				if (response.search("XU6J03M6") != -1) {
+				if (response.search("XU6J03M7") != -1) {
 					setTimeout("get_log();",20000);
 				} else {
 					setTimeout("get_log();",200);
 				}
 			}
-			retArea.value = response.replace("XU6J03M6", "");
+			retArea.value = response.replace("XU6J03M7", "");
 			retArea.scrollTop = retArea.scrollHeight;
 			_responseLen = response.length;
 		},

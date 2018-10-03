@@ -374,7 +374,7 @@ swjsq_renewal() {
 
 	case ${lasterr:=-1} in
 		0)
-			local outmsg="更新登录时间成功。帐号登录展期：${limitdate:0:4}-${limitdate:4:2}-${limitdate:6:2}"; _log "$outmsg";;
+			local outmsg="更新登录时间成功。帐号登录周期：${limitdate:0:4}-${limitdate:4:2}-${limitdate:6:2}"; _log "$outmsg";;
 		-1)
 			local outmsg="更新登录时间失败。迅雷服务器未响应，请稍候"; _log "$outmsg";;
 		*)
@@ -450,8 +450,6 @@ isp_bandwidth() {
 			json_select ..
 			cur_bandwidth=$(( ${cur_bandwidth:-0} / 1024 ))
 			max_bandwidth=$(( ${max_bandwidth:-0} / 1024 ))
-			_log "cur_bandwidth: $cur_bandwidth"
-			_log "max_bandwidth: $max_bandwidth"
 
 			if [ -n "$bind_dial_account" -a "$bind_dial_account" != "$dial_account" ]; then
 				local outmsg="绑定宽带账号 $bind_dial_account 与当前宽带账号 $dial_account 不一致，请联系迅雷客服解绑（每月仅一次）"; \
@@ -528,7 +526,7 @@ isp_upgrade() {
 			local outmsg="${link_cn}提速失败。错误代码: ${lasterr}"; \
 				[ -n "$message" ] && outmsg="${outmsg}，原因: $message"; _log "$outmsg" $(( 1 | $1 * 8 | 32 ));;
 	esac
-	_log "XU6J03M6"
+	_log "XU6J03M7--------------------------------------------------------------------------"
 	[ $lasterr -eq 0 ] && return 0 || return 1
 }
 
