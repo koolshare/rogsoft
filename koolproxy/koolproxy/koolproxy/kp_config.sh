@@ -32,7 +32,19 @@ get_lan_cidr(){
 	echo $lan_ipaddr/$suffix
 }
 
-write_user_txt(){
+write_sourcelist(){
+	if [ -n "$koolproxy_sourcelist" ];then
+		echo $koolproxy_sourcelist|sed 's/>/\n/g' > $KP_DIR/data/source.list
+	else
+		cat > $KP_DIR/data/source.list <<-EOF
+			1|koolproxy.txt|https://kprule.com/koolproxy.txt|
+			1|daily.txt|https://kprule.com/daily.txt|
+			1|kp.dat|https://kprule.com/kp.dat|
+			1|user.txt||
+			
+		EOF
+	fi
+	
 	if [ -n "$koolproxy_custom_rule" ];then
 		echo $koolproxy_custom_rule| base64_decode |sed 's/\\n/\n/g' > $KP_DIR/data/rules/user.txt
 		dbus remove koolproxy_custom_rule
@@ -45,11 +57,11 @@ detect_start_up(){
 }
 
 start_koolproxy(){
-	write_user_txt
+	write_sourcelist
 	echo_date 开启koolproxy主进程！
 	[ ! -L "$KSROOT/bin/koolproxy" ] && ln -sf $KSROOT/koolproxy/koolproxy $KSROOT/bin/koolproxy
-	[ "$koolproxy_mode" == "3" ] && EXT_ARG="-e" || EXT_ARG=""
-	cd $KP_DIR && koolproxy $EXT_ARG --mark -d
+	cd $KP_DIR && koolproxy --mark -d
+	[ "$?" != "0" ] && dbus set koolproxy_enable=0 && exit 1
 }
 
 stop_koolproxy(){
