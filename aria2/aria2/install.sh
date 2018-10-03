@@ -1,7 +1,6 @@
 #!/bin/sh
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
-MODEL=`nvram get model`
 aria2_enable=`dbus get aria2_enable`
 aria2_version=`dbus get aria2_version`
 
@@ -20,7 +19,7 @@ cp -rf /tmp/aria2/webs/* /koolshare/webs/
 cp -rf /tmp/aria2/res/* /koolshare/res/
 cp -rf /tmp/aria2/aria2 /koolshare
 cp -rf /tmp/aria2/uninstall.sh /koolshare/scripts/uninstall_aria2.sh
-if [ "$MODEL" == "GT-AC5300" ];then
+if [ "`nvram get model`" == "GT-AC5300" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
 	cp -rf /tmp/aria2/GT-AC5300/webs/* /koolshare/webs/
 fi
 rm -fr /tmp/aria2* >/dev/null 2>&1
@@ -35,8 +34,9 @@ if [ "$aria2_version" == "1.5" ] || [ "$aria2_version" == "1.4" ] || [ "$aria2_v
 	dbus set aria2_custom=Y2EtY2VydGlmaWNhdGU9L2V0Yy9zc2wvY2VydHMvY2EtY2VydGlmaWNhdGVzLmNydA==
 fi
 
-dbus set aria2_version="1.8"
-dbus set softcenter_module_aria2_install=1
+dbus set aria2_version="2.1"
+dbus set softcenter_module_aria2_version="2.1"
+dbus set softcenter_module_aria2_install="1"
 dbus set softcenter_module_aria2_name="aria2"
 dbus set softcenter_module_aria2_title="aria2"
 dbus set softcenter_module_aria2_description="linux下载利器"
