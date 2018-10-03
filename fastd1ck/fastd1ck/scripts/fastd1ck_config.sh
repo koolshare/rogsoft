@@ -33,7 +33,7 @@ case $1 in
 start)
 	if [ "$fastd1ck_enable" == "1" ];then
 		logger "[软件中心]: 启动迅雷快鸟！"
-		start-stop-daemon -S -b -q -x /koolshare/scripts/fastd1ck_main.sh --start >/dev/null 2>&1
+		start-stop-daemon -S -b -q -x /koolshare/scripts/fastd1ck_main.sh -- --start >/dev/null 2>&1
 	else
 		logger "[软件中心]: 迅雷快鸟未设置开机启动，跳过！"
 	fi

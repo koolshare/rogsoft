@@ -23,8 +23,8 @@ chmod +x /koolshare/scripts/uninstall_fastd1ck.sh
 [ ! -L "/koolshare/init.d/S99fastd1ck.sh" ] && ln -sf /koolshare/scripts/fastd1ck_config.sh /koolshare/init.d/S99fastd1ck.sh
 
 
-dbus set fastd1ck_version="1.4"
-dbus set softcenter_module_fastd1ck_version="1.4"
+dbus set fastd1ck_version="1.5"
+dbus set softcenter_module_fastd1ck_version="1.5"
 dbus set softcenter_module_fastd1ck_description=迅雷快鸟，上网必备神器
 dbus set softcenter_module_fastd1ck_install=1
 dbus set softcenter_module_fastd1ck_name=fastd1ck

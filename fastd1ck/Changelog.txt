@@ -1,5 +1,7 @@
 fastd1ck for asuswrt/merlin hnd platform
 ----------------------
+1.5
+   - fix	修复开机启动/修复升级插件后未启动
 1.4
    - fix	修复提速成功后开关自动关闭的bug
 1.3
