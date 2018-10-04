@@ -161,14 +161,6 @@ var edit_falg;
 function init() {
 	show_menu(menu_hook);
 	get_dbus_data();
-	generate_options();
-	refresh_acl_table();
-	refresh_rule_table();
-	update_visibility();
-	get_user_rule();
-	hook_event();
-	get_run_status();
-    showDropdownClientList('setClientIP', 'ip', 'all', 'ClientList_Block', 'pull_arrow', 'online');
 }
 
 function get_dbus_data(){
@@ -180,7 +172,15 @@ function get_dbus_data(){
 	 	success: function(data){
 	 	 	dbus = data.result[0];
 			conf2obj();
-	  	}
+			generate_options();
+			refresh_acl_table();
+			refresh_rule_table();
+			update_visibility();
+			get_user_rule();
+			hook_event();
+			get_run_status();
+			showDropdownClientList('setClientIP', 'ip', 'all', 'ClientList_Block', 'pull_arrow', 'online');
+		}
 	});
 }
 
@@ -261,8 +261,8 @@ function get_run_status(){
 			for ( var i = 5; i < response.result.split("@@").length; i++) {
 				var va = response.result.split("@@")[i].split("&&")[0];
 				var nu = response.result.split("@@")[i].split("&&")[1];
-				if (E("koolproxy_rule_nu_" + nu)){
-					$("#koolproxy_rule_nu_" + nu).html(va);
+				if (E("koolproxy_rule_nu_" + parseInt(nu))){
+					$("#koolproxy_rule_nu_" + parseInt(nu)).html(va);
 				}
 			}
 			setTimeout("get_run_status();", 10000);
@@ -303,7 +303,6 @@ function conf2obj(){
 			E(params_chk[i]).checked = dbus[params_chk[i]] == "1";
 		}
 	}
-	//E("koolproxy_enable").checked = dbus["koolproxy_enable"] == "1";
 	for (var i = 0; i < params.length; i++) {
 		if(dbus[params[i]]){
 			E(params[i]).value = dbus[params[i]];
@@ -819,7 +818,7 @@ function refresh_rule_html() {
 	return code;
 }
 
-function setClientIP(ip , name, mac){
+function setClientIP(ip, name, mac) {
 	E("koolproxy_acl_ip").value = ip;
 	E("koolproxy_acl_name").value = name;
 	E("koolproxy_acl_mac").value = mac;
@@ -928,7 +927,7 @@ function showDropdownClientList(_callBackFun, _callBackFunParam, _interfaceMode,
 			code += clientName;
 		}
 		if(_state == "offline")
-			code += '<strong title="Remove this client" style="float:right;margin-right:5px;cursor:pointer;" onclick="removeClient(\'' + clientObj.mac + '\', \'' + _containerID  + '_clientlist_dropdown_expand\', \'' + _containerID  + '_clientlist_offline\')">×</strong>';
+			code += '<strong title="Remove this client" style="float:right;margin-right:5px;cursor:pointer;" onclick="removeClient(\'' + clientObj.mac + '\', \'' + _containerID + '_clientlist_dropdown_expand\', \'' + _containerID + '_clientlist_offline\')">×</strong>';
 		code += '</div><!--[if lte IE 6.5]><iframe class="hackiframe2"></iframe><![endif]--></a>';
 		return code;
 	};
@@ -1153,20 +1152,20 @@ function openkpHint(itemNum) {
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<div id="LoadingBar" class="popup_bar_bg">
-	<table cellpadding="5" cellspacing="0" id="loadingBarBlock" class="loadingBarBlock"  align="center">
-		<tr>
-			<td height="100">
-				<div id="loading_block3" style="margin:10px auto;margin-left:10px;width:85%; font-size:12pt;"></div>
-				<div id="loading_block2" style="margin:10px auto;width:95%;"></div>
-				<div id="log_content2" style="margin-left:15px;margin-right:15px;margin-top:10px;overflow:hidden">
-					<textarea cols="63" rows="21" wrap="on" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Courier New', Courier, mono; font-size:11px;background:#000;color:#FFFFFF;"></textarea>
-				</div>
-				<div id="ok_button" class="apply_gen" style="background: #000;display: none;">
-					<input id="ok_button1" class="button_gen" type="button" onclick="hideKPLoadingBar()" value="确定">
-				</div>
-			</td>
-		</tr>
-	</table>
+		<table cellpadding="5" cellspacing="0" id="loadingBarBlock" class="loadingBarBlock" align="center">
+			<tr>
+				<td height="100">
+					<div id="loading_block3" style="margin:10px auto;margin-left:10px;width:85%; font-size:12pt;"></div>
+					<div id="loading_block2" style="margin:10px auto;width:95%;"></div>
+					<div id="log_content2" style="margin-left:15px;margin-right:15px;margin-top:10px;overflow:hidden">
+						<textarea cols="63" rows="21" wrap="on" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Courier New', Courier, mono; font-size:11px;background:#000;color:#FFFFFF;"></textarea>
+					</div>
+					<div id="ok_button" class="apply_gen" style="background: #000;display: none;">
+						<input id="ok_button1" class="button_gen" type="button" onclick="hideKPLoadingBar()" value="确定">
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 	<table class="content" align="center" cellpadding="0" cellspacing="0">
 		<tr>
@@ -1195,7 +1194,7 @@ function openkpHint(itemNum) {
 											</li>
 										</div>
 										<!-- this is the popup area for user rules -->
-										<div id="vpnc_settings"  class="contentM_qis" style="box-shadow: 3px 3px 10px #000;margin-top: -65px;">
+										<div id="vpnc_settings" class="contentM_qis" style="box-shadow: 3px 3px 10px #000;margin-top: -65px;">
 											<div class="user_title">koolproxy自定义规则</div>
 											<div style="margin-left:15px"><i>1&nbsp;&nbsp;点击【保存文件】按钮，文本框内的内容会保存到/koolshare/koolproxy/data/user.txt。</i></div>
 											<div style="margin-left:15px"><i>2&nbsp;&nbsp;如果你更改了user.txt，你需要重新重启koolproxy插件才，新加入的规则才能生效。</i></div>
@@ -1205,7 +1204,7 @@ function openkpHint(itemNum) {
 											</div>
 											<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
 												<input id="edit_node" class="button_gen" type="button" onclick="save();" value="保存文件">	
-												<input id="edit_node" class="button_gen" type="button" onclick="close_user_rule();" value="返回主界面">	
+												<input id="edit_node" class="button_gen" type="button" onclick="close_user_rule();" value="返回主界面">
 											</div>
 										</div>
 										<!-- end of the popouparea -->
@@ -1269,7 +1268,6 @@ function openkpHint(itemNum) {
 															重启
 															&nbsp;&nbsp;&nbsp;&nbsp;
 														</span>
-														
 														<span id="koolproxy_reboot_interval_span">
 															&nbsp;&nbsp;&nbsp;&nbsp;
 															每隔

@@ -3,12 +3,13 @@
 # shadowsocks script for HND router with kernel 4.1.27 merlin firmware
 # by sadog (sadoneli@gmail.com) from koolshare.cn
 
-alias echo_date='echo $(date +%Y年%m月%d日\ %X):'
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 eval `dbus export koolproxy_`
 SOFT_DIR=/koolshare
 KP_DIR=$SOFT_DIR/koolproxy
+lan_ipaddr=$(nvram get lan_ipaddr)
 LOCK_FILE=/var/lock/koolproxy.lock
 #=======================================
 
@@ -65,7 +66,7 @@ start_koolproxy(){
 }
 
 stop_koolproxy(){
-	if [ "`pidof koolproxy`" ];then
+	if [ -n "`pidof koolproxy`" ];then
 		echo_date 关闭koolproxy主进程...
 		kill -9 `pidof koolproxy` >/dev/null 2>&1
 		killall koolproxy >/dev/null 2>&1
@@ -75,7 +76,8 @@ stop_koolproxy(){
 add_ipset_conf(){
 	if [ "$koolproxy_mode" == "2" ];then
 		echo_date 添加黑名单软连接...
-		[ ! -L "/jffs/configs/dnsmasq.d/koolproxy_ipset.conf" ] && ln -sf /koolshare/koolproxy/data/koolproxy_ipset.conf /jffs/configs/dnsmasq.d/koolproxy_ipset.conf
+		rm -rf /jffs/configs/dnsmasq.d/koolproxy_ipset.conf
+		ln -sf /koolshare/koolproxy/data/koolproxy_ipset.conf /jffs/configs/dnsmasq.d/koolproxy_ipset.conf
 		dnsmasq_restart=1
 	fi
 }
@@ -91,18 +93,18 @@ remove_ipset_conf(){
 restart_dnsmasq(){
 	if [ "$dnsmasq_restart" == "1" ];then
 		echo_date 重启dnsmasq进程...
-		service dnsmasq restart > /dev/null 2>&1
+		service restart_dnsmasq > /dev/null 2>&1
 	fi
 }
 
 write_reboot_job(){
 	# start setvice
 	if [ "1" == "$koolproxy_reboot" ]; then
-		echo_date 开启插件定时重启，每天"$koolproxy_reboot_hour"时，自动重启插件...
-		cru a koolproxy_reboot "* $koolproxy_reboot_hour * * * /bin/sh $KP_DIR/kp_config.sh restart"
+		echo_date 开启插件定时重启，每天"$koolproxy_reboot_hour"时"$koolproxy_reboot_min"分，自动重启插件...
+		cru a koolproxy_reboot "$koolproxy_reboot_min $koolproxy_reboot_hour * * * /bin/sh $KP_DIR/kp_config.sh restart"
 	elif [ "2" == "$koolproxy_reboot" ]; then
-		echo_date 开启插件间隔重启，每隔"$koolproxy_reboot_inter_hour"时，自动重启插件...
-		cru a koolproxy_reboot "* */$koolproxy_reboot_inter_hour * * * /bin/sh $KP_DIR/kp_config.sh restart"
+		echo_date 开启插件间隔重启，每隔"$koolproxy_reboot_inter_hour"时"$koolproxy_reboot_inter_min"分，自动重启插件...
+		cru a koolproxy_reboot "*/$koolproxy_reboot_inter_min */$koolproxy_reboot_inter_hour * * * /bin/sh $KP_DIR/kp_config.sh restart"
 	fi
 }
 
@@ -238,15 +240,19 @@ lan_acess_control(){
 load_nat(){
 	nat_ready=$(iptables -t nat -L PREROUTING -v -n --line-numbers|grep -v PREROUTING|grep -v destination)
 	i=120
+	# laod nat rules
 	until [ -n "$nat_ready" ]
 	do
 	    i=$(($i-1))
 	    if [ "$i" -lt 1 ];then
-	        echo_date "错误：不能正确加载nat规则!"
+	        echo_date "Could not load nat rules!"
+	        sh /koolshare/koolproxy/kp_config.sh stop
+	        exit
 	    fi
 	    sleep 1
 		nat_ready=$(iptables -t nat -L PREROUTING -v -n --line-numbers|grep -v PREROUTING|grep -v destination)
 	done
+	
 	echo_date 加载nat规则！
 	#----------------------BASIC RULES---------------------
 	echo_date 写入iptables规则到nat表中...
@@ -289,6 +295,7 @@ detect_cert(){
 	if [ ! -f $KP_DIR/data/private/ca.key.pem ]; then
 		echo_date 检测到首次运行，开始生成koolproxy证书，用于https过滤！
 		cd $KP_DIR/data && sh gen_ca.sh
+		echo_date 证书生成完毕！！！
 	fi
 }
 
