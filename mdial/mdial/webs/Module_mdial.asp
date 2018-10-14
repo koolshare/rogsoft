@@ -595,7 +595,7 @@ function reload_Soft_Center(){
 										<div class="KoolshareBottom">
 											论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>www.koolshare.cn</u></i> </a> <br/>
 											Github项目： <a href="https://github.com/koolshare/rogsoft" target="_blank"> <i><u>github.com/koolshare/rogsoft</u></i> </a> <br/>
-											Shell by： <i>sensec, modified by sadog</i>
+											Shell&Web by： <i>sadog</i>
 										</div>
 									</td>
 								</tr>
