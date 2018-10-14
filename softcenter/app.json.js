@@ -89,6 +89,17 @@
             "version": "1.5"
         }, 
         {
+            "build_date": "2018-10-14_21:11:58", 
+            "changelog": "", 
+            "description": "pppoe单线多拨，带宽提升神器！", 
+            "home_url": "Module_mdial.asp", 
+            "md5": "d4818e4f5cf3e0ead6177c9ce2721519", 
+            "name": "mdial", 
+            "tar_url": "mdial/mdial.tar.gz", 
+            "title": "单线多拨", 
+            "version": "1.0"
+        }, 
+        {
             "build_date": "2018-09-01_16:25:41", 
             "changelog": "", 
             "description": "一些小功能的插件", 

@@ -1,0 +1,4 @@
+mdial for asuswrt/merlin hnd platform
+----------------------
+1.0
+   - add	添加单线多拨插件。
