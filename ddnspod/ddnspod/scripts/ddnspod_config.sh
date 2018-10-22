@@ -80,7 +80,7 @@ parseDomain() {
 
 add_ddnspod_cru(){
 	sed -i '/ddnspod/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
-	cru a ddnspod "0 */$ddnspod_refresh_time * * * /koolshare/scripts/ddnspod.sh update"
+	cru a ddnspod "0 */$ddnspod_refresh_time * * * /koolshare/scripts/ddnspod_config.sh update"
 }
 
 stop_ddnspod(){
