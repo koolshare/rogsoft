@@ -1,0 +1,7 @@
+Koolshare Asuswrt-Merlin softeware center Changelog
+===========================================
+1.4.0
+   - add	add RT-AX88U support.
+
+1.2.4
+   - fix	add software center for 86U only

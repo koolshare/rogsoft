@@ -1,0 +1,9 @@
+{
+"version":"1.3",
+"md5":"8da4cf054b3b64fff6cd128095715ee3",
+"home_url":"Module_ssid.asp",
+"title":"中文SSID",
+"description":"中文SSID，装逼利器！",
+"changelog":"",
+"build_date":"2018-12-04_21:55:46"
+}

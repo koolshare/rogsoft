@@ -1,0 +1,9 @@
+{
+"version":"1.5",
+"md5":"44e9c45c3271ea4eca484867fdc4abf4",
+"home_url":"Module_qiandao.asp",
+"title":"自动签到",
+"description":"自动签到",
+"changelog":"",
+"build_date":"2019-07-10_23:20:59"
+}

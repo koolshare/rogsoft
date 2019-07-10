@@ -1,0 +1,8 @@
+mdial for asuswrt/merlin hnd platform
+----------------------
+1.2
+   - update	修复负载均衡的一些问题
+1.1
+   - update	完善作者信息
+1.0
+   - add	添加单线多拨插件。
