@@ -224,7 +224,6 @@ var currState = {
 	"lastStatus": "-1",
 	"module": ""
 };
-
 function checkField(o, f, d) {
 	if (typeof o[f] == "undefined") {
 		o[f] = d;
@@ -232,7 +231,6 @@ function checkField(o, f, d) {
 
 	return o[f];
 }
-
 function appPostScript(moduleInfo, script) {
 	if (currState.installing) {
 		console.log("current is in installing state");
@@ -254,7 +252,6 @@ function appPostScript(moduleInfo, script) {
 	} else if (script == "ks_app_remove.sh") {
 		action = "ks_app_remove";
 	}
-
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {
 		"id": id,
@@ -279,18 +276,15 @@ function appPostScript(moduleInfo, script) {
 		}
 	});
 }
-
 function appInstallModule(moduleInfo) {
 	appPostScript(moduleInfo, "ks_app_install.sh");
 }
-
 function appUninstallModule(moduleInfo) {
 	if (!window.confirm('确定卸载吗')) {
 		return;
 	}
 	appPostScript(moduleInfo, "ks_app_remove.sh");
 }
-
 function initInstallStatus() {
 	var o = db_softcenter_;
 	var base = "softcenter_installing_";
@@ -306,7 +300,6 @@ function initInstallStatus() {
 		}
 	}
 }
-
 function showInstallStatus(isInit) {
 	$.ajax({
 		type: "GET",
@@ -326,7 +319,6 @@ function showInstallStatus(isInit) {
 			if (o[base + "status"] != currState.lastStatus) {
 				currState.lastStatus = o[base + "status"];
 				showInstallInfo(curr_module, currState.lastStatus);
-
 				// Install ok now
 				if (currState.lastStatus == "1" || currState.lastStatus == "7" || currState.lastStatus == "13") {
 					currState.installing = false;
@@ -336,7 +328,6 @@ function showInstallStatus(isInit) {
 					currState.installing = false;
 				}
 			}
-
 			if (currState.lastChangeTick > curr) {
 				setTimeout("showInstallStatus()", 400);
 			} else {
@@ -347,7 +338,6 @@ function showInstallStatus(isInit) {
 		}
 	})
 }
-
 function showInstallInfo(module, scode) {
 		var code = parseInt(scode);
 		var s = module.capitalizeFirstLetter();
@@ -373,7 +363,6 @@ function showInstallInfo(module, scode) {
 		$("#appInstallInfo").html(s + infos[code]);
 	}
 	//切换安装未安装面板
-
 function toggleAppPanel(showInstall) {
 		$('.show-install-btn').removeClass('active');
 		$('.show-uninstall-btn').removeClass('active');
@@ -383,12 +372,10 @@ function toggleAppPanel(showInstall) {
 	/**
 	 * 渲染apps，安装和未安装按照class hook进行显示隐藏，存在同一个面板中
 	 */
-
 function renderView(apps) {
 	// set apps to global variable of softInfo
 	softInfo = apps;
 	//console.log(softInfo);
-
 	//简单模板函数
 	function _format(source, opts) {
 			var source = source.valueOf(),
@@ -440,7 +427,6 @@ function renderView(apps) {
 	$('.show-install-btn').val('已安装(' + installCount + ')');
 	$('.show-uninstall-btn').val('未安装(' + uninstallCount + ')');
 }
-
 function getRemoteData() {
 	var remoteURL = db_softcenter_["softcenter_home_url"] + '/softcenter/app.json.js';
 	return $.ajax({
@@ -450,7 +436,6 @@ function getRemoteData() {
 		timeout: 5000
 	});
 }
-
 function softceterInitData(data) {
 	var remoteData = data;
 	$("#spnOnlineVersion").html(remoteData.version);
@@ -467,7 +452,6 @@ function softceterInitData(data) {
 		});
 	}
 }
-
 function init(cb) {
 		//设置默认值
 		function _setDefault(source, defaults) {
@@ -494,7 +478,6 @@ function init(cb) {
 						}
 					}
 				});
-
 				for (var field in result) {
 					if (!result[field].install){
 						delete(result[field]);
@@ -514,7 +497,6 @@ function init(cb) {
 				result[name] = $.extend(oldApp, app);
 				result[name].install = install;
 			});
-
 			$.map(localData, function(app, name) {
 				if (!result[name]) {
 					result[name] = app;
@@ -530,7 +512,6 @@ function init(cb) {
 					description: "暂无",
 					new_version: false
 				});
-
 				// icon 规则:
 				// 如果已安装的插件,那图标必定在 /koolshare/res 目录, 通过 /res/icon-{name}.png 请求路径得到图标
 				// 如果是未安装的插件,则必定在 https://rogsoft.ddnsto.com/{name}/{name}/icon-{name}.png
@@ -548,7 +529,6 @@ function init(cb) {
 					//远端更新成功
 					syncRemoteSuccess = 1;
 					softceterInitData(remoteData);
-
 					remoteData = remoteData.apps || [];
 					renderView(_mergeData(remoteData));
 					cb();
@@ -577,7 +557,6 @@ $(function() {
 		success: function(response) {
 			db_softcenter_ = response.result[0];
 			db_softcenter_["softcenter_home_url"] = "https://rogsoft.ddnsto.com";
-
 			if (!db_softcenter_["softcenter_version"]) {
 				db_softcenter_["softcenter_version"] = "0.0";
 			}
@@ -617,18 +596,15 @@ $(function() {
 					var name = $(this).data('name');
 					console.log('update', name);
 					appInstallModule(softInfo[name]);
-
 				});
 			}
 		}
 	});
 });
-
 function menu_hook() {
 	tabtitle[tabtitle.length - 1] = new Array("", "软件中心", "离线安装");
 	tablink[tablink.length - 1] = new Array("", "Module_Softcenter.asp", "Module_Softsetting.asp");
 }
-
 function notice_show() {
 	$.ajax({
 		url: 'https://rogsoft.ddnsto.com/softcenter/push_message.json.js',
@@ -637,7 +613,10 @@ function notice_show() {
 		success: function(res) {
 			$("#push_titile").html(res.title);
 			$("#push_content1").html(res.content1);
-			$("#push_content2").html(res.content2);
+			if (res.content2) {
+				document.getElementById("push_content2_li").style.display = "";
+				$("#push_content2").html(res.content2);
+			}
 			if (res.content3) {
 				document.getElementById("push_content3_li").style.display = "";
 				$("#push_content3").html(res.content3);
@@ -652,110 +631,107 @@ function notice_show() {
 </script>
 </head>
 <body>
-    <div id="TopBanner"></div>
-    <div id="Loading" class="popup_bg"></div>
+	<div id="TopBanner"></div>
+	<div id="Loading" class="popup_bg"></div>
 	<table class="content" align="center" cellpadding="0" cellspacing="0">
-	    <tr>
-	        <td width="17">&nbsp;</td>
-	        <td valign="top" width="202">
-	            <div id="mainMenu"></div>
-	            <div id="subMenu"></div>
-	        </td>
-	        <td valign="top">
-	            <div id="tabMenu" class="submenuBlock"></div>
-	                <table width="98%" border="0" align="left" cellpadding="0" cellspacing="0">
-	                    <tr>
-	                        <td align="left" valign="top">
-	                            <div>
-	                                <table width="760px" border="0" cellpadding="5" cellspacing="0" bordercolor="#6b8fa3" class="FormTitle" id="FormTitle">
-	                                    <tr>
-	                                        <td bgcolor="#4D595D" colspan="3" valign="top">
-	                                            <div>&nbsp;</div>
-	                                            <div class="formfonttitle">Software Center <% nvram_get("model"); %></div>
-	                                            <div style="margin:10px 0 10px 5px;" class="splitLine"></div>
-	                                                <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" >
-	                                                </table>
-	                                                <table width="100%" height="150px" style="border-collapse:collapse;">
-	                                                    <tr bgcolor="#444f53">
-	                                                        <td colspan="5" bgcolor="#444f53" class="cloud_main_radius">
-	                                                            <div style="padding:10px;width:95%;font-style:italic;font-size:14px;">
-	                                                                <br/><br/>
-	                                                                <table width="100%" >
-	                                                                    <tr>
-	                                                                        <td>
-	                                                                            <ul style="margin-top:-50px;padding-left:15px;" >
-	                                                                                <li style="margin-top:-5px;">
-	                                                                                    <h2 id="push_titile"><em>欢迎</em></h2>
-	                                                                                </li>
-	                                                                                <li style="margin-top:-5px;">
-	                                                                                    <h4 id="push_content1" >欢迎来到插件中心，目前正在紧张开发中，各种插件酝酿中！</h4>
-	                                                                                </li>
-	                                                                                <li  style="margin-top:-5px;">
-	                                                                                    <h4 id="push_content2">如果你想加入我们的工作，在 <a href="http://www.koolshare.cn" target="_blank"> <i><u>www.koolshare.cn</u></i> </a>联系我们！</h4>
-	                                                                                </li>
-	                                                                                <li id="push_content3_li" style="margin-top:-5px;display: none;">
-	                                                                                    <h4 id="push_content3"></h4>
-	                                                                                </li>
-	                                                                                <li id="push_content4_li" style="margin-top:-5px;display: none;">
-	                                                                                    <h4 id="push_content4"></h4>
-	                                                                                </li>
-	                                                                                <li style="margin-top:-5px;">
-	                                                                                    <h5>当前版本：<span id="spnCurrVersion"></span> 在线版本：<span id="spnOnlineVersion"></span>
-	                                                                                    <input type="button" id="updateBtn" value="更新" style="display:none" /></h5>
-	                                                                                </li>
-	                                                                            </ul>
-	                                                                        </td>
-	                                                                    </tr>
-	                                                                </table>
-	                                                            </div>
-	                                                        </td>
-	                                                    </tr>
-	                                                    <tr height="10px">
-	                                                        <td colspan="3"></td>
-	                                                    </tr>
-	
-	                                                    <tr bgcolor="#444f53" id="install_status" style="display: none;" width="235px">
-	                                                        <td>
-	                                                            <div style="padding:10px;width:95%;font-size:14px;" id="appInstallInfo">
-	                                                            </div>
-	                                                        </td>
-	                                                        <td class="cloud_main_radius_right">
-	                                                        </td>
-	                                                     </tr>
-	                                                    <tr height="10px">
-	                                                        <td colspan="3"></td>
-	                                                    </tr>
-	                                                    <tr width="235px">
-	                                                        <td colspan="4" cellpadding="0" cellspacing="0" style="padding:0">
-	                                                            <input class="show-install-btn" type="button" value="已安装"/>
-	                                                            <input class="show-uninstall-btn" type="button" value="未安装"/>
-	                                                        </td>
-	                                                    </tr>
-	
-	                                                    <tr bgcolor="#444f53" width="235px">
-	                                                        <td colspan="4" id="IconContainer">
-	                                                            <div style="text-align:center; line-height: 4em;">更新中...</div>
-	                                                        </td>
-	                                                    </tr>
-	                                                    <tr height="10px">
-	                                                        <td colspan="3"></td>
-	                                                    </tr>
-	
-	                                                </table>
-	                                            <div class="KoolshareBottom">论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>koolshare.cn</u></i> </a>
-	                                                <br/>Github项目： <a href="https://github.com/koolshare/rogsoft" target="_blank"> <i><u>github.com/koolshare</u></i> </a>
-	                                                <br/>Shell & Web by： <a href="mailto:sadoneli@gmail.com"> <i>sadoneli</i> </a>, <i>Xiaobao</i>
-	                                            </div>
-	                                        </td>
-	                                    </tr>
-	                            </table>
-	                        </div>
-	                    </td>
-	                </tr>
-	            </table>
-	        </td>
-	        <td width="10" align="center" valign="top"></td>
-	    </tr>
+		<tr>
+			<td width="17">&nbsp;</td>
+			<td valign="top" width="202">
+				<div id="mainMenu"></div>
+				<div id="subMenu"></div>
+			</td>
+			<td valign="top">
+				<div id="tabMenu" class="submenuBlock"></div>
+					<table width="98%" border="0" align="left" cellpadding="0" cellspacing="0">
+						<tr>
+							<td align="left" valign="top">
+								<div>
+									<table width="760px" border="0" cellpadding="5" cellspacing="0" bordercolor="#6b8fa3" class="FormTitle" id="FormTitle">
+										<tr>
+											<td bgcolor="#4D595D" colspan="3" valign="top">
+												<div>&nbsp;</div>
+												<div class="formfonttitle">Software Center <% nvram_get("model"); %></div>
+												<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
+													<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
+													</table>
+													<table width="100%" height="150px" style="border-collapse:collapse;">
+														<tr bgcolor="#444f53">
+															<td colspan="5" bgcolor="#444f53" class="cloud_main_radius">
+																<div style="padding:10px;width:95%;font-style:italic;font-size:14px;">
+																	<br/><br/>
+																	<table width="100%">
+																		<tr>
+																			<td>
+																				<ul style="margin-top:-50px;padding-left:15px;">
+																					<li style="margin-top:-5px;">
+																						<h2 id="push_titile"><em>软件中心&nbsp;-&nbsp;by&nbsp;koolshare</em></h2>
+																					</li>
+																					<li style="margin-top:-5px;">
+																						<h4 id="push_content1" ><font color='#1E90FF'>交流反馈:&nbsp;&nbsp;</font><a href='https://github.com/koolshare/rogsoft' target='_blank'><em>1.软件中心GitHub项目</em></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://t.me/xbchat' target='_blank'><em>2.加入telegram群</em></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://shang.qq.com/wpa/qunwpa?idkey=f475468129ba8019245425559b5df5bdad7d7201ac7780417dd0218bbb4e1322' target='_blank'><em>3.加入QQ群</em></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://koolshare.cn/forum-98-1.html' target='_blank'><em>4.Koolshare论坛插件版块</em></a></h4>
+																					</li>
+																					<li id="push_content2_li" style="margin-top:-5px;display: none;">
+																						<h4 id="push_content2"></h4>
+																					</li>
+																					<li id="push_content3_li" style="margin-top:-5px;display: none;">
+																						<h4 id="push_content3"></h4>
+																					</li>
+																					<li id="push_content4_li" style="margin-top:-5px;display: none;">
+																						<h4 id="push_content4"></h4>
+																					</li>
+																					<li style="margin-top:-5px;">
+																						<h5>当前版本：<span id="spnCurrVersion"></span> 在线版本：<span id="spnOnlineVersion"></span>
+																						<input type="button" id="updateBtn" value="更新" style="display:none" /></h5>
+																					</li>
+																				</ul>
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+															</td>
+														</tr>
+														<tr height="10px">
+															<td colspan="3"></td>
+														</tr>
+														<tr bgcolor="#444f53" id="install_status" style="display: none;" width="235px">
+															<td>
+																<div style="padding:10px;width:95%;font-size:14px;" id="appInstallInfo">
+																</div>
+															</td>
+															<td class="cloud_main_radius_right">
+															</td>
+														 </tr>
+														<tr height="10px">
+															<td colspan="3"></td>
+														</tr>
+														<tr width="235px">
+															<td colspan="4" cellpadding="0" cellspacing="0" style="padding:0">
+																<input class="show-install-btn" type="button" value="已安装"/>
+																<input class="show-uninstall-btn" type="button" value="未安装"/>
+															</td>
+														</tr>
+														<tr bgcolor="#444f53" width="235px">
+															<td colspan="4" id="IconContainer">
+																<div id="software_center_message" style="text-align:center; line-height: 4em;">更新中...</div>
+															</td>
+														</tr>
+														<tr height="10px">
+															<td colspan="3"></td>
+														</tr>
+													</table>
+												<div class="KoolshareBottom">论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>koolshare.cn</u></i> </a>
+													<br/>Github项目： <a href="https://github.com/koolshare/rogsoft" target="_blank"> <i><u>github.com/koolshare</u></i> </a>
+													<br/>Shell & Web by： <a href="mailto:sadoneli@gmail.com"> <i>sadoneli</i> </a>, <i>Xiaobao</i>
+												</div>
+											</td>
+										</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td width="10" align="center" valign="top"></td>
+		</tr>
 	</table>
 <div id="footer"></div>
 </body>

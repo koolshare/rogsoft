@@ -27,12 +27,10 @@ function init(menu_hook) {
 	show_menu();
 	get_log();
 }
-
 function menu_hook() {
 	tabtitle[tabtitle.length - 1] = new Array("", "软件中心", "离线安装");
 	tablink[tablink.length - 1] = new Array("", "Module_Softcenter.asp", "Module_Softsetting.asp");
 }
-
 function upload_software() {
 	var filename = $("#file").val();
 	filename = filename.split('\\');
@@ -65,7 +63,6 @@ function upload_software() {
 		}
 	});
 }
-
 function install_now(moduleInfo) {
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {
@@ -86,7 +83,6 @@ function install_now(moduleInfo) {
 		}
 	});
 }
-
 function get_log(s) {
 	var retArea = E("soft_log");
 	$.ajax({
@@ -170,14 +166,13 @@ function get_log(s) {
 													<span id="file_info" style="display:none;">完成</span>
 												</td>
 											</tr>
-                                    	</table>
-                                    	<div id="log_content" style="margin-top:10px;display: block;">
+										</table>
+										<div id="log_content" style="margin-top:10px;display: block;">
 											<textarea cols="63" rows="40" wrap="off" readonly="readonly" id="soft_log" style="width:99%; font-family:'Lucida Console'; font-size:12px;background:#475A5F;color:#FFFFFF;"></textarea>
 										</div>
-										<div class="KoolshareBottom">
-											<br/>论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>www.koolshare.cn</u></i> </a> <br/>
-											后台技术支持： <i>Xiaobao</i> <br/>
-											Shell, Web by： <i>Sadoneli</i><br/>
+										<div class="KoolshareBottom">论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>koolshare.cn</u></i> </a>
+											<br/>Github项目： <a href="https://github.com/koolshare/rogsoft" target="_blank"> <i><u>github.com/koolshare</u></i> </a>
+											<br/>Shell & Web by： <a href="mailto:sadoneli@gmail.com"> <i>sadoneli</i> </a>, <i>Xiaobao</i>
 										</div>
 									</td>
 								</tr>
@@ -193,6 +188,3 @@ function get_log(s) {
 	<div id="footer"></div>
 </body>
 </html>
-
-
-
