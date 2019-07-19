@@ -66,7 +66,7 @@ start_make(){
 		ejusb $swap_diskorder
 		if [ "$?" == "0" ];then
 			echo_date "卸载成功，尝试将磁盘格式化为ext3格式，磁盘内的数据将会全部丢失！"
-			mkfs.ext3 /dev/$swap_make_part_mount
+			mkfs.ext3 -F /dev/$swap_make_part_mount
 			sleep 1
 			echo_date "格式化完成，尝试重新挂载磁盘"
 			mkdir -p /tmp/mnt/$swap_make_part_mount
