@@ -105,8 +105,8 @@ if [[ "${serverchan_info_temp}" == "1" ]]; then
 		interface_5g1_temperature=`wl -i ${interface_5g1} phy_tempsense | awk '{print $1}'` 2>/dev/null
 		[ -n "${interface_2g_temperature}" ] && interface_2g_temperature_c=`expr ${interface_2g_temperature} / 2 + 20`°C || interface_2g_temperature_c="offline"
 		[ -n "${interface_5g1_temperature}" ] && interface_5g1_temperature_c=`expr ${interface_5g1_temperature} / 2 + 20`°C || interface_5g1_temperature_c="offline"
-		router_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-1：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; CPU: ${router_cpu_temperature}°C"
-		router_temperature="2.4GHz: ${interface_2_temperature_c} | 5GHz: ${interface_5_temperature_c} | CPU: ${router_cpu_temperature}"
+		#router_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-1：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; CPU: ${router_cpu_temperature}°C"
+		router_temperature="2.4GHz: ${interface_2g_temperature_c} | 5GHz: ${interface_5g1_temperature_c} | CPU: ${router_cpu_temperature}°C"
 		;;
 	esac
 
