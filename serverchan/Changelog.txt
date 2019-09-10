@@ -1,5 +1,9 @@
 Koolshare hnd/axhnd router software center serverchan Changelog
 ===========================================
+0.8
+   - fix	Fixed a bug with auto push failed, thx to xpc0938
+   - fix	fix a show issue for the temperature of 2.4GHz and 5GHz wireless network card, thx to xpc0938
+
 0.7
    - fix	修复关闭mac地址显示无效的问题
    - fix	修复RT-AC86U等机型无法显示温度的问题
