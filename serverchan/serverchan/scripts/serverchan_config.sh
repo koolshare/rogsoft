@@ -37,7 +37,10 @@ creat_trigger_dhcp(){
     rm -f /jffs/configs/dnsmasq.d/dhcp_trigger.conf
     echo "dhcp-script=/koolshare/scripts/serverchan_dhcp_trigger.sh" >> /jffs/configs/dnsmasq.d/dhcp_trigger.conf
     [ "${serverchan_info_logger}" == "1" ] && logger "[软件中心] - [ServerChan]: 重启DNSMASQ！"
-    service restart_dnsmasq
+    #service restart_dnsmasq
+    killall dnsmasq
+    sleep 1
+    dnsmasq --log-async
 }
 
 remove_trigger_dhcp(){
