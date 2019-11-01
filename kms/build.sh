@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="kms"
-VERSION="1.4"
+VERSION="1.5"
 TITLE="系统工具"
 DESCRIPTION="kms"
 HOME_URL="Module_kms.asp"
