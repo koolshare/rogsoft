@@ -66,6 +66,7 @@ var cpu_info_old = new Array();
 var core_num = '<%cpu_core_num();%>';
 var cpu_usage_array = new Array();
 var array_size = 46;
+var refresh_flag=1;
 for (i = 0; i < core_num; i++) {
 	cpu_info_old[i] = {
 		total: 0,
@@ -80,6 +81,7 @@ var ram_usage_array = new Array(array_size);
 for (i = 0; i < array_size; i++) {
 	ram_usage_array[i] = 101;
 }
+var params_chk = ['rog_ui_flag'];
 
 function init() {
 	show_menu(menu_hook);
@@ -87,6 +89,36 @@ function init() {
 	get_temperature();
 	showbootTime();
 	showclock();
+	show_ui_switch();
+}
+
+function show_ui_switch(){
+	if(productid != "RT-AC86U"){
+		$("#UI_SWITCH").hide();
+	} else {
+		get_dbus_data();
+	}
+}
+
+function get_dbus_data(){
+	$.ajax({
+		type: "GET",
+		url: "/_api/rog_",
+		dataType: "json",
+		async: false,
+		success: function(data) {
+			dbus = data.result[0];
+			conf2obj();
+		}
+	});
+}
+
+function conf2obj(){
+	for (var i = 0; i < params_chk.length; i++) {
+		if(dbus[params_chk[i]]){
+			E(params_chk[i]).checked = dbus[params_chk[i]] == "1";
+		}
+	}
 }
 
 function get_temperature(){
@@ -198,7 +230,7 @@ function showbootTime() {
 }
 
 function fix_nu(num, length) {
-  return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
+	return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
 }
 
 Date.prototype.toLocaleString = function() {
@@ -212,6 +244,138 @@ function showclock() {
         time = new Date(time.valueOf() + 1000);
         E("rog_time").innerHTML = time.toLocaleString();
     }, 1000);
+}
+
+function showROGLoadingBar(action){
+	if(window.scrollTo)
+		window.scrollTo(0,0);
+
+	disableCheckChangedStatus();
+	
+	htmlbodyforIE = document.getElementsByTagName("html");  //this both for IE&FF, use "html" but not "body" because <!DOCTYPE html PUBLIC.......>
+	htmlbodyforIE[0].style.overflow = "hidden";	  //hidden the Y-scrollbar for preventing from user scroll it.
+	
+	winW_H();
+
+	var blockmarginTop;
+	var blockmarginLeft;
+	if (window.innerWidth)
+		winWidth = window.innerWidth;
+	else if ((document.body) && (document.body.clientWidth))
+		winWidth = document.body.clientWidth;
+	
+	if (window.innerHeight)
+		winHeight = window.innerHeight;
+	else if ((document.body) && (document.body.clientHeight))
+		winHeight = document.body.clientHeight;
+
+	if (document.documentElement  && document.documentElement.clientHeight && document.documentElement.clientWidth){
+		winHeight = document.documentElement.clientHeight;
+		winWidth = document.documentElement.clientWidth;
+	}
+
+	if(winWidth >1050){
+	
+		winPadding = (winWidth-1050)/2;	
+		winWidth = 1105;
+		blockmarginLeft= (winWidth*0.3)+winPadding-150;
+	}
+	else if(winWidth <=1050){
+		blockmarginLeft= (winWidth)*0.3+document.body.scrollLeft-160;
+
+	}
+	
+	if(winHeight >660)
+		winHeight = 660;
+	
+	blockmarginTop= winHeight*0.3-140		
+	E("loadingBarBlock").style.marginTop = blockmarginTop+"px";
+	E("loadingBarBlock").style.marginLeft = blockmarginLeft+"px";
+	E("loadingBarBlock").style.width = 770+"px";
+	E("LoadingBar").style.width = winW+"px";
+	E("LoadingBar").style.height = winH+"px";
+	LoadingROGProgress(action);
+}
+
+function LoadingROGProgress(action){
+	E("LoadingBar").style.visibility = "visible";
+	$("#loading_block2").html("<font color='#ffcc00'>----------------------------------------------------------------------------------------------------------------------------------");
+	if (action == "2"){
+		E("loading_block3").innerHTML = "ROG插件日志";
+	}else{
+		E("loading_block3").innerHTML = "切皮肤中 ...";
+	}
+}
+
+function hideROGLoadingBar(){
+	x = -1;
+	E("LoadingBar").style.visibility = "hidden";
+	if (refresh_flag == "1"){
+		refreshpage();
+	}
+}
+
+var x = 6;
+function count_down_close() {
+	if (x == "0") {
+		hideROGLoadingBar();
+	}
+	if (x < 0) {
+		E("ok_button1").value = "手动关闭"
+		return false;
+	}
+	E("ok_button1").value = "自动关闭（" + x + "）"
+		--x;
+	setTimeout("count_down_close();", 1000);
+}
+
+function switch_ui(action){
+	var dbus = {};
+	dbus["rog_ui_flag"] = E("rog_ui_flag").checked ? '1' : '0';
+	var id = parseInt(Math.random() * 100000000);
+	var postData = {"id": id, "method": "rog_config.sh", "params":[2, action], "fields": dbus};
+	$.ajax({
+		type: "POST",
+		cache:false,
+		url: "/_api/",
+		data: JSON.stringify(postData),
+		dataType: "json",
+		success: function(response) {
+			get_log(1);
+		}
+	});
+}
+
+function get_log(action){
+	showROGLoadingBar(action);
+	$.ajax({
+		url: '/_temp/rog_log.txt',
+		type: 'GET',
+		cache:false,
+		dataType: 'text',
+		success: function(response) {
+			var retArea = E("log_content3");
+			if (response.search("XU6J03M6") != -1) {
+				retArea.value = response.replace("XU6J03M6", " ");
+				E("ok_button").style.display = "";
+				retArea.scrollTop = retArea.scrollHeight;
+				if (action == "1"){
+					count_down_close();
+				}
+				return true;
+			}
+			setTimeout("get_log(" + action + ");", 200);
+			retArea.value = response.replace("XU6J03M6", " ");
+			retArea.scrollTop = retArea.scrollHeight;
+		}
+	});
+}
+
+function show_log() {
+	x = -1;
+	refresh_flag=2;
+	E("ok_button1").value = "关闭日志";
+	get_log(2);
 }
 
 function menu_hook(title, tab) {
@@ -231,10 +395,10 @@ function menu_hook(title, tab) {
 					<div id="loading_block3" style="margin:10px auto;margin-left:10px;width:85%; font-size:12pt;"></div>
 					<div id="loading_block2" style="margin:10px auto;width:95%;"></div>
 					<div id="log_content2" style="margin-left:15px;margin-right:15px;margin-top:10px;overflow:hidden">
-						<textarea cols="63" rows="21" wrap="on" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Courier New', Courier, mono; font-size:11px;background:#000;color:#FFFFFF;"></textarea>
+						<textarea cols="63" rows="21" wrap="on" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Courier New', Courier, mono; font-size:11px; background:#000; color:#FFFFFF; outline:none;"></textarea>
 					</div>
 					<div id="ok_button" class="apply_gen" style="background: #000;display: none;">
-						<input id="ok_button1" class="button_gen" type="button" onclick="hideKPLoadingBar()" value="确定">
+						<input id="ok_button1" class="button_gen" type="button" onclick="hideROGLoadingBar()" value="确定">
 					</div>
 				</td>
 			</tr>
@@ -313,6 +477,15 @@ function menu_hook(title, tab) {
 														<button id="ram_flush" onclick="flush_ram();" class="rog_btn" style="width:110px;cursor:pointer;">一键释放内存</button>
 														</div>
 														
+													</td>
+												</tr>
+												<tr id="UI_SWITCH">
+													<th>切换皮肤</th>
+													<td>
+														<input type="checkbox" id="rog_ui_flag" name="rog_ui_flag" >包括下架插件
+														<a style="cursor:pointer;margin-left: 10px;" class="rog_btn" onclick="switch_ui(1)" >Rog风格</a>
+														<a style="cursor:pointer;" class="rog_btn" onclick="switch_ui(2)" >Asuswrt风格</a>
+														<a style="cursor:pointer;" class="rog_btn" onclick="show_log()" >查看日志</a>
 													</td>
 												</tr>
 												<!--<tr>
