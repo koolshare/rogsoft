@@ -114,8 +114,8 @@ _get_plugin_name(){
 	serverchan)
 		echo "【ServerChan 微信推送】"
 		;;
-	shadowsocks)
-		echo "【科学上网】"
+	rog)
+		echo "ROG工具箱"
 		;;
 	*)
 		echo "【$1】"

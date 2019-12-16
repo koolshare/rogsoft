@@ -95,6 +95,8 @@ function init() {
 function show_ui_switch(){
 	if(productid != "RT-AC86U"){
 		$("#UI_SWITCH").hide();
+		$("#msg2").hide();
+		
 	} else {
 		get_dbus_data();
 	}
@@ -499,7 +501,8 @@ function menu_hook(title, tab) {
 											</div>-->
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
-												<li>目前仅支持温度显示等一些简单功能，用以弥补官改固件没有温度显示的遗憾，后续功能有待开发。</li>
+												<li id="msg1">本插件支持温度显示等一些简单功能，用以弥补官改固件没有温度显示的遗憾。</li>
+												<li id="msg2">RT-AC86U固件支持【软件中心】和【插件】在Rog风格和Asuswrt风格皮肤之间的切换。</li>
 											</div>
 										</td>
 									</tr>
