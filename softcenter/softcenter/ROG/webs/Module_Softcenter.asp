@@ -653,7 +653,7 @@ function notice_show() {
 										<tr>
 											<td colspan="3" valign="top">
 												<div>&nbsp;</div>
-												<div class="formfonttitle">Software Center <% nvram_get("model"); %></div>
+												<div class="formfonttitle">Software Center <% nvram_get("odmpid"); %></div>
 												<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 													<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" >
 													</table>
