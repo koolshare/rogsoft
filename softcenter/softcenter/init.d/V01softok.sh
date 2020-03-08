@@ -22,7 +22,7 @@ detect_skipd(){
 start(){
 	detect_skipd
 	sleep 1
-	if [ -z "$(dbus get softcenter_version)" ] && [ -f "/koolshare/.soft_ver" ];then
+	if [ -f "/koolshare/.soft_ver" ];then
 		dbus set softcenter_version=$(cat /koolshare/.soft_ver)
 	fi
 }
