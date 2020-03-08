@@ -1,11 +1,11 @@
 /*  For software center  */
 .KoolshareBottom {
-	width: 230px;
+	width: 205px;
 	height: 100px;
 	background: url(/res/koolshare.png) 0px 3px no-repeat;
 	text-align: left;
 	padding-left:150px;
-	padding-top:8px;
+	padding-top:7px;
 	margin-top:20px;
 	float:right;
 }
@@ -51,12 +51,6 @@
     font-style: normal;
 	font-weight:normal;
 }
-.SimpleNote { padding:5px 10px;}
-.NoteButton { padding:5px 10px; margin:10px 0}
-#NoteBox { padding:10px}
-.FormTable h2,#NoteBox h2 { font-size:16px; border-bottom:1px #AAA dashed; height:26px; color:#1cfe16; margin-top:20px;}
-.FormTable h3,#NoteBox h3,
-.FormTable h4,#NoteBox h4 { color:#FC0;}
 .IE8HACK{
 	display: none \9;
 }

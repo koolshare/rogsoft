@@ -207,17 +207,24 @@ input[type=button]:focus {
 }
 .cloud_main_radius h2 {
 	border-bottom:1px #AAA dashed;
+	height:32px;
+	margin-top:15px;
+	margin-bottom:15px;
 }
 .cloud_main_radius h3, .cloud_main_radius h4 {
 	font-size:12px;
 	color:#FC0;
 	font-weight:normal;
 	font-style: normal;
+	margin-top:12px;
+	margin-bottom:12px;
 }
 .cloud_main_radius h5 {
 	color:#FFF;
 	font-weight:normal;
 	font-style: normal;
+	margin-top:9px;
+	margin-bottom:9x;
 }
 </style>
 <script>
@@ -351,7 +358,7 @@ function showInstallInfo(module, scode) {
 		var infos = [
 			"操作失败",
 			"已安装",
-			"将被安装到jffs分区...",
+			"插件将被安装到jffs分区...",
 			"正在下载中...请耐心等待...",
 			"正在安装中...",
 			"安装成功！请5秒后刷新本页面！...",
@@ -653,35 +660,36 @@ function notice_show() {
 										<tr>
 											<td colspan="3" valign="top">
 												<div>&nbsp;</div>
-												<div class="formfonttitle">Software Center <% nvram_get("odmpid"); %></div>
+												<div id="title_name" class="formfonttitle"></div>
+												<script type="text/javascript">
+													var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("model"); %>';
+													$("#title_name").html("Software Center " + MODEL)
+												</script>
 												<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 													<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" >
 													</table>
 													<table width="100%" height="150px" style="border-collapse:collapse;">
 														<tr>
 															<td colspan="5" class="cloud_main_radius">
-																<div style="padding:10px;width:95%;font-style:italic;font-size:14px;">
-																	<br/><br/>
-																	<table width="100%" >
+																<div style="width:95%;font-style:italic;font-size:14px;">
+																	<table width="100%">
 																		<tr>
 																			<td>
-																				<ul style="margin-top:-50px;padding-left:15px;" >
-																					<li style="margin-top:-5px;">
-																						<h2 id="push_titile"><em>软件中心&nbsp;-&nbsp;by&nbsp;koolshare</em></h2>
-																					</li>
-																					<li style="margin-top:-5px;">
+																				<ul style="padding-left:25px;">
+																					<h2 id="push_titile"><em>软件中心&nbsp;-&nbsp;by&nbsp;koolshare</em></h2>
+																					<li>
 																						<h4 id="push_content1" ><font color='#1E90FF'>交流反馈:&nbsp;&nbsp;</font><a href='https://github.com/koolshare/rogsoft' target='_blank'><em>1.软件中心GitHub项目</em></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://t.me/xbchat' target='_blank'><em>2.加入telegram群</em></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://shang.qq.com/wpa/qunwpa?idkey=f475468129ba8019245425559b5df5bdad7d7201ac7780417dd0218bbb4e1322' target='_blank'><em>3.加入QQ群</em></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://koolshare.cn/forum-98-1.html' target='_blank'><em>4.Koolshare论坛插件版块</em></a></h4>
 																					</li>
-																					<li id="push_content2_li" style="margin-top:-5px;display: none;">
+																					<li id="push_content2_li" style="display: none;">
 																						<h4 id="push_content2"></h4>
 																					</li>
-																					<li id="push_content3_li" style="margin-top:-5px;display: none;">
+																					<li id="push_content3_li" style="display: none;">
 																						<h4 id="push_content3"></h4>
 																					</li>
-																					<li id="push_content4_li" style="margin-top:-5px;display: none;">
+																					<li id="push_content4_li" style="display: none;">
 																						<h4 id="push_content4"></h4>
 																					</li>
-																					<li style="margin-top:-5px;">
+																					<li>
 																						<h5>当前版本：<span id="spnCurrVersion"></span> 在线版本：<span id="spnOnlineVersion"></span>
 																						<input type="button" id="updateBtn" value="更新" style="display:none" /></h5>
 																					</li>
@@ -712,7 +720,7 @@ function notice_show() {
 																<input class="show-uninstall-btn" type="button" value="未安装"/>
 															</td>
 														</tr>
-														<tr width="100%">
+														<tr width="100%"  width="235px">
 															<td colspan="4" id="IconContainer">
 																<div id="software_center_message" style="text-align:center; line-height: 4em;">更新中...</div>
 															</td>
@@ -721,9 +729,10 @@ function notice_show() {
 															<td colspan="3"></td>
 														</tr>
 													</table>
-												<div class="KoolshareBottom">论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>koolshare.cn</u></i> </a>
-													<br/>Github项目： <a href="https://github.com/koolshare/rogsoft" target="_blank"> <i><u>github.com/koolshare</u></i> </a>
-													<br/>Shell & Web by： <a href="mailto:sadoneli@gmail.com"> <i>sadoneli</i> </a>, <i>Xiaobao</i>
+												<div class="KoolshareBottom">
+													论坛技术支持: <a href="https://koolshare.cn" target="_blank"> <i><u>https://koolshare.cn</u></i></a><br />
+													GitHub: <a href="https://github.com/koolshare/rogsoft" target="_blank"><i><u>https://github.com/koolshare</u></i></a><br />
+													Shell & Web by: <a href="mailto:sadoneli@gmail.com"><i>sadoneli</i></a>, <i>Xiaobao</i>
 												</div>
 											</td>
 										</tr>

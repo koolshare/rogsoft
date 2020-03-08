@@ -28,17 +28,14 @@ install_tar(){
 	cd /tmp
 	echo_date ====================== step 1 ===========================
 	echo_date 开启软件离线安装！
-	sleep 1
 	if [ -f $TARGET_DIR/$soft_name ];then
-		echo_date $TARGET_DIR目录下检测到上传的离线安装包$soft_name
+		local _SIZE=$(ls -lh $TARGET_DIR/$soft_name|awk '{print $5}')
+		echo_date $TARGET_DIR目录下检测到上传的离线安装包$soft_name，大小：$_SIZE
 		mv /tmp/upload/$soft_name /tmp
-		sleep 1
 		echo_date 尝试解压离线安装包离线安装包
-		sleep 1
 		tar -zxvf $soft_name >/dev/null 2>&1
 		if [ "$?" == "0" ];then
 			echo_date 解压完成！
-			sleep 1
 			cd /tmp
 		else
 			echo_date 解压错误，错误代码："$?"！
@@ -119,12 +116,9 @@ install_tar(){
 				sleep 1
 			done
 			echo_date 离线包安装完成！
-			sleep 1
 			echo_date 一点点清理工作...
-			sleep 1
 			clean
 			echo_date 完成！离线安装插件成功，现在你可以退出本页面~
-			sleep 1
 		else
 			echo_date 没有找到安装脚本！
 			echo_date 删除相关文件并退出...

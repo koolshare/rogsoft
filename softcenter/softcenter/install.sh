@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MODEL=`nvram get model`
+MODEL=$(nvram get model)
 
 softcenter_install() {
 	if [ -d "/tmp/softcenter" ]; then
@@ -24,14 +24,14 @@ softcenter_install() {
 		# coping files
 		cp -rf /tmp/softcenter/webs/* /koolshare/webs/
 		cp -rf /tmp/softcenter/res/* /koolshare/res/
-		if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
+		if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
 			cp -rf /tmp/softcenter/ROG/webs/* /koolshare/webs/
 			cp -rf /tmp/softcenter/ROG/res/* /koolshare/res/
 		fi
 		cp -rf /tmp/softcenter/init.d/* /koolshare/init.d/
 		cp -rf /tmp/softcenter/bin/* /koolshare/bin/
 		#for axhnd
-		if [ "`nvram get model`" == "RT-AX88U" ] || [ "`nvram get model`" == "GT-AX11000" ];then
+		if [ "$MODEL" == "RT-AX88U" ] || [ "$MODEL" == "GT-AX11000" ];then
 			cp -rf /tmp/softcenter/axbin/* /koolshare/bin/
 		fi
 		cp -rf /tmp/softcenter/perp /koolshare/
@@ -43,7 +43,7 @@ softcenter_install() {
 		[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
 		[ ! -L "/jffs/.asusrouter" ] && ln -sf /koolshare/bin/kscore.sh /jffs/.asusrouter
 		[ -L "/koolshare/bin/base64" ] && rm -rf /koolshare/bin/base64
-		if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
+		if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
 			# for offcial mod, RT-AC86U, GT-AC5300
 			[ ! -L "/jffs/etc/profile" ] && ln -sf /koolshare/scripts/base.sh /jffs/etc/profile
 		else
@@ -68,7 +68,7 @@ softcenter_install() {
 			EOF
 			chmod +x /jffs/scripts/wan-start
 		else
-			STARTCOMAND1=`cat /jffs/scripts/wan-start | grep -c "/koolshare/bin/ks-wan-start.sh start"`
+			STARTCOMAND1=$(cat /jffs/scripts/wan-start | grep -c "/koolshare/bin/ks-wan-start.sh start")
 			[ "$STARTCOMAND1" -gt "1" ] && sed -i '/ks-wan-start.sh/d' /jffs/scripts/wan-start && sed -i '1a /koolshare/bin/ks-wan-start.sh start' /jffs/scripts/wan-start
 			[ "$STARTCOMAND1" == "0" ] && sed -i '1a /koolshare/bin/ks-wan-start.sh start' /jffs/scripts/wan-start
 		fi
@@ -80,7 +80,7 @@ softcenter_install() {
 			EOF
 			chmod +x /jffs/scripts/nat-start
 		else
-			STARTCOMAND2=`cat /jffs/scripts/nat-start | grep -c "/koolshare/bin/ks-nat-start.sh start"`
+			STARTCOMAND2=$(cat /jffs/scripts/nat-start | grep -c "/koolshare/bin/ks-nat-start.sh start")
 			[ "$STARTCOMAND2" -gt "1" ] && sed -i '/ks-nat-start.sh/d' /jffs/scripts/nat-start && sed -i '1a /koolshare/bin/ks-nat-start.sh start' /jffs/scripts/nat-start
 			[ "$STARTCOMAND2" == "0" ] && sed -i '1a /koolshare/bin/ks-nat-start.sh start' /jffs/scripts/nat-start
 		fi
@@ -92,7 +92,7 @@ softcenter_install() {
 			EOF
 			chmod +x /jffs/scripts/post-mount
 		else
-			STARTCOMAND2=`cat /jffs/scripts/post-mount | grep "/koolshare/bin/ks-mount-start.sh start"`
+			STARTCOMAND2=$(cat /jffs/scripts/post-mount | grep "/koolshare/bin/ks-mount-start.sh start")
 			[ -z "$STARTCOMAND2" ] && sed -i '1a /koolshare/bin/ks-mount-start.sh start' /jffs/scripts/post-mount
 		fi
 

@@ -5,7 +5,7 @@ source $KSROOT/scripts/base.sh
 
 
 #From dbus to local variable
-eval `dbus export softcenter_installing_`
+eval $(dbus export softcenter_installing_)
 source /koolshare/scripts/base.sh
 export PERP_BASE=/koolshare/perp
 
@@ -34,8 +34,8 @@ export PERP_BASE=/koolshare/perp
 #softcenter_installing_status=14	#正在检查是否有更新~
 #softcenter_installing_status=15	#检测更新错误！
 
-softcenter_home_url=`dbus get softcenter_home_url`
-CURR_TICK=`date +%s`
+softcenter_home_url=$(dbus get softcenter_home_url)
+CURR_TICK=$(date +%s)
 BIN_NAME=$(basename "$0")
 BIN_NAME="${BIN_NAME%.*}"
 if [ "$ACTION" != "" ]; then
@@ -46,7 +46,7 @@ VER_SUFFIX=_version
 MD5_SUFFIX=_md5
 INSTALL_SUFFIX=_install
 UNINSTALL_SUFFIX=_uninstall
-if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
+if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
 	ROG=1
 fi
 
@@ -64,7 +64,7 @@ install_module() {
 	if [ "$softcenter_installing_tick" = "" ]; then
 		export softcenter_installing_tick=0
 	fi
-	LAST_TICK=`expr $softcenter_installing_tick + 20`
+	LAST_TICK=$(expr $softcenter_installing_tick + 20)
 	if [ "$LAST_TICK" -ge "$CURR_TICK" -a "$softcenter_installing_module" != "" ]; then
 		LOGGER "module $softcenter_installing_module is installing"
 		exit 2
@@ -78,23 +78,23 @@ install_module() {
 
 	# Just ignore the old installing_module
 	export softcenter_installing_module=$softcenter_installing_todo
-	export softcenter_installing_tick=`date +%s`
+	export softcenter_installing_tick=$(date +%s)
 	dbus set softcenter_installing_status="2"
 	sleep 1
 	dbus save softcenter_installing_
 
 	URL_SPLIT="/"
-	#OLD_MD5=`dbus get softcenter_module_$softcenter_installing_module$MD5_SUFFIX`
-	OLD_VERSION=`dbus get softcenter_module_$softcenter_installing_module$VER_SUFFIX`
-	HOME_URL=`dbus get softcenter_home_url`
+	#OLD_MD5=$(dbus get softcenter_module_$softcenter_installing_module$MD5_SUFFIX)
+	OLD_VERSION=$(dbus get softcenter_module_$softcenter_installing_module$VER_SUFFIX)
+	HOME_URL=$(dbus get softcenter_home_url)
 	TAR_URL=$HOME_URL$URL_SPLIT$softcenter_installing_tar_url
-	FNAME=`basename $softcenter_installing_tar_url`
+	FNAME=$(basename $softcenter_installing_tar_url)
 
 	if [ "$OLD_VERSION" = "" ]; then
 		OLD_VERSION=0
 	fi
 
-	CMP=`versioncmp $softcenter_installing_version $OLD_VERSION`
+	CMP=$(versioncmp $softcenter_installing_version $OLD_VERSION)
 	if [ -f /koolshare/webs/Module_$softcenter_installing_module.sh -o "$softcenter_installing_todo" = "softcenter" ]; then
 		CMP="-1"
 	fi
@@ -197,7 +197,7 @@ uninstall_module() {
 	if [ "$softcenter_installing_tick" = "" ]; then
 		export softcenter_installing_tick=0
 	fi
-	LAST_TICK=`expr $softcenter_installing_tick + 20`
+	LAST_TICK=$(expr $softcenter_installing_tick + 20)
 	if [ "$LAST_TICK" -ge "$CURR_TICK" -a "$softcenter_installing_module" != "" ]; then
 		LOGGER "module $softcenter_installing_module is installing"
 		exit 2
@@ -209,7 +209,7 @@ uninstall_module() {
 		exit 3
 	fi
 
-	ENABLED=`dbus get "$softcenter_installing_todo""_enable"`
+	ENABLED=$(dbus get "$softcenter_installing_todo""_enable")
 	if [ "$ENABLED" = "1" ]; then
 		LOGGER "please disable this module than try again"
 		exit 4
@@ -217,7 +217,7 @@ uninstall_module() {
 
 	# Just ignore the old installing_module
 	export softcenter_installing_module=$softcenter_installing_todo
-	export softcenter_installing_tick=`date +%s`
+	export softcenter_installing_tick=$(date +%s)
 	export softcenter_installing_status="6"
 	dbus save softcenter_installing_
 
@@ -225,7 +225,7 @@ uninstall_module() {
 	dbus remove "softcenter_module_$softcenter_installing_module$VER_SUFFIX"
 	dbus remove "softcenter_module_$softcenter_installing_module$INSTALL_SUFFIX"
 
-	txt=`dbus list $softcenter_installing_todo`
+	txt=$(dbus list $softcenter_installing_todo)
 	printf "%s\n" "$txt" |
 	while IFS= read -r line; do
 		line2="${line%=*}"
