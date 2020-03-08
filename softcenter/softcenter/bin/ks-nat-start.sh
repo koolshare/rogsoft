@@ -3,7 +3,7 @@
 ACTION=$1
 #ACTION="start_nat"
 
-echo start `date` > /tmp/ks_nat_log.txt
+#echo start `date` > /tmp/ks_nat_log.txt
 
 ks_nat=`nvram get ks_nat`
 [ "$ks_nat" == "1" ] && echo exit `date` >> /tmp/ks_nat_log.txt && exit
@@ -28,4 +28,4 @@ do
     esac
 done
 
-echo finish `date` >> /tmp/ks_nat_log.txt
+#echo finish `date` >> /tmp/ks_nat_log.txt
