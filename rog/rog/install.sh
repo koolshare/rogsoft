@@ -2,6 +2,7 @@
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 DIR=$(cd $(dirname $0); pwd)
+model=$(nvram get odmpid)
 
 # 判断路由架构和平台
 case $(uname -m) in
@@ -27,6 +28,9 @@ esac
 cp -rf /tmp/rog/scripts/* /koolshare/scripts/
 cp -rf /tmp/rog/webs/* /koolshare/webs/
 cp -rf /tmp/rog/res/* /koolshare/res/
+if [ -n "$model" ];then
+	cp -rf /tmp/rog/init.d/* /koolshare/init.d/
+fi
 cp -rf /tmp/rog/uninstall.sh /koolshare/scripts/uninstall_rog.sh
 if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
 	cp -rf /tmp/$MODULE/ROG/webs/* /koolshare/webs/
