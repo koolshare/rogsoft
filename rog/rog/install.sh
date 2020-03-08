@@ -6,7 +6,7 @@ DIR=$(cd $(dirname $0); pwd)
 # 判断路由架构和平台
 case $(uname -m) in
 	aarch64)
-		if [ "`uname -o|grep Merlin`" ] && [ -d "/koolshare" ];then
+		if [ "$(uname -o|grep Merlin)" ] && [ -d "/koolshare" ];then
 			echo_date 固件平台【koolshare merlin hnd/axhnd aarch64】符合安装要求，开始安装插件！
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
@@ -28,7 +28,7 @@ cp -rf /tmp/rog/scripts/* /koolshare/scripts/
 cp -rf /tmp/rog/webs/* /koolshare/webs/
 cp -rf /tmp/rog/res/* /koolshare/res/
 cp -rf /tmp/rog/uninstall.sh /koolshare/scripts/uninstall_rog.sh
-if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
+if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
 	cp -rf /tmp/$MODULE/ROG/webs/* /koolshare/webs/
 fi
 chmod +x /koolshare/scripts/rog*

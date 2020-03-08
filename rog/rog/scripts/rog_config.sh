@@ -171,6 +171,26 @@ apply_ui(){
 	rm -rf ${BASE_FOLDER} ${serverchan_info_text} ${app_file}
 }
 
+fan_control(){
+	case $rog_fan_level in
+	0)
+		logger "[软件中心]手动控制：关闭${model}风扇！"
+		killall fanCtl
+		;;
+	1|2|3|4)
+		logger "[软件中心]手动控制：将${model}风扇调节至${rog_fan_level}挡！"
+		killall fanCtl
+		LD_PRELOAD=/rom/libnvram.so fanCtl $rog_fan_level 2>&1 &
+		;;
+	5)
+		logger "[软件中心]手动控制：将${model}风扇调节至自动控制策略！"
+		if [ -z "$(ps | grep fanCtl | grep -v grep)" ];then
+			LD_PRELOAD=/rom/libnvram.so fanCtl -d >/dev/null 2>&1 &
+		fi
+		;;
+	esac
+}
+
 case $2 in
 1)
 	sync
@@ -184,5 +204,10 @@ case $2 in
 	http_response "$1"
 	switch_ui $3 | tee -a $LOG_FILE
 	echo XU6J03M6 | tee -a $LOG_FILE
+	;;
+3)
+	# fan control
+	http_response "$1"
+	fan_control
 	;;
 esac

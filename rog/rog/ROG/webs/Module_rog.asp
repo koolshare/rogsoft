@@ -82,6 +82,7 @@ for (i = 0; i < array_size; i++) {
 	ram_usage_array[i] = 101;
 }
 var params_chk = ['rog_ui_flag'];
+var params_inp = ['rog_fan_level'];
 
 function init() {
 	show_menu(menu_hook);
@@ -93,12 +94,17 @@ function init() {
 }
 
 function show_ui_switch(){
-	if(productid != "RT-AC86U"){
+	if(productid == "RT-AC86U"){
+		$("#FANC").hide();
+		get_dbus_data();
+	}else if(productid == "RAX80"){
 		$("#UI_SWITCH").hide();
 		$("#msg2").hide();
-		
-	} else {
 		get_dbus_data();
+	}else{
+		$("#UI_SWITCH").hide();
+		$("#FANC").hide();
+		$("#msg2").hide();
 	}
 }
 
@@ -119,6 +125,11 @@ function conf2obj(){
 	for (var i = 0; i < params_chk.length; i++) {
 		if(dbus[params_chk[i]]){
 			E(params_chk[i]).checked = dbus[params_chk[i]] == "1";
+		}
+	}
+	for (var i = 0; i < params_inp.length; i++) {
+		if (dbus[params_inp[i]]) {
+			$("#" + params_inp[i]).val(dbus[params_inp[i]]);
 		}
 	}
 }
@@ -335,7 +346,7 @@ function switch_ui(action){
 	var dbus = {};
 	dbus["rog_ui_flag"] = E("rog_ui_flag").checked ? '1' : '0';
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "rog_config.sh", "params":[2, action], "fields": dbus};
+	var postData = {"id": id, "method": "rog_config.sh", "params":["2", action], "fields": dbus};
 	$.ajax({
 		type: "POST",
 		cache:false,
@@ -345,6 +356,20 @@ function switch_ui(action){
 		success: function(response) {
 			get_log(1);
 		}
+	});
+}
+
+function apply_fan(action){
+	var dbus = {};
+	dbus["rog_fan_level"] = E("rog_fan_level").value;
+	var id = parseInt(Math.random() * 100000000);
+	var postData = {"id": id, "method": "rog_config.sh", "params":["3"], "fields": dbus};
+	$.ajax({
+		type: "POST",
+		cache:false,
+		url: "/_api/",
+		data: JSON.stringify(postData),
+		dataType: "json"
 	});
 }
 
@@ -478,7 +503,6 @@ function menu_hook(title, tab) {
 														<!--<a style="cursor:pointer;" id="ram_flush" class="rog_btn" onclick="flush_ram()" disabled=false >一键释放内存</a>-->
 														<button id="ram_flush" onclick="flush_ram();" class="rog_btn" style="width:110px;cursor:pointer;">一键释放内存</button>
 														</div>
-														
 													</td>
 												</tr>
 												<tr id="UI_SWITCH">
@@ -488,6 +512,21 @@ function menu_hook(title, tab) {
 														<a style="cursor:pointer;margin-left: 10px;" class="rog_btn" onclick="switch_ui(1)" >Rog风格</a>
 														<a style="cursor:pointer;" class="rog_btn" onclick="switch_ui(2)" >Asuswrt风格</a>
 														<a style="cursor:pointer;" class="rog_btn" onclick="show_log()" >查看日志</a>
+													</td>
+												</tr>
+												<tr id="FANC">
+													<th>风扇控制</th>
+													<td>
+														<span>当前风扇档位：</span>
+														<select id="rog_fan_level" name="rog_fan_level" style="width:auto;" class="ssconfig input_option">
+															<option value="5" selected>自动策略</option>
+															<option value="0">关闭</option>
+															<option value="1">1档</option>
+															<option value="2">2档</option>
+															<option value="3">3档</option>
+															<option value="4">4档</option>
+														</select>
+														<a style="cursor:pointer;margin-left: 10px;" class="rog_btn" onclick="apply_fan()" >应用风扇档位</a>
 													</td>
 												</tr>
 												<!--<tr>
