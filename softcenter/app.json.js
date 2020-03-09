@@ -177,6 +177,17 @@
             "version": "2.0"
         }, 
         {
+            "build_date": "2020-03-09_16:49:21", 
+            "changelog": "", 
+            "description": "解决重启Bug", 
+            "home_url": "Module_reboothelper.asp", 
+            "md5": "a3c0ae802e463966fedb887a3cc14571", 
+            "name": "reboothelper", 
+            "tar_url": "reboothelper/reboothelper.tar.gz", 
+            "title": "重启助手", 
+            "version": "0.3"
+        }, 
+        {
             "build_date": "2020-01-03_14:30:52", 
             "changelog": "", 
             "description": "ddnspod", 
@@ -200,7 +211,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "b911ffadfc69986446ec9d5f926bc5be", 
+    "md5": "48ad90c301103f70544dbba83ff0517f", 
     "tar_url": "softcenter/softcenter.tar.gz", 
     "version": "1.5.0"
 }
