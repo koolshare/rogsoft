@@ -1,7 +1,7 @@
 #!/bin/sh
 
 source /koolshare/scripts/base.sh
-eval `dbus export reboothelper`
+eval $(dbus export reboothelper)
 
 create_Cron(){
 	cru a reboothelper_schedule "$reboothelper_minute $reboothelper_hour $reboothelper_day * $reboothelper_week echo b > /proc/sysrq-trigger"
@@ -9,11 +9,12 @@ create_Cron(){
 }
 
 delete_Cron(){
-	jobexist=`cru l | grep reboothelper_schedule`
+	jobexist=$(cru l | grep reboothelper_schedule)
 	# kill crontab job
 	[ -n "$jobexist" ] && cru d reboothelper_schedule
 }
 
+# 开机启动
 case $1 in
 start)
 	if [ "$reboothelper_enable" == "1" ];then
@@ -24,7 +25,11 @@ start)
 stop)
 	delete_Cron
 	;;
-2)
+esac
+
+# web控制
+case $2 in
+1)
 	if [ "$reboothelper_enable" == "1" ];then
 		logger "[软件中心]: 添加自动重启任务"
 		create_Cron

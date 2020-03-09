@@ -124,8 +124,8 @@
                 }
             });
 
-            showLoading(5);
-            refreshpage(5);
+            showLoading(2);
+            refreshpage(2);
 
 
             var id = parseInt(Math.random() * 100000000);

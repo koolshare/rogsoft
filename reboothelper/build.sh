@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="reboothelper"
-VERSION="0.3"
+VERSION="0.4"
 TITLE="重启助手"
 DESCRIPTION="解决重启Bug"
 HOME_URL="Module_reboothelper.asp"
