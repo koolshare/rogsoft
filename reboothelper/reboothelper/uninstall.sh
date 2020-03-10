@@ -9,5 +9,5 @@ rm -rf /koolshare/res/icon-reboothelper.png
 rm -rf /koolshare/scripts/reboothelper_*.sh
 rm -rf /koolshare/webs/Module_reboothelper.asp
 rm -rf /tmp/reboothelper*
-rm -rf /koolshare/init.d/S99Reboothelper*
+rm -rf /koolshare/init.d/*Reboothelper*
 

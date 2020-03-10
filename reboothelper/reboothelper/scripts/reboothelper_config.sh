@@ -5,7 +5,7 @@ eval $(dbus export reboothelper)
 
 create_Cron(){
 	cru a reboothelper_schedule "$reboothelper_minute $reboothelper_hour $reboothelper_day * $reboothelper_week echo b > /proc/sysrq-trigger"
-	[ ! -L "/koolshare/init.d/S99Reboothelper.sh" ] && ln -sf /koolshare/scripts/reboothelper_config.sh /koolshare/init.d/S99Reboothelper.sh
+	[ ! -L "/koolshare/init.d/V99Reboothelper.sh" ] && ln -sf /koolshare/scripts/reboothelper_config.sh /koolshare/init.d/V99Reboothelper.sh
 }
 
 delete_Cron(){
