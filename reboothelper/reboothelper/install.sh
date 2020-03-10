@@ -31,7 +31,7 @@ cp -rf /tmp/reboothelper/uninstall.sh /koolshare/scripts/uninstall_reboothelper.
 
 chmod +x /koolshare/scripts/reboothelper*
 chmod +x /koolshare/scripts/uninstall_reboothelper.sh
-[ -L "/koolshare/init.d/V99Reboothelper.sh" ] && rm -rf /koolshare/init.d/V99Reboothelper.sh
+[ -L "/koolshare/init.d/S99Reboothelper.sh" ] && rm -rf /koolshare/init.d/V99Reboothelper.sh
 [ ! -L "/koolshare/init.d/V99Reboothelper.sh" ] && ln -sf /koolshare/scripts/reboothelper_config.sh /koolshare/init.d/V99Reboothelper.sh
 chmod +x /koolshare/init.d/*
 
