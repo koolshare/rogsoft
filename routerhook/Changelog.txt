@@ -1,0 +1,4 @@
+Koolshare hnd/axhnd router software center routerhook Changelog
+===========================================
+0.1
+   - fix	修复温度显示
