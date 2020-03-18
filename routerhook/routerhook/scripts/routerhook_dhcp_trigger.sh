@@ -85,11 +85,11 @@ dbus set routerhook_lease_send_time="`TZ=UTC-8 date -d "${client_join_time}" +%s
 
 echo '{' > ${routerhook_lease_text}
 echo '"msgTYPE":"newDHCP",' >> ${routerhook_lease_text}
-echo '"cliNAME": "${client_lease_name}",' >> ${routerhook_lease_text}
-echo '"cliIP": "${client_lease_ip}",' >> ${routerhook_lease_text}
-echo '"cliMAC": "${client_lease_mac}",' >> ${routerhook_lease_text}
-echo '"upTIME": "${client_join_time_format}",' >> ${routerhook_lease_text}
-echo '"expTIME": "${client_lease_epired_time_format}",' >> ${routerhook_lease_text}
+echo '"cliNAME": "'${client_lease_name}'",' >> ${routerhook_lease_text}
+echo '"cliIP":"'${client_lease_ip}'",' >> ${routerhook_lease_text}
+echo '"cliMAC":"'${client_lease_mac}'",' >> ${routerhook_lease_text}
+echo '"upTIME":"'${client_join_time_format}'",' >> ${routerhook_lease_text}
+echo '"expTIME":"'${client_lease_epired_time_format}'",' >> ${routerhook_lease_text}
 
 if [[ ${routerhook_trigger_dhcp_leases} == "1" ]]; then
     dnsmasq_leases_list=`cat ${dnsmasq_leases_file} | sort -t "." -k3n,3 -k4n,4`
@@ -104,32 +104,32 @@ if [[ ${routerhook_trigger_dhcp_leases} == "1" ]]; then
             dhcp_custom_clientlist=`echo $(nvram get custom_clientlist | sed 's/</\n/g' | awk -F ">" '{print $1"##"$2}' | sed '/^##*$/d' | grep -i "${dhcp_client_mac}")`
             if [[ "${dhcp_custom_clientlist}" == "" ]]; then
                 if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then                    
-                    echo '"ip":"$3",' >> ${routerhook_lease_text}
-                    echo '"name":"$4"' >> ${routerhook_lease_text}
+                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
+                    echo '"name":"'$4'"' >> ${routerhook_lease_text}
                 else
-                    echo '"ip":"$3",' >> ${routerhook_lease_text}
-                    echo '"mac":"$2",' >> ${routerhook_lease_text}
-                    echo '"name":"$4"' >> ${routerhook_lease_text}
+                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
+                    echo '"mac":"'$2'",' >> ${routerhook_lease_text}
+                    echo '"name":"'$4'"' >> ${routerhook_lease_text}
                 fi
             else
                 dhcp_lease_name=`echo ${dhcp_custom_clientlist} | awk -F "##" '{print $1}'`
                 if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
-                    echo '"ip":"$3",' >> ${routerhook_lease_text}
-                    echo '"name":"$dhcp_lease_name"' >> ${routerhook_lease_text}
+                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
+                    echo '"name":"'$dhcp_lease_name'"' >> ${routerhook_lease_text}
                 else
-                    echo '"ip":"$3",' >> ${routerhook_lease_text}
-                    echo '"mac":"$2",' >> ${routerhook_lease_text}
-                    echo '"name":"$dhcp_lease_name"' >> ${routerhook_lease_text}
+                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
+                    echo '"mac":"'$2'",' >> ${routerhook_lease_text}
+                    echo '"name":"'$dhcp_lease_name'"' >> ${routerhook_lease_text}
                 fi
             fi
         else
             if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
-                echo '"ip":"$3",' >> ${routerhook_lease_text}
-                echo '"name":"$4"' >> ${trigger_dhcp_white_name}
+                echo '"ip":"'$3'",' >> ${routerhook_lease_text}
+                echo '"name":"'$4'"' >> ${trigger_dhcp_white_name}
             else
-                echo '"ip":"$3",' >> ${routerhook_lease_text}
-                echo '"mac":"$2",' >> ${routerhook_lease_text}
-                echo '"name":"$trigger_dhcp_white_name"' >> ${routerhook_lease_text}
+                echo '"ip":"'$3'",' >> ${routerhook_lease_text}
+                echo '"mac":"'$2'",' >> ${routerhook_lease_text}
+                echo '"name":"'$trigger_dhcp_white_name'"' >> ${routerhook_lease_text}
             fi
         fi
         let num=num+1
@@ -140,12 +140,12 @@ fi
 
 echo '}' >> ${routerhook_lease_text}
 
-routerhook_send_content=`cat ${routerhook_lease_text}`
+routerhook_send_content=`jq -c . ${routerhook_lease_text}`
 sckey_nu=`dbus list routerhook_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
 for nu in ${sckey_nu}
 do
     routerhook_config_sckey=`dbus get routerhook_config_sckey_${nu}`
-    result=`wget --no-check-certificate --header 'Content-Type: application/json' --body-data '${routerhook_send_content}' -qO- ${routerhook_config_sckey}`
+    result=`wget --no-check-certificate --post-data "${routerhook_send_content}" -qO- ${routerhook_config_sckey}`
     if [ -n $(echo $result | grep "success") ];then
         [ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 设备上线信息推送到 URL No.${nu} 成功！！"
     else

@@ -99,7 +99,7 @@
     margin-left: -100px;
     top: 10px;
     width:720px;
-    return height:auto;
+    height:auto;
     box-shadow: 3px 3px 10px #000;
     background: rgba(0,0,0,0.85);
     display:none;
@@ -268,9 +268,9 @@ function onSubmitCtrl(){
 	showLoading(5);
 	refreshpage(5);
 	var params_input = ["routerhook_silent_time_start_hour", "routerhook_silent_time_end_hour", "routerhook_config_ntp", "routerhook_config_name", "routerhook_status_check", "routerhook_check_week", "routerhook_check_day", "routerhook_check_inter_min", "routerhook_check_inter_hour", "routerhook_check_inter_day", "routerhook_check_inter_pre", "routerhook_check_custom", "routerhook_check_time_hour", "routerhook_check_time_min", "routerhook_trigger_dhcp_white"];
-	var params_check = ["routerhook_enable", "routerhook_silent_time", "routerhook_info_logger", "routerhook_info_silent_send", "routerhook_info_system", "routerhook_info_temp", "routerhook_info_wan", "routerhook_info_usb", "routerhook_info_lan", "routerhook_info_dhcp", "routerhook_info_softcenter", "routerhook_trigger_ifup", "routerhook_trigger_dhcp", "routerhook_dhcp_bwlist_en", "routerhook_dhcp_white_en", "routerhook_dhcp_black_en", "routerhook_info_lan_macoff", "routerhook_info_dhcp_macoff", "routerhook_trigger_dhcp_macoff" ];
+	var params_check = ["routerhook_enable", "routerhook_silent_time", "routerhook_info_logger", "routerhook_info_silent_send", "routerhook_info_system", "routerhook_info_temp", "routerhook_info_wan", "routerhook_info_usb", "routerhook_trigger_ifup", "routerhook_trigger_dhcp", "routerhook_dhcp_bwlist_en", "routerhook_dhcp_white_en", "routerhook_dhcp_black_en", "routerhook_trigger_dhcp_macoff" ];
 	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white"];
-	// collect data from input
+    // collect data from input
 	for (var i = 0; i < params_input.length; i++) {
 		if(E(params_input[i])){
 			db_routerhook[params_input[i]] = E(params_input[i]).value;
@@ -323,7 +323,7 @@ function reload_Soft_Center() { //返回软件中心按钮
 }
 
 function menu_hook(title, tab) {
-	tabtitle[tabtitle.length - 1] = new Array("", "routerhook微信通知");
+	tabtitle[tabtitle.length - 1] = new Array("", "RouterHook通知回调");
 	tablink[tablink.length - 1] = new Array("", "Module_routerhook.asp");
 }
 
@@ -503,7 +503,7 @@ function oncheckclick(obj) {
 }
 
 function version_show() {
-    $("#routerhook_version_show").html("<i>插件版本：0.1");
+    $("#routerhook_version_show").html("<i>插件版本：离线版");
 	// $.ajax({
 	// 	url: 'https://rogsoft.ddnsto.com/routerhook/config.json.js',
 	// 	type: 'GET',
@@ -890,47 +890,27 @@ function version_show() {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th width="20%">系统运行情况(sysStatus:string)</th>
+                                            <th width="20%">系统运行情况(sysINFO:object)</th>
                                             <td>
                                                 <input type="checkbox" id="routerhook_info_system" checked="checked" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th width="20%">设备温度(temp:number)</th>
+                                            <th width="20%">设备温度(tempINFO:object)</th>
                                             <td>
                                                 <input type="checkbox" id="routerhook_info_temp" checked="checked" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th width="20%">网络信息(netStatus:string)</th>
+                                            <th width="20%">网络信息(netINFO:object)</th>
                                             <td>
                                                 <input type="checkbox" id="routerhook_info_wan" checked="checked" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th width="20%">USB信息(usbStatus:string)</th>
+                                            <th width="20%">USB信息(usbINFO:object)</th>
                                             <td>
                                                 <input type="checkbox" id="routerhook_info_usb" checked="checked" onclick="oncheckclick(this);">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th width="20%">客户端列表(cliLists:array)</th>
-                                            <td>
-                                                <input type="checkbox" id="routerhook_info_lan" checked="checked" onclick="oncheckclick(this);">
-                                                <label style="margin-left:30px;">列表关闭MAC显示<input type="checkbox" id="routerhook_info_lan_macoff" checked="checked" onclick="oncheckclick(this);">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th width="20%">DHCP租期内用户列表(dhcpLists:array)</th>
-                                            <td>
-                                                <input type="checkbox" id="routerhook_info_dhcp" checked="checked" onclick="oncheckclick(this);">
-                                                <label style="margin-left:30px;">列表关闭MAC显示<input type="checkbox" id="routerhook_info_dhcp_macoff" checked="checked" onclick="oncheckclick(this);">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th width="20%">软件中心插件信息(scStatus:array)</th>
-                                            <td>
-                                                <input type="checkbox" id="routerhook_info_softcenter" checked="checked" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
                                     </table>
