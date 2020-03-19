@@ -36,7 +36,7 @@ rm -rf /koolshare/init.d/*aliddns.sh
 cp -rf /tmp/aliddns/scripts/* /koolshare/scripts/
 cp -rf /tmp/aliddns/webs/* /koolshare/webs/
 cp -rf /tmp/aliddns/res/* /koolshare/res/
-cp -rf /tmp/aliddns/install.sh /koolshare/scripts/uninstall_aliddns.sh
+cp -rf /tmp/aliddns/uninstall.sh /koolshare/scripts/uninstall_aliddns.sh
 chmod +x /koolshare/scripts/aliddns*
 chmod +x /koolshare/init.d/*
 [ ! -L "/koolshare/init.d/S98Aliddns.sh" ] && ln -sf /koolshare/scripts/aliddns_config.sh /koolshare/init.d/S98Aliddns.sh

@@ -78,6 +78,17 @@
             "version": "1.6"
         }, 
         {
+            "build_date": "2020-03-19_17:42:47", 
+            "changelog": "Changelog.txt", 
+            "description": "从路由器推送状态及通知到指定url的工具", 
+            "home_url": "Module_routerhook.asp", 
+            "md5": "D1E076F7177F27C0210B3601EC970B3D", 
+            "name": "routerhook", 
+            "tar_url": "routerhook/routerhook.tar.gz", 
+            "title": "RouterHook事件回调", 
+            "version": "0.1"
+        }, 
+        {
             "build_date": "2019-07-10_23:20:59", 
             "changelog": "", 
             "description": "自动签到", 
@@ -133,15 +144,15 @@
             "version": "2.2"
         }, 
         {
-            "build_date": "2019-07-10_16:53:29", 
+            "build_date": "2020-03-20_00:09:27", 
             "changelog": "", 
             "description": "aliddns", 
             "home_url": "Module_aliddns.asp", 
-            "md5": "07881ef5a31f39d62bfc03d60dc0944e", 
+            "md5": "fe4f4a050f421e6f59baf68ecb3381bb", 
             "name": "aliddns", 
             "tar_url": "aliddns/aliddns.tar.gz", 
             "title": "阿里DDNS", 
-            "version": "1.4"
+            "version": "1.5"
         }, 
         {
             "build_date": "2019-07-10_16:40:45", 
