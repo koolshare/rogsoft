@@ -268,7 +268,7 @@ function onSubmitCtrl(){
 	showLoading(5);
 	refreshpage(5);
 	var params_input = ["routerhook_silent_time_start_hour", "routerhook_silent_time_end_hour", "routerhook_config_ntp", "routerhook_config_name", "routerhook_status_check", "routerhook_check_week", "routerhook_check_day", "routerhook_check_inter_min", "routerhook_check_inter_hour", "routerhook_check_inter_day", "routerhook_check_inter_pre", "routerhook_check_custom", "routerhook_check_time_hour", "routerhook_check_time_min", "routerhook_trigger_dhcp_white"];
-	var params_check = ["routerhook_enable", "routerhook_silent_time", "routerhook_info_logger", "routerhook_info_silent_send", "routerhook_info_system", "routerhook_info_temp", "routerhook_info_wan", "routerhook_info_usb", "routerhook_trigger_ifup", "routerhook_trigger_dhcp", "routerhook_dhcp_bwlist_en", "routerhook_dhcp_white_en", "routerhook_dhcp_black_en", "routerhook_trigger_dhcp_macoff" ];
+	var params_check = ["routerhook_enable", "routerhook_silent_time", "routerhook_info_logger", "routerhook_info_silent_send", "routerhook_info_system", "routerhook_info_temp", "routerhook_info_wan", "routerhook_info_usb", "routerhook_trigger_ifup", "routerhook_trigger_ifup_sendinfo","routerhook_trigger_dhcp", "routerhook_dhcp_bwlist_en", "routerhook_dhcp_white_en", "routerhook_dhcp_black_en", "routerhook_trigger_dhcp_leases","routerhook_trigger_dhcp_macoff" ];
 	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white"];
     // collect data from input
 	for (var i = 0; i < params_input.length; i++) {
@@ -924,7 +924,7 @@ function version_show() {
                                             <th width="20%">网络重拨时</th>
                                             <td>
                                                 <input type="checkbox" id="routerhook_trigger_ifup" checked="checked" onclick="oncheckclick(this);">
-                                                <label style="margin-left:30px;">重播时单独推送上面设置的路由器信息<input type="checkbox" id="routerhook_trigger_ifup_sendinfo" onclick="oncheckclick(this);">
+                                                <label style="margin-left:30px;">重拨时单独推送上面设置的路由器信息<input type="checkbox" id="routerhook_trigger_ifup_sendinfo" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
                                         <tr>

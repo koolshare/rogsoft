@@ -89,51 +89,45 @@ echo '"cliNAME": "'${client_lease_name}'",' >> ${routerhook_lease_text}
 echo '"cliIP":"'${client_lease_ip}'",' >> ${routerhook_lease_text}
 echo '"cliMAC":"'${client_lease_mac}'",' >> ${routerhook_lease_text}
 echo '"upTIME":"'${client_join_time_format}'",' >> ${routerhook_lease_text}
-echo '"expTIME":"'${client_lease_epired_time_format}'",' >> ${routerhook_lease_text}
+echo '"expTIME":"'${client_lease_epired_time_format}'"' >> ${routerhook_lease_text}
 
 if [[ ${routerhook_trigger_dhcp_leases} == "1" ]]; then
     dnsmasq_leases_list=`cat ${dnsmasq_leases_file} | sort -t "." -k3n,3 -k4n,4`
     num=0
-    echo '"cliLISTS":[' >> ${routerhook_lease_text}
+    echo ',"cliLISTS":[' >> ${routerhook_lease_text}
     echo "${dnsmasq_leases_list}" | while read line
     do
+        if [[ "${num}" != "0" ]]; then
+            echo ',' >> ${routerhook_lease_text}
+        fi
         echo '{' >> ${routerhook_lease_text}
         dhcp_client_mac=`echo ${line} | awk '{print $2}'`
         trigger_dhcp_white_name=`echo $(dbus get routerhook_trigger_dhcp_white | base64_decode | grep -i "${dhcp_client_mac}") | cut -d# -f2`
         if [[ "${trigger_dhcp_white_name}" == "" ]]; then
             dhcp_custom_clientlist=`echo $(nvram get custom_clientlist | sed 's/</\n/g' | awk -F ">" '{print $1"##"$2}' | sed '/^##*$/d' | grep -i "${dhcp_client_mac}")`
             if [[ "${dhcp_custom_clientlist}" == "" ]]; then
-                if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then                    
-                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
-                    echo '"name":"'$4'"' >> ${routerhook_lease_text}
+                if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
+                    echo ${line} | awk '{print "\"ip\":\""$3"\",\"name\":\""$4"\""}' >>${routerhook_lease_text}
                 else
-                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
-                    echo '"mac":"'$2'",' >> ${routerhook_lease_text}
-                    echo '"name":"'$4'"' >> ${routerhook_lease_text}
+                    echo ${line} | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":\""$4"\""}' >>${routerhook_lease_text}
                 fi
             else
                 dhcp_lease_name=`echo ${dhcp_custom_clientlist} | awk -F "##" '{print $1}'`
                 if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
-                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
-                    echo '"name":"'$dhcp_lease_name'"' >> ${routerhook_lease_text}
+                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${serverchan_lease_text}
                 else
-                    echo '"ip":"'$3'",' >> ${routerhook_lease_text}
-                    echo '"mac":"'$2'",' >> ${routerhook_lease_text}
-                    echo '"name":"'$dhcp_lease_name'"' >> ${routerhook_lease_text}
+                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${serverchan_lease_text}
                 fi
             fi
         else
             if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
-                echo '"ip":"'$3'",' >> ${routerhook_lease_text}
-                echo '"name":"'$4'"' >> ${trigger_dhcp_white_name}
+                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${serverchan_lease_text}
             else
-                echo '"ip":"'$3'",' >> ${routerhook_lease_text}
-                echo '"mac":"'$2'",' >> ${routerhook_lease_text}
-                echo '"name":"'$trigger_dhcp_white_name'"' >> ${routerhook_lease_text}
+                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${serverchan_lease_text}
             fi
         fi
+        echo '}' >> ${routerhook_lease_text}
         let num=num+1
-        echo '},' >> ${routerhook_lease_text}
     done
     echo "]" >> ${routerhook_lease_text}
 fi

@@ -145,7 +145,7 @@ if [[ "${routerhook_info_wan}" == "1" ]]; then
 	echo '{' >> ${routerhook_info_text}
 	echo '"proto":"'${router_wan0_proto}'",' >> ${routerhook_info_text}
 	echo '"pubIPv4":"'${router_wan0_ip4}'",' >> ${routerhook_info_text}
-	echo '"pubIPv6":"'${router_wan0_ip6}'"' >> ${routerhook_info_text}
+	echo '"pubIPv6":"'${router_wan0_ip6}'",' >> ${routerhook_info_text}
 	echo '"wanIPv4":"'${router_wan0_ip}'",' >> ${routerhook_info_text}
 	echo '"wanDNS":["'${router_wan0_dns1}'","'${router_wan0_dns2}'"],' >> ${routerhook_info_text}
 	echo '"wanRX":"'${router_wan0_rx}'",' >> ${routerhook_info_text}
