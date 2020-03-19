@@ -33,7 +33,7 @@ fi
 cp -rf /tmp/ddnspod/scripts/* /koolshare/scripts/
 cp -rf /tmp/ddnspod/webs/* /koolshare/webs/
 cp -rf /tmp/ddnspod/res/* /koolshare/res/
-cp -rf /tmp/ddnspod/install.sh /koolshare/scripts/uninstall_ddnspod.sh
+cp -rf /tmp/ddnspod/uninstall.sh /koolshare/scripts/uninstall_ddnspod.sh
 chmod +x /koolshare/scripts/ddnspod*
 [ ! -L "/koolshare/init.d/S99ddnspod.sh" ] && ln -sf /koolshare/scripts/ddnspod_config.sh /koolshare/init.d/S99ddnspod.sh
 
