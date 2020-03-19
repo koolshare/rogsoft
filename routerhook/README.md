@@ -11,8 +11,13 @@
 ## 软件中心：
 重置软件中心命令：SSH登录后`koolshare-reset`，此操作会清空所有插件
 查看软件中心运行：`ps|grep httpdb|grep -v grep`
-停止软件中心命令：`sh /koolshare/perp/perp.sh stop`
-启用软件中心命令：`sh /koolshare/perp/perp.sh start`
+停止软件中心命令：`sh -x /koolshare/perp/perp.sh stop`
+启用软件中心命令：`sh -x /koolshare/perp/perp.sh start`
+重启路由Web页面服务: `service restart_httpd`
+
+## Tips:
+- 开发过程中发现，若软件中心首页显示`更新中...`，多半是因为dbus挂了，目前不知道除了重启路由器怎么能够单独重启dbus服务。
+- `/routerhook/version`文件中若版本号后面有换行，则会导致插件安装后，接口`http://xxx/_api/routerhook_`返回的JSON格式异常，导致软件中心界面`更新中...`
 
 ## 数据格式：
 

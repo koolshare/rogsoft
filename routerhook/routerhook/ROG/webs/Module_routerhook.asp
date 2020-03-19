@@ -503,21 +503,20 @@ function oncheckclick(obj) {
 }
 
 function version_show() {
-    $("#routerhook_version_show").html("<i>插件版本：离线版");
-	// $.ajax({
-	// 	url: 'https://rogsoft.ddnsto.com/routerhook/config.json.js',
-	// 	type: 'GET',
-	// 	dataType: 'jsonp',
-	// 	success: function(res) {
-	// 		if (typeof(res["version"]) != "undefined" && res["version"].length > 0) {
-	// 			if (res["version"] == db_routerhook["routerhook_version"]) {
-	// 				$("#routerhook_version_show").html("<i>插件版本：" + res["version"]);
-	// 			} else if (res["version"] > db_routerhook["routerhook_version"]) {
-	// 				$("#routerhook_version_show").html("<font color=\"#66FF66\">有新版本：</font>" + res.version);
-	// 			}
-	// 		}
-	// 	}
-	// });
+	$.ajax({
+		url: 'https://rogsoft.ddnsto.com/routerhook/config.json.js',
+		type: 'GET',
+		dataType: 'jsonp',
+		success: function(res) {
+			if (typeof(res["version"]) != "undefined" && res["version"].length > 0) {
+				if (res["version"] == db_routerhook["routerhook_version"]) {
+					$("#routerhook_version_show").html("<i>插件版本：" + res["version"]);
+				} else if (res["version"] > db_routerhook["routerhook_version"]) {
+					$("#routerhook_version_show").html("<font color=\"#66FF66\">有新版本：</font>" + res.version);
+				}
+			}
+		}
+	});
 }
 </script>
 </head>
@@ -594,7 +593,7 @@ function version_show() {
                                         <th style="width:20%;">版本信息</th>
                                         <td>
                                             <div id="routerhook_version_show" style="padding-top:5px;margin-left:0px;margin-top:0px;float: left;"></div>
-                                            <span style="padding-top:5px;margin-right: 15px;margin-left:0px;margin-top:0px;float: right;"><a href="http://koolshare.cn/thread-123937-1-1.html" target="_blank">[ 反馈地址 ]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/koolshare/rogsoft/master/routerhook/Changelog.txt" target="_blank"><em><u>[ 更新日志 ]</u></em></a></span>
+                                            <span style="padding-top:5px;margin-right: 15px;margin-left:0px;margin-top:0px;float: right;"><a href="https://koolshare.cn/thread-178114-1-1.html" target="_blank">[ 反馈地址 ]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/koolshare/rogsoft/master/routerhook/Changelog.txt" target="_blank"><em><u>[ 更新日志 ]</u></em></a></span>
                                         </td>
                                         <tr>
                                             <th width="20%">消息免打扰时间</th>
