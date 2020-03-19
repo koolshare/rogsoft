@@ -32,7 +32,9 @@ def work_paths_by_walk():
 
 def work_parent():
     ignore_paths = frozenset(["maintain_files", "softcenter", "appledns", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel",  "phddns", "ssid", "koolproxy"])
-    for fname in os.listdir(parent_path):
+    fnames = os.listdir(parent_path)
+    fnames.sort()
+    for fname in fnames:
 
         if fname[0] == "." or fname in ignore_paths:
             continue
@@ -44,7 +46,9 @@ def work_parent():
             yield fname, path
 
 def work_files(parent, ext):
-    for fname in os.listdir(parent):
+    fnames = os.listdir(parent_path)
+    fnames.sort()
+    for fname in fnames:
         path = os.path.join(parent, fname)
         if os.path.isfile(path):
             yield path
