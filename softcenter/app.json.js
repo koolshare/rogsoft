@@ -155,26 +155,26 @@
             "version": "2.4"
         }, 
         {
-            "build_date": "2020-03-20_00:10:08", 
+            "build_date": "2020-03-21_00:05:25", 
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_routerhook.asp", 
-            "md5": "912ba2ccf51704dccdf30d4e2029c1a1", 
+            "md5": "34b2b8496fc45f5f00a7a0717056f179", 
             "name": "routerhook", 
             "tar_url": "routerhook/routerhook.tar.gz", 
             "title": "RouterHook事件回调", 
-            "version": "0.1"
+            "version": "0.2"
         }, 
         {
-            "build_date": "2019-10-21_00:07:47", 
+            "build_date": "2020-03-21_00:03:34", 
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_serverchan.asp", 
-            "md5": "ad374c3ae938d6dfca2c70bd522ffa31", 
+            "md5": "fdae529ad0ece109a13e8de80daa09da", 
             "name": "serverchan", 
             "tar_url": "serverchan/serverchan.tar.gz", 
             "title": "serverChan微信推送", 
-            "version": "0.9"
+            "version": "1.0"
         }, 
         {
             "build_date": "2019-07-10_22:31:15", 
