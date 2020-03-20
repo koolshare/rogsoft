@@ -371,7 +371,9 @@ function showInstallInfo(module, scode) {
 			"下载文件校验不一致！",
 			"然而并没有更新！",
 			"正在检查是否有更新~",
-			"检测更新错误！"
+			"检测更新错误！",
+			" wget下载错误，详情见系统日志！",
+			"卸载失败！请关闭插件后重试！"
 		];
 		document.getElementById("install_status").style.display = "";
 		$("#appInstallInfo").html(s + infos[code]);
@@ -447,12 +449,12 @@ function getRemoteData() {
 		url: remoteURL,
 		method: 'GET',
 		dataType: 'jsonp',
-		timeout: 5000
+		timeout: 3500
 	});
 }
 function softceterInitData(data) {
 	var remoteData = data;
-	$("#spnOnlineVersion").html(remoteData.version);
+	$("#spnOnlineVersion").html("<em>" + remoteData.version + "</em>");
 	if (remoteData.version != db_softcenter_["softcenter_version"]) {
 		$("#updateBtn").show();
 		$("#updateBtn").click(function() {
@@ -538,6 +540,8 @@ function init(cb) {
 			cb();
 			return;
 		} else {
+			renderView(_mergeData({}));
+			cb();
 			getRemoteData()
 				.done(function(remoteData) {
 					//远端更新成功
@@ -549,8 +553,9 @@ function init(cb) {
 				})
 				.fail(function() {
 					//如果没有更新成功，比如没网络，就用空数据merge本地
-					renderView(_mergeData({}));
-					cb();
+				//renderView(_mergeData({}));
+				//cb();
+				$("#spnOnlineVersion").html("<i>获取在线版本失败！请尝试重新刷新本页面，或者检查你的网络设置！</i>")
 				});
 		}
 		notice_show();
@@ -574,7 +579,7 @@ $(function() {
 			if (!db_softcenter_["softcenter_version"]) {
 				db_softcenter_["softcenter_version"] = "0.0";
 			}
-			$("#spnCurrVersion").html(db_softcenter_["softcenter_version"]);
+			$("#spnCurrVersion").html("<em>" + db_softcenter_["softcenter_version"] + "</em>");
 
 			init(function() {
 				toggleAppPanel(1);
@@ -690,7 +695,7 @@ function notice_show() {
 																						<h4 id="push_content4"></h4>
 																					</li>
 																					<li>
-																						<h5>当前版本：<span id="spnCurrVersion"></span> 在线版本：<span id="spnOnlineVersion"></span>
+																						<h5>当前版本：<span id="spnCurrVersion"></span>&nbsp;&nbsp;&nbsp;&nbsp;在线版本：<span id="spnOnlineVersion"></span>
 																						<input type="button" id="updateBtn" value="更新" style="display:none" /></h5>
 																					</li>
 																				</ul>
