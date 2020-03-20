@@ -1,7 +1,11 @@
 Koolshare hnd/axhnd router software center routerhook Changelog
 ===========================================
+0.2
+   - docs 完善ReadMe文档
+   - feat 替换了个好看点儿的ICON
+   
 0.1
-   - fix	部分配置开关无效的bug
+   - fix 部分配置开关无效的bug
    - fix 安装时不安装卸载脚本的bug
    - docs 新增数据格式文档
    - feat 替换获取外网IP的API为ip.sb的API
