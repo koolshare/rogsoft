@@ -1,5 +1,10 @@
 Koolshare hnd/axhnd router software center serverchan Changelog
 ===========================================
+1.0
+   - fix 修复安装时没有正确安装卸载脚本的bug
+   - fix 修复触发器配置无法保存的bug
+   - fix 调成dhcp触发器删除策略，实现与RouterHook插件共存
+
 0.9
    - fix	Fixed conflict with RT-AC86U 384_81049
 

@@ -557,11 +557,12 @@ function version_show() {
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                     <div class="formfontdesc" id="cmdDesc">
-                                        * 「<a href="https://github.com/sdlyfjx/rogsoft" target=_blank><i>RouterHook</i></a>」，是一款「程序员」和「路由器」之间的通信软件。说人话？就是从路由器发生报警或日志等事件时回调指定地址的工具。<br><br>
+                                        * 「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank><i>RouterHook</i></a>」，是一款为程序员量身定做的「路由器」和「服务器」之间的通信软件。说人话？就是按照你配置的触发规则从路由器发送JSON消息到你配置的回调指定地址的工具。<br><br>
                                         开通并使用上它，需要不止一分钟：<br>
                                         <i>1. 你知道WebHook是个啥</i><br>
-                                        <i>2. 你有自己的回调地址</i><br>
+                                        <i>2. 你搭建了自己的Web服务并有自己的回调地址（可以公网也可以本局域网）</i><br>
                                         <i>3. 配置好就可以用了</i><br>
+                                        <i>4. 具体说明详见：「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank><i>传送门</i></a>」</i>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">

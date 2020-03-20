@@ -42,6 +42,7 @@ rm -rf /koolshare/scripts/serverchan_*
 cp -rf /tmp/serverchan/res/icon-serverchan.png /koolshare/res/
 cp -rf /tmp/serverchan/scripts/* /koolshare/scripts/
 cp -rf /tmp/serverchan/webs/Module_serverchan.asp /koolshare/webs/
+cp -rf /tmp/serverchan/uninstall.sh /koolshare/scripts/uninstall_serverchan.sh
 if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
 	cp -rf /tmp/serverchan/ROG/webs/Module_serverchan.asp /koolshare/webs/
 fi
