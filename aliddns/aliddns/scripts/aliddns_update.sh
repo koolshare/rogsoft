@@ -89,6 +89,7 @@ start_update() {
 
 	# compare ip
 	if [ -n "$ip" -a -n "$current_ip" ]; then
+		echo_date "[aliddns_update.sh]：公网IP：$ip, 解析IP：$current_ip"
 		# no ip change
 		if [ "$ip" == "$current_ip" ]; then
 			dbus set aliddns_last_act="$now: skipped($ip)"
