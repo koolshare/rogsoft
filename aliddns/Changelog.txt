@@ -3,7 +3,7 @@ Koolshare Asuswrt-Merlin Aliddns Changelog
 1.6 - 1.7
    - add	添加几条预置的获取IP命令.
    - add	添加”【网络地图】首页显示Aliddns域名“功能，去勾选后Aliddns可以和AsusDDNS共存，
-   			勾选后可以将AliDDNS域名显示在【网络地图】首页，但和AsusDDNS无法共存（和以前版本一样）。
+   		勾选后可以将AliDDNS域名显示在【网络地图】首页，但和AsusDDNS无法共存（和以前版本一样）。
    - add	web页面更新，添加日志页面，现在日志不再显示在系统日志。
    - add	添加帮助信息标签页，方便新用户。
    - add	添加远程访问地址，现在可以直观的生成远程访问DDNS地址。
