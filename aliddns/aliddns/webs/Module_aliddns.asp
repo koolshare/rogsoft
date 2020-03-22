@@ -81,6 +81,7 @@
 		background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
 		background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
 	}
+	#aliddns_switch, #tablet_1, #tablet_2, #aliddns_log, #tablet_3 { border:1px solid #91071f; } /* W3C rogcss */
 	.input_option{
 		vertical-align:middle;
 		font-size:12px;
@@ -407,7 +408,7 @@ function reload_Soft_Center(){
 										<div style="margin-left:5px;" id="head_illustrate">
 											<li><em>Aliddns</em>是一款基于阿里云解析的私人ddns解决方案。</li>
 										</div>
-										<div style="margin:5px 0px 0px 0px;">
+										<div id="aliddns_switch" style="margin:5px 0px 0px 0px;">
 											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<thead>
 												<tr>
