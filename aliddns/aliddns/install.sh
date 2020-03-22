@@ -6,7 +6,7 @@ DIR=$(cd $(dirname $0); pwd)
 # 判断路由架构和平台
 case $(uname -m) in
 	aarch64)
-		if [ "`uname -o|grep Merlin`" ] && [ -d "/koolshare" ];then
+		if [ "$(uname -o|grep Merlin)" ] && [ -d "/koolshare" ];then
 			echo_date 固件平台【koolshare merlin hnd/axhnd aarch64】符合安装要求，开始安装插件！
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
@@ -24,8 +24,8 @@ case $(uname -m) in
 esac
 
 # stop aliddns first
-enable=`dbus get aliddns_enable`
-if [ "$enable" == "1" ];then
+enable=$(dbus get aliddns_enable)
+if [ "$enable" == "1" ]; then
 	sh /koolshare/scripts/aliddns_config.sh stop
 fi
 
@@ -51,7 +51,7 @@ dbus set softcenter_module_aliddns_description="aliddns"
 
 # re-enable aliddns
 if [ "$enable" == "1" ];then
-	sh /koolshare/scripts/aliddns_config.sh
+	sh /koolshare/scripts/aliddns_config.sh ks 1
 fi
 
 # 完成
