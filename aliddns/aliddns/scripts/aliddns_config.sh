@@ -97,8 +97,6 @@ start_aliddns(){
 	echo_date "Aliddns：创建Aliddns定时检测任务..."
 	cru a aliddns_checker "*/$aliddns_interval * * * * /koolshare/scripts/aliddns_update.sh"
 
-	sleep 1
-
 	# start update now
 	echo_date "Aliddns：运行aliddns_update.sh，更新DDNS..."
 	sh /koolshare/scripts/aliddns_update.sh >/dev/null 2>&1

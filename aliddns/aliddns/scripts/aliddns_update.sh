@@ -6,7 +6,6 @@ eval $(dbus export aliddns_)
 LOG_FILE=/tmp/upload/aliddns_log.txt
 LOG_MAX=1000
 now=$(echo_date)
-[ -z "$aliddns_curl" ] && aliddns_curl="curl -s --interface ppp0 ip.clang.cn"
 [ -z "$aliddns_dns" ] && aliddns_dns="223.5.5.5"
 [ -z "$aliddns_ttl" ] && aliddns_ttl="600"
 
@@ -77,9 +76,10 @@ start_update() {
 			dbus set aliddns_curl="nvram get wan0_realip_ip"
 		;;
 		6)
-			__valid_ip "$aliddns_curl"
+			__valid_ip "$aliddns_curl" >/dev/null 2>&1
 			if [ "$?" == "0" ]; then
 				ip="$aliddns_curl"
+				dbus set aliddns_userip="$aliddns_curl"
 			else
 				ip=$(eval $aliddns_curl 2>&1 | grep -Eo "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | grep -v "Terminated")
 			fi
@@ -170,7 +170,7 @@ start_update() {
 		aliddns_record_id=$(add_record | get_recordid)
 		echo_date "[aliddns_update.sh]：添加记录 $aliddns_record_id"
 	else
-		update_record "$aliddns_record_id"
+		update_record "$aliddns_record_id" >/dev/null 2>&1
 		echo_date "[aliddns_update.sh]：更新记录 $aliddns_record_id"
 	fi
 	
