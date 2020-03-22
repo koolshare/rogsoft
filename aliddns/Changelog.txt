@@ -1,9 +1,6 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
-1.7
-   - fix	修复Aliddns插件在rog皮肤中的问题。
-
-1.6
+1.6 - 1.7
    - add	添加几条预置的获取IP命令.
    - add	添加”【网络地图】首页显示Aliddns域名“功能，去勾选后Aliddns可以和AsusDDNS共存，
    			勾选后可以将AliDDNS域名显示在【网络地图】首页，但和AsusDDNS无法共存（和以前版本一样）。
