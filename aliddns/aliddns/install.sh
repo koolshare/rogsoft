@@ -39,6 +39,11 @@ cp -rf /tmp/aliddns/res/* /koolshare/res/
 cp -rf /tmp/aliddns/uninstall.sh /koolshare/scripts/uninstall_aliddns.sh
 chmod +x /koolshare/scripts/aliddns*
 chmod +x /koolshare/init.d/*
+if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+	continue
+else
+	sed -i '/rogcss/d' /koolshare/webs/Module_aliddns.asp >/dev/null 2>&1
+fi
 [ ! -L "/koolshare/init.d/S98Aliddns.sh" ] && ln -sf /koolshare/scripts/aliddns_config.sh /koolshare/init.d/S98Aliddns.sh
 
 # 离线安装需要向skipd写入安装信息
