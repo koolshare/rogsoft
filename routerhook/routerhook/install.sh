@@ -28,7 +28,7 @@ echo_date "STOP RouterHook FIRST"
 # stop routerhook first
 enable=`dbus get routerhook_enable`
 if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/routerhook_config.sh" ];then
-	/koolshare/routerhook/routerhook_config stop >/dev/null 2>&1
+	/koolshare/scripts/routerhook_config.sh stop >/dev/null 2>&1
 fi
 
 # 安装
@@ -83,7 +83,7 @@ dbus set softcenter_module_routerhook_description="从路由器推送状态及�
 
 # re-enable routerhook
 if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/routerhook_config.sh" ];then
-	/koolshare/routerhook/routerhook_config start >/dev/null 2>&1
+	/koolshare/scripts/routerhook_config.sh start >/dev/null 2>&1
 fi
 
 # 完成
