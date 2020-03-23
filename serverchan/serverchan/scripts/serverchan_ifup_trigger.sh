@@ -25,7 +25,8 @@ echo "---" >> ${serverchan_ifup_text}
 router_wan0_proto=`nvram get wan0_proto`
 router_wan0_ifname=`nvram get wan0_ifname`
 router_wan0_gw=`nvram get wan0_gw_ifname`
-router_wan0_public_ip=`curl --interface ${router_wan0_gw} -s https://ip.ngrok.wang 2>&1`
+router_wan0_ip4=`curl -4 --interface ${router_wan0_gw} -s https://api.ip.sb/ip 2>&1`
+router_wan0_ip6=`curl -6 --interface ${router_wan0_gw} -s https://api.ip.sb/ip 2>&1`
 router_wan0_dns1=`nvram get wan0_dns | awk '{print $1}'`
 router_wan0_dns2=`nvram get wan0_dns | awk '{print $2}'`
 router_wan0_ip=`nvram get wan0_ipaddr`
@@ -35,7 +36,8 @@ router_wan0_tx=`ifconfig ${router_wan0_ifname} | grep 'TX bytes' | cut -d\( -f3 
 echo "#### **网络状态信息:**" >> ${serverchan_ifup_text}
 echo "##### **WAN0状态信息:**" >> ${serverchan_ifup_text}
 echo "##### 联机类型: ${router_wan0_proto}" >> ${serverchan_ifup_text}
-echo "##### 公网 IPv4地址: ${router_wan0_public_ip}" >> ${serverchan_ifup_text}
+echo "##### 公网IPv4地址: ${router_wan0_ip4}" >> ${serverchan_ifup_text}
+echo "##### 公网IPv6地址: ${router_wan0_ip6}" >> ${serverchan_ifup_text}
 echo "##### WAN口IPv4地址: ${router_wan0_ip}" >> ${serverchan_ifup_text}
 echo "##### WAN口DNS地址: ${router_wan0_dns1} ${router_wan0_dns2}" >> ${serverchan_ifup_text}
 echo "##### WAN口接收流量: ${router_wan0_rx}" >> ${serverchan_ifup_text}
@@ -45,7 +47,8 @@ router_wan1_ifname=`nvram get wan1_ifname`
 router_wan1_gw=`nvram get wan1_gw_ifname`
 if [ -n "${router_wan1_ifname}" ] && [ -n "${router_wan1_gw}" ]; then
     router_wan1_proto=`nvram get wan1_proto`
-    router_wan1_public_ip=`curl --interface ${router_wan1_gw} -s https://ip.ngrok.wang 2>&1`
+    router_wan1_ip4=`curl -4 --interface ${router_wan1_gw} -s https://api.ip.sb/ip 2>&1`
+    router_wan1_ip6=`curl -6 --interface ${router_wan1_gw} -s https://api.ip.sb/ip 2>&1`
     router_wan1_dns1=`nvram get wan1_dns | awk '{print $1}'`
     router_wan1_dns2=`nvram get wan1_dns | awk '{print $2}'`
     router_wan1_ip=`nvram get wan1_ipaddr`
@@ -53,7 +56,8 @@ if [ -n "${router_wan1_ifname}" ] && [ -n "${router_wan1_gw}" ]; then
     router_wan1_tx=`ifconfig ${router_wan1_ifname} | grep 'TX bytes' | cut -d\( -f3 | cut -d\) -f1`
     echo "##### **WAN1状态信息:**" >> ${serverchan_ifup_text}
     echo "##### 联机类型: ${router_wan1_proto}" >> ${serverchan_ifup_text}
-    echo "##### 公网 IPv4地址: ${router_wan1_public_ip}" >> ${serverchan_ifup_text}
+    echo "##### 公网IPv4地址: ${router_wan1_ip4}" >> ${serverchan_ifup_text}
+    echo "##### 公网IPv6地址: ${router_wan1_ip6}" >> ${serverchan_ifup_text}
     echo "##### WAN口IPv4地址: ${router_wan1_ip}" >> ${serverchan_ifup_text}
     echo "##### WAN口DNS地址: ${router_wan1_dns1} ${router_wan1_dns2}" >> ${serverchan_ifup_text}
     echo "##### WAN口接收流量: ${router_wan1_rx}" >> ${serverchan_ifup_text}
