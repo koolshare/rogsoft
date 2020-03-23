@@ -307,6 +307,93 @@ if [[ "${routerhook_info_usb}" == "1" ]]; then
 	echo ']' >> ${routerhook_info_text}
 fi
 
+# 客户端列表
+if [[ "${routerhook_info_lan}" == "1" ]]; then
+	echo ',"cliINFO":[' >> ${routerhook_info_text}
+	arp_list=`arp | grep "br0" | grep -v "incomplete" | sed 's/ (/\t/g'|sed 's/) at /\t/' | sed 's/\[ether\]/ /g' | cut -d " " -f1 | sort -t "." -k3n,3 -k4n,4`
+	if [ -n "${arp_list}" ];then
+		# arp_list_title="|IP|MAC|客户端名称|"
+		arp_num=0
+		echo "${arp_list}" | while read line
+		do
+			if [[ "${arp_num}" != "0" ]]; then
+            	echo ',' >> ${routerhook_info_text}
+        	fi
+        	echo '{' >> ${routerhook_info_text}
+			arp_client_mac=`echo ${line} | awk '{print $3}'`
+			arp_dhcp_white_name=`echo $(dbus get routerhook_trigger_dhcp_white | base64_decode | grep -i "${arp_client_mac}") | cut -d# -f2`
+			if [[ "${arp_dhcp_white_name}" == "" ]]; then
+				arp_custom_clientlist=`echo $(nvram get custom_clientlist | sed 's/</\n/g' | awk -F ">" '{print $1"##"$2}' | sed '/^##*$/d' | grep -i "${arp_client_mac}")`
+				if [[ "${arp_custom_clientlist}" == "" ]]; then
+					if [ "$routerhook_info_lan_macoff" == "1" ]; then
+						echo ${line} | awk '{print "\"ip\":\""$2"\",\"name\":\""$1"\""}' >>${routerhook_info_text}
+					else
+						echo ${line} | awk '{print "\"ip\":\""$2"\",\"mac\":\""$3"\",\"name\":\""$1"\""}' >>${routerhook_info_text}
+					fi
+				else
+					arp_lease_name=`echo ${arp_custom_clientlist} | awk -F "##" '{print $1}'`
+					if [ "$routerhook_info_lan_macoff" == "1" ]; then
+						echo $(echo "${line}" | awk '{print "\"ip\":\""$2"\",\"name\":"}')"\"${arp_lease_name}\"" >>${routerhook_info_text}
+					else
+                    	echo $(echo "${line}" | awk '{print "\"ip\":\""$2"\",\"mac\":\""$3"\",\"name\":"}')"\"${arp_lease_name}\"" >>${routerhook_info_text}
+					fi
+				fi
+			else
+				if [ "$routerhook_info_lan_macoff" == "1" ]; then
+                	echo $(echo "${line}" | awk '{print "\"ip\":\""$2"\",\"name\":"}')"\"${arp_dhcp_white_name}\"" >>${routerhook_info_text}
+				else
+                	echo $(echo "${line}" | awk '{print "\"ip\":\""$2"\",\"mac\":\""$3"\",\"name\":"}')"\"${arp_dhcp_white_name}\"" >>${routerhook_info_text}
+				fi
+			fi
+			echo '}' >> ${routerhook_info_text}
+			let arp_num=arp_num+1
+		done
+	fi
+	echo ']' >> ${routerhook_info_text}
+fi
+
+# DHCP租期列表
+if [[ "${routerhook_info_dhcp}" == "1" ]]; then
+	echo ',"dhcpINFO":[' >> ${routerhook_info_text}
+	dnsmasq_leases_list=`cat ${dnsmasq_leases_file} | sort -t "." -k3n,3 -k4n,4`
+	num=0
+	echo "${dnsmasq_leases_list}" | while read line
+	do
+		if [[ "${num}" != "0" ]]; then
+           	echo ',' >> ${routerhook_info_text}
+        fi
+        echo '{' >> ${routerhook_info_text}
+		dhcp_client_mac=`echo ${line} | awk '{print $2}'`
+		trigger_dhcp_white_name=`echo $(dbus get routerhook_trigger_dhcp_white | base64_decode | grep -i "${dhcp_client_mac}") | cut -d# -f2`
+		if [[ "${trigger_dhcp_white_name}" == "" ]]; then
+			dhcp_custom_clientlist=`echo $(nvram get custom_clientlist | sed 's/</\n/g' | awk -F ">" '{print $1"##"$2}' | sed '/^##*$/d' | grep -i "${dhcp_client_mac}")`
+			if [[ "${dhcp_custom_clientlist}" == "" ]]; then
+				if [ "$routerhook_info_dhcp_macoff" == "1" ];then
+					echo ${line} | awk '{print "\"ip\":\""$3"\",\"name\":\""$4"\""}' >>${routerhook_info_text}
+				else
+					echo ${line} | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":\""$4"\""}' >>${routerhook_info_text}
+				fi
+			else
+				dhcp_lease_name=`echo ${dhcp_custom_clientlist} | awk -F "##" '{print $1}'`
+				if [ "$routerhook_info_dhcp_macoff" == "1" ];then
+					echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${routerhook_info_text}
+				else
+					echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${routerhook_info_text}
+				fi
+			fi
+		else
+			if [ "$routerhook_info_dhcp_macoff" == "1" ];then
+				echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${routerhook_info_text}
+			else
+				echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${routerhook_info_text}
+			fi
+		fi
+		echo '}' >> ${routerhook_info_text}
+		let num=num+1
+	done
+	echo ']' >> ${routerhook_info_text}
+fi
+
 echo '}' >> ${routerhook_info_text}
 
 routerhook_send_content=`jq -c . ${routerhook_info_text}`

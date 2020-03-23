@@ -267,9 +267,46 @@ function conf2obj() { //表单填写函数，将dbus数据填入到对应的表�
 function onSubmitCtrl(){
 	showLoading(5);
 	refreshpage(5);
-	var params_input = ["routerhook_silent_time_start_hour", "routerhook_silent_time_end_hour", "routerhook_config_ntp", "routerhook_config_name", "routerhook_status_check", "routerhook_check_week", "routerhook_check_day", "routerhook_check_inter_min", "routerhook_check_inter_hour", "routerhook_check_inter_day", "routerhook_check_inter_pre", "routerhook_check_custom", "routerhook_check_time_hour", "routerhook_check_time_min", "routerhook_trigger_dhcp_white"];
-	var params_check = ["routerhook_enable", "routerhook_silent_time", "routerhook_info_logger", "routerhook_info_silent_send", "routerhook_info_system", "routerhook_info_temp", "routerhook_info_wan", "routerhook_info_usb", "routerhook_trigger_ifup", "routerhook_trigger_ifup_sendinfo","routerhook_trigger_dhcp", "routerhook_dhcp_bwlist_en", "routerhook_dhcp_white_en", "routerhook_dhcp_black_en", "routerhook_trigger_dhcp_leases","routerhook_trigger_dhcp_macoff" ];
-	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white"];
+	var params_input = [
+        "routerhook_silent_time_start_hour",
+        "routerhook_silent_time_end_hour",
+        "routerhook_config_ntp",
+        "routerhook_config_name",
+        "routerhook_status_check",
+        "routerhook_check_week",
+        "routerhook_check_day",
+        "routerhook_check_inter_min",
+        "routerhook_check_inter_hour",
+        "routerhook_check_inter_day",
+        "routerhook_check_inter_pre",
+        "routerhook_check_custom",
+        "routerhook_check_time_hour",
+        "routerhook_check_time_min",
+        "routerhook_trigger_dhcp_white"
+    ];
+	var params_check = [
+        "routerhook_enable",
+        "routerhook_silent_time",
+        "routerhook_info_logger",
+        "routerhook_info_silent_send",
+        "routerhook_info_system",
+        "routerhook_info_temp",
+        "routerhook_info_wan",
+        "routerhook_info_usb",
+        "routerhook_info_lan",
+        "routerhook_info_lan_macoff",
+        "routerhook_info_dhcp",
+        "routerhook_info_dhcp_macoff",
+        "routerhook_trigger_ifup",
+        "routerhook_trigger_ifup_sendinfo",
+        "routerhook_trigger_dhcp",
+        "routerhook_dhcp_bwlist_en",
+        "routerhook_dhcp_white_en",
+        "routerhook_dhcp_black_en",
+        "routerhook_trigger_dhcp_leases",
+        "routerhook_trigger_dhcp_macoff"
+    ];
+    var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white"];
     // collect data from input
 	for (var i = 0; i < params_input.length; i++) {
 		if(E(params_input[i])){
@@ -911,6 +948,20 @@ function version_show() {
                                             <th width="20%">USB信息(usbINFO:object)</th>
                                             <td>
                                                 <input type="checkbox" id="routerhook_info_usb" checked="checked" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">客户端列表</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_info_lan" checked="checked" onclick="oncheckclick(this);">
+                                                <label style="margin-left:30px;">列表关闭MAC显示<input type="checkbox" id="routerhook_info_lan_macoff" checked="checked" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">DHCP租期内用户列表</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_info_dhcp" checked="checked" onclick="oncheckclick(this);">
+                                                <label style="margin-left:30px;">列表关闭MAC显示<input type="checkbox" id="routerhook_info_dhcp_macoff" checked="checked" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
                                     </table>

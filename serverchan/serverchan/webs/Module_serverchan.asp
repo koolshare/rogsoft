@@ -99,7 +99,7 @@
     margin-left: -100px;
     top: 10px;
     width:720px;
-    return height:auto;
+    height:auto;
     box-shadow: 3px 3px 10px #000;
     background: rgba(0,0,0,0.85);
     display:none;
