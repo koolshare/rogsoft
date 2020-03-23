@@ -114,16 +114,16 @@ if [[ ${routerhook_trigger_dhcp_leases} == "1" ]]; then
             else
                 dhcp_lease_name=`echo ${dhcp_custom_clientlist} | awk -F "##" '{print $1}'`
                 if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
-                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${serverchan_lease_text}
+                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${routerhook_lease_text}
                 else
-                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${serverchan_lease_text}
+                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${routerhook_lease_text}
                 fi
             fi
         else
             if [ "$routerhook_trigger_dhcp_macoff" == "1" ];then
-                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${serverchan_lease_text}
+                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${routerhook_lease_text}
             else
-                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${serverchan_lease_text}
+                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${routerhook_lease_text}
             fi
         fi
         echo '}' >> ${routerhook_lease_text}

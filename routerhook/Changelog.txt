@@ -1,5 +1,10 @@
 Koolshare hnd/axhnd router software center routerhook Changelog
 ===========================================
+0.3
+   - fix 修复遗留Bug
+   - fix 优化卸载脚本
+   - feat 定时推送新增在线列表和dhcp列表
+
 0.2
    - docs 完善ReadMe文档
    - feat 替换了个好看点儿的ICON
