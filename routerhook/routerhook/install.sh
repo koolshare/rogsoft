@@ -44,7 +44,6 @@ rm -rf /koolshare/scripts/routerhook_*
 cp -rf /tmp/routerhook/res/icon-routerhook.png /koolshare/res/
 cp -rf /tmp/routerhook/scripts/* /koolshare/scripts/
 cp -rf /tmp/routerhook/webs/Module_routerhook.asp /koolshare/webs/
-cp -rf /tmp/routerhook/uninstall.sh /koolshare/scripts/uninstall_routerhook.sh
 if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
 	echo_date "检测到ROG主题模式"
 	cp -rf /tmp/routerhook/ROG/webs/Module_routerhook.asp /koolshare/webs/
