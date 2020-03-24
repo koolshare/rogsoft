@@ -2,7 +2,11 @@
 source /koolshare/scripts/base.sh
 eval `dbus export serverchan_`
 model=`nvram get model`
-ntp_server=${serverchan_config_ntp} || "ntp1.aliyun.com"
+if [ "${routerhook_config_ntp}" == "" ]; then
+    ntp_server="ntp1.aliyun.com"
+else
+    ntp_server=${routerhook_config_ntp}
+fi
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 serverchan_info_text=/tmp/.serverchan_info.md
 softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"

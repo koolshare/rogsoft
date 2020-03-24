@@ -3,7 +3,11 @@
 set -x
 source /koolshare/scripts/base.sh
 eval `dbus export serverchan_`
-ntp_server=${serverchan_config_ntp} || "ntp1.aliyun.com"
+if [ "${serverchan_config_ntp}" == "" ]; then 
+    ntp_server="ntp1.aliyun.com" 
+else 
+    ntp_server=${serverchan_config_ntp} 
+fi 
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 dnsmasq_leases_file="/var/lib/misc/dnsmasq.leases"
 serverchan_lease_text="/tmp/.serverchan_dhcp.md"
