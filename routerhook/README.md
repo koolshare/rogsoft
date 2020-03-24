@@ -98,8 +98,10 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 			"total": 0 // 全部SWAP
 		},
 		"routerJFFS": {
-			"used": 3.7, // 已使用JFFS空间大小
-			"total": 48 // 全部JFFS空间大小
+			"used": "3.7M", // 已使用JFFS空间大小（单位有K/M/G）
+			"total": "48M", // 全部JFFS空间大小
+			"available": "44.3M", // 可用JFFS空间大小
+			"use":"9%" // 使用率
 		}
 	},
 	"tempINFO": {
@@ -138,9 +140,10 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 	    {
 		    "name": "General UDisk", // 设备名称
 		    "status": "mounted", // 挂载状态removed,mounted
-		    "total": 0, // 总容量
-		    "used": 0, // 已用空间
-		    "free": 0 // 可用空间
+		    "total": "0", // 总容量（0或数字带单位）
+		    "used": "0", // 已用空间（0或数字带单位）
+		    "free": "0", // 可用空间（0或者数字带单位）
+			"use": "0" // 使用率(0或者数字%)
 	    }
     ],
 	"cliINFO":[ // 在线客户端列表

@@ -3,7 +3,11 @@
 source /koolshare/scripts/base.sh
 eval `dbus export routerhook_`
 model=`nvram get model`
-ntp_server=${routerhook_config_ntp} || "ntp1.aliyun.com"
+if [ "${routerhook_config_ntp}" == "" ]; then
+    ntp_server="ntp1.aliyun.com"
+else
+    ntp_server=${routerhook_config_ntp}
+fi
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 routerhook_info_text=/tmp/.routerhook_info.json
 softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
@@ -70,8 +74,10 @@ if [ "${routerhook_info_system}" == "1" ]; then
 	router_memfree=`awk 'BEGIN{printf ("%.2f\n",'$(cat /proc/meminfo | grep "MemFree" | awk '{print $2}')'/1024)}'`
 	router_swaptotal=`awk 'BEGIN{printf ("%.2f\n",'$(cat /proc/meminfo | grep "SwapTotal" | awk '{print $2}')'/1024)}'`
 	router_swapfree=`awk 'BEGIN{printf ("%.2f\n",'$(cat /proc/meminfo | grep "SwapFree" | awk '{print $2}')'/1024)}'`
-	router_jffs_total=`df -h | grep "/jffs" | grep -v grep | awk '{print $2}' | sed 's/M//g'`
-	router_jffs_used=`df -h | grep "/jffs" | grep -v grep | awk '{print $3}' | sed 's/M//g'`
+	router_jffs_total=`df -h | grep "/jffs" | grep -v grep | awk '{print $2}'`
+	router_jffs_used=`df -h | grep "/jffs" | grep -v grep | awk '{print $3}'`
+	router_jffs_available=`df -h | grep "/jffs" | grep -v grep | awk '{print $4}'`
+	router_jffs_use=`df -h | grep "/jffs" | grep -v grep | awk '{print $5}'`
 	echo ',"sysINFO":{' >> ${routerhook_info_text}
 	echo '"routerNAME":"'${router_name}'",' >> ${routerhook_info_text}
 	echo '"routerTIME":"'${router_time}'",' >> ${routerhook_info_text}
@@ -82,7 +88,7 @@ if [ "${routerhook_info_system}" == "1" ]; then
 	echo '"routerAVGLOAD":['${router_cpu_loadavg_1min}', '${router_cpu_loadavg_5min}', '${router_cpu_loadavg_15min}'],' >> ${routerhook_info_text}
 	echo '"routerMEM":{"unit":"MB","all":'${router_memtotal}', "free":'${router_memfree}'},' >> ${routerhook_info_text}
 	echo '"routerSWAP":{"free":'${router_swapfree}',"total":'${router_swaptotal}'},' >> ${routerhook_info_text}
-	echo '"routerJFFS":{"used":'${router_jffs_used}',"total":'${router_jffs_total}'}' >> ${routerhook_info_text}
+	echo '"routerJFFS":{"used":"'${router_jffs_used}'","total":"'${router_jffs_total}'","available":"'${router_jffs_available}'","use":"'${router_jffs_use}'"}' >> ${routerhook_info_text}
 	echo '}' >> ${routerhook_info_text}
 fi
 
@@ -265,9 +271,10 @@ if [[ "${routerhook_info_usb}" == "1" ]]; then
 	if [ -n "${usb1_fs_path}" ];then
 		usb1_product=`echo $(nvram get usb_path1_manufacturer) $(nvram get usb_path1_product)`
 		usb1_removed=`nvram get usb_path1_removed`
-		usb1_total=`df -h | grep "${usb1_fs_path}" | awk '{print $2}'`
-		usb1_used=`df -h | grep "${usb1_fs_path}" | awk '{print $3}'`
-		usb1_available=`df -h | grep "${usb1_fs_path}" | awk '{print $4}'`
+		usb1_total=`df -h | grep "${usb1_fs_path}" | head -n1 | awk '{print $2}'`
+        usb1_used=`df -h | grep "${usb1_fs_path}" | head -n1 | awk '{print $3}'`
+        usb1_available=`df -h | grep "${usb1_fs_path}" | head -n1 | awk '{print $4}'`
+        usb1_use=`df -h | grep "${usb1_fs_path}" | head -n1 | awk '{print $5}'`
 		[ "${usb1_removed}" == "1" ] && usb1_status="removed" || usb1_status="mounted"
 		[ -n "${usb1_total}"] && usb1_total || usb1_total=0
 		[ -n "${usb1_used}"] && usb1_used || usb1_used=0
@@ -275,9 +282,10 @@ if [[ "${routerhook_info_usb}" == "1" ]]; then
 		echo '{' >> ${routerhook_info_text}
 		echo '"name":"'${usb1_product}'",' >> ${routerhook_info_text}
 		echo '"status":"'${usb1_status}'",' >> ${routerhook_info_text}
-		echo '"total":'${usb1_total}',' >> ${routerhook_info_text}
-		echo '"used":'${usb1_used}',' >> ${routerhook_info_text}
-		echo '"free":'${usb1_available} >> ${routerhook_info_text}
+		echo '"total":"'${usb1_total}'",' >> ${routerhook_info_text}
+		echo '"used":"'${usb1_used}'",' >> ${routerhook_info_text}
+		echo '"free":"'${usb1_available}'",' >> ${routerhook_info_text}
+		echo '"use":"'${usb1_use}'"' >> ${routerhook_info_text}
 		echo '}' >> ${routerhook_info_text}
 	else
 		echo "{}" >> ${routerhook_info_text}
@@ -287,9 +295,10 @@ if [[ "${routerhook_info_usb}" == "1" ]]; then
 	if [ -n "${usb2_fs_path}" ];then
 		usb2_product=`echo $(nvram get usb_path2_manufacturer) $(nvram get usb_path2_product)`
 		usb2_removed=`nvram get usb_path2_removed`
-		usb2_total=`df -h | grep "${usb2_fs_path}" | awk '{print $2}'`
-		usb2_used=`df -h | grep "${usb2_fs_path}" | awk '{print $3}'`
-		usb2_available=`df -h | grep "${usb2_fs_path}" | awk '{print $4}'`
+		usb2_total=`df -h | grep "${usb2_fs_path}" | head -n1 | awk '{print $2}'`
+        usb2_used=`df -h | grep "${usb2_fs_path}" | head -n1 | awk '{print $3}'`
+        usb2_available=`df -h | grep "${usb2_fs_path}" | head -n1 | awk '{print $4}'`
+        usb2_use=`df -h | grep "${usb2_fs_path}" | head -n1 | awk '{print $5}'`
 		[ "${usb2_removed}" == "1" ] && usb2_status="removed" || usb2_status="mounted"
 		[ -n "${usb2_total}"] && usb2_total || usb2_total=0
 		[ -n "${usb2_used}"] && usb2_used || usb2_used=0
@@ -297,9 +306,10 @@ if [[ "${routerhook_info_usb}" == "1" ]]; then
 		echo ',{' >> ${routerhook_info_text}
 		echo '"name":"'${usb2_product}'",' >> ${routerhook_info_text}
 		echo '"status":"'${usb2_status}'",' >> ${routerhook_info_text}
-		echo '"total":'${usb2_total}',' >> ${routerhook_info_text}
-		echo '"used":'${usb2_used}',' >> ${routerhook_info_text}
-		echo '"free":'${usb2_available} >> ${routerhook_info_text}
+		echo '"total":"'${usb2_total}'",' >> ${routerhook_info_text}
+		echo '"used":"'${usb2_used}'",' >> ${routerhook_info_text}
+		echo '"free":"'${usb2_available}'",' >> ${routerhook_info_text}
+		echo '"use":"'${usb2_use}'"' >> ${routerhook_info_text}
 		echo '}' >> ${routerhook_info_text}
 	else
 		echo ",{}" >> ${routerhook_info_text}
