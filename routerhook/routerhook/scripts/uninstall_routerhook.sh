@@ -4,7 +4,7 @@ source /koolshare/scripts/base.sh
 logger "[软件中心]: 正在卸载routerhook..."
 MODULE=routerhook
 cd /
-sh /koolshare/scripts/routerhook_config stop >/dev/null 2>&1
+sh /koolshare/scripts/routerhook_config.sh stop >/dev/null 2>&1
 rm -rf /koolshare/init.d/*routerhook.sh >/dev/null 2>&1
 rm -rf /koolshare/scripts/*routerhook.sh >/dev/null 2>&1
 rm -rf /koolshare/scripts/routerhook* >/dev/null 2>&1
