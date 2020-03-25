@@ -2,7 +2,11 @@
 
 source /koolshare/scripts/base.sh
 eval `dbus export routerhook_`
-ntp_server=${routerhook_config_ntp} || "ntp1.aliyun.com"
+if [ "${serverchan_config_ntp}" == "" ]; then
+    ntp_server="ntp1.aliyun.com"
+else
+    ntp_server=${serverchan_config_ntp}
+fi
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 [ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 网络重启触发消息推送！"
 

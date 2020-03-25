@@ -1,5 +1,12 @@
 Koolshare hnd/axhnd router software center serverchan Changelog
 ===========================================
+1.1
+   - fix ASP文件中的样式多了个return的问题
+   - fix 优化卸载脚本逻辑（从armsoft上Copy过来的）
+   - fix 修复遗留的路径BUG
+   - fix 与armsoft统一代码，便于后期维护
+   - feat 新增公网IPv6地址
+
 1.0
    - fix 修复安装时没有正确安装卸载脚本的bug
    - fix 修复触发器配置无法保存的bug

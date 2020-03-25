@@ -28,7 +28,7 @@ echo_date "STOP RouterHook FIRST"
 # stop routerhook first
 enable=`dbus get routerhook_enable`
 if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/routerhook_config.sh" ];then
-	/koolshare/routerhook/routerhook_config stop >/dev/null 2>&1
+	/koolshare/scripts/routerhook_config.sh stop >/dev/null 2>&1
 fi
 
 # 安装
@@ -44,7 +44,6 @@ rm -rf /koolshare/scripts/routerhook_*
 cp -rf /tmp/routerhook/res/icon-routerhook.png /koolshare/res/
 cp -rf /tmp/routerhook/scripts/* /koolshare/scripts/
 cp -rf /tmp/routerhook/webs/Module_routerhook.asp /koolshare/webs/
-cp -rf /tmp/routerhook/uninstall.sh /koolshare/scripts/uninstall_routerhook.sh
 if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
 	echo_date "检测到ROG主题模式"
 	cp -rf /tmp/routerhook/ROG/webs/Module_routerhook.asp /koolshare/webs/
@@ -84,7 +83,7 @@ dbus set softcenter_module_routerhook_description="从路由器推送状态及�
 
 # re-enable routerhook
 if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/routerhook_config.sh" ];then
-	/koolshare/routerhook/routerhook_config start >/dev/null 2>&1
+	/koolshare/scripts/routerhook_config.sh start >/dev/null 2>&1
 fi
 
 # 完成

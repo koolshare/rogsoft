@@ -26,7 +26,7 @@ esac
 # stop serverchan first
 enable=`dbus get serverchan_enable`
 if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/serverchan_config.sh" ];then
-	/koolshare/serverchan/serverchan_config stop >/dev/null 2>&1
+	/koolshare/scripts/serverchan_config.sh stop >/dev/null 2>&1
 fi
 
 # 安装
@@ -42,7 +42,6 @@ rm -rf /koolshare/scripts/serverchan_*
 cp -rf /tmp/serverchan/res/icon-serverchan.png /koolshare/res/
 cp -rf /tmp/serverchan/scripts/* /koolshare/scripts/
 cp -rf /tmp/serverchan/webs/Module_serverchan.asp /koolshare/webs/
-cp -rf /tmp/serverchan/uninstall.sh /koolshare/scripts/uninstall_serverchan.sh
 if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
 	cp -rf /tmp/serverchan/ROG/webs/Module_serverchan.asp /koolshare/webs/
 fi
@@ -81,7 +80,7 @@ dbus set softcenter_module_serverchan_description="从路由器推送状态及�
 
 # re-enable serverchan
 if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/serverchan_config.sh" ];then
-	/koolshare/serverchan/serverchan_config start >/dev/null 2>&1
+	/koolshare/scripts/serverchan_config.sh start >/dev/null 2>&1
 fi
 
 # 完成

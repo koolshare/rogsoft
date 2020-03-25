@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sh /koolshare/serverchan/serverchan_config stop >/dev/null 2>&1
+sh /koolshare/scripts/serverchan_config.sh stop >/dev/null 2>&1
 rm -rf /koolshare/init.d/*serverchan.sh >/dev/null 2>&1
 rm -rf /koolshare/scripts/*serverchan.sh >/dev/null 2>&1
 rm -rf /koolshare/scripts/serverchan* >/dev/null 2>&1
