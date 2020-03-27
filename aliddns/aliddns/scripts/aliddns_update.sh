@@ -32,21 +32,33 @@ __valid_ip() {
 	fi
 }
 
+__resolve_ip() {
+	local SERVER_IP=$(nslookup "$1" $aliddns_dns | sed '1,4d' | awk '{print $3}' | grep -v : | awk 'NR==1{print}' 2>/dev/null)
+	local SERVER_IP=$(__valid_ip $SERVER_IP)
+	if [ -n "$SERVER_IP" ]; then
+		# success resolved
+		echo "$SERVER_IP"
+		return 0
+	else
+		# resolve failed
+		echo ""
+		return 1
+	fi
+}
+
 start_update() {
 	#get resovled ip
 	case "$aliddns_name" in
 		\*)
-			current_ip=$(nslookup koolshare.$aliddns_domain $aliddns_dns 2>&1)
+			current_ip=$(__resolve_ip koolshare.$aliddns_domain)
 		;;
 		\@)
-			current_ip=$(nslookup $aliddns_domain $aliddns_dns 2>&1)
+			current_ip=$(__resolve_ip $aliddns_domain)
 		;;
 		*)
-			current_ip=$(nslookup $aliddns_name.$aliddns_domain $aliddns_dns 2>&1)
+			current_ip=$(__resolve_ip $aliddns_name.$aliddns_domain)
 		;;
 	esac
-	current_ip=$(echo "$current_ip" | grep 'Address 1' | tail -n1 | awk '{print $NF}')
-	current_ip=$(__valid_ip "$current_ip")
 	
 	# get public ip
 	case "$aliddns_comd" in

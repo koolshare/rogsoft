@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
+1.9
+   - fix	修复域名解析失败的问题.
+   
 1.6 - 1.8
    - add	添加几条预置的获取IP命令.
    - add	添加”【网络地图】首页显示Aliddns域名“功能，去勾选后Aliddns可以和AsusDDNS共存，
@@ -10,6 +13,6 @@ Koolshare Asuswrt-Merlin Aliddns Changelog
    - update	优化日志内容输出，更容易找到问题。
    - fix	修复原脚本中的多个错误。
    - fix	修复一些不好的写法导致dbus数据出错的问题。
-
+   
 1.5
    - fix	修复插件无法卸载的问题。
