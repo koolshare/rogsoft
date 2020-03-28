@@ -148,7 +148,7 @@ start_usb2jffs(){
 	else
 		local CUR_VERSION="0"
 	fi
-	NEED_VERSION="1.5.3"
+	NEED_VERSION="1.5.4"
 	COMP=$(/rom/etc/koolshare/bin/versioncmp $CUR_VERSION $NEED_VERSION )
 	if [ "$COMP" == "1" ]; then
 		echo_date "软件中心版本：$CUR_VERSION，版本号过低，不支持本插件，请将软件中心更新到最新后重试！" 
