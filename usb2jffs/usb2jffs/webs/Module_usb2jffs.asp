@@ -40,7 +40,7 @@
 	.show-btn1:hover, .show-btn2:hover, .show-btn3:hover, .active {
 		border: 1px solid #2f3a3e;
 		background: #2f3a3e;
-		border: 1px solid #91071f;*/ /* W3C rogcss */
+		border: 1px solid #91071f; /* W3C rogcss */
 		background: #91071f; /* W3C rogcss */
 	}
 	#log_content{

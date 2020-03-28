@@ -221,11 +221,11 @@
             "version": "2.0"
         }, 
         {
-            "build_date": "2020-03-29_01:41:12", 
+            "build_date": "2020-03-29_01:47:44", 
             "changelog": "", 
             "description": "轻松用U盘挂载jffs", 
             "home_url": "Module_usb2jffs.asp", 
-            "md5": "760e2c016fb6b7978f67b7f5821fd57e", 
+            "md5": "eeec61380beaf5449c7b969f093463bc", 
             "name": "usb2jffs", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
             "title": "USB2JFFS", 
