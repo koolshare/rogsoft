@@ -212,6 +212,8 @@ start_usb2jffs(){
 		else
 			echo_date "/cifs2挂载失败，将无法使用同步功能！！"
 		fi
+		set_stop_sync
+		set_sync_job
 		echo_date "完成！"
 	else
 		echo_date "USB型JFFS挂载失败！！"
@@ -425,7 +427,14 @@ sync_usb_mtd(){
 	sync
 }
 
-set_sync(){
+del_sync_job(){
+	if [ -n "$(cru l|grep usb2jffs_sync)" ]; then
+		echo_date "删除插件定时同步任务..."
+		sed -i '/usb2jffs_sync/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
+	fi
+}
+
+set_sync_job(){
 	if [ "${usb2jffs_sync}" == "0" ]; then
 		echo_date "删除插件定时同步任务..."
 		sed -i '/usb2jffs_sync/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
@@ -489,6 +498,7 @@ case $2 in
 		echo_date "----------------------------------------------------------------------" | tee -a $LOG_FILE
 	fi
 	stop_usb2jffs | tee -a $LOG_FILE
+	del_sync_job | tee -a $LOG_FILE
 	echo_date "========================= USB2JFFS - 运行完成 ========================" | tee -a $LOG_FILE
 	echo "XU6J03M6" | tee -a $LOG_FILE
 	;;
@@ -501,6 +511,7 @@ case $2 in
 		echo_date "----------------------------------------------------------------------" | tee -a $LOG_FILE
 	fi
 	stop_usb2jffs 1 | tee -a $LOG_FILE
+	del_sync_job | tee -a $LOG_FILE
 	echo_date "========================= USB2JFFS - 运行完成 ========================" | tee -a $LOG_FILE
 	echo "XU6J03M6" >> $LOG_FILE
 	;;
@@ -518,12 +529,12 @@ case $2 in
 6)
 	# 设定定时同步
 	echo_date "========================= USB2JFFS - 定时设定 ========================" | tee -a $LOG_FILE
-	set_sync | tee -a $LOG_FILE
+	set_sync_job | tee -a $LOG_FILE
 	echo_date "========================= USB2JFFS - 设定完成 ========================" | tee -a $LOG_FILE
 	echo "XU6J03M6" >> $LOG_FILE
 	;;
 7)
-	# 设定卸载/删除时同步
+	# 设定是否卸载/删除时同步
 	echo_date "========================= USB2JFFS - 同步设定 ========================" | tee -a $LOG_FILE
 	set_stop_sync | tee -a $LOG_FILE
 	echo_date "========================= USB2JFFS - 设定完成 ========================" | tee -a $LOG_FILE
