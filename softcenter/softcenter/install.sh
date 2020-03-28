@@ -115,10 +115,9 @@ softcenter_install() {
 			STARTCOMAND5=$(cat /jffs/scripts/unmount | grep -c "/koolshare/bin/ks-unmount.sh \$1")
 			[ "$STARTCOMAND5" -gt "1" ] && sed -i '/ks-unmount.sh/d' /jffs/scripts/unmount && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
 			[ "$STARTCOMAND5" == "0" ] && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
-
+		fi
 		chmod +x /jffs/scripts/*
 		#============================================
-
 		# now try to reboot httpdb if httpdb not started
 		# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh
 	fi
