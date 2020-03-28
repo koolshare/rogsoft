@@ -1,0 +1,5 @@
+Koolshare Asuswrt-Merlin Aliddns Changelog
+===========================================
+1.0
+   - add	添加USB2JFFS插件，轻松用U盘挂载系统JFFS分区。
+   		更新信息见插件帮助标签页！

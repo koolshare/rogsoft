@@ -56,4 +56,16 @@ else
 	[ "$STARTCOMAND4" -gt "1" ] && sed -i '/ks-services-start.sh/d' /jffs/scripts/services-start && sed -i '1a /koolshare/bin/ks-services-start.sh start' /jffs/scripts/services-start
 	[ "$STARTCOMAND4" == "0" ] && sed -i '1a /koolshare/bin/ks-services-start.sh start' /jffs/scripts/services-start
 fi
+
+if [ ! -f "/jffs/scripts/unmount" ];then
+	cat > /jffs/scripts/unmount <<-EOF
+	#!/bin/sh
+	/koolshare/bin/ks-unmount.sh \$1
+	EOF
+	chmod +x /jffs/scripts/unmount
+else
+	STARTCOMAND5=$(cat /jffs/scripts/unmount | grep -c "/koolshare/bin/ks-unmount.sh $1")
+	[ "$STARTCOMAND5" -gt "1" ] && sed -i '/ks-unmount.sh/d' /jffs/scripts/unmount && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
+	[ "$STARTCOMAND5" == "0" ] && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
+fi
 #============================================

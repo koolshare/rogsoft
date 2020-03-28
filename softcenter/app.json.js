@@ -219,10 +219,21 @@
             "tar_url": "swap/swap.tar.gz", 
             "title": "虚拟内存", 
             "version": "2.0"
+        }, 
+        {
+            "build_date": "2020-03-27_21:45:03", 
+            "changelog": "", 
+            "description": "aliddns", 
+            "home_url": "Module_aliddns.asp", 
+            "md5": "72740de60fbffbedcb40813d7d3f34df", 
+            "name": "usb2jffs", 
+            "tar_url": "usb2jffs/usb2jffs.tar.gz", 
+            "title": "阿里DDNS", 
+            "version": "1.9"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "005a9813c630e3cb3cd4c1e176363875", 
+    "md5": "b1bcd32cf21c0b603ff963397ae12a77", 
     "tar_url": "softcenter/softcenter.tar.gz", 
-    "version": "1.5.2"
+    "version": "1.5.3"
 }

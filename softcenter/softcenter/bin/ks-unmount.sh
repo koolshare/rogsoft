@@ -3,24 +3,23 @@
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 
-ACTION=$1
-KSPATH=$2
+KSPATH=$1
 
-for i in $(find /koolshare/init.d/ -name 'M*' | sort -n) ;
+for i in $(find /koolshare/init.d/ -name 'U*' | sort -n) ;
 do
     case "$i" in
-        M* | *.sh )
+        U* | *.sh )
             # fork subprocess.
             trap "" INT QUIT TSTP EXIT
             logger "plugin_mount_log_1 $i"
             if [ -r "$i" ]; then
-            	$i $ACTION $KSPATH
+            	$i $KSPATH
             fi
             ;;
         *)
             # No sh extension, Source shell script for speed.
             logger "plugin_mount_log_2 $i"
-            . $i $ACTION $KSPATH
+            . $i $KSPATH
             ;;
     esac
 done

@@ -60,7 +60,8 @@ softcenter_install() {
 
 		# remove install package
 		rm -rf /tmp/softcenter
-		# creat wan-start nat-start post-mount
+		#============================================
+		# check start up scripts 
 		if [ ! -f "/jffs/scripts/wan-start" ];then
 			cat > /jffs/scripts/wan-start <<-EOF
 			#!/bin/sh
@@ -80,9 +81,9 @@ softcenter_install() {
 			EOF
 			chmod +x /jffs/scripts/nat-start
 		else
-			STARTCOMAND2=$(cat /jffs/scripts/nat-start | grep -c "/koolshare/bin/ks-nat-start.sh start")
-			[ "$STARTCOMAND2" -gt "1" ] && sed -i '/ks-nat-start.sh/d' /jffs/scripts/nat-start && sed -i '1a /koolshare/bin/ks-nat-start.sh start' /jffs/scripts/nat-start
-			[ "$STARTCOMAND2" == "0" ] && sed -i '1a /koolshare/bin/ks-nat-start.sh start' /jffs/scripts/nat-start
+			STARTCOMAND2=$(cat /jffs/scripts/nat-start | grep -c "/koolshare/bin/ks-nat-start.sh start_nat")
+			[ "$STARTCOMAND2" -gt "1" ] && sed -i '/ks-nat-start.sh/d' /jffs/scripts/nat-start && sed -i '1a /koolshare/bin/ks-nat-start.sh start_nat' /jffs/scripts/nat-start
+			[ "$STARTCOMAND2" == "0" ] && sed -i '1a /koolshare/bin/ks-nat-start.sh start_nat' /jffs/scripts/nat-start
 		fi
 		
 		if [ ! -f "/jffs/scripts/post-mount" ];then
@@ -92,9 +93,35 @@ softcenter_install() {
 			EOF
 			chmod +x /jffs/scripts/post-mount
 		else
-			STARTCOMAND2=$(cat /jffs/scripts/post-mount | grep "/koolshare/bin/ks-mount-start.sh start")
-			[ -z "$STARTCOMAND2" ] && sed -i '1a /koolshare/bin/ks-mount-start.sh start' /jffs/scripts/post-mount
+			STARTCOMAND3=$(cat /jffs/scripts/post-mount | grep -c "/koolshare/bin/ks-mount-start.sh start")
+			[ "$STARTCOMAND3" -gt "1" ] && sed -i '/ks-mount-start.sh/d' /jffs/scripts/post-mount && sed -i '1a /koolshare/bin/ks-mount-start.sh start' /jffs/scripts/post-mount
+			[ "$STARTCOMAND3" == "0" ] && sed -i '1a /koolshare/bin/ks-mount-start.sh start' /jffs/scripts/post-mount
 		fi
+		
+		if [ ! -f "/jffs/scripts/services-start" ];then
+			cat > /jffs/scripts/services-start <<-EOF
+			#!/bin/sh
+			/koolshare/bin/ks-services-start.sh start
+			EOF
+			chmod +x /jffs/scripts/services-start
+		else
+			STARTCOMAND4=$(cat /jffs/scripts/services-start | grep -c "/koolshare/bin/ks-services-start.sh start")
+			[ "$STARTCOMAND4" -gt "1" ] && sed -i '/ks-services-start.sh/d' /jffs/scripts/services-start && sed -i '1a /koolshare/bin/ks-services-start.sh start' /jffs/scripts/services-start
+			[ "$STARTCOMAND4" == "0" ] && sed -i '1a /koolshare/bin/ks-services-start.sh start' /jffs/scripts/services-start
+		fi
+		
+		if [ ! -f "/jffs/scripts/unmount" ];then
+			cat > /jffs/scripts/unmount <<-EOF
+			#!/bin/sh
+			/koolshare/bin/ks-unmount.sh \$1
+			EOF
+			chmod +x /jffs/scripts/unmount
+		else
+			STARTCOMAND5=$(cat /jffs/scripts/unmount | grep -c "/koolshare/bin/ks-unmount.sh $1")
+			[ "$STARTCOMAND5" -gt "1" ] && sed -i '/ks-unmount.sh/d' /jffs/scripts/unmount && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
+			[ "$STARTCOMAND5" == "0" ] && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
+		fi
+		#============================================
 
 		# now try to reboot httpdb if httpdb not started
 		# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh
