@@ -48,7 +48,7 @@ get_current_usb_device(){
 
 get_jffs_original_mount_device(){
 	# 查看原始JFFS分区是用FLASH里的哪个分区挂载的
-	local mtd_jffs=$(df -h | grep /cifs2 |awk '{print $1}')
+	local mtd_jffs=$(df -h | grep -E "/jffs|cifs2" | awk '{print $1}' | grep "/dev/mtd")
 	if [ -n "$mtd_jffs" ];then
 		mtd_disk="$mtd_jffs"
 		return 0
@@ -160,7 +160,7 @@ JFFS2USB(){
 		nvram commit
 
 		# 把原来的jffs分区挂载到cifs
-		mount -t jffs2 -o rw,noatime /dev/mtdblock9 /cifs2
+		mount -t jffs2 -o rw,noatime ${mtd_disk} /cifs2
 	
 		# 因为service-start启动太早，所以要在这里再启动一次
 		# /koolshare/bin/ks-services-start.sh start
