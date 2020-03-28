@@ -221,15 +221,15 @@
             "version": "2.0"
         }, 
         {
-            "build_date": "2020-03-27_21:45:03", 
+            "build_date": "2020-03-29_01:19:57", 
             "changelog": "", 
-            "description": "aliddns", 
-            "home_url": "Module_aliddns.asp", 
-            "md5": "72740de60fbffbedcb40813d7d3f34df", 
+            "description": "轻松用U盘挂载jffs", 
+            "home_url": "Module_usb2jffs.asp", 
+            "md5": "087895f820d0b44505be4e0ee11651eb", 
             "name": "usb2jffs", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
-            "title": "阿里DDNS", 
-            "version": "1.9"
+            "title": "USB2JFFS", 
+            "version": "1.0"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 

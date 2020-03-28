@@ -1,0 +1,121 @@
+#!/bin/sh
+
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】'
+echo $(date) "umount-start-start" $1 >> /jffs/ks_start_log.txt
+LOG_FILE=/tmp/upload/usb2jffs_log.txt
+eval $(dbus export usb2jffs_)
+KSPATH=${usb2jffs_mount_path}
+UNPATH=$1
+
+#echo_date "卸载磁盘：$1" | tee -a $LOG_FILE
+
+test(){
+	# test
+	echo_date "---------------------------------------------"
+	mount
+	echo_date "---------------------------------------------"
+	df -h
+}
+
+stop_software_center(){
+	killall skipd >/dev/null 2>&1
+	/koolshare/perp/perp.sh stop >/dev/null 2>&1
+}
+
+start_software_center(){
+	killall skipd >/dev/null 2>&1
+	/koolshare/perp/perp.sh stop >/dev/null 2>&1
+	sleep 1
+	service start_skipd >/dev/null 2>&1
+	/koolshare/perp/perp.sh start >/dev/null 2>&1
+}
+
+
+get_current_jffs_device(){
+	# 查看当前/jffs的挂载点是什么设备
+	local cur_patition=$(df -h | grep /jffs |awk '{print $1}')
+	if [ -n "$cur_patition" ];then
+		jffs_device=$cur_patition
+		return 0
+	else
+		jffs_device=""
+		return 1
+	fi
+}
+
+get_current_usb_device(){
+	# 查看USB磁盘的挂载点是什么设备
+	local cur_patition=$(df -h | grep $UNPATH |awk '{print $1}')
+	if [ -n "$cur_patition" ];then
+		usb_device=$cur_patition
+		return 0
+	else
+		usb_device=""
+		return 1
+	fi
+}
+
+get_mount_status(){
+	get_current_jffs_device
+	get_current_usb_device
+	if [ "$jffs_device" == "$usb_device" ]; then
+		echo_date "USB2JFFS：检测到你的USB磁盘${usb_device}挂载在/jffs，开始卸载！"
+		return 0
+	else
+		#echo_date "USB2JFFS：设备${usb_device}挂载在${UNPATH}"
+		#echo_date "USB2JFFS：设备${jffs_device}挂载在/jffs"
+		return 1
+	fi
+}
+
+get_jffs_original_mount_device(){
+	# 查看原始JFFS分区是用FLASH里的哪个分区挂载的
+	local mtd_jffs=$(df -h | grep /cifs2 |awk '{print $1}')
+	if [ -n "$mtd_jffs" ];then
+		mtd_disk="$mtd_jffs"
+		return 0
+	else
+		# incase of cifs2 not mounted
+		local model=$(nvram get model)
+		case $model in
+			RT-AC86U|GT-AC5300)
+				mtd_disk="/dev/mtdblock8"
+				return 0
+				;;
+			RT-AX88U|GT-AX11000)
+				mtd_disk="/dev/mtdblock9"
+				return 0
+				;;
+			*)
+				mtd_disk=""
+				return 1
+				;;
+		esac
+	fi
+}
+
+start(){
+	sync
+	get_mount_status
+	if [ "$?" == "0" ];then
+		get_jffs_original_mount_device
+
+		stop_software_center
+	
+		umount -l /cifs2 >/dev/null 2>&1
+	
+		umount -l /jffs >/dev/null 2>&1
+		if [ "$?" == "0" ]; then
+			mount -t jffs2 -o rw,noatime $mtd_disk /jffs
+			if [ "$?" == "0" ]; then
+				service start_skipd
+				/koolshare/perp/perp.sh start
+			fi
+		fi
+	fi
+}
+
+#test | tee -a $LOG_FILE
+start | tee -a $LOG_FILE
+#test | tee -a $LOG_FILE
+#echo $(date) "umount-start-end" $1 >> /jffs/ks_start_log.txt

@@ -1,9 +1,12 @@
 #!/bin/sh
 
-sh /koolshare/scripts/aliddns_config.sh stop
+sh /koolshare/scripts/usb2jffs_configs.sh stop 3
 
-rm -rf /koolshare/scripts/uninstall_aliddns.sh
-rm -rf /koolshare/res/icon-aliddns.png
-rm -rf /koolshare/scripts/aliddns*
-rm -rf /koolshare/webs/Module_aliddns.asp
-rm -rf /koolshare/init.d/*aliddns.sh
+sleep 1
+
+rm -rf /koolshare/scripts/uninstall_usb2jffs.sh
+rm -rf /koolshare/res/icon-usb2jffs.png
+rm -rf /koolshare/res/sadog.png
+rm -rf /koolshare/scripts/usb2jffs*
+rm -rf /koolshare/webs/Module_usb2jffs.asp
+rm -rf /koolshare/init.d/*usb2jffs
