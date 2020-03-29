@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
+1.4
+   - fix	修复开机自启无法加载定时同步任务的问题。
+
 1.3
    - fix	修复有的时候无法识别U盘的问题。
 

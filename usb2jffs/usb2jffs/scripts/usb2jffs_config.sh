@@ -350,7 +350,7 @@ sync_usb_mtd(){
 		
 	else
 		echo_date "${mtd_disk}总容量为：${TOTAL_MTD_SIZE}KB, USB磁盘中.koolshare_jffs文件夹大小：${SPACE_USB_JFFS}KB"
-		echo_date "${TOTAL_MTD_SIZE}空间容量不够，只进行系统相关文件的同步，软件中心和插件文件不进行同步！"
+		echo_date "${mtd_disk}空间容量不够，只进行系统相关文件的同步，软件中心和插件文件不进行同步！"
 		# 文件夹同步
 		# ls 找出所有的目录，写入文件
 		ls -aelR /jffs/|grep -i "^/"|sed 's/:$//g'|sed 's/^\/jffs\///g'|sed '/^$/d'|sed '/koolshare/d'|sed '/dnsmasq.d/d'|sort > /tmp/upload/jffs_folders.txt

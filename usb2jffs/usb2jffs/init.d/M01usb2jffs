@@ -72,6 +72,37 @@ get_jffs_original_mount_device(){
 	fi
 }
 
+set_sync_job(){
+	if [ "${usb2jffs_sync}" == "0" ]; then
+		echo_date "删除插件定时同步任务..."
+		sed -i '/usb2jffs_sync/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
+	elif [ "${usb2jffs_sync}" == "1" ]; then
+		echo_date "设置每天${usb2jffs_time_hour}时${usb2jffs_time_min}分同步文件..."
+		cru a usb2jffs_sync ${usb2jffs_time_min} ${usb2jffs_time_hour}" * * * sh /koolshare/scripts/usb2jffs_config.sh sync"
+	elif [ "${usb2jffs_sync}" == "2" ]; then
+		echo_date "设置每周${usb2jffs_week}的${usb2jffs_time_hour}时${usb2jffs_time_min}分同步文件..."
+		cru a usb2jffs_sync ${usb2jffs_time_min} ${usb2jffs_time_hour}" * * "${usb2jffs_week}" sh /koolshare/scripts/usb2jffs_config.sh sync"
+	elif [ "${usb2jffs_sync}" == "3" ]; then
+		echo_date "设置每月${usb2jffs_day}日${usb2jffs_time_hour}时${usb2jffs_time_min}分同步文件..."
+		cru a usb2jffs_sync ${usb2jffs_time_min} ${usb2jffs_time_hour} ${usb2jffs_day}" * * sh /koolshare/scripts/usb2jffs_config.sh sync"
+	elif [ "${usb2jffs_sync}" == "4" ]; then
+		if [ "${usb2jffs_inter_pre}" == "1" ]; then
+			echo_date "设置每隔${usb2jffs_inter_min}分钟同步文件..."
+			cru a usb2jffs_sync "*/"${usb2jffs_inter_min}" * * * * sh /koolshare/scripts/usb2jffs_config.sh sync"
+		elif [ "${usb2jffs_inter_pre}" == "2" ]; then
+			echo_date "设置每隔${usb2jffs_inter_hour}小时同步文件..."
+			cru a usb2jffs_sync "0 */"${usb2jffs_inter_hour}" * * * sh /koolshare/scripts/usb2jffs_config.sh sync"
+		elif [ "${usb2jffs_inter_pre}" == "3" ]; then
+			echo_date "设置每隔${usb2jffs_inter_day}天${usb2jffs_inter_hour}小时${usb2jffs_time_min}分钟同步文件..."
+			cru a usb2jffs_sync ${usb2jffs_time_min} ${usb2jffs_time_hour}" */"${usb2jffs_inter_day} " * * sh /koolshare/scripts/usb2jffs_config.sh sync"
+		fi
+	elif [[ "${usb2jffs_sync}" == "5" ]]; then
+		check_custom_time=`dbus get usb2jffs_custom | base64_decode`
+		echo_date "设置每天${check_custom_time}时的${usb2jffs_time_min}分同步文件..."
+		cru a usb2jffs_sync ${usb2jffs_time_min} ${check_custom_time}" * * * sh /koolshare/scripts/usb2jffs_config.sh sync"
+	fi
+}
+
 JFFS2USB(){
 	# 检测是否已经有USB设备挂载了jffs，如果JFFS的挂载设备有多个，说明已经挂在
 	# 防止用户在路由器开机状态，并且已经替换了JFFS为USB的情况下，再插入一个有.koolshare_jffs目录的USB储存设备导致重复挂载
@@ -161,7 +192,15 @@ JFFS2USB(){
 
 		# 把原来的jffs分区挂载到cifs
 		mount -t jffs2 -o rw,noatime ${mtd_disk} /cifs2
-	
+
+		sleep 2
+		
+		# 重新弄获取skipd值
+		eval $(dbus export usb2jffs_)
+		
+		# 设定定时同步
+		set_sync_job
+		
 		# 因为service-start启动太早，所以要在这里再启动一次
 		# /koolshare/bin/ks-services-start.sh start
 		start-stop-daemon -S -q -b -x /koolshare/bin/ks-services-start.sh start

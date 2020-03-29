@@ -540,9 +540,9 @@ function cleanCode(){
 }
 function donate(w){
 	if(!w){
-		$("#qrcode_show").css("margin-top", "720px");
+		$("#qrcode_show").css("margin-top", "820px");
 	}else{
-		$("#qrcode_show").css("margin-top", "-140px");
+		$("#qrcode_show").css("margin-top", "-40px");
 	}
 	$("#qrcode_show").fadeIn(300);
 }
@@ -582,15 +582,15 @@ function donate(w){
 								<tr>
 									<td bgcolor="#4D595D" colspan="3" valign="top">
 										<div>&nbsp;</div>
-										<div id="qrcode_show" class="content_status" style="box-shadow: 3px 3px 10px #000;margin-top:-40px;margin-left:133px;display: none;width:484px;height:484px;background: #fff;">
+										<div id="qrcode_show" class="content_status" style="box-shadow: 3px 3px 10px #000;margin-top:-40px;margin-left:120px;display: none;width:520px;height:340px;background: #fff;">
 											<div style="text-align: center;margin-top:10px">
 												<span id="qrtitle" style="font-size:16px;color:#000;">捐赠：狗粮 → sadog</span>
 											</div>
-											<div id="qrcode" style="margin: 10px 50px 10px 50px;width:384px;height:384px;text-align:center;overflow:hidden" >
-												<canvas width="384" height="384" style="display: none;"></canvas>
-												<img alt="Scan me!" src="res/sadog.png" style="display: block;width:384px;height:384px">
+											<div id="qrcode" style="margin: 10px 5px 10px 0px;width:520px;height:240px;text-align:center;overflow:hidden" >
+												<canvas width="520px" height="360px" style="display: none;"></canvas>
+												<img style="height:240px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/sadog.png"/>
 											</div>
-											<div style="margin-top:15px;padding-bottom:10px;width:100%;text-align:center;">
+											<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
 												<input class="button_gen" type="button" onclick="cleanCode();" value="关闭">
 											</div>
 										</div>

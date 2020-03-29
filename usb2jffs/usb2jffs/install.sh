@@ -29,6 +29,7 @@ cp -rf /tmp/usb2jffs/webs/* /koolshare/webs/
 cp -rf /tmp/usb2jffs/res/* /koolshare/res/
 cp -rf /tmp/usb2jffs/init.d/* /koolshare/init.d/
 cp -rf /tmp/usb2jffs/uninstall.sh /koolshare/scripts/uninstall_usb2jffs.sh
+rm -r /tmp/usb2jffs/res/sadog.png
 chmod +x /koolshare/scripts/usb2jffs*
 chmod +x /koolshare/init.d/*
 if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
