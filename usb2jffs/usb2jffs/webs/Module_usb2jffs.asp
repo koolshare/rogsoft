@@ -150,13 +150,9 @@ function get_disks(){
 				if(usbDevicesList[i].partition[j].status != "unmounted"){
 					if(usbDevicesList[i].partition[j].format.indexOf("ext") != -1){
 						++flag_total;
-						$("#usb2jffs_mount_path").append("<option value='/tmp/mnt/" + usbDevicesList[i].partition[j].mountPoint + "'>/tmp/mnt/" + usbDevicesList[i].partition[j].partName + "</option>");
+						$("#usb2jffs_mount_path").append("<option value='/tmp/mnt/" + usbDevicesList[i].partition[j].partName + "'>/tmp/mnt/" + usbDevicesList[i].partition[j].partName + "</option>");
 					}
 				}
-				//check for swap exist
-				//if(usbDevicesList[i].partition[j].format.indexOf("ext") != -1)
-				//	dbus["usb2jffs_check_partName_" + (parseInt(i)) + "_" + (parseInt(j))] = '/mnt/' + usbDevicesList[i].partition[j].partName || "";
-				//write table
 				var totalsize = ((usbDevicesList[i].partition[j].size)/1000000).toFixed(2);
 				var usedsize = ((usbDevicesList[i].partition[j].used)/1000000).toFixed(2);
 				var usedpercent = (usedsize/totalsize*100).toFixed(2) + " %";

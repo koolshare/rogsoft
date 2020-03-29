@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
+1.3
+   - fix	修复有的时候无法识别U盘的问题。
+
 1.2
    - fix	修复86U使用的问题。
 

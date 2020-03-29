@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="usb2jffs"
-VERSION="1.2"
+VERSION="1.3"
 TITLE="USB2JFFS"
 DESCRIPTION="轻松用U盘挂载jffs"
 HOME_URL="Module_usb2jffs.asp"
