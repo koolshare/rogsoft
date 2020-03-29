@@ -19,6 +19,7 @@
     * [RT-AC86U 官改固件](http://koolshare.cn/thread-139965-1-1.html)
     * [GT-AC5300 官改固件](http://koolshare.cn/thread-130902-1-1.html)
     * [GT-AX11000 官改固件](http://koolshare.cn/thread-159465-1-1.html)
+    * [NETGEAR RAX80 梅林改版固件](https://koolshare.cn/thread-177255-1-1.html)
 
 ## 用户须知
 
