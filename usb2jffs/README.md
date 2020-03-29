@@ -336,3 +336,4 @@ post-mount脚本并不是只有在开机的时候会触发，路由器运行过�
 ---
 
 如果你觉得本插件好用，可以考虑捐赠开发者
+![](https://raw.githubusercontent.com/koolshare/rogsoft/master/usb2jffs/usb2jffs/res/sadog.png)
