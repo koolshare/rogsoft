@@ -126,7 +126,7 @@ speed_test(){
 	rm -f /tmp/upload/usb_read_speed*.txt
 	rm -f /tmp/upload/usb_write_speed*.txt
 
-	if [ "$speed_w_int" -gt "30" -a "$speed_r_int" -gt "50"  ]; then
+	if [ "$speed_r_int" -gt "30" -a "$speed_w_int" -gt "50" ]; then
 		echo_date "USB磁盘[${usb_device}]的读写速度符合USB2JFFS插件要求！"
 		#echo_date "此测试速度和USB磁盘实际速度可能有一定差别，以上读写速度仅供参考！"
 		#echo_date "在同等测试条件下，RT-AC86U, RT-AX88U等机型的flash读为10MB/s, 写为30MB/s"
