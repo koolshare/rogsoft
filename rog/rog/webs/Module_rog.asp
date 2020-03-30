@@ -144,6 +144,13 @@ function get_temperature(){
 		success: function(response){
 			E("rog_cpu_temperature").innerHTML = response.result.split("@@")[0];
 			E("rog_wl_temperature").innerHTML = response.result.split("@@")[1];
+			var pwr = response.result.split("@@")[2];
+			if (pwr){
+				E("rog_wl_power_tr").style.display = "";
+				E("rog_wl_power").innerHTML = pwr;
+			}else{
+				E("rog_wl_power_tr").style.display = "none";
+			}
 			setTimeout("get_temperature();", 2000);
 		},
 		error: function(){
@@ -479,6 +486,10 @@ function menu_hook(title, tab) {
 												<tr>
 													<th>网卡温度</th>
 													<td><span id="rog_wl_temperature"></span></td>
+												</tr>
+												<tr id="rog_wl_power_tr" style="display: none;">
+													<th>发射功率</th>
+													<td><span id="rog_wl_power"></span></td>
 												</tr>
 												<tr>
 													<th>内存使用</th>
