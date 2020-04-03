@@ -45,7 +45,7 @@ install_tar(){
 			dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
 			echo_date ======================== end ============================
 			echo XU6J03M6
-			exit		
+			exit
 		fi
 		
 		if [ -f /tmp/$name/install.sh ];then
