@@ -4,6 +4,8 @@
 
 [反馈地址](https://koolshare.cn/thread-178114-1-1.html)
 
+[更新日志](https://raw.githubusercontent.com/koolshare/rogsoft/master/routerhook/Changelog.txt)
+
 ![](./res/webhook.png)
 
 > 感谢[ServerChan插件](https://koolshare.cn/forum.php?mod=viewthread&tid=123937&highlight=serverchan)作者，本插件基本都是在ServerChan插件基础上进行修改的。ServerChan是为程序员和服务器之间通信的插件，那么本插件可以说就是为路由器和服务器之间通信的插件。至于服务器上的逻辑，需要你自己实现，比如可以通过钉钉机器人、企业微信机器人、ServerChan、HomeAssistant等等实现更丰富的自定义消息处理逻辑。
@@ -35,8 +37,13 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 1. 通过点击`手动推送`按钮可以进行手动消息推送
 1. 如果没啥bug的前提下，你配置的URL列表们就会依次收到路由器的消息回调了，具体的消息格式见下方
 1. 服务器端收到的POST消息中`body`就是JSON序列化后的字符串，你需要进行反序列化哦（例如`JSON.parse(body)`)
+1. 回调URL已支持环境变量功能，即系统会在请求URL前自动将URL中的所有`_PRM_EVENT`字符串替换为当前消息对应的`msgTYPE内容`（如你填写的URL为`https://www.baidu.com/_PRM_EVENT/search?type=_PRM_EVENT&info=aabbcc`则当系统中触发了`ifUP`事件时，回调的URL会变为`https://www.baidu.com/ifUP/search?type=ifUP&info=aabbcc`）
+1. 目前触发类事件（网络重拨或客户端上线）已适配IFTTT官方的WebHook接口
 
 ## 应用举例
+
+#### 通过IFTTT实现丰富功能
+由于触发类事件以支持IFTTT的WEBHOOK功能，所以只需按照上述内容配置好你的IFTTT回调地址，即可在事件发生时触发IFTTT中的逻辑：比如给你手机打电话、发短信、推送消息、发邮件等等。
 
 #### 自定义DDNS
 由于插件可以实现定时或在重拨时推送你的公网IPv4和IPv6地址到你的URL中，所以你可以在自己的后台服务上对接其他的DNS厂商API从而实现更新域名的解析记录，达到DDNS的效果。虽然软件中心中提供了市面上常见的DNS（阿里的、疼讯云的等等），但是如果你还是用的其他的厂商，那么通过此插件你就可以轻松实现啦！（后台服务需要你自己开发哦）
@@ -76,7 +83,7 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 
 ## POST数据格式：
 
-### 手动、定时推送长消息格式
+### 手动、定时推送长消息格式（不适配IFTTT）
 ```json5
 {
 	"msgTYPE": "manuINFO", // 定时推送时候type的值为cronINFO
@@ -163,7 +170,7 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 }
 ```
 
-### 网络重拨上线消息格式
+### 网络重拨上线消息格式（适配IFTTT）
 ```json5
 {
 	"msgTYPE":"ifUP",
@@ -179,11 +186,14 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 			"wanRX":"9.6 GiB",
 			"wanTX":"1.0 GiB"
 		}
-	]
+	],
+	"value1":"upTIME对应内容", // 适配IFTTT的键值对
+	"value2":"wan0的pubIPv4", // 适配IFTTT的键值对
+	"value3":"wan1的pubIPv4" // 适配IFTTT的键值对
 }
 ```
 
-### 设备上线消息格式
+### 设备上线消息格式（适配IFTTT）
 ```json5
 {
 	"msgTYPE": "newDHCP", // 消息type为newDHCP
@@ -192,6 +202,9 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 	"cliMAC": "xxx", // 设备mac地址
 	"upTIME": "2020年03月19日 09点44分38秒", // 上线时间
 	"expTIME": "2020年03月20日 09点44分38秒", // dhcp过期时间
+	"value1":"cliNAME对应内容", // 适配IFTTT的键值对
+	"value2":"cliIP对应内容", // 适配IFTTT的键值对
+	"value3":"cliMAC对应内容", // 适配IFTTT的键值对
 	"cliLISTS":[ // DHCP租期内用户列表（开启开关时候显示）
 		{
 			"ip":"",

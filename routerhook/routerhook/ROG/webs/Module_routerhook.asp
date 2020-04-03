@@ -599,7 +599,9 @@ function version_show() {
                                         <i>1. 你知道WebHook是个啥</i><br>
                                         <i>2. 你搭建了自己的Web服务并有自己的回调地址（可以公网也可以本局域网）</i><br>
                                         <i>3. 配置好就可以用了</i><br>
-                                        <i>4. 具体说明详见：「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank><i>传送门</i></a>」</i>
+                                        <i>4. 具体说明详见：「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank><i>传送门</i></a>」</i><br>
+                                        <i>5. 支持URL中的环境变量替换（即将URL中的_PRM_EVENT字符串替换为当前消息的msgType内容）</i><br>
+                                        <i>6. 回调消息已适配「<a href="https://ifttt.com/maker_webhooks" target=_blank><i>IFTTT</i></a>」官方的WebHook</i>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
@@ -674,7 +676,7 @@ function version_show() {
                                     </table>
                                     <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
                                         <tr>
-                                            <th>Hook URL(最少需要一个回调地址)</th>
+                                            <th>Hook URL(最少需要一个回调地址，会将URL中所有_PRM_EVENT字符串替换为当前消息的msgType)</th>
                                             <th>修改</th>
                                             <th>添加/删除</th>
                                         </tr>
@@ -696,7 +698,7 @@ function version_show() {
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
                                               <tr>
-                                                <td colspan="2">定时发送状态消息 (JSON格式长消息)</td>
+                                                <td colspan="2">定时发送状态消息 (JSON格式长消息，不适配IFTTT)</td>
                                               </tr>
                                           </thead>
                                         <tr>
@@ -968,7 +970,7 @@ function version_show() {
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
                                               <tr>
-                                                <td colspan="2">触发类通知消息 (JSON格式短消息)</td>
+                                                <td colspan="2">触发类通知消息 (JSON格式短消息，已适配IFTTT回调)</td>
                                               </tr>
                                           </thead>
                                         <tr>

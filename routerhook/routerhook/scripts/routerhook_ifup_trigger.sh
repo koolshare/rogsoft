@@ -22,8 +22,9 @@ send_title=`dbus get routerhook_config_name | base64_decode` || "本次未获取
 router_uptime=`cat /proc/uptime | awk '{print $1}' | awk '{print int($1/86400)"天 "int($1%86400/3600)"小时 "int(($1%3600)/60)"分钟 "int($1%60)"秒"}'`
 router_reboot_time=`echo $(TZ=UTC-8 date "+%Y年%m月%d日 %H点%M分%S秒")`
 
+msg_type='ifUP'
 echo '{' > ${routerhook_ifup_text}
-echo '"msgTYPE":"ifUP",' >> ${routerhook_ifup_text}
+echo '"msgTYPE":"'{msg_type}'",' >> ${routerhook_ifup_text}
 echo '"upTIME":"'${router_uptime}'",' >> ${routerhook_ifup_text}
 echo '"rebootTIME":"'${router_reboot_time}'",' >> ${routerhook_ifup_text}
 
@@ -72,14 +73,20 @@ if [ -n "${router_wan1_ifname}" ] && [ -n "${router_wan1_gw}" ]; then
     echo '}' >> ${routerhook_ifup_text}
 fi
 
-echo ']}' >> ${routerhook_ifup_text}
+echo '],' >> ${routerhook_ifup_text}
+echo '"value1":"'${router_uptime}'",' >> ${routerhook_ifup_text}
+echo '"value2":"'${router_wan0_ip4}'",' >> ${routerhook_ifup_text}
+echo '"value3":"'${router_wan1_ip4}'"' >> ${routerhook_ifup_text}
+echo '}' >> ${routerhook_ifup_text}
 
 routerhook_send_content=`jq -c . ${routerhook_ifup_text}`
 sckey_nu=`dbus list routerhook_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
 for nu in ${sckey_nu}
 do
     routerhook_config_sckey=`dbus get routerhook_config_sckey_${nu}`
-    result=`wget --no-check-certificate --post-data "${routerhook_send_content}" -qO- ${routerhook_config_sckey}`
+    routerhook_config_sckey=${routerhook_config_sckey//_PRM_EVENT/$msg_type}
+    reqstr="curl -H \"content-type:application/json\" -X POST -d '"${routerhook_send_content}"' ${routerhook_config_sckey}"
+	result=`eval ${reqstr}`
     if [ -n $(echo $result | grep "success") ];then
         [ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 网络重启信息推送到 URL No.${nu} 成功！！"
     else

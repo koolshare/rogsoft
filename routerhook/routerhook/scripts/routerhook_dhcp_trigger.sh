@@ -87,13 +87,17 @@ fi
 dbus set routerhook_lease_send_mac="${client_lease_mac}"
 dbus set routerhook_lease_send_time="`TZ=UTC-8 date -d "${client_join_time}" +%s`"
 
+msg_type='newDHCP'
 echo '{' > ${routerhook_lease_text}
-echo '"msgTYPE":"newDHCP",' >> ${routerhook_lease_text}
+echo '"msgTYPE":"'${msg_type}'",' >> ${routerhook_lease_text}
 echo '"cliNAME": "'${client_lease_name}'",' >> ${routerhook_lease_text}
 echo '"cliIP":"'${client_lease_ip}'",' >> ${routerhook_lease_text}
 echo '"cliMAC":"'${client_lease_mac}'",' >> ${routerhook_lease_text}
 echo '"upTIME":"'${client_join_time_format}'",' >> ${routerhook_lease_text}
-echo '"expTIME":"'${client_lease_epired_time_format}'"' >> ${routerhook_lease_text}
+echo '"expTIME":"'${client_lease_epired_time_format}'",' >> ${routerhook_lease_text}
+echo '"value1":"'${client_lease_name}'",' >> ${routerhook_lease_text}
+echo '"value2":"'${client_lease_ip}'",' >> ${routerhook_lease_text}
+echo '"value3":"'${client_lease_mac}'"' >> ${routerhook_lease_text}
 
 if [[ ${routerhook_trigger_dhcp_leases} == "1" ]]; then
     dnsmasq_leases_list=`cat ${dnsmasq_leases_file} | sort -t "." -k3n,3 -k4n,4`
@@ -143,7 +147,9 @@ sckey_nu=`dbus list routerhook_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 
 for nu in ${sckey_nu}
 do
     routerhook_config_sckey=`dbus get routerhook_config_sckey_${nu}`
-    result=`wget --no-check-certificate --post-data "${routerhook_send_content}" -qO- ${routerhook_config_sckey}`
+    routerhook_config_sckey=${routerhook_config_sckey//_PRM_EVENT/$msg_type}
+    reqstr="curl -H \"content-type:application/json\" -X POST -d '"${routerhook_send_content}"' ${routerhook_config_sckey}"
+	result=`eval ${reqstr}`
     if [ -n $(echo $result | grep "success") ];then
         [ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 设备上线信息推送到 URL No.${nu} 成功！！"
     else
