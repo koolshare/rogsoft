@@ -10,7 +10,6 @@ else
 fi
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 routerhook_info_text=/tmp/.routerhook_info.json
-softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
 app_file=/tmp/.app.json.js
 dnsmasq_leases_file="/var/lib/misc/dnsmasq.leases"
 rm -rf ${routerhook_info_text} ${app_file}
@@ -30,23 +29,25 @@ if [[ "${clang_action}" == "task" ]]; then
 		fi
 	fi
 fi
-echo '{' > ${routerhook_info_text}
 
+msg_type="cronINFO"
 case "${clang_action}" in
 task)
 	[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 启动定时推送任务！"
-	echo '"msgTYPE":"cronINFO"'>> ${routerhook_info_text}
+	msg_type="cronINFO"
 	;;
 *)
 	[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 启动手动推送任务！"
-	echo '"msgTYPE":"manuINFO"' >> ${routerhook_info_text}
+	msg_type="manuINFO"
 	;;
 esac
 dnsmasq_pid=`ps | grep "dnsmasq" | grep "nobody" | grep -v grep | awk '{print $1}'`
 kill -12 ${dnsmasq_pid}
 sleep 1
 [ ! -L "/koolshare/bin/base64_decode" ] &&  ln -s /koolshare/bin/base64_encode /koolshare/bin/base64_decode
-send_title=`echo "$routerhook_config_name"| base64_decode`
+
+echo '{' > ${routerhook_info_text}
+echo '"msgTYPE":"'${msg_type}'"' >> ${routerhook_info_text}
 
 # 系统运行状态
 if [ "${routerhook_info_system}" == "1" ]; then
@@ -411,7 +412,9 @@ sckey_nu=`dbus list routerhook_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 
 for nu in ${sckey_nu}
 do
 	routerhook_config_sckey=`dbus get routerhook_config_sckey_${nu}`
-	result=`wget --no-check-certificate --post-data "${routerhook_send_content}" -qO- ${routerhook_config_sckey}`
+	routerhook_config_sckey=${routerhook_config_sckey//_PRM_EVENT/$msg_type}
+	reqstr="curl -H \"content-type:application/json\" -X POST -d '"${routerhook_send_content}"' ${routerhook_config_sckey}"
+	result=`eval ${reqstr}`
 	if [ -n $(echo $result | grep "success") ];then
 		[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 路由器状态信息推送到 URL No.${nu} 成功！"
 	else

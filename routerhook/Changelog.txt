@@ -1,5 +1,11 @@
 Koolshare hnd/axhnd router software center routerhook Changelog
 ===========================================
+0.4
+   - feat 新增回调URL中支持动态变量
+   - feat 触发类时间支持IFTTT消息格式
+   - fix 请求有wget改为curl，请求头content-type由'x-www-form-urlencode'修正为'application/json'
+   - bug 重启后定时任务消失，暂不知为何
+
 0.3
    - fix 修复遗留Bug
    - fix 优化卸载脚本
