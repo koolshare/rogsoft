@@ -1,5 +1,9 @@
-Koolshare Asuswrt-Merlin Aliddns Changelog
+Koolshare Asuswrt-Merlin USB2JFFS Changelog
 ===========================================
+1.6 
+   - add	添加arm384机型支持。（需要arm384的1.0.4版本软件中心支持）
+   - update	根据反馈，将插件使用条件：读30MB/s，写50MB/s改为读20MB/s，写35MB/s
+
 1.5
    - fix	修复读取速度和写入速度判断相反的问题。
 

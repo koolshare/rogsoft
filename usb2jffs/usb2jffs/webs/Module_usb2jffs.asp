@@ -724,7 +724,7 @@ function donate(w){
 															&nbsp;&nbsp;&nbsp;&nbsp;因为测试文件块较小，此测试速度和USB磁盘实际速度可能有一定差别，因此本插件的读写速度结果仅供参考。<br />
 															&nbsp;&nbsp;&nbsp;&nbsp;在同等测试条件下，RT-AC86U, RT-AX88U, GT-AC5300等机型的flash读为10MB/s, 写为30MB/s。<br />
 															&nbsp;&nbsp;&nbsp;&nbsp;如果你的USB磁盘读写速度较低，使用本插件将会得到更差的实际体验！。<br />
-															&nbsp;&nbsp;&nbsp;&nbsp;因此，USB2JFFS插件要求USB磁盘设备读取不低于30MB/s, 写入速度不低于为50MB/s。<br />
+															&nbsp;&nbsp;&nbsp;&nbsp;因此，USB2JFFS插件要求USB磁盘设备读取不低于20MB/s, 写入速度不低于为35MB/s。<br />
 														<h4><i>注意事项</i></h4>
 															&nbsp;&nbsp;文件同步：<br />
 															&nbsp;&nbsp;&nbsp;&nbsp;1. 在成功挂载后，会复制原jffs目录下所有文件到USB磁盘的新jffs目录（即.koolshare_jffs文件夹）<br />

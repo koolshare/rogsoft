@@ -4,6 +4,8 @@ source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】'
 eval $(dbus export usb2jffs_)
 LOG_FILE=/tmp/upload/usb2jffs_log.txt
+R_LIMIT=20
+W_LIMIT=35
 KSPATH=${usb2jffs_mount_path}
 true > $LOG_FILE
 http_response "$1"
@@ -51,15 +53,19 @@ get_jffs_original_mount_device(){
 		dbus set usb2jffs_mtd_jffs="$mtd_jffs"
 		return 0
 	else
-		# 挂载了USB jffs的时候，直接给？
-		local model=$(nvram get model)
+		# 防止意外
+		local model=$(nvram get productid)
 		case $model in
 			RT-AC86U|GT-AC5300)
 				mtd_disk="/dev/mtdblock8"
 				return 0
 				;;
-			RT-AX88U|GT-AX11000)
+			RT-AX88U|GT-AX11000|TUF-AX3000)
 				mtd_disk="/dev/mtdblock9"
+				return 0
+				;;
+			RT-AC5300)
+				mtd_disk="/dev/mtdblock4"
 				return 0
 				;;
 			*)
@@ -126,14 +132,15 @@ speed_test(){
 	rm -f /tmp/upload/usb_read_speed*.txt
 	rm -f /tmp/upload/usb_write_speed*.txt
 
-	if [ "$speed_r_int" -gt "30" -a "$speed_w_int" -gt "50" ]; then
+
+	if [ "${speed_r_int}" -gt "${R_LIMIT}" -a "${speed_w_int}" -gt "${W_LIMIT}" ]; then
 		echo_date "USB磁盘[${usb_device}]的读写速度符合USB2JFFS插件要求！"
 		#echo_date "此测试速度和USB磁盘实际速度可能有一定差别，以上读写速度仅供参考！"
 		#echo_date "在同等测试条件下，RT-AC86U, RT-AX88U等机型的flash读为10MB/s, 写为30MB/s"
 		return 0
 	else
 		echo_date "USB磁盘[${usb_device}]的读写速度太低，不符合插件要求！"
-		echo_date "USB2JFFS插件要求USB磁盘设备读取不低于30MB/s, 写入速度不低于为50MB/s"
+		echo_date "USB2JFFS插件要求USB磁盘设备读取不低于${R_LIMIT}MB/s, 写入速度不低于为${W_LIMIT}MB/s"
 		echo_date "此测试速度和USB磁盘实际速度可能有一定差别，以上读写速度仅供参考！"
 		echo_date "在同等测试条件下，RT-AC86U, RT-AX88U等机型的flash读为10MB/s, 写为30MB/s"
 		echo_date "如果你的USB磁盘读写速度较低，使用本插件将会得到更差的实际体验！"
