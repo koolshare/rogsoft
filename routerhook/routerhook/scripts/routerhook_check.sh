@@ -10,7 +10,6 @@ else
 fi
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 routerhook_info_text=/tmp/.routerhook_info.json
-softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
 app_file=/tmp/.app.json.js
 dnsmasq_leases_file="/var/lib/misc/dnsmasq.leases"
 rm -rf ${routerhook_info_text} ${app_file}
