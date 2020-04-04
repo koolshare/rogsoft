@@ -44,8 +44,15 @@ if [ "$ACTION" != "" ]; then
 	BIN_NAME=$ACTION
 fi
 
-if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+MODEL=$(nvram get productid)
+if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+	# 官改固件，骚红皮肤
 	ROG=1
+fi
+
+if [ "$(nvram get productid)" == "TUF-AX3000" ];then
+	# 官改固件，橙色皮肤
+	TUF=1
 fi
 
 LOGGER() {
@@ -151,11 +158,14 @@ install_module() {
 			mv /tmp/${softcenter_installing_module}/uninstall.sh /koolshare/scripts/uninstall_${softcenter_installing_todo}.sh
 		fi
 
-		if [ -d /tmp/${softcenter_installing_module}/GT-AC5300 -a "$ROG" == "1" ]; then
-			cp -rf /tmp/${softcenter_installing_module}/GT-AC5300/* /tmp/${softcenter_installing_module}/
+		if [ -d /tmp/${softcenter_installing_module}/ROG -a "$ROG" == "1" ]; then
+			cp -rf /tmp/${softcenter_installing_module}/ROG/* /tmp/${softcenter_installing_module}/
 		fi
 
-		if [ -d /tmp/${softcenter_installing_module}/ROG -a "$ROG" == "1" ]; then
+		if [ -d /tmp/${softcenter_installing_module}/ROG -a "$TUF" == "1" ]; then
+			# 骚红变橙色
+			find /tmp/${softcenter_installing_module}/ROG/ -name "*.asp" | xargs sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g'
+			find /tmp/${softcenter_installing_module}/ROG/ -name "*.css" | xargs sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g'
 			cp -rf /tmp/${softcenter_installing_module}/ROG/* /tmp/${softcenter_installing_module}/
 		fi
 

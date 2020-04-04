@@ -19,7 +19,6 @@
 	font-size:13px;
 	font-family: Lucida Console;
 	background-image:none;
-	background-color: transparent;
 	background-color: #3e030d;
 	border:1px solid #91071f;
 	color:#FFFFFF;
@@ -63,10 +62,55 @@
 	width: 740px;
 	margin: 1px 0;
 }
-
+.show-install-btn, .show-uninstall-btn {
+	border: 1px solid #680516;
+	background: none;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px 5px 0px 0px;
+}
+.active {
+	background: #680516;
+	border: 1px solid #680516;
+}
+#soft_log {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px;
+	background:transparent;
+	border:1px solid #91071f;
+	color:#FFFFFF;
+}
+#IconContainer {
+	border: 1px solid #680516;
+}
+.ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%);
+}
+.ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);
+}
 [bgcolor="#4D595D"]{
+	background: rgba(0, 0, 0, 0.3);
+}
+[bgcolor="#444f53"]{
 	background: rgba(0, 0, 0, 0.5);
 }
+/* fix system tab */
 .submenuBlock{
 	width:735px;
 	margin-top:-140px;
@@ -74,7 +118,7 @@
 }
 .tab{
 	cursor:pointer;
-	background: rgb(83,4,18);
+	background: #530412;
 	color: White;
 	float: left;
 	height: 30px;

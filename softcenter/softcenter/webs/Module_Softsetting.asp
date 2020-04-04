@@ -20,6 +20,11 @@
 <script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
+<style>
+	input[type=button]:focus {
+		outline: none;
+	}
+</style>
 <script>
 var _responseLen;
 var noChange = 0;
@@ -168,7 +173,7 @@ function get_log(s) {
 											</tr>
 										</table>
 										<div id="log_content" style="margin-top:10px;display: block;">
-											<textarea cols="63" rows="40" wrap="off" readonly="readonly" id="soft_log" style="width:99%; font-family:'Lucida Console'; font-size:12px;background:#475A5F;color:#FFFFFF;"></textarea>
+											<textarea cols="63" rows="40" wrap="off" readonly="readonly" id="soft_log"></textarea>
 										</div>
 										<div class="KoolshareBottom">
 											论坛技术支持: <a href="https://koolshare.cn" target="_blank"> <i><u>https://koolshare.cn</u></i></a><br />

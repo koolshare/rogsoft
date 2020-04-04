@@ -129,16 +129,6 @@ input[type=button]:focus {
 	width:60%;
 	border-right: 1px solid #000;
 }
-.show-install-btn, .show-uninstall-btn {
-	border: none;
-	background: #444;
-	color: #fff;
-	padding: 10px 20px;
-	border-radius: 5px 5px 0px 0px;
-}
-.active {
-	background: #444f53;
-}
 .install-status-1 .uninstall-btn {
 	display: block;
 }
@@ -575,7 +565,7 @@ $(function() {
 			$("#spnCurrVersion").html("<em>" + db_softcenter_["softcenter_version"] + "</em>");
 			var jff2_scripts="<% nvram_get("jffs2_scripts"); %>";
 			if(jff2_scripts != 1){
-				$('#software_center_message').html('<h2><font color="#FF9900">错误！</font></h2><h2>软件中心不可用！因为你没有开启Enable JFFS custom scripts and configs选项！</h2><h2>请前往【系统管理】-<a href="Advanced_System_Content.asp"><u><em>【系统设置】</em></u></a>开启此选项再使用软件中心！！</h2>')
+				$('#software_center_message').html('<h1><font color="#FF9900">错误！</font></h1><h2>软件中心不可用！</h2><h2>因为你没有开启Enable JFFS custom scripts and configs选项！</h2><h2>请前往【系统管理】-<a href="Advanced_System_Content.asp"><u><em>【系统设置】</em></u></a>开启此选项再使用软件中心！</h2><h2>如果你是官改固件，请尝试重置路由器以重新初始化软件中心！</h2><h2>需要更多帮助，请前往<a href="https://koolshare.cn"><em><u>https://koolshare.cn</u></em></a>koolshare论坛交流反馈</h2>')
 			}else{
 				init(function() {
 					toggleAppPanel(1);

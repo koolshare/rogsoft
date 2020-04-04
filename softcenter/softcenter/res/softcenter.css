@@ -62,3 +62,45 @@
 	width: 740px;
 	margin: 1px 0;
 }
+.show-install-btn, .show-uninstall-btn {
+	border: none;
+	background: #444;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px 5px 0px 0px;
+}
+.active {
+	background: #444f53;
+	border: none;
+}
+#soft_log {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px;
+	background:#475A5F;
+	color:#FFFFFF;
+	border:none;
+}
+#IconContainer {
+	border: none;
+}
+.ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
+}
+.ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
+}

@@ -5,10 +5,17 @@
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 alias echo_date='echo 【$(date +%Y年%m月%d日\ %X)】:'
-eval `dbus export soft`
+eval $(dbus export soft)
 TARGET_DIR=/tmp/upload
-if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
+MODEL=$(nvram get productid)
+if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+	# 官改固件，骚红皮肤
 	ROG=1
+fi
+
+if [ "$(nvram get productid)" == "TUF-AX3000" ];then
+	# 官改固件，橙色皮肤
+	TUF=1
 fi
 
 clean(){
@@ -21,7 +28,7 @@ clean(){
 }
 
 install_tar(){
-	name=`echo "$soft_name"|sed 's/.tar.gz//g'|awk -F "_" '{print $1}'|awk -F "-" '{print $1}'`
+	name=$(echo "$soft_name"|sed 's/.tar.gz//g'|awk -F "_" '{print $1}'|awk -F "-" '{print $1}')
 	INSTALL_SUFFIX=_install
 	VER_SUFFIX=_version
 	NAME_SUFFIX=_name
@@ -51,12 +58,12 @@ install_tar(){
 		if [ -f /tmp/$name/install.sh ];then
 			INSTALL_SCRIPT=/tmp/$name/install.sh
 		else
-			INSTALL_SCRIPT_NU=`find /tmp -name "install.sh"|wc -l` 2>/dev/null
-			[ "$INSTALL_SCRIPT_NU" == "1" ] && INSTALL_SCRIPT=`find /tmp -name "install.sh"` || INSTALL_SCRIPT=""
+			INSTALL_SCRIPT_NU=$(find /tmp -name "install.sh"|wc -l) 2>/dev/null
+			[ "$INSTALL_SCRIPT_NU" == "1" ] && INSTALL_SCRIPT=$(find /tmp -name "install.sh") || INSTALL_SCRIPT=""
 		fi
 
 		if [ -n "$INSTALL_SCRIPT" -a -f "$INSTALL_SCRIPT" ];then
-			SCRIPT_AB_DIR=`dirname $INSTALL_SCRIPT`
+			SCRIPT_AB_DIR=$(dirname $INSTALL_SCRIPT)
 			MODULE_NAME=${SCRIPT_AB_DIR##*/}
 			echo_date 准备安装$MODULE_NAME插件！
 			echo_date 找到安装脚本！
@@ -69,38 +76,47 @@ install_tar(){
 			fi
 
 			if [ -d /tmp/$MODULE_NAME/ROG -a "$ROG" == "1" ]; then
+				echo_date "检测到ROG官改皮肤，安装中..."
 				cp -rf /tmp/$MODULE_NAME/ROG/* /tmp/$MODULE_NAME/
+			fi
+
+			if [ -d /tmp/${MODULE_NAME}/ROG -a "$TUF" == "1" ]; then
+				# 骚红变橙色
+				echo_date "检测到TUF官改皮肤，安装中..."
+				find /tmp/${MODULE_NAME}/ROG/ -name "*.asp" | xargs sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g'
+				find /tmp/${MODULE_NAME}/ROG/ -name "*.css" | xargs sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g'
+				cp -rf /tmp/${MODULE_NAME}/ROG/* /tmp/${MODULE_NAME}/
 			fi
 			
 			sleep 1
 			start-stop-daemon -S -q -x $INSTALL_SCRIPT 2>&1
 			if [ "$?" != "0" ];then
-				echo_date 因为$MODULE_NAME插件安装失败！退出离线安装！
+				echo_date 因为${MODULE_NAME}插件安装失败！退出离线安装！
 				clean
-				dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
+				dbus remove "softcenter_module_${MODULE_NAME}${INSTALL_SUFFIX}"
 				echo_date ======================== end ============================
 				echo XU6J03M6
 				exit
 			fi
 			echo_date ====================== step 3 ===========================
-			dbus set "softcenter_module_$MODULE_NAME$NAME_SUFFIX=$MODULE_NAME"
-			dbus set "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX=1"
+			dbus set "softcenter_module_${MODULE_NAME}${NAME_SUFFIX}=${MODULE_NAME}"
+			dbus set "softcenter_module_${MODULE_NAME}${INSTALL_SUFFIX}=1"
 			if [ -n "$soft_install_version" ];then
-				dbus set "softcenter_module_$MODULE_NAME$VER_SUFFIX=$soft_install_version"
+				dbus set "softcenter_module_${MODULE_NAME}${VER_SUFFIX}=$soft_install_version"
 				echo_date "从插件文件名中获取到了版本号：$soft_install_version"
 			else
-				if [ -z "`dbus get softcenter_module_$MODULE_NAME$VER_SUFFIX`" ];then
-					dbus set "softcenter_module_$MODULE_NAME$VER_SUFFIX=0.1"
+				if [ -z "$(dbus get softcenter_module_${MODULE_NAME}${VER_SUFFIX})" ];then
+					dbus set "softcenter_module_${MODULE_NAME}${VER_SUFFIX}=0.1"
 					echo_date "插件安装脚本里没有找到版本号，设置默认版本号为0.1"
 				else
-					echo_date "插件安装脚本已经设置了插件版本号为：`dbus get softcenter_module_$MODULE_NAME$VER_SUFFIX`"
+					echo_date "插件安装脚本已经设置了插件版本号为：$(dbus get softcenter_module_${MODULE_NAME}${VER_SUFFIX})"
 				fi
 			fi
-			install_pid=`ps | grep -w install.sh | grep -v grep | awk '{print $1}'`
+			install_pid=$(ps | grep -w install.sh | grep -v grep | awk '{print $1}')
 			i=120
 			until [ -z "$install_pid" ]
 			do
-				install_pid=`ps | grep -w install.sh | grep -v grep | awk '{print $1}'`
+				install_pid=$(ps | grep -w install.sh | grep -v grep | awk '{print $1}')
 				i=$(($i-1))
 				if [ "$i" -lt 1 ];then
 					echo_date "Could not load nat rules!"
@@ -108,7 +124,7 @@ install_tar(){
 					echo_date 删除相关文件并退出...
 					sleep 1
 					clean
-					dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
+					dbus remove "softcenter_module_${MODULE_NAME}${INSTALL_SUFFIX}"
 					echo_date ======================== end ============================
 					echo XU6J03M6
 					exit

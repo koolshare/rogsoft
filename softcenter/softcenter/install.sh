@@ -1,6 +1,15 @@
 #!/bin/sh
 
-MODEL=$(nvram get model)
+MODEL=$(nvram get productid)
+if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+	# 官改固件，骚红皮肤
+	ROG=1
+fi
+
+if [ "$(nvram get productid)" == "TUF-AX3000" ];then
+	# 官改固件，橙色皮肤
+	TUF=1
+fi
 
 softcenter_install() {
 	if [ -d "/tmp/softcenter" ]; then
@@ -24,8 +33,11 @@ softcenter_install() {
 		# coping files
 		cp -rf /tmp/softcenter/webs/* /koolshare/webs/
 		cp -rf /tmp/softcenter/res/* /koolshare/res/
-		if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
-			cp -rf /tmp/softcenter/ROG/webs/* /koolshare/webs/
+		if [ "$ROG" == "1" ]; then
+			cp -rf /tmp/softcenter/ROG/res/* /koolshare/res/
+		fi
+		if [ "$TUF" == "1" ]; then
+			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/$MODULE/ROG/res/*.css >/dev/null 2>&1
 			cp -rf /tmp/softcenter/ROG/res/* /koolshare/res/
 		fi
 		cp -rf /tmp/softcenter/init.d/* /koolshare/init.d/
@@ -43,23 +55,16 @@ softcenter_install() {
 		[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
 		[ ! -L "/jffs/.asusrouter" ] && ln -sf /koolshare/bin/kscore.sh /jffs/.asusrouter
 		[ -L "/koolshare/bin/base64" ] && rm -rf /koolshare/bin/base64
-		if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+		if [ "$ROG" == "1" -o "$TUF" == "1" ]; then
 			# for offcial mod, RT-AC86U, GT-AC5300
 			[ ! -L "/jffs/etc/profile" ] && ln -sf /koolshare/scripts/base.sh /jffs/etc/profile
 		else
 			# for Merlin mod, RT-AX88U, RT-AC86U
 			[ ! -L "/jffs/configs/profile.add" ] && ln -sf /koolshare/scripts/base.sh /jffs/configs/profile.add
 		fi
-		chmod 755 /koolshare/bin/*
-		chmod 755 /koolshare/init.d/*
-		chmod 755 /koolshare/perp/*
-		chmod 755 /koolshare/perp/.boot/*
-		chmod 755 /koolshare/perp/.control/*
-		chmod 755 /koolshare/perp/httpdb/*
-		chmod 755 /koolshare/scripts/*
 
 		# remove install package
-		rm -rf /tmp/softcenter
+		rm -rf /tmp/softcenter*
 		#============================================
 		# check start up scripts 
 		if [ ! -f "/jffs/scripts/wan-start" ];then
@@ -90,7 +95,7 @@ softcenter_install() {
 			/koolshare/bin/ks-mount-start.sh start \$1
 			EOF
 		else
-			STARTCOMAND3=$(cat /jffs/scripts/post-mount | grep -c "/koolshare/bin/ks-mount-start.sh \$1")
+			STARTCOMAND3=$(cat /jffs/scripts/post-mount | grep -c "/koolshare/bin/ks-mount-start.sh start \$1")
 			[ "$STARTCOMAND3" -gt "1" ] && sed -i '/ks-mount-start.sh/d' /jffs/scripts/post-mount && sed -i '1a /koolshare/bin/ks-mount-start.sh start $1' /jffs/scripts/post-mount
 			[ "$STARTCOMAND3" == "0" ] && sed -i '/ks-mount-start.sh/d' /jffs/scripts/post-mount && sed -i '1a /koolshare/bin/ks-mount-start.sh start $1' /jffs/scripts/post-mount
 		fi
@@ -116,7 +121,15 @@ softcenter_install() {
 			[ "$STARTCOMAND5" -gt "1" ] && sed -i '/ks-unmount.sh/d' /jffs/scripts/unmount && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
 			[ "$STARTCOMAND5" == "0" ] && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
 		fi
-		chmod +x /jffs/scripts/*
+
+		chmod 755 /jffs/scripts/*
+		chmod 755 /koolshare/bin/*
+		chmod 755 /koolshare/init.d/*
+		chmod 755 /koolshare/perp/*
+		chmod 755 /koolshare/perp/.boot/*
+		chmod 755 /koolshare/perp/.control/*
+		chmod 755 /koolshare/perp/httpdb/*
+		chmod 755 /koolshare/scripts/*
 		#============================================
 		# now try to reboot httpdb if httpdb not started
 		# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh
