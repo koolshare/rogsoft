@@ -144,15 +144,15 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-04-04_23:12:27", 
+            "build_date": "2020-04-04_23:16:40", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "e7a6165b31b0a0bde3fc1679cd656dfd", 
+            "md5": "98fb9a434e01ae3a996f36066d74427b", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "2.5"
+            "version": "2.6"
         }, 
         {
             "build_date": "2020-04-03_22:58:05", 
@@ -233,7 +233,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "8a60edf5d4d0e540b96f3ed8a3028995", 
+    "md5": "09540a16cc60d5a730a8e5c2126d505e", 
     "tar_url": "softcenter/softcenter.tar.gz", 
     "version": "1.5.5"
 }

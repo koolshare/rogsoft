@@ -41,7 +41,7 @@ GT-AC5300|GT-AX11000)
 		wl_txpwr=""
 	fi
 	;;
-RT-AC86U|RT-AX88U)
+RT-AC86U|RT-AX88U|TUF-AX3000|*)
 	interface_2g=$(nvram get wl0_ifname)
 	interface_5g1=$(nvram get wl1_ifname)
 	interface_2g_temperature=$(wl -i ${interface_2g} phy_tempsense | awk '{print $1}') 2>/dev/null
