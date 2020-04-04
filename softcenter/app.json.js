@@ -1,22 +1,22 @@
 {
     "apps": [
         {
-            "build_date": "2019-07-10_16:40:45", 
+            "build_date": "2020-04-04_23:12:16", 
             "changelog": "", 
             "description": "自动部署SSL证书", 
             "home_url": "Module_acme.asp", 
-            "md5": "8b5283ea294497bc8f8b5759df3d97f3", 
+            "md5": "953432f700d62ee7706ec463adcbfe9d", 
             "name": "acme", 
             "tar_url": "acme/acme.tar.gz", 
             "title": "Let's Encrypt", 
             "version": "3.0"
         }, 
         {
-            "build_date": "2020-03-27_21:45:03", 
+            "build_date": "2020-04-04_23:12:22", 
             "changelog": "", 
             "description": "aliddns", 
             "home_url": "Module_aliddns.asp", 
-            "md5": "72740de60fbffbedcb40813d7d3f34df", 
+            "md5": "d3d6a8364050fb71167fabfaf4978422", 
             "name": "aliddns", 
             "tar_url": "aliddns/aliddns.tar.gz", 
             "title": "阿里DDNS", 
@@ -144,11 +144,11 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-03-31_00:25:13", 
+            "build_date": "2020-04-04_23:12:27", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "801e89ae686e0c3a9f50fbeae787b833", 
+            "md5": "e7a6165b31b0a0bde3fc1679cd656dfd", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 

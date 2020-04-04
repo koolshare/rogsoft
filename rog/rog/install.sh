@@ -2,6 +2,7 @@
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 DIR=$(cd $(dirname $0); pwd)
+MODEL=$(nvram get productid)
 odmpid=$(nvram get odmpid)
 
 # 判断路由架构和平台
@@ -34,11 +35,13 @@ case $(uname -m) in
 	;;
 esac
 
-if [ "$(nvram get model)" == "GT-AC5300" ] || [ "$(nvram get model)" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$MODEL" == "RT-AC86U" ];then
+	# 官改固件，骚红皮肤
 	ROG=1
 fi
 
-if [ "$(nvram get productid)" == "TUF-AX3000" ];then
+if [ "$MODEL" == "TUF-AX3000" ];then
+	# 官改固件，橙色皮肤
 	TUF=1
 fi
 
@@ -55,10 +58,7 @@ if [ "$ROG" == "1" ];then
 fi
 if [ "$TUF" == "1" ];then
 	# rog ui to tuf ui
-	find /tmp/$MODULE/ROG -name "*.css" | xargs sed -i 's/91071f/92650F/g'
-	find /tmp/$MODULE/ROG -name "*.css" | xargs sed -i 's/680516/D0982C/g'
-	find /tmp/$MODULE/ROG -name "*.asp" | xargs sed -i 's/91071f/92650F/g'
-	find /tmp/$MODULE/ROG -name "*.asp" | xargs sed -i 's/680516/D0982C/g'
+	sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/$MODULE/ROG/webs/Module_rog.asp >/dev/null 2>&1
 	cp -rf /tmp/$MODULE/ROG/webs/* /koolshare/webs/
 fi
 chmod +x /koolshare/scripts/rog*
