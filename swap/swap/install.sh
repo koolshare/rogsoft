@@ -1,6 +1,7 @@
 #! /bin/sh
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
+MODEL=$(nvram get productid)
 DIR=$(cd $(dirname $0); pwd)
 
 # 判断路由架构和平台
@@ -8,6 +9,16 @@ case $(uname -m) in
 	aarch64)
 		if [ "`uname -o|grep Merlin`" ] && [ -d "/koolshare" ];then
 			echo_date 固件平台【koolshare merlin hnd/axhnd aarch64】符合安装要求，开始安装插件！
+		else
+			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
+			echo_date 退出安装！
+			rm -rf /tmp/swap* >/dev/null 2>&1
+			exit 1
+		fi
+		;;
+	armv7l)
+		if [ "$MODEL" == "TUF-AX3000" -a -d "/koolshare" ];then
+			echo_date 固件TUF-AX3000 koolshare官改固件符合安装要求，开始安装插件！
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
 			echo_date 退出安装！
@@ -23,6 +34,16 @@ case $(uname -m) in
 	;;
 esac
 
+if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$MODEL" == "RT-AC86U" ];then
+	# 官改固件，骚红皮肤
+	ROG=1
+fi
+
+if [ "$MODEL" == "TUF-AX3000" ];then
+	# 官改固件，橙色皮肤
+	TUF=1
+fi
+
 # 安装插件
 find /koolshare/init.d/ -name "*swap.sh*"|xargs rm -rf
 cd /tmp
@@ -36,12 +57,12 @@ cd /
 if [ ! -f "/jffs/scripts/post-mount" ];then
 	cat > /jffs/scripts/post-mount <<-EOF
 	#!/bin/sh
-	/koolshare/bin/ks-mount-start.sh start
+	/koolshare/bin/ks-mount-start.sh start \$1
 	EOF
-	chmod +x /jffs/scripts/post-mount
 else
-	STARTCOMAND2=`cat /jffs/scripts/post-mount | grep ks-mount-start`
-	[ -z "$STARTCOMAND2" ] && sed -i '1a /koolshare/bin/ks-mount-start.sh start' /jffs/scripts/post-mount
+	STARTCOMAND3=$(cat /jffs/scripts/post-mount | grep -c "/koolshare/bin/ks-mount-start.sh start \$1")
+	[ "$STARTCOMAND3" -gt "1" ] && sed -i '/ks-mount-start.sh/d' /jffs/scripts/post-mount && sed -i '1a /koolshare/bin/ks-mount-start.sh start $1' /jffs/scripts/post-mount
+	[ "$STARTCOMAND3" == "0" ] && sed -i '/ks-mount-start.sh/d' /jffs/scripts/post-mount && sed -i '1a /koolshare/bin/ks-mount-start.sh start $1' /jffs/scripts/post-mount
 fi
 chmod +x /jffs/scripts/post-mount
 chmod +X /koolshare/bin/*
