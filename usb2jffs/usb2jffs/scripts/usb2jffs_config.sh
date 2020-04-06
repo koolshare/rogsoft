@@ -220,7 +220,7 @@ start_usb2jffs(){
 			echo_date "/cifs2挂载失败，将无法使用同步功能！！"
 		fi
 		set_stop_sync
-		set_sync_job
+		set_sync_job "start"
 		echo_date "完成！"
 	else
 		echo_date "USB型JFFS挂载失败！！"
@@ -442,6 +442,17 @@ del_sync_job(){
 }
 
 set_sync_job(){
+	if [ $1 == "start" ]; then
+		nv_usb2jffs_sync=$(nvram get usb2jffs_sync)
+		case $nv_usb2jffs_sync in
+			0|1|2|3|4|5)
+				echo_date "start usb2jffs. nv_usb2jffs_sync = ${nv_usb2jffs_sync}, overwrite by nv." | tee -a $LOG_FILE
+				usb2jffs_sync=${nv_usb2jffs_sync}
+				;;
+			*)
+				;;
+		esac
+	fi
 	if [ "${usb2jffs_sync}" == "0" ]; then
 		echo_date "删除插件定时同步任务..."
 		sed -i '/usb2jffs_sync/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
@@ -470,6 +481,8 @@ set_sync_job(){
 		echo_date "设置每天${check_custom_time}时的${usb2jffs_time_min}分同步文件..."
 		cru a usb2jffs_sync ${usb2jffs_time_min} ${check_custom_time}" * * * sh /koolshare/scripts/usb2jffs_config.sh sync"
 	fi
+	nvram set usb2jffs_sync=${usb2jffs_sync}
+	nvram commit
 }
 
 set_stop_sync(){
