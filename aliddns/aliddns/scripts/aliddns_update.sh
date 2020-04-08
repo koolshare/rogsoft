@@ -151,7 +151,7 @@ start_update() {
 	}
 	
 	query_recordid() {
-		send_request "DescribeSubDomainRecords" "SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&SubDomain=$aliddns_name1.$aliddns_domain&Timestamp=$timestamp"
+		send_request "DescribeSubDomainRecords" "SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&SubDomain=$aliddns_name1.$aliddns_domain&Timestamp=$timestamp&Type=A"
 	}
 	
 	update_record() {
@@ -194,7 +194,7 @@ start_update() {
 		echo_date "[aliddns_update.sh]：本次更新失败，原因：无法获取域名record id ！"
 	else
 		# success
-		dbus set aliddns_record_id="$aliddns_record_id"
+		#dbus set aliddns_record_id="$aliddns_record_id"
 		dbus set aliddns_last_act="$now: success, ($ip)"
 		echo_date "[aliddns_update.sh]：更新成功，本次IP：$ip！"
 	fi
