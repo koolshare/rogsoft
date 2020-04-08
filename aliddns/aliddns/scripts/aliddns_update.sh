@@ -175,9 +175,9 @@ start_update() {
 		;;
 	esac
 	
-	if [ -z "$aliddns_record_id" ];then
+	#if [ -z "$aliddns_record_id" ];then
 		aliddns_record_id=$(query_recordid | get_recordid)
-	fi
+	#fi
 	
 	if [ -z "$aliddns_record_id" ];then
 		aliddns_record_id=$(add_record | get_recordid)
