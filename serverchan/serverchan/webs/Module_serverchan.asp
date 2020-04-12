@@ -114,6 +114,7 @@
 .serverchan_btn {
     border: 1px solid #222;
     background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rog */
     font-size:10pt;
     color: #fff;
     padding: 5px 5px;
@@ -123,11 +124,23 @@
 .serverchan_btn:hover {
     border: 1px solid #222;
     background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rog */
     font-size:10pt;
     color: #fff;
     padding: 5px 5px;
     border-radius: 5px 5px 5px 5px;
     width:16%;
+}
+#serverchan_trigger_dhcp_white {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px;
+	text-transform: none;
+	margin-top:5px;
+	color:#FFFFFF;
+	background:#475A5F;
+	background:transparent; /* W3C rog */
+	border:1px solid #91071f; /* W3C rog */
 }
 input[type=button]:focus {
     outline: none;
@@ -961,7 +974,7 @@ function version_show() {
                                                 <textarea placeholder="# 填入设备MAC地址，一行一个，格式如下：
                                                 aa:bb:cc:dd:ee:ff
                                                 aa:bb:cc:dd:ee:ff #我的电脑
-                                                a1:b2:c3:d4:e5:f6 #我的手机" cols="50" rows="7" id="serverchan_trigger_dhcp_white" name="serverchan_trigger_dhcp_white" style="width:99%; font-family:'Lucida Console'; font-size:12px;background:#475A5F;color:#FFFFFF;text-transform:none;margin-top:5px;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                                                a1:b2:c3:d4:e5:f6 #我的手机" cols="50" rows="7" id="serverchan_trigger_dhcp_white" name="serverchan_trigger_dhcp_white" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                                             </td>
                                         </tr>
 
