@@ -67,22 +67,22 @@
             "version": "2.0"
         }, 
         {
-            "build_date": "2020-03-05_13:05:46", 
+            "build_date": "2020-04-12_16:56:24", 
             "changelog": "", 
             "description": "易有云 （EasyExplorer） 跨平台文件同步，支持双向同步！", 
             "home_url": "Module_easyexplorer.asp", 
-            "md5": "a4f8c2d6a47b83562e4029d4d7b5ad8e", 
+            "md5": "346556aa7d593dbcfc6f4bef97a0dcd8", 
             "name": "easyexplorer", 
             "tar_url": "easyexplorer/easyexplorer.tar.gz", 
             "title": "易有云", 
             "version": "2.4"
         }, 
         {
-            "build_date": "2019-07-10_23:35:24", 
+            "build_date": "2020-04-12_16:56:29", 
             "changelog": "", 
             "description": "迅雷快鸟，上网必备神器", 
             "home_url": "Module_fastd1ck.asp", 
-            "md5": "79f3e0e2daf6a020fee1db1acc5c3393", 
+            "md5": "c42d32599a6a188bfeca9d13187dabde", 
             "name": "fastd1ck", 
             "tar_url": "fastd1ck/fastd1ck.tar.gz", 
             "title": "迅雷快鸟", 
