@@ -1,9 +1,9 @@
 {
-"version":"3.8.4",
-"md5":"9df3ab1a1b70b5e205ed6680f449d058",
+"version":"3.8.4.1",
+"md5":"8a47af270acab902c9fa93cf16267b48",
 "home_url":"Module_koolproxy.asp",
-"title":"koolproxy",
-"description":"koolproxy",
+"title":"KidsProtect",
+"description":"KP: Kids Protect，互联网内容过滤，保护未成年人上网~",
 "changelog":"",
-"build_date":"2019-07-10_20:20:22"
+"build_date":"2020-04-12_11:58:52"
 }

@@ -111,6 +111,17 @@
             "version": "1.5"
         }, 
         {
+            "build_date": "2020-04-12_11:58:52", 
+            "changelog": "", 
+            "description": "KP: Kids Protect，互联网内容过滤，保护未成年人上网~", 
+            "home_url": "Module_koolproxy.asp", 
+            "md5": "8a47af270acab902c9fa93cf16267b48", 
+            "name": "koolproxy", 
+            "tar_url": "koolproxy/koolproxy.tar.gz", 
+            "title": "KidsProtect", 
+            "version": "3.8.4.1"
+        }, 
+        {
             "build_date": "2019-07-10_20:18:55", 
             "changelog": "", 
             "description": "pppoe单线多拨，带宽提升神器！", 
@@ -233,7 +244,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "09540a16cc60d5a730a8e5c2126d505e", 
+    "md5": "1a1126e7a70393cbc1a49ed1e0a48f98", 
     "tar_url": "softcenter/softcenter.tar.gz", 
     "version": "1.5.5"
 }

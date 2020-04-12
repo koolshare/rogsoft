@@ -2,29 +2,55 @@
 source /koolshare/scripts/base.sh
 eval `dbus export koolproxy`
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
+module=koolproxy
+MODEL=$(nvram get productid)
 DIR=$(cd $(dirname $0); pwd)
 mkdir -p /tmp/upload
 touch /tmp/upload/kp_log.txt
 
+remove_install_file(){
+	rm -rf /tmp/${module}* >/dev/null 2>&1
+}
+
 # 判断路由架构和平台
 case $(uname -m) in
 	aarch64)
-		if [ "`uname -o|grep Merlin`" ] && [ -d "/koolshare" ];then
+		if [ "$(uname -o|grep Merlin)" -a -d "/koolshare" ];then
 			echo_date 固件平台【koolshare merlin hnd/axhnd aarch64】符合安装要求，开始安装插件！
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
 			echo_date 退出安装！
-			rm -rf /tmp/koolproxy* >/dev/null 2>&1
+			remove_install_file
+			exit 1
+		fi
+		;;
+	armv7l)
+		if [ "$MODEL" == "TUF-AX3000" -a -d "/koolshare" ];then
+			echo_date 固件TUF-AX3000 koolshare官改固件符合安装要求，开始安装插件！
+		else
+			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
+			echo_date 退出安装！
+			remove_install_file
 			exit 1
 		fi
 		;;
 	*)
 		echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的平台：$(uname -m)不能安装！！！
 		echo_date 退出安装！
-		rm -rf /tmp/koolproxy* >/dev/null 2>&1
+		remove_install_file
 		exit 1
 	;;
 esac
+
+if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$MODEL" == "RT-AC86U" ];then
+	# 官改固件，骚红皮肤
+	ROG=1
+fi
+
+if [ "$MODEL" == "TUF-AX3000" ];then
+	# 官改固件，橙色皮肤
+	TUF=1
+fi
 
 # stop koolproxy first
 if [ "$koolproxy_enable" == "1" ] && [ -f "/koolshare/koolproxy/kp_config.sh" ];then
@@ -56,8 +82,12 @@ mkdir -p /koolshare/koolproxy/data/rules
 cp -rf /tmp/koolproxy/scripts/* /koolshare/scripts/
 cp -rf /tmp/koolproxy/webs/* /koolshare/webs/
 cp -rf /tmp/koolproxy/res/* /koolshare/res/
-if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
+if [ "$ROG" ];then
 	cp -rf /tmp/koolproxy/ROG/webs/* /koolshare/webs/
+fi
+if [ "$TUF" ];then
+	cp -rf /tmp/koolproxy/ROG/webs/* /koolshare/webs/
+	sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_koolproxy.asp >/dev/null 2>&1
 fi
 if [ ! -f /koolshare/koolproxy/data/rules/user.txt ];then
 	cp -rf /tmp/koolproxy/koolproxy /koolshare/
@@ -86,8 +116,8 @@ dbus set koolproxy_version="$(cat $DIR/version)"
 dbus set softcenter_module_koolproxy_version="$(cat $DIR/version)"
 dbus set softcenter_module_koolproxy_install="1"
 dbus set softcenter_module_koolproxy_name="koolproxy"
-dbus set softcenter_module_koolproxy_title="koolproxy"
-dbus set softcenter_module_koolproxy_description="koolproxy"
+dbus set softcenter_module_koolproxy_title="KidsProtect"
+dbus set softcenter_module_koolproxy_description="KP: Kids Protect，互联网内容过滤，保护未成年人上网~"
 
 # restart
 if [ "$koolproxy_enable" == "1" ] && [ -f "/koolshare/koolproxy/kp_config.sh" ];then
