@@ -1,5 +1,9 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
+2.0
+   - update	同名不同类型的DNS将获取到两个id导致更新记录失败，所以加上了强制类型为A记录。（thx to @whyic）
+   - update	更换新纪录的时候会删除旧记录
+
 1.9
    - fix	修复域名解析失败的问题.
    
