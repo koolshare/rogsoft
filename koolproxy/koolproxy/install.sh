@@ -82,12 +82,14 @@ mkdir -p /koolshare/koolproxy/data/rules
 cp -rf /tmp/koolproxy/scripts/* /koolshare/scripts/
 cp -rf /tmp/koolproxy/webs/* /koolshare/webs/
 cp -rf /tmp/koolproxy/res/* /koolshare/res/
-if [ "$ROG" ];then
-	cp -rf /tmp/koolproxy/ROG/webs/* /koolshare/webs/
-fi
-if [ "$TUF" ];then
-	cp -rf /tmp/koolproxy/ROG/webs/* /koolshare/webs/
-	sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_koolproxy.asp >/dev/null 2>&1
+if [ "$ROG" == "1" ];then
+	continue
+else
+	if [ "$TUF" == "1" ];then
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	else
+		sed -i '/rogcss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	fi
 fi
 if [ ! -f /koolshare/koolproxy/data/rules/user.txt ];then
 	cp -rf /tmp/koolproxy/koolproxy /koolshare/
@@ -125,5 +127,5 @@ if [ "$koolproxy_enable" == "1" ] && [ -f "/koolshare/koolproxy/kp_config.sh" ];
 fi
 # 完成
 echo_date "koolproxy插件安装完毕！"
-rm -rf /tmp/koolproxy* >/dev/null 2>&1
+remove_install_file
 exit 0

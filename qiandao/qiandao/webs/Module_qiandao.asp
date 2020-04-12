@@ -55,10 +55,14 @@ input[type=button]:focus {
 	width:8.45601%;
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #919fa4 0%, #67767d 100%);
+	border: 1px solid #91071f; /* W3C rogcss*/
+	background: none; /* W3C rogcss*/
 }
 .active {
 	background: linear-gradient(to bottom, #61b5de 0%, #279fd9 100%);
 	border: 1px solid #222;
+	background: linear-gradient(to bottom, #cf0a2c 0%, #91071f 100%); /* W3C rogcss*/
+	border: 1px solid #91071f; /* W3C rogcss*/
 }
 #log_content1 {
 	width:97%;
@@ -71,9 +75,12 @@ input[type=button]:focus {
 	overflow-x:hidden;
 	border:0px solid #222;
 	background:#475A5F;
+	border:1px solid #91071f; /* W3C rogcss*/
+	background:transparent; /* W3C rogcss*/
 }
 #qiandao_setting, #qiandao_log{
 	margin: -1px 0px 0px 0px;
+	border: 1px solid rgb(145, 7, 31); /* W3C rogcss*/
 }
 </style>
 <script>
