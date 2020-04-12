@@ -80,7 +80,7 @@ input[type=button]:focus {
 }
 #qiandao_setting, #qiandao_log{
 	margin: -1px 0px 0px 0px;
-	border: 1px solid rgb(145, 7, 31); /* W3C rogcss*/
+	border: 1px solid #91071f; /* W3C rogcss*/
 }
 </style>
 <script>
