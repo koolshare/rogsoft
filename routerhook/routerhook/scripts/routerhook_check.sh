@@ -408,16 +408,5 @@ fi
 echo '}' >> ${routerhook_info_text}
 
 routerhook_send_content=`jq -c . ${routerhook_info_text}`
-sckey_nu=`dbus list routerhook_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
-for nu in ${sckey_nu}
-do
-	routerhook_config_sckey=`dbus get routerhook_config_sckey_${nu}`
-	routerhook_config_sckey=${routerhook_config_sckey//_PRM_EVENT/$msg_type}
-	reqstr="curl -H \"content-type:application/json\" -X POST -d '"${routerhook_send_content}"' ${routerhook_config_sckey}"
-	result=`eval ${reqstr}`
-	if [ -n $(echo $result | grep "success") ];then
-		[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 路由器状态信息推送到 URL No.${nu} 成功！"
-	else
-		[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 路由器状态信息推送到 URL No.${nu} 失败，请检查网络及配置！"
-	fi
-done
+
+source /koolshare/scripts/routerhook_sender.sh

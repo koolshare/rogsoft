@@ -131,6 +131,17 @@
     border-radius: 5px 5px 5px 5px;
     width:16%;
 }
+#routerhook_sm_bwlist {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px;
+	text-transform: none;
+	margin-top:5px;
+	color:#FFFFFF;
+	background:#475A5F;
+	background:transparent; /* W3C rog */
+	border:1px solid #91071f; /* W3C rog */
+}
 #routerhook_trigger_dhcp_white {
 	width:99%;
 	font-family:'Lucida Console';
@@ -162,7 +173,7 @@ var db_routerhook = {}
 function initial() {
 	show_menu();
 	get_dbus_data();
-	refresh_table();
+    refresh_table();
 	version_show();
 }
 
@@ -174,7 +185,6 @@ function get_dbus_data() {
 		async: false,
 		success: function(data) {
 			db_routerhook = data.result[0];
-			console.log(db_routerhook);
 			conf2obj();
 			$("#routerhook_version_show").html("<i>插件版本：" + db_routerhook["routerhook_version"] + "</i>")
 		}
@@ -375,6 +385,25 @@ function menu_hook(title, tab) {
 	tablink[tablink.length - 1] = new Array("", "Module_routerhook.asp");
 }
 
+function refresh_table() {
+	//获取dbus数据接口，该接口获取dbus list routerhook的所有值
+	$.ajax({
+		type: "GET",
+		url: "/_api/routerhook_",
+		dataType: "json",
+		async: false,
+		success: function(response) {
+			db_routerhook=response.result[0];
+			//先删除表格中的行，留下前两行，表头和数据填写行
+            $("#conf_table").find("tr:gt(1)").remove();
+            $("#header_table").find("tr:gt(1)").remove();
+			//在表格中增加行，增加的行的内容来自refresh_html()函数生成
+            $('#conf_table tr:last').after(refresh_html());
+            $('#header_table tr:last').after(refresh_header_html());
+		}
+	});
+}
+
 function addTr(o) { //添加配置行操作
 	var _form_addTr = document.form;
 	if (trim(_form_addTr.config_sckey.value) == "") {
@@ -446,21 +475,16 @@ function delTr(o) { //删除配置行功能
 	}
 }
 
-function refresh_table() {
-	//获取dbus数据接口，该接口获取dbus list routerhook的所有值
-	$.ajax({
-		type: "GET",
-		url: "/_api/routerhook_",
-		dataType: "json",
-		async: false,
-		success: function(response) {
-			db_routerhook=response.result[0];
-				//先删除表格中的行，留下前两行，表头和数据填写行
-			$("#conf_table").find("tr:gt(1)").remove();
-			//在表格中增加行，增加的行的内容来自refresh_html()函数生成
-			$('#conf_table tr:last').after(refresh_html());
-		}
-	});
+function editlTr(o) { //编辑节点功能，显示编辑面板
+	checkTime = 2001; //编辑节点时停止可能在进行的刷新
+	var id = $(o).attr("id");
+	var ids = id.split("_");
+	confs = getAllConfigs();
+	id = ids[ids.length - 1];
+	var c = confs[id];
+
+	document.form.config_sckey.value = c["config_sckey"];
+	myid = id; //返回ID号
 }
 var myid;
 
@@ -468,22 +492,24 @@ function getAllConfigs() { //用dbus数据生成数据组，方便用于refresh_
 	var dic = {};
 	node_max = 0; //定义配置行数，用于每行配置的后缀
 	for (var field in db_routerhook) {
-		names = field.split("_");
-		dic[names[names.length - 1]] = 'ok';
+		let names = field.split("_");
+        let suffix = names[names.length-1]
+        if(parseInt(suffix) > 0)
+        	dic[names[names.length - 1]] = 'ok';
 	}
-	confs = {};
+	let confs = {};
 	var p = "routerhook";
-	var params = ["config_sckey"];
+    var params = ["config_sckey"];
 	for (var field in dic) {
 		var obj = {};
 		for (var i = 0; i < params.length; i++) {
-			var ofield = p + "_" + params[i] + "_" + field;
+            var ofield = p + "_" + params[i] + "_" + field;
 			if (typeof db_routerhook[ofield] == "undefined") {
 				obj = null;
 				break;
 			}
 			obj[params[i]] = db_routerhook[ofield];
-			//alert(i);
+            //alert(i);
 		}
 		if (obj != null) {
 			var node_i = parseInt(field);
@@ -494,7 +520,7 @@ function getAllConfigs() { //用dbus数据生成数据组，方便用于refresh_
 			confs[field] = obj;
 		}
 	}
-	//总之，最后生成了confs数组
+    //总之，最后生成了confs数组
 	return confs;
 }
 
@@ -508,11 +534,11 @@ function refresh_html() { //用conf数据生成配置表格
 	for (var field in confs) {
 		var c = confs[field];
 		html = html + '<tr>';
-		html = html + '<td><input class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_sckey"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:430px;margin-top: 3px;" disabled="disabled" /></td>';
-		html = html + '<td>';
+		html = html + '<td><input class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_sckey"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:580px;margin-top: 3px;" disabled="disabled" /></td>';
+		html = html + '<td width="7%">';
 		html = html + '<input style="margin-left:-3px;" id="dd_node_' + c["node"] + '" class="edit_btn" type="button" onclick="editlTr(this);" value="">'
 		html = html + '</td>';
-		html = html + '<td>';
+		html = html + '<td width="10%">';
 		html = html + '<input style="margin-top: 4px;margin-left:-3px;" id="td_node_' + c["node"] + '" class="remove_btn" type="button" onclick="delTr(this);" value="">'
 		html = html + '</td>';
 		html = html + '</tr>';
@@ -520,16 +546,141 @@ function refresh_html() { //用conf数据生成配置表格
 	return html;
 }
 
-function editlTr(o) { //编辑节点功能，显示编辑面板
+function addHr(o) { //添加自定义header操作
+	var _form_addTr = document.form;
+	if (trim(_form_addTr.config_header_key.value) == "") {
+		alert("提交Header的Key不能为空!");
+		return false;
+	}
+	var ns = {};
+	node_max_header += 1;
+	// 定义ns数组，用于回传给dbus
+	var p = "routerhook_config_header";
+	if (!myhid) {
+        ns[p + "_key_" + node_max_header] = $('#config_header_key').val();
+        ns[p + "_val_" + node_max_header] = $('#config_header_val').val();
+	} else {
+        ns[p + "_key_" + myhid] = $('#config_header_key').val();
+        ns[p + "_val_" + myhid] = $('#config_header_val').val();
+    }
+	//回传网页数据给dbus接口，此处回传不同于form表单回传
+	var id = parseInt(Math.random() * 100000000);
+	var postData = {"id": id, "method": "dummy_script.sh", "params":[2], "fields": ns};
+	$.ajax({
+		type: "POST",
+		cache: false,
+		url: "/_api/",
+		data: JSON.stringify(postData),
+		dataType: "json",
+		success: function(response) {
+			if (response.result == id){
+				//回传成功后，重新生成表格
+				refresh_table();
+				// 添加成功一个后将输入框清空
+                document.form.config_header_key.value = "";
+                document.form.config_header_val.value = "";
+			}
+		}
+	});
+	myhid = 0;
+}
+
+function delHr(o) { //删除自定义配置Header
+	if (confirm("你确定删除吗？")) {
+		//定位每行配置对应的ID号
+		var id = $(o).attr("id");
+		var ids = id.split("_");
+		var p = "routerhook_config_header";
+		id = ids[ids.length - 1];
+		// 定义ns数组，用于回传给dbus
+		var ns = {};
+		//空的值，用于清除dbus中的对应值
+        ns[p + "_key_" + id] = "";
+		ns[p + "_val_" + id] = "";
+		//回传删除数据操作给dbus接口
+		var id = parseInt(Math.random() * 100000000);
+		var postData = {"id": id, "method": "dummy_script.sh", "params":[2], "fields": ns};
+		$.ajax({
+			type: "POST",
+			cache:false,
+			url: "/_api/",
+			data: JSON.stringify(postData),
+			dataType: "json",
+			success: function(response) {
+				refresh_table();
+			}
+		});
+	}
+}
+
+function editlHr(o) { //编辑自定义Header节点功能，显示编辑面板
 	checkTime = 2001; //编辑节点时停止可能在进行的刷新
 	var id = $(o).attr("id");
 	var ids = id.split("_");
-	confs = getAllConfigs();
+	confs = getAllHeaderConfigs();
 	id = ids[ids.length - 1];
 	var c = confs[id];
 
-	document.form.config_sckey.value = c["config_sckey"];
-	myid = id; //返回ID号
+    document.form.config_header_key.value = c["key"];
+    document.form.config_header_val.value = c["val"];
+
+	myhid = id; //返回ID号
+}
+var myhid;
+
+function getAllHeaderConfigs() { //用dbus数据生成数据组，方便用于refresh_header_html()生成表格
+	var dic = {};
+	node_max_header = 0; //定义配置行数，用于每行配置的后缀
+	for (var field in db_routerhook) {
+		let names = field.split("_");
+        let suffix = names[names.length-1]
+        if(parseInt(suffix) > 0)
+        	dic[names[names.length - 1]] = 'ok';
+	}
+	let confs = {};
+	for (var field in dic) {
+		var obj = {};
+        let f1 = "routerhook_config_header_key_" + field;
+        let f2 = "routerhook_config_header_val_" + field;
+		if (typeof db_routerhook[f1] != "undefined") {
+            let node_i = parseInt(field);
+			if (node_i > node_max_header) {
+				node_max_header = node_i;
+			}
+            obj['key'] = db_routerhook[f1];
+            obj['val'] = db_routerhook[f2];
+			obj["node"] = field;
+			confs[field] = obj;
+        }
+	}
+    //总之，最后生成了confs数组
+	return confs;
+}
+
+function refresh_header_html() { //用conf数据生成配置表格
+	let confs = getAllHeaderConfigs();
+	var n = 0;
+	for (var i in confs) {
+		n++;
+	} //获取节点的数目
+	var html = '';
+	for (var field in confs) {
+		var c = confs[field];
+		html = html + '<tr>';
+		html = html + '<td>';
+        html = html + '<input type="input" class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="100" value="' + c["key"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:200px;margin-top: 3px;" disabled="disabled" />';
+        html = html + '<i style="margin-left:5px;margin-right:3px;">:</i>';
+        html = html + '<input type="input" class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="512" value="' + c["val"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:360px;margin-top: 3px;" disabled="disabled" />';
+		heml = html + '</td>';
+        html = html + '<td width="7%">';
+		html = html + '<input style="margin-left:-3px;" id="dd_node_hd_' + c["node"] + '" class="edit_btn" type="button" onclick="editlHr(this);" value="">'
+		html = html + '</td>';
+		html = html + '<td width="10%">';
+		html = html + '<input style="margin-top: 4px;margin-left:-3px;" id="td_node_hd_' + c["node"] + '" class="remove_btn" type="button" onclick="delHr(this);" value="">'
+		html = html + '</td>';
+		html = html + '</tr>';
+	}
+	return html;
 }
 
 function oncheckclick(obj) {
@@ -610,9 +761,15 @@ function version_show() {
                                         <i>1. 你知道WebHook是个啥</i><br>
                                         <i>2. 你搭建了自己的Web服务并有自己的回调地址（可以公网也可以本局域网）</i><br>
                                         <i>3. 配置好就可以用了</i><br>
-                                        <i>4. 具体说明详见：「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank><i>传送门</i></a>」</i><br>
-                                        <i>5. 支持URL中的环境变量替换（即将URL中的_PRM_EVENT字符串替换为当前消息的msgType内容）</i><br>
-                                        <i>6. 回调消息已适配「<a href="https://ifttt.com/maker_webhooks" target=_blank><i>IFTTT</i></a>」官方的WebHook</i>
+                                        <i>4. 具体说明详见：「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank>传送门</a>」</i><br>
+                                        <i>5. 支持配置中的动态参数（见下方说明）</i><br>
+                                        <i>6. 回调消息已适配「<a href="https://ifttt.com/maker_webhooks" target=_blank>IFTTT</a>」官方的WebHook</i><br>
+                                        <i>7. 新增短定时消息并适配「<a href="https://www.home-assistant.io/integrations/http/#sensor" target=_blank>HASS</a>」官方的Sensor</i><br>
+                                        <i>8. 支持自定义请求Header，方便鉴权等</i><br>
+                                        <br>动态参数（支持在下方的URL和Header配置中添加动态参数，系统在发送请求前会先将URL和Header中的动态参数进行字符串替换）<br>
+                                        <i>_PRM_EVENT:替换为当前消息的消息类型，如ifUP,newDHCP,cronINFO,manuINFO等</i><br>
+                                        <i>_PRM_DT:替换为当前时间的GMT标准时间串，形如Wed, 15 Apr 2020 08:59:50 GMT</i><br>
+                                        <i>_PRM_TS:替换为当前时间的10位时间戳（与_PRM_DT并非相等，存在毫秒的差异）</i>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
@@ -687,13 +844,13 @@ function version_show() {
                                     </table>
                                     <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
                                         <tr>
-                                            <th>Hook URL(最少需要一个回调地址，会将URL中所有_PRM_EVENT字符串替换为当前消息的msgType)</th>
+                                            <th>Hook URL (最少需要一个回调地址，无需提交即时生效)</th>
                                             <th>修改</th>
                                             <th>添加/删除</th>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="input" name="config_sckey" id="config_sckey" class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                                <input type="input" name="config_sckey" id="config_sckey" class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:580px;margin-top: 3px;" />
                                            </td>
                                             <td width="7%">
                                                 <div>
@@ -706,12 +863,35 @@ function version_show() {
                                             </td>
                                           </tr>
                                     </table>
+                                    <table id="header_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
+                                        <tr>
+                                            <th>Header (非必填自定义Header，每行一个，无需提交即时生效)</th>
+                                            <th>修改</th>
+                                            <th>添加/删除</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="input" name="config_header_key" id="config_header_key" class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="100" value="" style="width:200px;margin-top: 3px;" />
+                                                <i>:</i>
+                                                <input type="input" name="config_header_val" id="config_header_val" class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="512" value="" style="width:360px;margin-top: 3px;" />
+                                           </td>
+                                            <td width="7%">
+                                                <div>
+                                                </div>
+                                            </td>
+                                            <td width="10%">
+                                                <div>
+                                                    <input type="button" class="add_btn" onclick="addHr()" value=""/>
+                                                </div>
+                                            </td>
+                                          </tr>
+                                    </table>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
-                                              <tr>
+                                            <tr>
                                                 <td colspan="2">定时发送状态消息 (JSON格式长消息，不适配IFTTT)</td>
-                                              </tr>
-                                          </thead>
+                                            </tr>
+                                        </thead>
                                         <tr>
                                             <th width="20%">设备标识（随便起个名字就好）</th>
                                             <td>
@@ -981,7 +1161,67 @@ function version_show() {
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
                                               <tr>
-                                                <td colspan="2">触发类通知消息 (JSON格式短消息，已适配IFTTT回调)</td>
+                                                <td colspan="2">虚拟传感器消息 (逐条推送JSON格式短消息，适用于IFTTT和HASS)</td>
+                                              </tr>
+                                        </thead>
+                                        <tr>
+                                            <th width="20%">定时任务设定</th>
+                                            <td>
+                                                <input type="text" class="input_ss_table" value="" id="routerhook_sm_cron" name="routerhook_sm_cron" maxlength="255" value="" placeholder="完整cron表达式" style="width:250px;"/>
+                                                <a href="http://www.bejson.com/othertools/cron/" target=_blank><i>cron在线生成工具</i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">系统负载（设备名：rh_load，三选一）</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_sm_load1" onclick="oncheckclick(this);"><label style="margin-right:30px;">1min</label>
+                                                <input type="checkbox" id="routerhook_sm_load2" onclick="oncheckclick(this);"><label style="margin-right:30px;">5min</label>
+                                                <input type="checkbox" id="routerhook_sm_load3" onclick="oncheckclick(this);"><label style="margin-right:30px;">15min</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">空闲内存（设备名：rh_mem_free）</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_sm_mem" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">空闲交换（设备名：rh_swap_free）</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_sm_swap" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">CPU温度（设备名：rh_cpu_temp）</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_sm_cpu" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">2.4G温度（设备名：rh_24g_temp）</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_sm_24g" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">5G-1温度（设备名：rh_5g1_temp）</th>
+                                            <td>
+                                                <input type="checkbox" id="routerhook_sm_5g1" onclick="oncheckclick(this);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="20%">在线状态（设备名：rh_[mac地址]）<br><i>每条mac为一个虚拟设备单独推送</i><br><i>消息设备名中mac地址不含冒号</i></th>
+                                            <td>
+                                                <label><input type="checkbox" id="routerhook_sm_bwlist_en" name="routerhook_sm_bwlist_en" onclick="oncheckclick(this);">启用</label><br>
+                                                <textarea placeholder="# 填入设备MAC地址，一行一个，格式如下：
+                                                a1:b2:c3:d4:e5:f6" cols="50" rows="7" id="routerhook_sm_bwlist" name="routerhook_sm_bwlist" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
+                                        <thead>
+                                              <tr>
+                                                <td colspan="2">触发类消息 (JSON格式短消息，已适配IFTTT回调)</td>
                                               </tr>
                                           </thead>
                                         <tr>
@@ -1011,7 +1251,6 @@ function version_show() {
                                                 a1:b2:c3:d4:e5:f6 #我的手机" cols="50" rows="7" id="routerhook_trigger_dhcp_white" name="routerhook_trigger_dhcp_white" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                                             </td>
                                         </tr>
-
                                     </table>
                                     <div class="apply_gen">
                                         <span><input class="button_gen" id="cmdBtn" onclick="onSubmitCtrl();" type="button" value="提交"/></span>
