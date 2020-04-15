@@ -332,7 +332,9 @@ function onSubmitCtrl(){
         "routerhook_sm_cpu",
         "routerhook_sm_24g",
         "routerhook_sm_5g1",
-        "routerhook_sm_bwlist_en"
+        "routerhook_sm_bwlist_en",
+        "routerhook_sm_bwlist_or",
+        "routerhook_sm_bwlist_and"
     ];
 	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white", "routerhook_sm_cron", "routerhook_sm_bwlist"];
 	// collect data from input
@@ -698,6 +700,12 @@ function oncheckclick(obj) {
 		if (obj.id == "routerhook_dhcp_black_en") {
 			E("routerhook_dhcp_white_en").checked = false;
 		}
+        if (obj.id == "routerhook_sm_bwlist_or") {
+            E("routerhook_sm_bwlist_and").checked = false;
+        }
+        if (obj.id == "routerhook_sm_bwlist_and") {
+            E("routerhook_sm_bwlist_or").checked = false;
+        }
 	} else {
 		if (obj.id == "routerhook_dhcp_white_en") {
 			E("routerhook_dhcp_black_en").checked = true;
@@ -778,10 +786,15 @@ function version_show() {
                                         <i>6. 回调消息已适配「<a href="https://ifttt.com/maker_webhooks" target=_blank>IFTTT</a>」官方的WebHook</i><br>
                                         <i>7. 新增短定时消息并适配「<a href="https://www.home-assistant.io/integrations/http/#sensor" target=_blank>HASS</a>」官方的Sensor</i><br>
                                         <i>8. 支持自定义请求Header，方便鉴权等</i><br>
-                                        <br>动态参数（支持在下方的URL和Header配置中添加动态参数，系统在发送请求前会先将URL和Header中的动态参数进行字符串替换）<br>
-                                        <i>_PRM_EVENT:替换为当前消息的消息类型，如ifUP,newDHCP,cronINFO,manuINFO等</i><br>
-                                        <i>_PRM_DT:替换为当前时间的GMT标准时间串，形如Wed, 15 Apr 2020 08:59:50 GMT</i><br>
-                                        <i>_PRM_TS:替换为当前时间的10位时间戳（与_PRM_DT并非相等，存在毫秒的差异）</i>
+                                        <br>动态参数：<br>
+                                        支持在下方的URL和Header配置中添加动态参数，系统在发送请求前会先将URL和Header中的动态参数进行字符串替换<br>
+                                        <i>1. _PRM_EVENT：替换为当前消息的消息类型，如ifUP,newDHCP,cronINFO,manuINFO等</i><br>
+                                        <i>2. _PRM_DT：替换为当前时间的GMT标准时间串，形如Wed, 15 Apr 2020 08:59:50 GMT</i><br>
+                                        <i>3. _PRM_TS：替换为当前时间的10位时间戳（与_PRM_DT并非相等，存在毫秒的差异）</i><br>
+                                        <br>聚合设备：<br>
+                                        设备上线状态为ON，离线状态为OFF，聚合设备是将列表中所有设备状态按照指定模式进行聚合后的新设备（设备名为rh_dev）<br>
+                                        <i>【或模式】只要有一个设备在线，则聚合设备状态为ON；当所有设备离线后聚合设备状态为OFF</i><br>
+                                        <i>【与模式】必须所有设备都在线，则聚合设备为ON；否则为OFF</i>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
@@ -1222,9 +1235,11 @@ function version_show() {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th width="20%">在线状态（设备名：rh_[mac地址]）<br><i>每条mac为一个虚拟设备单独推送</i><br><i>消息设备名中mac地址不含冒号</i></th>
+                                            <th width="20%">在线状态（设备名：rh_dev_[mac地址]）<br><i>列表中每条mac对应一个设备</i><br><i>消息中设备名mac不含冒号</i><br><i>聚合设备开启后会多一个名为rh_dev的设备</i></th>
                                             <td>
-                                                <label><input type="checkbox" id="routerhook_sm_bwlist_en" name="routerhook_sm_bwlist_en" onclick="oncheckclick(this);">启用</label><br>
+                                                <label><input type="checkbox" id="routerhook_sm_bwlist_en" name="routerhook_sm_bwlist_en" onclick="oncheckclick(this);">启用</label> （ 聚合设备：
+                                                <label><input type="checkbox" id="routerhook_sm_bwlist_or" name="routerhook_sm_bwlist_or" onclick="oncheckclick(this);">或模式</label>
+                                                <label><input type="checkbox" id="routerhook_sm_bwlist_and" name="routerhook_sm_bwlist_and" onclick="oncheckclick(this);">与模式</label> ）<br>
                                                 <textarea placeholder="# 填入设备MAC地址，一行一个，格式如下：
                                                 a1:b2:c3:d4:e5:f6" cols="50" rows="7" id="routerhook_sm_bwlist" name="routerhook_sm_bwlist" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                                             </td>
