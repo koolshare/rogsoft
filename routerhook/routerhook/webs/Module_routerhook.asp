@@ -195,12 +195,8 @@ function conf2obj() { //表单填写函数，将dbus数据填入到对应的表�
 	for (var field in db_routerhook) {
 		var el = E(field);
 		if (el != null) {
-			if (field == "routerhook_config_name") {
-				el.value = Base64.decode(db_routerhook[field]);
-			} else if (field == "routerhook_trigger_dhcp_white") {
-				el.value = Base64.decode(db_routerhook[field]);
-			} else if (field == "routerhook_check_custom") {
-				el.value = Base64.decode(db_routerhook[field]);
+            if(["routerhook_config_name","routerhook_trigger_dhcp_white","routerhook_check_custom","routerhook_sm_cron","routerhook_sm_bwlist"].indexOf(field)>=0){
+                el.value = Base64.decode(db_routerhook[field]);
 			} else {
 				if (field == "routerhook_status_check") {
 					__routerhook_status_check = db_routerhook[field];
@@ -303,7 +299,9 @@ function onSubmitCtrl(){
         "routerhook_check_custom",
         "routerhook_check_time_hour",
         "routerhook_check_time_min",
-        "routerhook_trigger_dhcp_white"
+        "routerhook_trigger_dhcp_white",
+        "routerhook_sm_cron",
+        "routerhook_sm_bwlist"
     ];
 	var params_check = [
         "routerhook_enable",
@@ -325,9 +323,18 @@ function onSubmitCtrl(){
         "routerhook_dhcp_white_en",
         "routerhook_dhcp_black_en",
         "routerhook_trigger_dhcp_leases",
-        "routerhook_trigger_dhcp_macoff"
+        "routerhook_trigger_dhcp_macoff",
+        "routerhook_sm_load1",
+        "routerhook_sm_load2",
+        "routerhook_sm_load3",
+        "routerhook_sm_mem",
+        "routerhook_sm_swap",
+        "routerhook_sm_cpu",
+        "routerhook_sm_24g",
+        "routerhook_sm_5g1",
+        "routerhook_sm_bwlist_en"
     ];
-	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white"];
+	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white", "routerhook_sm_cron", "routerhook_sm_bwlist"];
 	// collect data from input
 	for (var i = 0; i < params_input.length; i++) {
 		if(E(params_input[i])){
@@ -699,6 +706,11 @@ function oncheckclick(obj) {
 			E("routerhook_dhcp_white_en").checked = true;
 		}
 	}
+    if(obj.id.indexOf('sm_load')>0){
+        for (let i = 1; i <= 3; i++) {
+            E(`routerhook_sm_load${i}`).checked = obj.id == `routerhook_sm_load${i}` && obj.checked
+        }
+    }
 }
 
 function version_show() {
