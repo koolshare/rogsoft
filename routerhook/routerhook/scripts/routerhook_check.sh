@@ -112,9 +112,9 @@ if [[ "${routerhook_info_temp}" == "1" ]]; then
 		[ -n "${interface_5g2_temperature}" ] && interface_5g2_temperature_c=`expr ${interface_5g2_temperature} / 2 + 20` || interface_5g2_temperature_c="null"
 		# router_temperature="2.4G: ${interface_2g_temperature_c} | 5G-1: ${interface_5g1_temperature_c} | 5G-2: ${interface_5g2_temperature_c} | CPU: ${router_cpu_temperature}°C"
 		echo '"CPU":'${router_cpu_temperature}',' >> ${routerhook_info_text}
-		echo '"5G2":'${interface_5g2_temperature_c}'",' >> ${routerhook_info_text}
-		echo '"5G1":'${interface_5g1_temperature_c}'",' >> ${routerhook_info_text}
-		echo '"24G":'${interface_2g_temperature_c}'"' >> ${routerhook_info_text}
+		echo '"5G2":'${interface_5g2_temperature_c}',' >> ${routerhook_info_text}
+		echo '"5G1":'${interface_5g1_temperature_c}',' >> ${routerhook_info_text}
+		echo '"24G":'${interface_2g_temperature_c} >> ${routerhook_info_text}
 		;;
 	*)
 		interface_2g=`nvram get wl0_ifname`

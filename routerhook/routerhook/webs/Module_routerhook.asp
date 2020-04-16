@@ -739,13 +739,14 @@ function version_show() {
 }
 
 function onMacChange(obj){
-    let list = obj.value.split('\n')
+    let list = obj.value.toUpperCase().split('\n')
     for (let i = 0; i < list.length; i++) {
         const item = list[i]
         if(!validator.mac_addr(item) || item.length !=17) return E(obj.id).style="background:#91071f;"
     }
     E(obj.id).style=""
-    if(list.indexOf(list[list.length-1])<list.length-1) E(obj.id).value=list.slice(0,-1).join('\n')
+    if(list.indexOf(list[list.length-1])<list.length-1) list=list.slice(0,-1)
+    E(obj.id).value=list.join('\n')
 }
 </script>
 </head>
