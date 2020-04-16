@@ -737,6 +737,16 @@ function version_show() {
 		}
 	});
 }
+
+function onMacChange(obj){
+    let list = obj.value.split('\n')
+    for (let i = 0; i < list.length; i++) {
+        const item = list[i]
+        if(!validator.mac_addr(item) || item.length !=17) return E(obj.id).style="background:#91071f;"
+    }
+    E(obj.id).style=""
+    if(list.indexOf(list[list.length-1])<list.length-1) E(obj.id).value=list.slice(0,-1).join('\n')
+}
 </script>
 </head>
 <body onload="initial();">
@@ -1241,7 +1251,7 @@ function version_show() {
                                                 <label><input type="checkbox" id="routerhook_sm_bwlist_or" name="routerhook_sm_bwlist_or" onclick="oncheckclick(this);">或模式</label>
                                                 <label><input type="checkbox" id="routerhook_sm_bwlist_and" name="routerhook_sm_bwlist_and" onclick="oncheckclick(this);">与模式</label> ）<br>
                                                 <textarea placeholder="# 填入设备MAC地址，一行一个，格式如下：
-                                                a1:b2:c3:d4:e5:f6" cols="50" rows="7" id="routerhook_sm_bwlist" name="routerhook_sm_bwlist" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                                                a1:b2:c3:d4:e5:f6" cols="50" rows="7" id="routerhook_sm_bwlist" name="routerhook_sm_bwlist" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onpaste="onMacChange(this);" onkeyup="onMacChange(this);"></textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -1272,7 +1282,7 @@ function version_show() {
                                                 <label><input type="checkbox" id="routerhook_dhcp_bwlist_en" name="routerhook_dhcp_bwlist_en" onclick="oncheckclick(this);">启用</label>（ 
                                                 <label><input type="checkbox" id="routerhook_dhcp_white_en" name="routerhook_dhcp_white_en" onclick="oncheckclick(this);">白名单</label>
                                                 <label><input type="checkbox" id="routerhook_dhcp_black_en" name="routerhook_dhcp_black_en" onclick="oncheckclick(this);">黑名单</label> ）
-                                                <textarea placeholder="# 填入设备MAC地址，一行一个，格式如下：
+                                                <textarea onpaste="onMacChange(this);" onkeyup="onMacChange(this);" placeholder="# 填入设备MAC地址，一行一个，格式如下：
                                                 aa:bb:cc:dd:ee:ff
                                                 aa:bb:cc:dd:ee:ff #我的电脑
                                                 a1:b2:c3:d4:e5:f6 #我的手机" cols="50" rows="7" id="routerhook_trigger_dhcp_white" name="routerhook_trigger_dhcp_white" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
