@@ -195,7 +195,7 @@ function conf2obj() { //表单填写函数，将dbus数据填入到对应的表�
 	for (var field in db_routerhook) {
 		var el = E(field);
 		if (el != null) {
-            if(["routerhook_config_name","routerhook_trigger_dhcp_white","routerhook_check_custom","routerhook_sm_cron","routerhook_sm_bwlist"].indexOf(field)>=0){
+            if(["routerhook_config_name","routerhook_trigger_dhcp_white","routerhook_check_custom","routerhook_sm_bwlist"].indexOf(field)>=0){
                 el.value = Base64.decode(db_routerhook[field]);
 			} else {
 				if (field == "routerhook_status_check") {
@@ -337,7 +337,7 @@ function onSubmitCtrl(){
         "routerhook_sm_bwlist_or",
         "routerhook_sm_bwlist_and"
     ];
-	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white", "routerhook_sm_cron", "routerhook_sm_bwlist"];
+	var params_base64 = ["routerhook_config_name", "routerhook_check_custom", "routerhook_trigger_dhcp_white", "routerhook_sm_bwlist"];
 	// collect data from input
 	for (var i = 0; i < params_input.length; i++) {
 		if(E(params_input[i])){
@@ -758,7 +758,7 @@ function onInputChange(obj){
     }
     if(obj.id == "routerhook_sm_cron"){
         let val = obj.value
-
+        if(val>60 || val<1 || 60%val!=0) E("routerhook_sm_cron").value=''
     }
 }
 </script>
@@ -800,12 +800,12 @@ function onInputChange(obj){
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                     <div class="formfontdesc" id="cmdDesc">
-                                        * 「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank><i>RouterHook</i></a>」，是一款为程序员量身定做的「路由器」和「服务器」之间的通信软件。说人话？就是按照你配置的触发规则从路由器发送JSON消息到你配置的回调指定地址的工具。<br><br>
+                                        * 「<a href="https://github.com/sdlyfjx/rogsoft/tree/RouterHook/routerhook" target=_blank><i>RouterHook</i></a>」，是一款为程序员量身定做的「路由器」和「服务器」之间的通信软件。说人话？就是按照你配置的触发规则从路由器发送JSON消息到你配置的回调地址的工具。你需要自己搭建回调服务或通过接入IFTTT和HomeAssistant使用<br><br>
                                         开通并使用上它，需要不止一分钟：<br>
                                         <i>1. 你知道WebHook是个啥</i><br>
                                         <i>2. 你搭建了自己的Web服务并有自己的回调地址（可以公网也可以本局域网）</i><br>
-                                        <i>3. 配置好就可以用了</i><br>
-                                        <i>4. 具体说明详见：「<a href="https://github.com/koolshare/rogsoft/tree/master/routerhook" target=_blank>传送门</a>」</i><br>
+                                        <i>3. 欢迎加入官方交流QQ群：「<a href="//shang.qq.com/wpa/qunwpa?idkey=871530c81551a93a9ce8e4e80a87d28289ccd3cd93744ba94d6861d7b06e2466">959376811</a>」</i><br>
+                                        <i>4. 具体说明详见：「<a href="https://github.com/sdlyfjx/rogsoft/tree/RouterHook/routerhook" target=_blank>传送门</a>」</i><br>
                                         <i>5. 支持配置中的动态参数（见下方说明）</i><br>
                                         <i>6. 回调消息已适配「<a href="https://ifttt.com/maker_webhooks" target=_blank>IFTTT</a>」官方的WebHook</i><br>
                                         <i>7. 新增短定时消息并适配「<a href="https://www.home-assistant.io/integrations/http/#sensor" target=_blank>HASS</a>」官方的Sensor</i><br>
@@ -1221,10 +1221,11 @@ function onInputChange(obj){
                                             </td>
                                         </tv>
                                         <tr>
-                                            <th width="20%">定时任务设定</th>
+                                            <th width="20%">触发间隔（≤60且能被60整除）</th>
                                             <td>
-                                                <input type="text" class="input_ss_table" value="" id="routerhook_sm_cron" name="routerhook_sm_cron" maxlength="255" value="" placeholder="完整cron表达式" style="width:250px;" oninput="onInputChange(this);" onpaste="onInputChange(this)"/>
-                                                <a href="http://www.bejson.com/othertools/cron/" target=_blank><i>cron在线生成工具</i></a>
+                                                <label>每隔</label>
+                                                <input type="text" class="input_ss_table" value="" id="routerhook_sm_cron" name="routerhook_sm_cron" maxlength="2" value="" placeholder="秒" style="width:50px;" oninput="onInputChange(this);" onpaste="onInputChange(this)"/>
+                                                <label>秒触发一次</label><i>（留空为关闭）</i>
                                             </td>
                                         </tr>
                                         <tr>

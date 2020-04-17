@@ -6,6 +6,7 @@ eval `dbus export routerhook_`
 remove_cron_job(){
     echo 关闭自动发送状态消息...
     cru d routerhook_check >/dev/null 2>&1
+    cru d routerhook_sm >/dev/null 2>&1
 }
 
 # for long message job creat
@@ -30,6 +31,11 @@ creat_cron_job(){
         cru a routerhook_check ${routerhook_check_time_min} ${check_custom_time}" * * * /koolshare/scripts/routerhook_check_task.sh"
     else
         remove_cron_job
+    fi
+    if [[ -n "${routerhook_sm_cron}" ]]; then
+        cru a routerhook_sm "* * * * * /koolshare/scripts/routerhook_hass_task.sh"
+    else
+        cru d routerhook_sm >/dev/null 2>&1
     fi
 }
 
