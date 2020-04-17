@@ -259,6 +259,7 @@ cru l
 
 ### 虚拟传感器消息：系统负载（支持HASS和IFTTT）
 只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_load`
+
 value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
 
 ```json5
@@ -276,6 +277,7 @@ value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state
 
 ### 虚拟传感器消息：空闲内存（支持HASS和IFTTT）
 只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_mem_free`
+
 value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
 
 ```json5
@@ -293,6 +295,7 @@ value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state
 
 ### 虚拟传感器消息：空闲SWAP（支持HASS和IFTTT）
 只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_swap_free`
+
 value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
 
 ```json5
@@ -310,6 +313,7 @@ value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state
 
 ### 虚拟传感器消息：CPU温度（支持HASS和IFTTT）
 只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_cpu_temp`
+
 value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
 
 ```json5
@@ -327,6 +331,7 @@ value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state
 
 ### 虚拟传感器消息：单设备在线状态（支持HASS和IFTTT）
 只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_dev_设备去冒号后的mac`
+
 value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
 
 ```json5
@@ -344,6 +349,7 @@ value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state
 
 ### 虚拟传感器消息：聚合设备在线状态（支持HASS和IFTTT）
 只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_dev`
+
 value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
 
 ```json5
@@ -400,8 +406,9 @@ HASS的回调中需要在请求头配置鉴权签名，则直接将长期签名�
 
 ### 聚合设备
 设备上线状态为ON，离线状态为OFF，聚合设备是将列表中所有设备状态按照指定模式进行聚合后的新设备（设备名为rh_dev）
-【或模式】只要有一个设备在线，则聚合设备状态为ON；当所有设备离线后聚合设备状态为OFF
-【与模式】必须所有设备都在线，则聚合设备为ON；否则为OFF
+- 【或模式】只要有一个设备在线，则聚合设备状态为ON；当所有设备离线后聚合设备状态为OFF
+- 【与模式】必须所有设备都在线，则聚合设备为ON；否则为OFF
 
 用处是啥呢？比如说：
+
 你们家两口人有两个手机，你事先配置好了两个手机的mac地址，且每60分钟进行一次状态上报到HASS中。则每个手机都会是一个虚拟设备，设备名为`rh_dev_mac地址`这时候如果你想要实现当有一个人回家时就执行回家场景，所有人都离家后执行离家场景的话，你可以使用`或模式`。这时候会有一个新的虚拟聚合设备，名为`rh_dev`，其对应的设备状态便是`ON`或者`OFF`
