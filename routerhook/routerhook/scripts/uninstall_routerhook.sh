@@ -1,5 +1,5 @@
 #!/bin/sh
-eval `dbus export routerhook_`
+eval $(dbus export routerhook_)
 source /koolshare/scripts/base.sh
 logger "[软件中心]: 正在卸载routerhook..."
 MODULE=routerhook
@@ -13,10 +13,9 @@ rm -rf /koolshare/res/icon-routerhook.png >/dev/null 2>&1
 rm -rf /koolshare/webs/Module_routerhook.asp >/dev/null 2>&1
 rm -rf /tmp/routerhook* >/dev/null 2>&1
 
-values=`dbus list routerhook | cut -d "=" -f 1`
-for value in $values
-do
-dbus remove $value 
+values=$(dbus list routerhook | cut -d "=" -f 1)
+for value in $values; do
+    dbus remove $value
 done
 
 cru d routerhook_check >/dev/null 2>&1

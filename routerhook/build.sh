@@ -7,7 +7,7 @@ DESCRIPTION="从路由器推送状态及通知的工具"
 HOME_URL="Module_routerhook.asp"
 
 # Check and include base
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ "$MODULE" == "" ]; then
 	echo "module not found"
 	exit 1

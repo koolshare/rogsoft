@@ -1,16 +1,16 @@
 #!/bin/sh
 
 source /koolshare/scripts/base.sh
-eval `dbus export routerhook_`
+eval $(dbus export routerhook_)
 # for long message job remove
-remove_cron_job(){
+remove_cron_job() {
     echo 关闭自动发送状态消息...
     cru d routerhook_check >/dev/null 2>&1
     cru d routerhook_sm >/dev/null 2>&1
 }
 
 # for long message job creat
-creat_cron_job(){
+creat_cron_job() {
     echo 启动自动发送状态消息...
     if [[ "${routerhook_status_check}" == "1" ]]; then
         cru a routerhook_check ${routerhook_check_time_min} ${routerhook_check_time_hour}" * * * /koolshare/scripts/routerhook_check_task.sh"
@@ -27,7 +27,7 @@ creat_cron_job(){
             cru a routerhook_check ${routerhook_check_time_min} ${routerhook_check_time_hour}" */"${routerhook_check_inter_day} " * * /koolshare/scripts/routerhook_check_task.sh"
         fi
     elif [[ "${routerhook_status_check}" == "5" ]]; then
-        check_custom_time=`dbus get routerhook_check_custom | base64_decode`
+        check_custom_time=$(dbus get routerhook_check_custom | base64_decode)
         cru a routerhook_check ${routerhook_check_time_min} ${check_custom_time}" * * * /koolshare/scripts/routerhook_check_task.sh"
     else
         remove_cron_job
@@ -39,9 +39,9 @@ creat_cron_job(){
     fi
 }
 
-creat_trigger_dhcp(){
+creat_trigger_dhcp() {
     sed -i '/routerhook_dhcp_trigger/d' /jffs/configs/dnsmasq.d/dhcp_trigger.conf
-    echo "dhcp-script=/koolshare/scripts/routerhook_dhcp_trigger.sh" >> /jffs/configs/dnsmasq.d/dhcp_trigger.conf
+    echo "dhcp-script=/koolshare/scripts/routerhook_dhcp_trigger.sh" >>/jffs/configs/dnsmasq.d/dhcp_trigger.conf
     [ "${routerhook_info_logger}" == "1" ] && logger "[软件中心] - [routerhook]: 重启DNSMASQ！"
     #service restart_dnsmasq
     killall dnsmasq
@@ -49,13 +49,13 @@ creat_trigger_dhcp(){
     dnsmasq --log-async
 }
 
-remove_trigger_dhcp(){
+remove_trigger_dhcp() {
     sed -i '/routerhook_dhcp_trigger/d' /jffs/configs/dnsmasq.d/dhcp_trigger.conf
     [ "${routerhook_info_logger}" == "1" ] && logger "[软件中心] - [routerhook]: 重启DNSMASQ！"
     service restart_dnsmasq
 }
 
-creat_trigger_ifup(){
+creat_trigger_ifup() {
     rm -f /koolshare/init.d/*routerhook.sh
     if [[ "${routerhook_trigger_ifup}" == "1" ]]; then
         ln -sf /koolshare/scripts/routerhook_ifup_trigger.sh /koolshare/init.d/S99routerhook.sh
@@ -64,11 +64,11 @@ creat_trigger_ifup(){
     fi
 }
 
-remove_trigger_ifup(){
+remove_trigger_ifup() {
     rm -f /koolshare/init.d/*routerhook.sh
 }
 
-onstart(){
+onstart() {
     creat_cron_job
     creat_trigger_ifup
     if [ "${routerhook_trigger_dhcp}" == "1" ]; then
