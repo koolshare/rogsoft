@@ -23,16 +23,23 @@ do
     header="${header} -H \"${header_key}:${header_val}\""
 done
 
+url_wl=`dbus list routerhook_sm_url | cut -d "=" -f 2 | sed 's/\,/ /g'`
 url_nu=`dbus list routerhook_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
 for nu in ${url_nu}
 do
+    if [[ -n $(echo $msg_type | grep "rh_") ]] && [[ -n "${url_wl}" ]]; then
+        check=$(echo $url_wl | grep "[[:alpha:]]\?${nu}[[:alpha:]]\?")
+        if [[ "${check}" == "" ]]; then
+            continue
+        fi
+    fi
 	temp=`dbus get routerhook_config_sckey_${nu}`
     url=`replace_var $temp`
 	reqstr="curl ${header} -X POST -d '"${routerhook_send_content}"' ${url}"
 	result=`eval ${reqstr}`
-	if [ -n $(echo $result | grep "success") ];then
+	if [[ -n "$(echo $result | grep "success")" ]];then
 		[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 路由器状态信息推送到 URL No.${nu} 成功！"
 	else
-		[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 路由器状态信息推送到 URL No.${nu} 失败，请检查网络及配置！"
+		[ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 路由器状态信息推送到 URL No.${nu} 失败，请检查后端服务、网络和配置！"
 	fi
 done

@@ -300,6 +300,7 @@ function onSubmitCtrl(){
         "routerhook_check_time_hour",
         "routerhook_check_time_min",
         "routerhook_trigger_dhcp_white",
+        "routerhook_sm_url",
         "routerhook_sm_cron",
         "routerhook_sm_bwlist"
     ];
@@ -543,7 +544,7 @@ function refresh_html() { //用conf数据生成配置表格
 	for (var field in confs) {
 		var c = confs[field];
 		html = html + '<tr>';
-		html = html + '<td><input class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_sckey"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:580px;margin-top: 3px;" disabled="disabled" /></td>';
+		html = html + '<td><i>'+c["node"]+'. </i><input class="input_ss_table" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_sckey"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:565px;margin-top: 3px;" disabled="disabled" /></td>';
 		html = html + '<td width="7%">';
 		html = html + '<input style="margin-left:-3px;" id="dd_node_' + c["node"] + '" class="edit_btn" type="button" onclick="editlTr(this);" value="">'
 		html = html + '</td>';
@@ -747,6 +748,18 @@ function onMacChange(obj){
     E(obj.id).style=""
     if(list.indexOf(list[list.length-1])<list.length-1) list=list.slice(0,-1)
     E(obj.id).value=list.join('\n')
+}
+
+function onInputChange(obj){
+    if(obj.id == "routerhook_sm_url"){
+        let val = obj.value.split(/[^0-9]/)
+        console.log(val)
+        return E("routerhook_sm_url").value=val.filter((e,i)=>e<=node_max&&val.indexOf(e, 0)===i).join(',')
+    }
+    if(obj.id == "routerhook_sm_cron"){
+        let val = obj.value
+
+    }
 }
 </script>
 </head>
@@ -1201,9 +1214,16 @@ function onMacChange(obj){
                                               </tr>
                                         </thead>
                                         <tr>
+                                            <th width="20%">推送地址列表（序号间用逗号分隔）</th>
+                                            <td>
+                                                <input type="text" class="input_ss_table" value="" id="routerhook_sm_url" name="routerhook_sm_url" maxlength="255" value="" placeholder="填入上述URL序号" style="width:250px;" oninput="onInputChange(this);" onpaste="onInputChange(this)"/>
+                                                <i>留空则推全部链接</i>
+                                            </td>
+                                        </tv>
+                                        <tr>
                                             <th width="20%">定时任务设定</th>
                                             <td>
-                                                <input type="text" class="input_ss_table" value="" id="routerhook_sm_cron" name="routerhook_sm_cron" maxlength="255" value="" placeholder="完整cron表达式" style="width:250px;"/>
+                                                <input type="text" class="input_ss_table" value="" id="routerhook_sm_cron" name="routerhook_sm_cron" maxlength="255" value="" placeholder="完整cron表达式" style="width:250px;" oninput="onInputChange(this);" onpaste="onInputChange(this)"/>
                                                 <a href="http://www.bejson.com/othertools/cron/" target=_blank><i>cron在线生成工具</i></a>
                                             </td>
                                         </tr>
