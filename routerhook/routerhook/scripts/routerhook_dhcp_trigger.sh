@@ -39,7 +39,6 @@ if [[ "${routerhook_silent_time}" == "1" ]]; then
         exit
     fi
 fi
-send_title=$(dbus get routerhook_config_name | base64_decode) || "本次未获取到！"
 client_join_time_format=$(TZ=UTC-8 date -d "${client_join_time}" "+%Y年%m月%d日 %H点%M分%S秒")
 client_lease_epired_time=$(TZ=UTC-8 date -d @$(expr $(TZ=UTC-8 date -d "${client_join_time}" +%s) + ${dhcp_lease_time}) "+%Y-%m-%d %H:%M:%S")
 client_lease_epired_time_format=$(TZ=UTC-8 date -d "${client_lease_epired_time}" "+%Y年%m月%d日 %H点%M分%S秒")
