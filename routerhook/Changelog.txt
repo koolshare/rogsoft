@@ -1,5 +1,15 @@
 Koolshare hnd/axhnd router software center routerhook Changelog
 ===========================================
+1.0
+   Breaking Change! 丰富功能，支持HASS
+   - fix 修复部分bug
+   - fix 修复发送结果判断不准确的bug
+   - feat 新增自定义Header，可以自定义添加Header
+   - feat 新增Header和URL中的动态变量
+   - feat 将发送请求的模块独立出来进行共用，提高复用，方便维护
+   - feat 新增虚拟传感器功能，支持HASS和IFTTT
+   - feat 完善界面，增加输入检查逻辑等
+
 0.4
    - feat 新增回调URL中支持动态变量
    - feat 触发类时间支持IFTTT消息格式
