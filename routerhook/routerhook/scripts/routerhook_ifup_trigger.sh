@@ -23,7 +23,7 @@ router_reboot_time=$(echo $(TZ=UTC-8 date "+%Y年%m月%d日 %H点%M分%S秒"))
 
 msg_type='ifUP'
 echo '{' >${routerhook_ifup_text}
-echo '"msgTYPE":"'{msg_type}'",' >>${routerhook_ifup_text}
+echo '"msgTYPE":"'${msg_type}'",' >>${routerhook_ifup_text}
 echo '"upTIME":"'${router_uptime}'",' >>${routerhook_ifup_text}
 echo '"rebootTIME":"'${router_reboot_time}'",' >>${routerhook_ifup_text}
 
