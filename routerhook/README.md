@@ -4,7 +4,9 @@
 
 [反馈地址](https://koolshare.cn/thread-178114-1-1.html)
 
-[更新日志](https://raw.githubusercontent.com/koolshare/rogsoft/master/routerhook/Changelog.txt)
+[更新日志](https://raw.githubusercontent.com/sdlyfjx/rogsoft/master/routerhook/Changelog.txt)
+
+[QQ群:959376811](https://jq.qq.com/?_wv=1027&k=58nto0i)
 
 ![](./res/webhook.png)
 
@@ -29,6 +31,10 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 
 > 也就是说，这个插件只是负责把通知消息发送到你自己的服务上，<font color=red>而服务的逻辑需要自己去实现哦！</font>所以对于小白来说可能不太适用（因为这个是需要开发后台服务的）那有个卵用呢？具体例子见下方说明。
 
+## Breaking Change 1.0
+
+1.0版重大更新于2020/04/17发布。主要是增加了HomeAssistant的传感器功能和自定义请求头功能
+
 ## 使用方法
 
 1. 软件中心安装
@@ -39,8 +45,13 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 1. 服务器端收到的POST消息中`body`就是JSON序列化后的字符串，你需要进行反序列化哦（例如`JSON.parse(body)`)
 1. 回调URL已支持环境变量功能，即系统会在请求URL前自动将URL中的所有`_PRM_EVENT`字符串替换为当前消息对应的`msgTYPE内容`（如你填写的URL为`https://www.baidu.com/_PRM_EVENT/search?type=_PRM_EVENT&info=aabbcc`则当系统中触发了`ifUP`事件时，回调的URL会变为`https://www.baidu.com/ifUP/search?type=ifUP&info=aabbcc`）
 1. 目前触发类事件（网络重拨或客户端上线）已适配IFTTT官方的WebHook接口
+1. 1.0版新增了三个动态参数和自定义Header功能，具体可见下方说明
+1. 1.0版新增了虚拟传感器功能，将路由器的部分参数作为传感器接入HASS中，从而可以更完美的配合智能家居使用
 
 ## 应用举例
+
+#### 接入HASS实现智能家居联动
+1.0版本加入了HASS对接功能，只需要按照HASS官方的HTTP SENSOR说明配置好回调地址，配置好鉴权的Header，就可以实现路由器状态或客户端状态更新到HASS中。比如说：路由器CPU温度过高后HASS中场景控制散热器散热、白名单设备上线后控制回家场景等等
 
 #### 通过IFTTT实现丰富功能
 由于触发类事件以支持IFTTT的WEBHOOK功能，所以只需按照上述内容配置好你的IFTTT回调地址，即可在事件发生时触发IFTTT中的逻辑：比如给你手机打电话、发短信、推送消息、发邮件等等。
@@ -55,15 +66,43 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 有了此插件，当你的路由器重新拨号后（如果你用的也是PPPoE拨号完了会随时变动外网IP那种），此插件会回调你的地址，这样你就可以更新云端的防火墙策略、安全组策略，实现只允许你当前IP进行SSH登录、MySQL登录等限制，提升云服务的安全性
 
 #### 手机连上路由器智能家居实现回家场景联动
-目前貌似只有设备上线的通知推送（下线的没有噻？），所以可以实现你即将到家的时候，手机已经连上你家的WIFI啦，这样插件可以回调你的局域网或云端的HA网关或者IFTTT这种，实现一系列的场景联动
+目前貌似只有设备上线的通知推送（下线的没有噻？），所以可以实现你即将到家的时候，手机已经连上你家的WIFI啦，这样插件可以回调你的局域网或云端的HA网关或者IFTTT这种，实现一系列的场景联动。1.0版本后加入了设备上下线状态推送功能。在名单中配置好MAC地址列表，则每一个mac代表一个虚拟设备，设备的上下线状态会同步推送到你的后端。同时支持聚合设备功能，即将多个mac聚合为一个统一的虚拟设备（支持两种聚合模式），则可以实现当有一个设备上线时聚合设备为开，所有设备下线时聚合设备为关的功能。
 
 #### 路由器温度高自动打开风扇降温
-通过设置定时推送（有路由器的设备温度信息），当路由器温度高时，你的后台服务可以直接控制风扇进行路由器降温（当然这个后台服务你需要自己去实现）
+通过设置定时推送（有路由器的设备温度信息），当路由器温度高时，你的后台服务可以直接控制风扇进行路由器降温（当然这个后台服务你需要自己去实现），目前通过IFTTT或HASS都可以实现，最短可实现1s更新一次数据（可能对路由器负载过大，推荐设置的长一点儿）
 
 ## Tips:
 - 开发过程中发现，若软件中心首页显示`更新中...`，多半是因为dbus挂了，目前不知道除了重启路由器怎么能够单独重启dbus服务。
 - `/routerhook/version`文件中若版本号后面有换行，则会导致插件安装后，接口`http://xxx/_api/routerhook_`返回的JSON格式异常，导致软件中心界面`更新中...`
 - 原ServerChan插件使用VSCode编辑`install.sh`和`uninstall.sh`的时候保存后会导致无法执行，提示`no such file or directory`，用记事本重新保存一下即可（可能是编码问题但我也没搞清楚，如果你遇到类似问题希望对你有帮助）
+
+## 定时任务说明
+由于crontab最少只能支持分钟级别的定时触发，所以通过其他方式实现了秒级触发。
+```
+cru定时命令
+
+add:  cru a <unique id> <"min hour day month week command">
+delete:  cru d <unique id>
+list:  cru l
+
+min      分钟（0-59）
+hour     小时（0-24）
+day      日期（1-31）
+month    月份（1-12；或英文缩写Jan、Feb等）
+week     周几（0-6，0为周日；或单词缩写Sun、Mon等）
+每间隔多久用[*/数字]表示
+
+例1：周三的凌晨5点重启
+cru a Timer_ID1 "0 5 * * 3 /sbin/reboot"
+例2：每隔5天的凌晨3点重启
+cru a Timer_ID2 "0 3 */5 * * /sbin/reboot"
+例2：每隔5分钟重启
+cru a Timer_ID3 "*/5 * * * * /sbin/reboot"
+例4：删除定时器Timer_ID3
+cru d Timer_ID3
+例5：显示所有定时器列表：
+cru l
+```
 
 #### Windows下的打包命令：
 
@@ -82,6 +121,8 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
 - 重启路由Web页面服务: `service restart_httpd`
 
 ## POST数据格式：
+
+如不手动指定，则Header中content-type默认为application/json（手动指定管不管我也没测试）
 
 ### 手动、定时推送长消息格式（不适配IFTTT）
 ```json5
@@ -214,3 +255,160 @@ _在网上找了些图解实WebHook的，大体一个意思吧，并不是对此
     ]
 }
 ```
+
+
+### 虚拟传感器消息：系统负载（支持HASS和IFTTT）
+只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_load`
+
+value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
+
+```json5
+{
+	"value1":10.0,   // 系统负载数值
+	"value2":"1min", // 单位，根据选择的模式分别对应1min，5min和10min
+	"value3":"",     // 显示名称
+	"state": 10.0,  // 对应value1
+	"attributes":{
+		"unit_of_measurement":"1min", // 对应value2
+		"friendly_name":"" // 对应value3
+	}
+}
+```
+
+### 虚拟传感器消息：空闲内存（支持HASS和IFTTT）
+只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_mem_free`
+
+value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
+
+```json5
+{
+	"value1":10.0,   // 数值
+	"value2":"MB", // 单位
+	"value3":"",     // 显示名称
+	"state": 10.0,  // 对应value1
+	"attributes":{
+		"unit_of_measurement":"", // 对应value2
+		"friendly_name":"" // 对应value3
+	}
+}
+```
+
+### 虚拟传感器消息：空闲SWAP（支持HASS和IFTTT）
+只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_swap_free`
+
+value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
+
+```json5
+{
+	"value1":10.0,   // 数值
+	"value2":"MB", // 单位
+	"value3":"",     // 显示名称
+	"state": 10.0,  // 对应value1
+	"attributes":{
+		"unit_of_measurement":"", // 对应value2
+		"friendly_name":"" // 对应value3
+	}
+}
+```
+
+### 虚拟传感器消息：CPU温度（支持HASS和IFTTT）
+只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_cpu_temp`
+
+value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
+
+```json5
+{
+	"value1":10,   // 数值
+	"value2":"℃", // 单位
+	"value3":"",     // 显示名称
+	"state": 10,  // 对应value1
+	"attributes":{
+		"unit_of_measurement":"", // 对应value2
+		"friendly_name":"" // 对应value3
+	}
+}
+```
+
+### 虚拟传感器消息：单设备在线状态（支持HASS和IFTTT）
+只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_dev_设备去冒号后的mac`
+
+value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
+
+```json5
+{
+	"value1":"ON",   // 在线为ON，离线为OFF
+	"value2":"OL", // 单位，OL表示ONLINE的意思，自己起的
+	"value3":"",     // 显示名称
+	"state": "ON",  // 对应value1
+	"attributes":{
+		"unit_of_measurement":"", // 对应value2
+		"friendly_name":"" // 对应value3
+	}
+}
+```
+
+### 虚拟传感器消息：聚合设备在线状态（支持HASS和IFTTT）
+只需在回调URL中将设备名称替换为`_PRM_EVENT`即可，本消息设备名为`rh_dev`
+
+value1、value2、value3为IFTTT的回调消息格式，分别对应HASS的state,unit_of_measurement和friendly_name
+
+```json5
+{
+	"value1":"ON",   // 在线为ON，离线为OFF
+	"value2":"OL", // 单位，OL表示ONLINE的意思，自己起的
+	"value3":"",     // 显示名称
+	"state": "ON",  // 对应value1
+	"attributes":{
+		"unit_of_measurement":"", // 对应value2
+		"friendly_name":"" // 对应value3
+	}
+}
+```
+
+## 关于动态参数：
+
+支持在配置的URL和Header时添加动态参数，系统在发送请求前会先将URL和Header中的动态参数进行字符串替换
+
+1. _PRM_EVENT：替换为当前消息的消息类型，如ifUP,newDHCP,cronINFO,manuINFO等
+1. _PRM_DT：替换为当前时间的GMT标准时间串，形如Wed, 15 Apr 2020 08:59:50 GMT
+1. _PRM_TS：替换为当前时间的10位时间戳（与_PRM_DT并非相等，存在毫秒的差异）
+
+### 例如1：
+HASS的回调地址中需要指定设备名，格式形如：`http://IP_ADDRESS:8123/api/states/sensor.DEVICE_NAME`，则你只需要在配置这个回调地址的时候，将`DEVICE_NAME`写作为`_PRM_EVENT`，即你填写的回调地址为`http://IP_ADDRESS:8123/api/states/sensor._PRM_EVENT`，系统在请求该地址时候，会将`_PRM_EVENT`替换为当前消息的msg_type的内容，比如上面的manuINFO啦，rh_load啦等等
+
+### 例如2：
+HASS的回调中需要在请求头配置鉴权签名，则直接将长期签名配置到对应的自定义请求头中去即可。但如果需要有当前时间等之类的参数时候，你只需要用`_PRM_TS`或者`_PRM_DT`代替即可，系统在发送请求前会自动将其替换为对应的内容
+
+## 关于虚拟传感器功能
+
+很多小伙伴可能想要实现实时性较高的数据回调，比如想几秒钟就获取一次CPU温度啦之类的。所以才有了这个功能和1.0版本的诞生（不然可能也就是万年0.X了）
+
+虚拟传感器功能是根据坛友提出来的想法和提供的HASS的文档而实现哒！当然这个过程中踩了很多坑（超多，不想说）
+
+目前支持的功能说明如下：
+
+### 推送地址列表
+
+考虑到可能有人需要使用多种回调，有的地址是接入HASS的，有的地址是接入其他后台服务的，有的地址是接入IFTTT的，那么可以把这些地址都配置进去后，在此设置需要以HASS格式推送消息的地址列表。
+比如你配置的URL列表如下：
+1. 你自己的回调地址
+1. 你自己搭建的外网服务的回调地址
+1. 局域网中的HASS回调地址
+1. 互联网上的IFTTT回调地址
+
+那么现在如果你只想让虚拟传感器消息推送第三个地址，则只需要在此填入`3`即可，如果是3和4，则填入`3,4`用符号分割即可
+
+### 触发间隔
+
+配置多少秒上报一次数据，这里对数据格式有一定要求，必须≤60秒且数字可以被60整除，比如1，2，3，4，5，6，10等等
+
+建议配置的稍微长一点儿，比如10秒啊，30秒啊，否则不知道会不会增加路由器负载（我反正没测试，爆了不赖我）
+
+### 聚合设备
+设备上线状态为ON，离线状态为OFF，聚合设备是将列表中所有设备状态按照指定模式进行聚合后的新设备（设备名为rh_dev）
+- 【或模式】只要有一个设备在线，则聚合设备状态为ON；当所有设备离线后聚合设备状态为OFF
+- 【与模式】必须所有设备都在线，则聚合设备为ON；否则为OFF
+
+用处是啥呢？比如说：
+
+你们家两口人有两个手机，你事先配置好了两个手机的mac地址，且每60分钟进行一次状态上报到HASS中。则每个手机都会是一个虚拟设备，设备名为`rh_dev_mac地址`这时候如果你想要实现当有一个人回家时就执行回家场景，所有人都离家后执行离家场景的话，你可以使用`或模式`。这时候会有一个新的虚拟聚合设备，名为`rh_dev`，其对应的设备状态便是`ON`或者`OFF`
