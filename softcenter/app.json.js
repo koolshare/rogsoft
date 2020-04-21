@@ -166,15 +166,15 @@
             "version": "2.7"
         }, 
         {
-            "build_date": "2020-04-12_22:38:53", 
+            "build_date": "2020-04-21_16:35:47", 
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_routerhook.asp", 
-            "md5": "3d25109435ccab8047dddf1aab273298", 
+            "md5": "96e4c7528fc036da9b6a8c2485ac7671", 
             "name": "routerhook", 
             "tar_url": "routerhook/routerhook.tar.gz", 
             "title": "RouterHook事件回调", 
-            "version": "0.4"
+            "version": "1.0"
         }, 
         {
             "build_date": "2020-04-12_22:42:34", 

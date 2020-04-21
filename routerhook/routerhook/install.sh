@@ -3,10 +3,7 @@ source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 MODEL=$(nvram get productid)
 module=routerhook
-DIR=$(
-    cd $(dirname $0)
-    pwd
-)
+DIR=$(cd $(dirname $0); pwd)
 
 remove_install_file() {
     rm -rf /tmp/${module}* >/dev/null 2>&1
