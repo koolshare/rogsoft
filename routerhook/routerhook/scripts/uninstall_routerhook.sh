@@ -1,7 +1,7 @@
 #!/bin/sh
 eval $(dbus export routerhook_)
 source /koolshare/scripts/base.sh
-logger "[软件中心]: 正在卸载routerhook..."
+logger "[routerhook]: 正在卸载routerhook..."
 MODULE=routerhook
 cd /
 sh /koolshare/scripts/routerhook_config.sh stop >/dev/null 2>&1
@@ -19,5 +19,5 @@ for value in $values; do
 done
 
 cru d routerhook_check >/dev/null 2>&1
-logger "[软件中心]: 完成routerhook卸载"
+logger "[routerhook]: 完成routerhook卸载"
 rm -f /koolshare/scripts/uninstall_routerhook.sh
