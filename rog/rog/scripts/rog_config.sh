@@ -47,7 +47,7 @@ switch_ui(){
 	app_nu_online=$(cat ${app_file} | jq '.apps|length')
 	for app in ${soft_lists}
 	do
-		i=0
+		i=-1
 		until [ "${i}" == "${app_nu_online}" ];	do
 			i=$(($i+1))
 			soft_match=$(cat ${app_file} | jq .apps[${i}] | grep -w "${app}")
