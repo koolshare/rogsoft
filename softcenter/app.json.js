@@ -1,11 +1,11 @@
 {
     "apps": [
         {
-            "build_date": "2020-04-27_10:17:36", 
+            "build_date": "2020-04-27_10:40:04", 
             "changelog": "", 
             "description": "自动部署SSL证书", 
             "home_url": "Module_acme.asp", 
-            "md5": "c3f3259d6caab0f9c87c29cd5c8cfc50", 
+            "md5": "15cf29d1929e29b3638f1e7e4c44c83d", 
             "name": "acme", 
             "tar_url": "acme/acme.tar.gz", 
             "title": "Let's Encrypt", 
@@ -155,11 +155,11 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-04-27_10:23:03", 
+            "build_date": "2020-04-27_10:39:57", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "e51a824490919081d66f71de03b6ba29", 
+            "md5": "509e2403907773c591cc051e1bbc6061", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
@@ -232,11 +232,11 @@
             "version": "2.0"
         }, 
         {
-            "build_date": "2020-04-27_10:17:51", 
+            "build_date": "2020-04-27_10:40:01", 
             "changelog": "", 
             "description": "轻松用U盘挂载jffs", 
             "home_url": "Module_usb2jffs.asp", 
-            "md5": "3235b6fe780299f22d262bf1a502c64e", 
+            "md5": "b32974b6113f88c21b865ee09f23ad7d", 
             "name": "usb2jffs", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
             "title": "USB2JFFS", 

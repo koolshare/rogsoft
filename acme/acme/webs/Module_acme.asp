@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- version: 1.8 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache"/>
@@ -48,7 +47,6 @@
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333 0%, #000000 100%);
 	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
-	/* W3C */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -59,7 +57,6 @@
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #27c9c9 0%, #279fd9 100%);
 	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
-	/* W3C */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -152,13 +149,11 @@ function update_visibility(r) {
 }
 
 function conf_to_obj() {
-	// data from input
 	for (var i = 0; i < params_input.length; i++) {
 		if(db_acme[params_input[i]]){
 			E(params_input[i]).value = db_acme[params_input[i]];
 		}
 	}
-	// data from checkbox
 	for (var i = 0; i < params_check.length; i++) {
 		if(db_acme[params_check[i]]){
 			E(params_check[i]).checked = db_acme[params_check[i]] == "1";
@@ -201,13 +196,11 @@ function save(){
 			return false;
 		}	
 	}
-	// data from input
 	for (var i = 0; i < params_input.length; i++) {
 		if(E(params_input[i])){
 			db_acme[params_input[i]] = E(params_input[i]).value
 		}
 	}
-	// data from checkbox
 	for (var i = 0; i < params_check.length; i++) {
 		db_acme[params_check[i]] = E(params_check[i]).checked ? '1' : '0';
 	}
@@ -264,7 +257,6 @@ function get_realtime_log(w) {
 					E("ok_button").style.display = "";
 					count_down_close();
 				}else{
-					//查看日志
 					E("close_button").style.display = "";
 					E("ok_button").style.display = "none";
 				}
