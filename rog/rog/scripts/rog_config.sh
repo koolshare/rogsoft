@@ -129,18 +129,12 @@ download_ui(){
 	case ${app} in
 	softcenter)
 		echo_date "切换$(_get_plugin_name $app)的webui为$(_get_ui_name $type)风格！"
-		$WGET -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}${EXT}/webs/Module_Softcenter.asp
-		$WGET -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}${EXT}/webs/Module_Softsetting.asp
 		$WGET -P ${BASE_FOLDER}/res https://rogsoft.ddnsto.com/${app}/${app}${EXT}/res/softcenter.css
 		;;
-	acme)
+	*)
 		echo_date "切换$(_get_plugin_name $app)的webui为$(_get_ui_name $type)风格！"
 		wget -4 --no-check-certificate --quiet -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}/webs/Module_${app}.asp
 		[ "$?" == "0" -a "$type" == "2" ] && sed -i '/rogcss/d' ${BASE_FOLDER}/webs/Module_${app}.asp >/dev/null 2>&1
-		;;
-	aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|mdial|qiaodao|rog|serverchan)
-		echo_date "切换$(_get_plugin_name $app)的webui为$(_get_ui_name $type)风格！"
-		$WGET -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}${EXT}/webs/Module_${app}.asp
 		;;
 	esac
 }

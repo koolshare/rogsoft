@@ -1,8 +1,13 @@
-#! /bin/sh
+#!/bin/sh
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 MODEL=$(nvram get productid)
+module=acme
 DIR=$(cd $(dirname $0); pwd)
+
+remove_install_file(){
+	rm -rf /tmp/${module}* >/dev/null 2>&1
+}
 
 # 判断路由架构和平台
 case $(uname -m) in
@@ -12,7 +17,7 @@ case $(uname -m) in
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
 			echo_date 退出安装！
-			rm -rf /tmp/acme* >/dev/null 2>&1
+			remove_install_file
 			exit 1
 		fi
 		;;
@@ -22,14 +27,14 @@ case $(uname -m) in
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
 			echo_date 退出安装！
-			rm -rf /tmp/acme* >/dev/null 2>&1
+			remove_install_file
 			exit 1
 		fi
 		;;
 	*)
 		echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的平台：$(uname -m)不能安装！！！
 		echo_date 退出安装！
-		rm -rf /tmp/acme* >/dev/null 2>&1
+		remove_install_file
 		exit 1
 	;;
 esac
@@ -59,9 +64,9 @@ if [ "$ROG" == "1" ];then
 	continue
 else
 	if [ "$TUF" == "1" ];then
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_acme.asp >/dev/null 2>&1
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${Module}.asp >/dev/null 2>&1
 	else
-		sed -i '/rogcss/d' /koolshare/webs/Module_acme.asp >/dev/null 2>&1
+		sed -i '/rogcss/d' /koolshare/webs/Module_${Module}.asp >/dev/null 2>&1
 	fi
 fi
 
@@ -75,5 +80,5 @@ dbus set softcenter_module_acme_description="自动部署SSL证书"
 
 # 完成
 echo_date "Let's Encrypt插件安装完毕！"
-rm -rf /tmp/acme* >/dev/null 2>&1
+remove_install_file
 exit 0

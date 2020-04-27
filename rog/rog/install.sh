@@ -46,6 +46,10 @@ if [ "$MODEL" == "TUF-AX3000" ];then
 fi
 
 # 安装插件
+if [ ! -x /koolshare/bin/jq ]; then
+	cp -f /tmp/rog/bin/jq /koolshare/bin/
+	chmod +x /koolshare/bin/jq
+fi
 cp -rf /tmp/rog/scripts/* /koolshare/scripts/
 cp -rf /tmp/rog/webs/* /koolshare/webs/
 cp -rf /tmp/rog/res/* /koolshare/res/
@@ -54,12 +58,13 @@ if [ -n "$odmpid" -a "$odmpid" == "RAX80" ];then
 fi
 cp -rf /tmp/rog/uninstall.sh /koolshare/scripts/uninstall_rog.sh
 if [ "$ROG" == "1" ];then
-	cp -rf /tmp/$MODULE/ROG/webs/* /koolshare/webs/
-fi
-if [ "$TUF" == "1" ];then
-	# rog ui to tuf ui
-	sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/$MODULE/ROG/webs/Module_rog.asp >/dev/null 2>&1
-	cp -rf /tmp/$MODULE/ROG/webs/* /koolshare/webs/
+	continue
+else
+	if [ "$TUF" == "1" ];then
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	else
+		sed -i '/rogcss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	fi
 fi
 chmod +x /koolshare/scripts/rog*
 chmod +x /koolshare/scripts/uninstall_rog.sh

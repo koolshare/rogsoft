@@ -26,7 +26,6 @@
 	<script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 	<script type="text/javascript" src="/res/softcenter.js"></script>
 	<style type="text/css">
-		/* folder tree */
 		.mask_bg{
 			position:absolute;
 			margin:auto;
@@ -72,21 +71,21 @@
 		}
 		.show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5, .show-btn6 {
 			border: 1px solid #222;
-			background: linear-gradient(to bottom, #919fa4  0%, #67767d 100%); /* W3C */
-			/*background: linear-gradient(to bottom, #91071f  0%, #700618 100%);*/ /* W3C */
 			font-size:10pt;
 			color: #fff;
 			padding: 10px 3.75px;
 			border-radius: 5px 5px 0px 0px;
 			width:8.45601%;
-			/*border: 1px solid #91071f;*/
-			/*background: none;*/
+			background: linear-gradient(to bottom, #919fa4  0%, #67767d 100%);
+			background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
+			border: 1px solid #91071f; /* W3C rogcss */
+			background: none; /* W3C rogcss */
 		}
 		.active {
 			background: #2f3a3e;
-			background: linear-gradient(to bottom, #61b5de  0%, #279fd9 100%); /* W3C */
-			/*background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);*/ /* W3C */
-			/*border: 1px solid #91071f;*/
+			background: linear-gradient(to bottom, #61b5de  0%, #279fd9 100%);
+			background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
+			border: 1px solid #91071f; /* W3C rogcss */
 		}
 		input[type=button]:focus {
 			outline: none;
@@ -97,8 +96,8 @@
 			font-size:12px;
 			color:#FFFFFF;
 			background:#475A5F;
-			/*background:transparent;*/
-			/*border:1px solid #91071f;*/
+			background:transparent; /* W3C rogcss */
+			border:1px solid #91071f; /* W3C rogcss */
 		}
 		.popup_bar_bg_ks{
 			position:fixed;	
@@ -108,16 +107,16 @@
 			width:100%;
 			height:100%;
 			z-index:99;
-			filter:alpha(opacity=90);  /*IE5、IE5.5、IE6、IE7*/
+			filter:alpha(opacity=90);
 			background-repeat: repeat;
 			visibility:hidden;
 			overflow:hidden;
 			background-color: #444F53;
 			background:rgba(68, 79, 83, 0.9) none repeat scroll 0 0 !important;
-			/*background: url(/images/New_ui/login_bg.png);*/
-			/*background-position: 0 0;*/
-			/*background-size: cover;*/
-			/*opacity: .94;*/
+			background: url(/images/New_ui/login_bg.png); /* W3C rogcss */
+			background-position: 0 0; /* W3C rogcss */
+			background-size: cover; /* W3C rogcss */
+			opacity: .94; /* W3C rogcss */
 		}
 		#log_content3, #loading_block2, #log_content1 {
 			line-height:1.5

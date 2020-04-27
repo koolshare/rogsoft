@@ -68,11 +68,13 @@ cp -rf /tmp/aria2/res/* /koolshare/res/
 cp -rf /tmp/aria2/aria2 /koolshare
 cp -rf /tmp/aria2/uninstall.sh /koolshare/scripts/uninstall_aria2.sh
 if [ "$ROG" == "1" ];then
-	cp -rf /tmp/aria2/ROG/webs/* /koolshare/webs/
-fi
-if [ "$TUF" == "1" ];then
-	cp -rf /tmp/aria2/ROG/webs/* /koolshare/webs/
-	sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_aria2.asp >/dev/null 2>&1
+	continue
+else
+	if [ "$TUF" == "1" ];then
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	else
+		sed -i '/rogcss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	fi
 fi
 chmod +x /koolshare/bin/*
 chmod +x /koolshare/scripts/aria2*.sh

@@ -1,11 +1,11 @@
 {
     "apps": [
         {
-            "build_date": "2020-04-04_23:12:16", 
+            "build_date": "2020-04-27_10:17:36", 
             "changelog": "", 
             "description": "自动部署SSL证书", 
             "home_url": "Module_acme.asp", 
-            "md5": "953432f700d62ee7706ec463adcbfe9d", 
+            "md5": "c3f3259d6caab0f9c87c29cd5c8cfc50", 
             "name": "acme", 
             "tar_url": "acme/acme.tar.gz", 
             "title": "Let's Encrypt", 
@@ -34,11 +34,11 @@
             "version": "2.2"
         }, 
         {
-            "build_date": "2020-04-12_16:42:28", 
+            "build_date": "2020-04-27_10:17:41", 
             "changelog": "", 
             "description": "CloudFlare DDNS", 
             "home_url": "Module_cfddns.asp", 
-            "md5": "6f4d6d5dc6cdf57e7c502e606222cd08", 
+            "md5": "3315e4d280934b721a1a1175467c5456", 
             "name": "cfddns", 
             "tar_url": "cfddns/cfddns.tar.gz", 
             "title": "CloudFlare DDNS", 
@@ -155,15 +155,15 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-04-12_11:25:50", 
+            "build_date": "2020-04-27_10:23:03", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "00fe9215d75424fb2fb828ccf31a608c", 
+            "md5": "e51a824490919081d66f71de03b6ba29", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "2.7"
+            "version": "2.8"
         }, 
         {
             "build_date": "2020-04-21_21:26:55", 
@@ -232,11 +232,11 @@
             "version": "2.0"
         }, 
         {
-            "build_date": "2020-04-05_21:28:57", 
+            "build_date": "2020-04-27_10:17:51", 
             "changelog": "", 
             "description": "轻松用U盘挂载jffs", 
             "home_url": "Module_usb2jffs.asp", 
-            "md5": "f836b10804652929bf3b9327d97fed3d", 
+            "md5": "3235b6fe780299f22d262bf1a502c64e", 
             "name": "usb2jffs", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
             "title": "USB2JFFS", 
