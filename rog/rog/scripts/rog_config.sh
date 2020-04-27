@@ -5,13 +5,13 @@ alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 LOG_FILE=/tmp/upload/rog_log.txt
 
 # 具有ROG的插件： acme aria2 cfddns ddnsto easyexplorer fastd1ck frpc koolproxy mdial qiaodao rog serverchan softcenter shadowsocks
-# 无ROG的插件： aliddns ddnspod kms shellinabox ssid ssserver swap
+# 无ROG的插件： ddnspod kms shellinabox ssid ssserver swap
 
 switch_ui(){
 	WGET="wget -4 --no-check-certificate --quiet --timeout=15"
 	softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
 	app_file=/tmp/.app.json.js
-	ROGUI="softcenter|acme|aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|koolproxy|mdial|qiaodao|rog|serverchan"
+	ROGUI="softcenter|aliddns|acme|aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|koolproxy|mdial|qiaodao|rog|serverchan|usb2jffs|routerhook"
 	BASE_FOLDER=/tmp/ks_ui
 	rm -rf ${BASE_FOLDER}
 	rm -rf ${serverchan_info_text} ${app_file}
@@ -115,7 +115,7 @@ _get_plugin_name(){
 		echo "【ServerChan 微信推送】"
 		;;
 	rog)
-		echo "ROG工具箱"
+		echo "【ROG工具箱】"
 		;;
 	*)
 		echo "【$1】"
