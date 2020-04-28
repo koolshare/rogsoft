@@ -39,11 +39,11 @@ update_record() {
 get_info(){
 	get_type="A"
 	cfddns_result=`get_record_response`
-	if [ $(echo $cfddns_result | grep -c "\"success\":true") -gt 0 ];then
+	if [ $(echo $cfddns_result | grep -c "\"success\": true") -gt 0 ];then
 		# CFDDNS的A记录ID
-		cfddns_id=`echo $cfddns_result | awk -F"","" '{print $1}' | sed 's/{.*://g' | sed 's/\"//g'`
+		cfddns_id=`echo $cfddns_result | awk -F"\", \"" '{print $1}' | sed 's/{.*: //g' | sed 's/\"//g'`
 		# CFDDNS的A记录IP
-		current_ip=`echo $cfddns_result | awk -F"","" '{print $4}' | grep -oE '([0-9]{1,3}\.?){4}'`
+		current_ip=`echo $cfddns_result | awk -F"\", \"" '{print $6}' | grep -oE '([0-9]{1,3}\.?){4}'`
 		echo_date CloudFlare IP为 $current_ip
 	else
 		dbus set cfddns_status="【$LOGTIME】：获取IPV4解析记录错误！"
@@ -70,7 +70,7 @@ get_info_ipv6(){
 		echo_date 本地IP为 $localipv6
 		# CFDDNS返回的JSON结果
 		cfddns_result=`get_record_response`
-		if [ $(echo $cfddns_result | grep -c "\"success\":true") -gt 0 ];then 
+		if [ $(echo $cfddns_result | grep -c "\"success\": true") -gt 0 ];then 
 			# CFDDNS的AAAA记录ID
 			cfddns_id=`echo $cfddns_result | awk -F"","" '{print $1}' | sed 's/{.*://g' | sed 's/\"//g'`
 			# CFDDNS的AAAA记录IP
@@ -87,7 +87,7 @@ get_info_ipv6(){
 
 update_ip(){
 	update_result=`update_record`
-	if [ $(echo $update_result | grep -c "\"success\":true") -gt 0 ];then 
+	if [ $(echo $update_result | grep -c "\"success\": true") -gt 0 ];then 
 		echo_date 更新成功！
 	else
 		echo_date 更新失败!请检查设置！
