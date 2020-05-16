@@ -55,16 +55,16 @@ remove_trigger_dhcp() {
 }
 
 creat_trigger_ifup() {
-    rm -f /koolshare/init.d/*routerhook.sh
+    rm -f /koolshare/init.d/S99routerhook.sh
     if [[ "${routerhook_trigger_ifup}" == "1" ]]; then
         ln -sf /koolshare/scripts/routerhook_ifup_trigger.sh /koolshare/init.d/S99routerhook.sh
     else
-        rm -f /koolshare/init.d/*routerhook.sh
+        rm -f /koolshare/init.d/S99routerhook.sh
     fi
 }
 
 remove_trigger_ifup() {
-    rm -f /koolshare/init.d/*routerhook.sh
+    rm -f /koolshare/init.d/S99routerhook.sh
 }
 
 onstart() {

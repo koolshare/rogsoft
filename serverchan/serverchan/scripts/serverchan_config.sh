@@ -52,17 +52,17 @@ remove_trigger_dhcp(){
 
 creat_trigger_ifup(){
     logger "[ServerChan]: 添加WAN触发器"
-    rm -f /koolshare/init.d/*serverchan.sh
+    rm -f /koolshare/init.d/S99serverchan.sh
     if [[ "${serverchan_trigger_ifup}" == "1" ]]; then
         ln -sf /koolshare/scripts/serverchan_ifup_trigger.sh /koolshare/init.d/S99serverchan.sh
     else
-        rm -f /koolshare/init.d/*serverchan.sh
+        rm -f /koolshare/init.d/S99serverchan.sh
     fi
 }
 
 remove_trigger_ifup(){
     logger "[ServerChan]: 移除WAN触发器"
-    rm -f /koolshare/init.d/*serverchan.sh
+    rm -f /koolshare/init.d/S99serverchan.sh
 }
 
 onstart(){
