@@ -5,7 +5,7 @@ routerhook_var_timestamp=$(date '+%s')
 routerhook_var_gmt=$(date -u '+%a, %d %b %Y %T GMT')
 
 replace_var() {
-    temp_var=$1
+    temp_var=$@
     temp_var=${temp_var//_PRM_EVENT/$msg_type}
     temp_var=${temp_var//_PRM_DT/$routerhook_var_gmt}
     temp_var=${temp_var//_PRM_TS/$routerhook_var_timestamp}
