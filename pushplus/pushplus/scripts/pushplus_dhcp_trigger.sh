@@ -10,7 +10,7 @@ else
 fi 
 ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
 dnsmasq_leases_file="/var/lib/misc/dnsmasq.leases"
-pushplus_lease_text="/tmp/.pushplus_dhcp.md"
+pushplus_lease_text="/tmp/.pushplus_dhcp.json"
 dhcp_lease_time=`nvram get dhcp_lease`
 client_join_time=`TZ=UTC-8 date "+%Y-%m-%d %H:%M:%S"`
 client_lease_info=`cat ${dnsmasq_leases_file} | sort -rn | head -n1`
@@ -86,71 +86,77 @@ fi
 
 dbus set pushplus_lease_send_mac="${client_lease_mac}"
 dbus set pushplus_lease_send_time="`TZ=UTC-8 date -d "${client_join_time}" +%s`"
-echo "##### ** 刚刚有新的客户端加入了你的网络，信息如下： **" > ${pushplus_lease_text}
-echo "---" >> ${pushplus_lease_text}
-echo "##### 客户端名: ${client_lease_name}" >> ${pushplus_lease_text}
-echo "##### 客户端IP: ${client_lease_ip}" >> ${pushplus_lease_text}
-echo "##### 客户端MAC: ${client_lease_mac}" >> ${pushplus_lease_text}
-echo "##### 客户端上线时间: ${client_join_time_format}" >> ${pushplus_lease_text}
-echo "##### 租约过期的时间: ${client_lease_epired_time_format}" >>${pushplus_lease_text}
-echo "---" >> ${pushplus_lease_text}
+
+msg_type='newDHCP'
+echo '{' >${pushplus_lease_text}
+echo '"msgTYPE":"'${msg_type}'",' >>${pushplus_lease_text}
+echo '"cliNAME": "'${client_lease_name}'",' >>${pushplus_lease_text}
+echo '"cliIP":"'${client_lease_ip}'",' >>${pushplus_lease_text}
+echo '"cliMAC":"'${client_lease_mac}'",' >>${pushplus_lease_text}
+echo '"upTIME":"'${client_join_time_format}'",' >>${pushplus_lease_text}
+echo '"expTIME":"'${client_lease_epired_time_format}'"' >>${pushplus_lease_text}
+
 if [[ ${pushplus_trigger_dhcp_leases} == "1" ]]; then
-    echo "##### 现在租约期内的客户端共有 ${total_lease_client} 个,情况如下：" >> ${pushplus_lease_text}
-    if [ "$pushplus_trigger_dhcp_macoff" == "1" ];then
-        total_lease_info_title="|IP|客户端名称|"
-        total_lease_info_tab="|:-|:-|"
-    else
-        total_lease_info_title="|IP|MAC|客户端名称|"
-        total_lease_info_tab="|:-|:-|:-|"
-    fi
-    echo "${total_lease_info_title}" >> ${pushplus_lease_text}
-    echo "${total_lease_info_tab}" >> ${pushplus_lease_text}
-    dnsmasq_leases_list=`cat ${dnsmasq_leases_file} | sort -t "." -k3n,3 -k4n,4`
+    dnsmasq_leases_list=$(cat ${dnsmasq_leases_file} | sort -t "." -k3n,3 -k4n,4)
     num=0
-    echo "${dnsmasq_leases_list}" | while read line
-    do
-        dhcp_client_mac=`echo ${line} | awk '{print $2}'`
-        trigger_dhcp_white_name=`echo $(dbus get pushplus_trigger_dhcp_white | base64_decode | grep -i "${dhcp_client_mac}") | cut -d# -f2`
+    echo ',"cliLISTS":[' >>${pushplus_lease_text}
+    echo "${dnsmasq_leases_list}" | while read line; do
+        if [[ "${num}" != "0" ]]; then
+            echo ',' >>${pushplus_lease_text}
+        fi
+        echo '{' >>${pushplus_lease_text}
+        dhcp_client_mac=$(echo ${line} | awk '{print $2}')
+        trigger_dhcp_white_name=$(echo $(dbus get pushplus_trigger_dhcp_white | base64_decode | grep -i "${dhcp_client_mac}") | cut -d# -f2)
         if [[ "${trigger_dhcp_white_name}" == "" ]]; then
-            dhcp_custom_clientlist=`echo $(nvram get custom_clientlist | sed 's/</\n/g' | awk -F ">" '{print $1"##"$2}' | sed '/^##*$/d' | grep -i "${dhcp_client_mac}")`
+            dhcp_custom_clientlist=$(echo $(nvram get custom_clientlist | sed 's/</\n/g' | awk -F ">" '{print $1"##"$2}' | sed '/^##*$/d' | grep -i "${dhcp_client_mac}"))
             if [[ "${dhcp_custom_clientlist}" == "" ]]; then
-                if [ "$pushplus_trigger_dhcp_macoff" == "1" ];then
-                    echo ${line} | awk '{print "|"$3"%26nbsp;%26nbsp;|"$4"|"}' >>${pushplus_lease_text}
+                if [ "$pushplus_trigger_dhcp_macoff" == "1" ]; then
+                    echo ${line} | awk '{print "\"ip\":\""$3"\",\"name\":\""$4"\""}' >>${pushplus_lease_text}
                 else
-                    echo ${line} | awk '{print "|"$3"%26nbsp;%26nbsp;|"$2"%26nbsp;%26nbsp;|"$4"|"}' >>${pushplus_lease_text}
+                    echo ${line} | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":\""$4"\""}' >>${pushplus_lease_text}
                 fi
             else
-                dhcp_lease_name=`echo ${dhcp_custom_clientlist} | awk -F "##" '{print $1}'`
-                if [ "$pushplus_trigger_dhcp_macoff" == "1" ];then
-                    echo $(echo "${line}" | awk '{print "|"$3"%26nbsp;%26nbsp;|"}')"${dhcp_lease_name}|" >>${pushplus_lease_text}
+                dhcp_lease_name=$(echo ${dhcp_custom_clientlist} | awk -F "##" '{print $1}')
+                if [ "$pushplus_trigger_dhcp_macoff" == "1" ]; then
+                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${pushplus_lease_text}
                 else
-                    echo $(echo "${line}" | awk '{print "|"$3"%26nbsp;%26nbsp;|"$2"%26nbsp;%26nbsp;|"}')"${dhcp_lease_name}|" >>${pushplus_lease_text}
+                    echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${dhcp_lease_name}\"" >>${pushplus_lease_text}
                 fi
             fi
         else
-            if [ "$pushplus_trigger_dhcp_macoff" == "1" ];then
-                echo $(echo "${line}" | awk '{print "|"$3"%26nbsp;%26nbsp;|"}')"${trigger_dhcp_white_name}|" >>${pushplus_lease_text}
+            if [ "$pushplus_trigger_dhcp_macoff" == "1" ]; then
+                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${pushplus_lease_text}
             else
-                echo $(echo "${line}" | awk '{print "|"$3"%26nbsp;%26nbsp;|"$2"%26nbsp;%26nbsp;|"}')"${trigger_dhcp_white_name}|" >>${pushplus_lease_text}
+                echo $(echo "${line}" | awk '{print "\"ip\":\""$3"\",\"mac\":\""$2"\",\"name\":"}')"\"${trigger_dhcp_white_name}\"" >>${pushplus_lease_text}
             fi
         fi
+        echo '}' >>${pushplus_lease_text}
         let num=num+1
     done
-    echo "---" >> ${pushplus_lease_text}
+    echo "]" >>${pushplus_lease_text}
 fi
-pushplus_send_title="${send_title} 路由器客户端上线通知："
-pushplus_send_content=`cat ${pushplus_lease_text}`
-sckey_nu=`dbus list pushplus_config_sckey | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
-for nu in ${sckey_nu}
+
+echo '}' >>${pushplus_lease_text}
+
+
+pushplus_send_title="${send_title} 客户端上线通知："
+pushplus_send_content=$(jq -c . ${pushplus_lease_text})
+
+token_nu=`dbus list pushplus_config_token | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
+for nu in ${token_nu}
 do
-    pushplus_config_sckey=`dbus get pushplus_config_sckey_${nu}`
-    url="https://sc.ftqq.com/${pushplus_config_sckey}.send"
-    result=`wget --no-check-certificate --post-data "text=${pushplus_send_title}&desp=${pushplus_send_content}" -qO- ${url}`
-    if [ -n $(echo $result | grep "success") ];then
-        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 设备上线信息推送到 SCKEY No.${nu} 成功！！"
+    pushplus_config_token=`dbus get pushplus_config_token_${nu}`
+    pushplus_config_channel=`dbus get pushplus_config_channel_${nu}`
+    pushplus_config_topic=`dbus get pushplus_config_topic_${nu}`
+    url="https://pushplus.hxtrip.com/send?template=route&token=${pushplus_config_token}&topic=${pushplus_config_topic}&channel=${pushplus_config_channel}&title=${pushplus_send_title}"
+    reqstr="curl -H \"content-type:application/json\" -X POST -d '{\"content\":"${pushplus_send_content}"' ${url}"
+    result=$(eval ${reqstr})
+    if [[ -n "$(echo $result | grep "success")" ]]; then
+        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启信息推送到 TOKEN No.${nu} 成功！！"
     else
-        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 设备上线信息推送到 SCKEY No.${nu} 失败，请检查网络及配置！"
+        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启信息推送到 TOKEN No.${nu} 失败，请检查网络及配置！"
     fi
 done
+
 sleep 2
 rm -rf ${pushplus_lease_text}
