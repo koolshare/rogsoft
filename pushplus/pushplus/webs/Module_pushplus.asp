@@ -279,7 +279,7 @@ function onSubmitCtrl(){
 	showLoading(5);
 	refreshpage(5);
 	var params_input = ["pushplus_silent_time_start_hour", "pushplus_silent_time_end_hour", "pushplus_config_ntp", "pushplus_config_name", "pushplus_status_check", "pushplus_check_week", "pushplus_check_day", "pushplus_check_inter_min", "pushplus_check_inter_hour", "pushplus_check_inter_day", "pushplus_check_inter_pre", "pushplus_check_custom", "pushplus_check_time_hour", "pushplus_check_time_min", "pushplus_trigger_dhcp_white"];
-	var params_check = ["pushplus_enable", "pushplus_silent_time", "pushplus_info_logger", "pushplus_info_silent_send", "pushplus_info_system", "pushplus_info_temp", "pushplus_info_wan", "pushplus_info_usb", "pushplus_info_lan", "pushplus_info_dhcp", "pushplus_info_softcenter", "pushplus_trigger_ifup", "pushplus_trigger_ifup_sendinfo","pushplus_trigger_dhcp", "pushplus_trigger_dhcp_leases","pushplus_dhcp_bwlist_en", "pushplus_dhcp_white_en", "pushplus_dhcp_black_en", "pushplus_info_lan_macoff", "pushplus_info_dhcp_macoff", "pushplus_trigger_dhcp_macoff" ];
+	var params_check = ["pushplus_enable", "pushplus_silent_time", "pushplus_info_logger", "pushplus_info_silent_send", "pushplus_info_system", "pushplus_info_temp", "pushplus_info_wan", "pushplus_info_usb", "pushplus_info_lan", "pushplus_info_dhcp", "pushplus_trigger_ifup", "pushplus_trigger_ifup_sendinfo","pushplus_trigger_dhcp", "pushplus_trigger_dhcp_leases","pushplus_dhcp_bwlist_en", "pushplus_dhcp_white_en", "pushplus_dhcp_black_en", "pushplus_info_lan_macoff", "pushplus_info_dhcp_macoff", "pushplus_trigger_dhcp_macoff" ];
 	var params_base64 = ["pushplus_config_name", "pushplus_check_custom", "pushplus_trigger_dhcp_white"];
 	// collect data from input
 	for (var i = 0; i < params_input.length; i++) {
@@ -340,7 +340,7 @@ function menu_hook(title, tab) {
 
 function addTr(o) { //添加配置行操作
 	var _form_addTr = document.form;
-	if (trim(_form_addTr.config_sckey.value) == "") {
+	if (trim(_form_addTr.config_token.value) == "") {
 		alert("提交的表单不能为空!");
 		return false;
 	}
@@ -348,7 +348,7 @@ function addTr(o) { //添加配置行操作
 	var p = "pushplus";
 	node_max += 1;
 	// 定义ns数组，用于回传给dbus
-	var params = ["config_sckey"];
+	var params = ["config_token"];
 	if (!myid) {
 		for (var i = 0; i < params.length; i++) {
 			ns[p + "_" + params[i] + "_" + node_max] = $('#' + params[i]).val();
@@ -372,7 +372,7 @@ function addTr(o) { //添加配置行操作
 				//回传成功后，重新生成表格
 				refresh_table();
 				// 添加成功一个后将输入框清空
-				document.form.config_sckey.value = "";
+				document.form.config_token.value = "";
 			}
 		}
 	});
@@ -388,7 +388,7 @@ function delTr(o) { //删除配置行功能
 		id = ids[ids.length - 1];
 		// 定义ns数组，用于回传给dbus
 		var ns = {};
-		var params = ["config_sckey"];
+		var params = ["config_token"];
 		for (var i = 0; i < params.length; i++) {
 			//空的值，用于清除dbus中的对应值
 			ns[p + "_" + params[i] + "_" + id] = "";
@@ -436,7 +436,7 @@ function getAllConfigs() { //用dbus数据生成数据组，方便用于refresh_
 	}
 	confs = {};
 	var p = "pushplus";
-	var params = ["config_sckey"];
+	var params = ["config_token"];
 	for (var field in dic) {
 		var obj = {};
 		for (var i = 0; i < params.length; i++) {
@@ -471,7 +471,7 @@ function refresh_html() { //用conf数据生成配置表格
 	for (var field in confs) {
 		var c = confs[field];
 		html = html + '<tr>';
-		html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_sckey"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:430px;margin-top: 3px;" disabled="disabled" /></td>';
+		html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_token"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:430px;margin-top: 3px;" disabled="disabled" /></td>';
 		html = html + '<td>';
 		html = html + '<input style="margin-left:-3px;" id="dd_node_' + c["node"] + '" class="edit_btn" type="button" onclick="editlTr(this);" value="">'
 		html = html + '</td>';
@@ -491,7 +491,7 @@ function editlTr(o) { //编辑节点功能，显示编辑面板
 	id = ids[ids.length - 1];
 	var c = confs[id];
 
-	document.form.config_sckey.value = c["config_sckey"];
+	document.form.config_token.value = c["config_token"];
 	myid = id; //返回ID号
 }
 
@@ -570,9 +570,9 @@ function version_show() {
                                     <div class="formfontdesc" id="cmdDesc">
                                         * 「<a href="http://sc.ftqq.com" target=_blank><i>Server酱</i></a>」，英文名「pushplus」，是一款「程序员」和「服务器」之间的通信软件。说人话？就是从服务器推报警和日志到手机的工具。<br><br>
                                         开通并使用上它，只需要一分钟：<br>
-                                        <i>1. 登录：</i>用GitHub账号<a href="http://sc.ftqq.com/?c=github&a=login" target="_blank"><i>登入网站</i></a>，就能获得一个<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>SCKEY</i></a>（在「<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>发送消息</i></a>」页面）<br>
+                                        <i>1. 登录：</i>用GitHub账号<a href="http://sc.ftqq.com/?c=github&a=login" target="_blank"><i>登入网站</i></a>，就能获得一个<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>TOKEN</i></a>（在「<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>发送消息</i></a>」页面）<br>
                                         <i>2. 绑定：</i>点击「<a href="http://sc.ftqq.com/?c=wechat&a=bind" target="_blank"><i>微信推送</i></a>」，扫码关注同时即可完成绑定<br>
-                                        <i>3. 发消息：</i>将获得到的<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>SCKEY</i></a>填入插件中并勾选相应选项提交即可。<br>
+                                        <i>3. 发消息：</i>将获得到的<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>TOKEN</i></a>填入插件中并勾选相应选项提交即可。<br>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
@@ -647,14 +647,24 @@ function version_show() {
                                     </table>
                                     <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
                                         <tr>
-                                            <th>TOKEN(最少需要一个TOKEN)</th>
+                                            <th>TOKEN(必填)</th>
+                                            <th>TOPIC(可选)</th>
+                                            <th>CHANNEL</th>
                                             <th>修改</th>
                                             <th>添加/删除</th>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="input" name="config_sckey" id="config_sckey" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
-                                           </td>
+                                                <input type="input" name="config_token" id="config_token" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                            </td>
+                                            <td>
+                                                <input type="input" name="config_topic" id="config_topic" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                            </td>
+                                            <td>
+                                                <label><input type="checkbox" id="config_channel_wechat" name="config_channel_wechat" onclick="oncheckclick(this);">微信</label>
+                                                <label><input type="checkbox" id="config_channel_email" name="config_channel_email" onclick="oncheckclick(this);">邮件</label>
+                                                <label><input type="checkbox" id="config_channel_sms" name="config_channel_sms" onclick="oncheckclick(this);">短信</label> ）
+                                            </td>
                                             <td width="7%">
                                                 <div>
                                                 </div>
@@ -937,12 +947,6 @@ function version_show() {
                                                 <label style="margin-left:30px;">列表关闭MAC显示<input type="checkbox" id="pushplus_info_dhcp_macoff" checked="checked" onclick="oncheckclick(this);">
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th width="20%">软件中心插件信息</th>
-                                            <td>
-                                                <input type="checkbox" id="pushplus_info_softcenter" checked="checked" onclick="oncheckclick(this);">
-                                            </td>
-                                        </tr>
                                     </table>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
@@ -985,7 +989,6 @@ function version_show() {
                                 </td>
                             </tr>
                         </table>
-
                                 </td>
                             </tr>
                         </table>
