@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
@@ -7,7 +7,7 @@
 <meta HTTP-EQUIV="Expires" CONTENT="-1"/>
 <link rel="shortcut icon" href="images/favicon.png"/>
 <link rel="icon" href="images/favicon.png"/>
-<title>软件中心 - Push+(全能推送)</title>
+<title>软件中心 - pushplus全能推送</title>
 <link rel="stylesheet" type="text/css" href="index_style.css"/> 
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="css/element.css">
@@ -564,20 +564,25 @@ function version_show() {
                             <tr>
                                 <td bgcolor="#4D595D" colspan="3" valign="top">
                                     <div>&nbsp;</div>
-                                    <div style="float:left;" class="formfonttitle">软件中心 - Push+</div>
+                                    <div style="float:left;" class="formfonttitle">软件中心 - pushplus全能推送</div>
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                     <div class="formfontdesc" id="cmdDesc">
-                                        * 「<a href="http://sc.ftqq.com" target=_blank><i>Server酱</i></a>」，英文名「pushplus」，是一款「程序员」和「服务器」之间的通信软件。说人话？就是从服务器推报警和日志到手机的工具。<br><br>
-                                        开通并使用上它，只需要一分钟：<br>
-                                        <i>1. 登录：</i>用GitHub账号<a href="http://sc.ftqq.com/?c=github&a=login" target="_blank"><i>登入网站</i></a>，就能获得一个<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>TOKEN</i></a>（在「<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>发送消息</i></a>」页面）<br>
-                                        <i>2. 绑定：</i>点击「<a href="http://sc.ftqq.com/?c=wechat&a=bind" target="_blank"><i>微信推送</i></a>」，扫码关注同时即可完成绑定<br>
-                                        <i>3. 发消息：</i>将获得到的<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>TOKEN</i></a>填入插件中并勾选相应选项提交即可。<br>
+                                        「<a href="https://pushplus.hxtrip.com/" target=_blank><i>pushplus</i></a>」，中文名「推送加」，起初是为了帮助程序员处理系统监控告警而开发的免费服务。随着功能不断的完善，我们针对性的推出了路由器插件可以让您第一时间在手机上接收路由器的消息。<br><br>
+                                        只需两步，轻松上手：<br>
+                                        <i>1. 获取Token：</i>打开<a href="https://pushplus.hxtrip.com/login?redirectUrl=/message" target="_blank"><i>pushplus官网</i></a>,微信扫码登录成功后在页面上获取您的Token<br>
+                                        <i>2. 填写Token：</i>在插件页面中填入自己的Token点击提交，即可收到路由器发送的消息。<br><br>
+                                        想要多个人接收怎么办？pushplus支持群发功能，到官网上创建自己的群组后，在插件页面上填入自己的群组编码，消息就会群发给群组内的成员了。<br>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
+                                        <thead>
+                                            <tr>
+                                              <td colspan="2">pushplus 基础设置</td>
+                                            </tr>
+                                        </thead>
                                         <tr id="switch_tr">
                                             <th>
-                                                <label>开启Push+</label>
+                                                <label>开启pushplus</label>
                                             </th>
                                             <td colspan="2">
                                                 <div class="switch_field" style="display:table-cell;float: left;">
@@ -595,17 +600,52 @@ function version_show() {
                                             </td>
                                         </tr>
                                     </table>
+
+                                    <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
+                                        <tr>
+                                            <th>Token(必填)</th>
+                                            <th>群组编码(可选)</th>
+                                            <th>推送渠道(可选)</th>
+                                            <th>修改</th>
+                                            <th>添加/删除</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="input" name="config_token" id="config_token" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                            </td>
+                                            <td>
+                                                <input type="input" name="config_topic" id="config_topic" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                            </td>
+                                            <td>
+                                                <label><input type="checkbox" readonly checked id="config_channel_wechat" name="config_channel_wechat" onclick="oncheckclick(this);">微信</label>
+                                                <!-- <label><input type="checkbox" id="config_channel_email" name="config_channel_email" onclick="oncheckclick(this);">邮件</label>
+                                                <label><input type="checkbox" id="config_channel_sms" name="config_channel_sms" onclick="oncheckclick(this);">短信</label> -->
+                                            </td>
+                                            <td width="7%">
+                                                <div>
+                                                </div>
+                                            </td>
+                                            <td width="10%">
+                                                <div>
+                                                    <input type="button" class="add_btn" onclick="addTr()" value=""/>
+                                                </div>
+                                            </td>
+                                          </tr>
+                                    </table>
+
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
                                               <tr>
-                                                <td colspan="2">Push+ 设置</td>
+                                                <td colspan="2">pushplus 功能设置</td>
                                               </tr>
-                                          </thead>
-                                        <th style="width:20%;">版本信息</th>
-                                        <td>
-                                            <div id="pushplus_version_show" style="padding-top:5px;margin-left:0px;margin-top:0px;float: left;"></div>
-                                            <span style="padding-top:5px;margin-right: 15px;margin-left:0px;margin-top:0px;float: right;"><a href="http://koolshare.cn/thread-123937-1-1.html" target="_blank">[ 反馈地址 ]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/koolshare/rogsoft/master/pushplus/Changelog.txt" target="_blank"><em><u>[ 更新日志 ]</u></em></a></span>
-                                        </td>
+                                          </thead>                                       
+                                        <tr>
+                                            <th style="width:20%;">版本信息</th>
+                                            <td>
+                                                <div id="pushplus_version_show" style="padding-top:5px;margin-left:0px;margin-top:0px;float: left;"></div>
+                                                <span style="padding-top:5px;margin-right: 15px;margin-left:0px;margin-top:0px;float: right;"><a href="https://pushplus.hxtrip.com/about" target="_blank">[ 联系我们 ]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/koolshare/rogsoft/master/pushplus/Changelog.txt" target="_blank"><em><u>[ 更新日志 ]</u></em></a></span>
+                                            </td>                                                                                    
+                                        </tr>
                                         <tr>
                                             <th width="20%">消息免打扰时间</th>
                                             <td>
@@ -645,37 +685,7 @@ function version_show() {
                                             </td>
                                         </tr>
                                     </table>
-                                    <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
-                                        <tr>
-                                            <th>TOKEN(必填)</th>
-                                            <th>TOPIC(可选)</th>
-                                            <th>CHANNEL</th>
-                                            <th>修改</th>
-                                            <th>添加/删除</th>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="input" name="config_token" id="config_token" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
-                                            </td>
-                                            <td>
-                                                <input type="input" name="config_topic" id="config_topic" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
-                                            </td>
-                                            <td>
-                                                <label><input type="checkbox" id="config_channel_wechat" name="config_channel_wechat" onclick="oncheckclick(this);">微信</label>
-                                                <label><input type="checkbox" id="config_channel_email" name="config_channel_email" onclick="oncheckclick(this);">邮件</label>
-                                                <label><input type="checkbox" id="config_channel_sms" name="config_channel_sms" onclick="oncheckclick(this);">短信</label> ）
-                                            </td>
-                                            <td width="7%">
-                                                <div>
-                                                </div>
-                                            </td>
-                                            <td width="10%">
-                                                <div>
-                                                    <input type="button" class="add_btn" onclick="addTr()" value=""/>
-                                                </div>
-                                            </td>
-                                          </tr>
-                                    </table>
+
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top:8px;">
                                         <thead>
                                               <tr>

@@ -2,8 +2,8 @@
 
 MODULE="pushplus"
 VERSION="0.1"
-TITLE="PushPlus全能推送"
-DESCRIPTION="从路由器推送状态及通知到Push+"
+TITLE="pushplus全能推送"
+DESCRIPTION="通过pushplus将路由器状态推送到微信上"
 HOME_URL="Module_pushplus.asp"
 
 # Check and include base
