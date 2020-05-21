@@ -1,33 +1,34 @@
 #!/bin/sh
 source /koolshare/scripts/base.sh
-eval `dbus export pushplus_`
-model=`nvram get model`
+eval $(dbus export pushplus_)
+model=$(nvram get model)
 if [ "${pushplus_config_ntp}" == "" ]; then
     ntp_server="ntp1.aliyun.com"
 else
     ntp_server=${pushplus_config_ntp}
 fi
-ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
+ntpclient -h ${ntp_server} -i3 -l -s >/dev/null 2>&1
 pushplus_info_text=/tmp/.pushplus_info.json
 app_file=/tmp/.app.json.js
 dnsmasq_leases_file="/var/lib/misc/dnsmasq.leases"
 rm -rf ${pushplus_info_text} ${app_file}
 
 if [[ "${pushplus_enable}" != "1" ]]; then
-	exit
+    exit
 fi
 clang_action="$1"
 if [[ "${clang_action}" == "task" ]]; then
-	if [[ "${pushplus_info_silent_send}" == "0" ]]; then
-		if [[ "${pushplus_silent_time}" == "1" ]]; then
-			router_now_hour=`date "+%H"`
-			if [[ "${router_now_hour}" -ge "${pushplus_silent_time_start_hour}" ]] || [[ "${router_now_hour}" -lt "${pushplus_silent_time_end_hour}" ]]; then
-				[ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 推送时间在消息免打扰时间内，推送任务通道静默！"
-				exit
-			fi
-		fi
-	fi
+    if [[ "${pushplus_info_silent_send}" == "0" ]]; then
+        if [[ "${pushplus_silent_time}" == "1" ]]; then
+            router_now_hour=$(date "+%H")
+            if [[ "${router_now_hour}" -ge "${pushplus_silent_time_start_hour}" ]] || [[ "${router_now_hour}" -lt "${pushplus_silent_time_end_hour}" ]]; then
+                [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 推送时间在消息免打扰时间内，推送任务通道静默！"
+                exit
+            fi
+        fi
+    fi
 fi
+send_title=$(dbus get pushplus_config_name | base64_decode) || "本次未获取到！"
 msg_type="cronINFO"
 case "${clang_action}" in
 task)
@@ -403,16 +404,15 @@ fi
 
 echo '}' >>${pushplus_info_text}
 
-
 pushplus_send_content=$(jq -c . ${pushplus_info_text})
-pushplus_send_title="${send_title} 状态信息"
+pushplus_send_title="${send_title}状态信息"
 
-token_nu=`dbus list pushplus_config_token | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
-for nu in ${token_nu}
-do
-    pushplus_config_token=`dbus get pushplus_config_token_${nu}`
-    pushplus_config_channel=`dbus get pushplus_config_channel_${nu}`
-    pushplus_config_topic=`dbus get pushplus_config_topic_${nu}`
+token_nu=$(dbus list pushplus_config_token | sort -n -t "_" -k 4 | cut -d "=" -f 1 | cut -d "_" -f 4)
+for nu in ${token_nu}; do
+    pushplus_config_token=$(dbus get pushplus_config_token_${nu})
+    pushplus_config_topic=$(dbus get pushplus_config_topic_${nu})
+    # pushplus_config_channel=`dbus get pushplus_config_channel_${nu}`
+    pushplus_config_channel="wechat"
     url="https://pushplus.hxtrip.com/send?template=route&token=${pushplus_config_token}&topic=${pushplus_config_topic}&channel=${pushplus_config_channel}&title=${pushplus_send_title}"
     reqstr="curl -H \"content-type:application/json\" -X POST -d '{\"content\":"${pushplus_send_content}"' ${url}"
     result=$(eval ${reqstr})

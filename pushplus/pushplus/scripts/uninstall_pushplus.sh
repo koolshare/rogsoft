@@ -1,5 +1,5 @@
 #!/bin/sh
-eval `dbus export pushplus_`
+eval $(dbus export pushplus_)
 source /koolshare/scripts/base.sh
 logger "[软件中心]: 正在卸载pushplus..."
 MODULE=pushplus
@@ -13,10 +13,9 @@ rm -rf /koolshare/res/icon-pushplus.png >/dev/null 2>&1
 rm -rf /koolshare/webs/Module_pushplus.asp >/dev/null 2>&1
 rm -rf /tmp/pushplus* >/dev/null 2>&1
 
-values=`dbus list pushplus | cut -d "=" -f 1`
-for value in $values
-do
-dbus remove $value 
+values=$(dbus list pushplus | cut -d "=" -f 1)
+for value in $values; do
+    dbus remove $value
 done
 
 cru d pushplus_check >/dev/null 2>&1

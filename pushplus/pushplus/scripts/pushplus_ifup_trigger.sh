@@ -1,12 +1,12 @@
 #!/bin/sh
 source /koolshare/scripts/base.sh
-eval `dbus export pushplus_`
-if [ "${pushplus_config_ntp}" == "" ]; then 
-    ntp_server="ntp1.aliyun.com" 
-else 
-    ntp_server=${pushplus_config_ntp} 
-fi 
-ntpclient -h ${ntp_server} -i3 -l -s > /dev/null 2>&1
+eval $(dbus export pushplus_)
+if [ "${pushplus_config_ntp}" == "" ]; then
+    ntp_server="ntp1.aliyun.com"
+else
+    ntp_server=${pushplus_config_ntp}
+fi
+ntpclient -h ${ntp_server} -i3 -l -s >/dev/null 2>&1
 [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启触发消息推送！"
 
 if [[ "${pushplus_enable}" != "1" ]]; then
@@ -17,9 +17,9 @@ if [[ ${pushplus_trigger_ifup} != "1" ]]; then
     exit
 fi
 pushplus_ifup_text="/tmp/.pushplus_ifup.json"
-send_title=`dbus get pushplus_config_name | base64_decode` || "本次未获取到！"
-router_uptime=`cat /proc/uptime | awk '{print $1}' | awk '{print int($1/86400)"天 "int($1%86400/3600)"小时 "int(($1%3600)/60)"分钟 "int($1%60)"秒"}'`
-router_reboot_time=`echo $(TZ=UTC-8 date "+%Y年%m月%d日 %H点%M分%S秒")`
+send_title=$(dbus get pushplus_config_name | base64_decode) || "本次未获取到！"
+router_uptime=$(cat /proc/uptime | awk '{print $1}' | awk '{print int($1/86400)"天 "int($1%86400/3600)"小时 "int(($1%3600)/60)"分钟 "int($1%60)"秒"}')
+router_reboot_time=$(echo $(TZ=UTC-8 date "+%Y年%m月%d日 %H点%M分%S秒"))
 
 msg_type='ifUP'
 echo '{' >${pushplus_ifup_text}
@@ -74,16 +74,15 @@ fi
 echo ']' >>${pushplus_ifup_text}
 echo '}' >>${pushplus_ifup_text}
 
-
 pushplus_send_title="${send_title} 网络重启通知："
 pushplus_send_content=$(jq -c . ${pushplus_ifup_text})
 
-token_nu=`dbus list pushplus_config_token | sort -n -t "_" -k 4|cut -d "=" -f 1|cut -d "_" -f 4`
-for nu in ${token_nu}
-do
-    pushplus_config_token=`dbus get pushplus_config_token_${nu}`
-    pushplus_config_channel=`dbus get pushplus_config_channel_${nu}`
-    pushplus_config_topic=`dbus get pushplus_config_topic_${nu}`
+token_nu=$(dbus list pushplus_config_token | sort -n -t "_" -k 4 | cut -d "=" -f 1 | cut -d "_" -f 4)
+for nu in ${token_nu}; do
+    pushplus_config_token=$(dbus get pushplus_config_token_${nu})
+    pushplus_config_topic=$(dbus get pushplus_config_topic_${nu})
+    # pushplus_config_channel=`dbus get pushplus_config_channel_${nu}`
+    pushplus_config_channel="wechat"
     url="https://pushplus.hxtrip.com/send?template=route&token=${pushplus_config_token}&topic=${pushplus_config_topic}&channel=${pushplus_config_channel}&title=${pushplus_send_title}"
     reqstr="curl -H \"content-type:application/json\" -X POST -d '{\"content\":"${pushplus_send_content}"' ${url}"
     result=$(eval ${reqstr})

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
@@ -348,7 +348,7 @@ function addTr(o) { //添加配置行操作
 	var p = "pushplus";
 	node_max += 1;
 	// 定义ns数组，用于回传给dbus
-	var params = ["config_token"];
+	var params = ["config_token","config_topic"];
 	if (!myid) {
 		for (var i = 0; i < params.length; i++) {
 			ns[p + "_" + params[i] + "_" + node_max] = $('#' + params[i]).val();
@@ -373,6 +373,7 @@ function addTr(o) { //添加配置行操作
 				refresh_table();
 				// 添加成功一个后将输入框清空
 				document.form.config_token.value = "";
+                document.form.config_topic.value = "";
 			}
 		}
 	});
@@ -388,7 +389,7 @@ function delTr(o) { //删除配置行功能
 		id = ids[ids.length - 1];
 		// 定义ns数组，用于回传给dbus
 		var ns = {};
-		var params = ["config_token"];
+		var params = ["config_token","config_topic"];
 		for (var i = 0; i < params.length; i++) {
 			//空的值，用于清除dbus中的对应值
 			ns[p + "_" + params[i] + "_" + id] = "";
@@ -436,7 +437,7 @@ function getAllConfigs() { //用dbus数据生成数据组，方便用于refresh_
 	}
 	confs = {};
 	var p = "pushplus";
-	var params = ["config_token"];
+	var params = ["config_token","config_topic"];
 	for (var field in dic) {
 		var obj = {};
 		for (var i = 0; i < params.length; i++) {
@@ -471,8 +472,10 @@ function refresh_html() { //用conf数据生成配置表格
 	for (var field in confs) {
 		var c = confs[field];
 		html = html + '<tr>';
-		html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_token"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:430px;margin-top: 3px;" disabled="disabled" /></td>';
-		html = html + '<td>';
+		html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_token"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:95%;margin-top: 3px;" disabled="disabled" /></td>';
+        html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_topic"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:95%;margin-top: 3px;" disabled="disabled" /></td>';
+        html = html + '<td>微信</td>';
+        html = html + '<td>';
 		html = html + '<input style="margin-left:-3px;" id="dd_node_' + c["node"] + '" class="edit_btn" type="button" onclick="editlTr(this);" value="">'
 		html = html + '</td>';
 		html = html + '<td>';
@@ -492,6 +495,7 @@ function editlTr(o) { //编辑节点功能，显示编辑面板
 	var c = confs[id];
 
 	document.form.config_token.value = c["config_token"];
+    document.form.config_topic.value = c["config_topic"];
 	myid = id; //返回ID号
 }
 
@@ -605,19 +609,19 @@ function version_show() {
                                         <tr>
                                             <th>Token(必填)</th>
                                             <th>群组编码(可选)</th>
-                                            <th>推送渠道(可选)</th>
+                                            <th>渠道</th>
                                             <th>修改</th>
                                             <th>添加/删除</th>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="input" name="config_token" id="config_token" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                                <input type="input" name="config_token" id="config_token" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:95%;margin-top: 3px;" />
                                             </td>
                                             <td>
-                                                <input type="input" name="config_topic" id="config_topic" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:430px;margin-top: 3px;" />
+                                                <input type="input" name="config_topic" id="config_topic" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" style="width:95%;margin-top: 3px;" />
                                             </td>
                                             <td>
-                                                <label><input type="checkbox" readonly checked id="config_channel_wechat" name="config_channel_wechat" onclick="oncheckclick(this);">微信</label>
+                                                <label><input type="checkbox" readonly checked disabled id="config_channel_wechat" name="config_channel_wechat" onclick="oncheckclick(this);">微信</label>
                                                 <!-- <label><input type="checkbox" id="config_channel_email" name="config_channel_email" onclick="oncheckclick(this);">邮件</label>
                                                 <label><input type="checkbox" id="config_channel_sms" name="config_channel_sms" onclick="oncheckclick(this);">短信</label> -->
                                             </td>
