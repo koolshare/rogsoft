@@ -112,6 +112,8 @@ cru l
 
 **打包**：在routerhook根目录打开gitbash，输入`tar -czvf routerhook.tar.gz routerhook/`即可
 
+**Win10打包**：Windows10的1803以上版本已经支持tar命令，可以直接进行打包，在项目目录下打开CMD或者PowerShell，运行命令`tar -czf routerhook.tar.gz routerhook/`即可
+
 **解压**：解压命令：`tar -xzvf routerhook.tar.gz -C /目标地址`
 
 #### 软件中心相关：
