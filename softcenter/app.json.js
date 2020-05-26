@@ -133,6 +133,17 @@
             "version": "1.3"
         }, 
         {
+            "build_date": "2020-04-12_22:42:34", 
+            "changelog": "", 
+            "description": "从路由器推送状态及通知到PushPlus", 
+            "home_url": "Module_pushplus.asp", 
+            "md5": "", 
+            "name": "pushplus", 
+            "tar_url": "pushplus/pushplus.tar.gz", 
+            "title": "PushPlus全能推送", 
+            "version": "0.1"
+        }, 
+        {
             "build_date": "2020-04-12_17:23:28", 
             "changelog": "", 
             "description": "自动签到", 
@@ -170,22 +181,22 @@
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_routerhook.asp", 
-            "md5": "268d623ecc246f946ebfc5cb214178d0", 
+            "md5": "", 
             "name": "routerhook", 
             "tar_url": "routerhook/routerhook.tar.gz", 
             "title": "RouterHook事件回调", 
-            "version": "1.0"
+            "version": "1.1"
         }, 
         {
-            "build_date": "2020-04-12_22:42:34", 
+            "build_date": "2020-05-26_20:07:42", 
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_serverchan.asp", 
-            "md5": "579b57409ddfaa02a30acb3c262da98b", 
+            "md5": "8cbb462ad5bdc3062d44a08eee63fe7c", 
             "name": "serverchan", 
             "tar_url": "serverchan/serverchan.tar.gz", 
             "title": "serverChan微信推送", 
-            "version": "1.1"
+            "version": "1.2"
         }, 
         {
             "build_date": "2020-04-12_22:44:08", 
@@ -208,17 +219,6 @@
             "tar_url": "softether/softether.tar.gz", 
             "title": "SoftEther_VPN_Server", 
             "version": "1.9"
-        }, 
-        {
-            "build_date": "2020-04-12_22:47:20", 
-            "changelog": "", 
-            "description": "ss-server", 
-            "home_url": "Module_ssserver.asp", 
-            "md5": "d0152648110ae6184d0ec824fecd6b08", 
-            "name": "ssserver", 
-            "tar_url": "ssserver/ssserver.tar.gz", 
-            "title": "ss-server", 
-            "version": "1.2"
         }, 
         {
             "build_date": "2020-04-12_22:48:47", 
