@@ -108,7 +108,11 @@ cru l
 
 > 貌似build.sh是可以进行打包的，但是具体怎么用我也不知道（看代码应该是需要拷贝到路由器上运行然后就可以打包啦？还请大神指点）
 
+**打包前的准备工作**：在Windows环境下，首先通过VSCode或其他工具将sh文件的换行符由`CRLF`转换为`LF`，再将制表符全部转换为`空格`，否则可能导致SH无法运行
+
 **打包**：在routerhook根目录打开gitbash，输入`tar -czvf routerhook.tar.gz routerhook/`即可
+
+**Win10打包**：Windows10的1803以上版本已经支持tar命令，可以直接进行打包，在项目目录下打开CMD或者PowerShell，运行命令`tar -czf routerhook.tar.gz routerhook/`即可
 
 **解压**：解压命令：`tar -xzvf routerhook.tar.gz -C /目标地址`
 

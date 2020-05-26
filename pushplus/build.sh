@@ -1,10 +1,10 @@
 #!/bin/sh
 
-MODULE="serverchan"
-VERSION="1.2"
-TITLE="serverChan微信推送"
-DESCRIPTION="从路由器推送状态及通知的工具"
-HOME_URL="Module_serverchan.asp"
+MODULE="pushplus"
+VERSION="0.1"
+TITLE="pushplus全能推送"
+DESCRIPTION="通过pushplus将路由器状态推送到微信上"
+HOME_URL="Module_pushplus.asp"
 
 # Check and include base
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

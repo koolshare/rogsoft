@@ -71,6 +71,8 @@ if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX1100
 	cp -rf /tmp/serverchan/ROG/webs/Module_serverchan.asp /koolshare/webs/
 fi
 chmod +x /koolshare/scripts/*
+# 安装重启自动启动功能
+[ ! -L "/koolshare/init.d/S99CRUserverchan.sh" ] && ln -sf /koolshare/scripts/serverchan_config.sh /koolshare/init.d/S99CRUserverchan.sh
 
 # 设置默认值
 router_name=`echo $(nvram get model) | base64_encode`
