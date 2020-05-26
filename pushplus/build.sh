@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="pushplus"
-VERSION="0.1"
+VERSION="0.2"
 TITLE="pushplus全能推送"
 DESCRIPTION="通过pushplus将路由器状态推送到微信上"
 HOME_URL="Module_pushplus.asp"
