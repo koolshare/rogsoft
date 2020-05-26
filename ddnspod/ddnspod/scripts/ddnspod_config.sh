@@ -54,7 +54,7 @@ arDdnsUpdate() {
 }
 
 arDdnsCheck() {
-	postRS
+	local postRS
 	hostIP=$(arIpAdress)
 	lastIP=$(arNslookup "${2}.${1}")
 	echo "hostIP: ${hostIP}"
