@@ -114,7 +114,7 @@
 .serverchan_btn {
     border: 1px solid #222;
     background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rog */
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
     font-size:10pt;
     color: #fff;
     padding: 5px 5px;
@@ -124,7 +124,7 @@
 .serverchan_btn:hover {
     border: 1px solid #222;
     background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rog */
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
     font-size:10pt;
     color: #fff;
     padding: 5px 5px;
@@ -139,8 +139,8 @@
 	margin-top:5px;
 	color:#FFFFFF;
 	background:#475A5F;
-	background:transparent; /* W3C rog */
-	border:1px solid #91071f; /* W3C rog */
+	background:transparent; /* W3C rogcss */
+	border:1px solid #91071f; /* W3C rogcss */
 }
 input[type=button]:focus {
     outline: none;

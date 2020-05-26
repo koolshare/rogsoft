@@ -67,8 +67,14 @@ rm -rf /koolshare/scripts/serverchan_*
 cp -rf /tmp/serverchan/res/icon-serverchan.png /koolshare/res/
 cp -rf /tmp/serverchan/scripts/* /koolshare/scripts/
 cp -rf /tmp/serverchan/webs/Module_serverchan.asp /koolshare/webs/
-if [ "`nvram get model`" == "GT-AC5300" ] || [ "`nvram get model`" == "GT-AX11000" ] || [ -n "`nvram get extendno | grep koolshare`" -a "`nvram get productid`" == "RT-AC86U" ];then
-	cp -rf /tmp/serverchan/ROG/webs/Module_serverchan.asp /koolshare/webs/
+if [ "$ROG" == "1" ];then
+	continue
+else
+	if [ "$TUF" == "1" ];then
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	else
+		sed -i '/rogcss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
+	fi
 fi
 chmod +x /koolshare/scripts/*
 # 安装重启自动启动功能
@@ -111,6 +117,6 @@ if [ "$enable" == "1" ] && [ -f "/koolshare/scripts/serverchan_config.sh" ];then
 fi
 
 # 完成
-rm -rf /tmp/serverchan* >/dev/null 2>&1
+remove_install_file
 echo_date "ServerChan微信通知插件安装完毕！"
 exit 0
