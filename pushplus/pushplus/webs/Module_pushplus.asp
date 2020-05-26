@@ -341,7 +341,7 @@ function menu_hook(title, tab) {
 function addTr(o) { //添加配置行操作
 	var _form_addTr = document.form;
 	if (trim(_form_addTr.config_token.value) == "") {
-		alert("提交的表单不能为空!");
+		alert("提交的Token不能为空!");
 		return false;
 	}
 	var ns = {};
@@ -351,11 +351,11 @@ function addTr(o) { //添加配置行操作
 	var params = ["config_token","config_topic"];
 	if (!myid) {
 		for (var i = 0; i < params.length; i++) {
-			ns[p + "_" + params[i] + "_" + node_max] = $('#' + params[i]).val();
+			ns[p + "_" + params[i] + "_" + node_max] = $('#' + params[i]).val() || "";
 		}
 	} else {
 		for (var i = 0; i < params.length; i++) {
-			ns[p + "_" + params[i] + "_" + myid] = $('#' + params[i]).val();
+			ns[p + "_" + params[i] + "_" + myid] = $('#' + params[i]).val() || "";
 		}
 	}
 	//回传网页数据给dbus接口，此处回传不同于form表单回传
@@ -419,7 +419,7 @@ function refresh_table() {
 		async: false,
 		success: function(response) {
 			db_pushplus=response.result[0];
-				//先删除表格中的行，留下前两行，表头和数据填写行
+			//先删除表格中的行，留下前两行，表头和数据填写行
 			$("#conf_table").find("tr:gt(1)").remove();
 			//在表格中增加行，增加的行的内容来自refresh_html()函数生成
 			$('#conf_table tr:last').after(refresh_html());
@@ -437,18 +437,16 @@ function getAllConfigs() { //用dbus数据生成数据组，方便用于refresh_
 	}
 	confs = {};
 	var p = "pushplus";
-	var params = ["config_token","config_topic"];
 	for (var field in dic) {
 		var obj = {};
-		for (var i = 0; i < params.length; i++) {
-			var ofield = p + "_" + params[i] + "_" + field;
-			if (typeof db_pushplus[ofield] == "undefined") {
-				obj = null;
-				break;
-			}
-			obj[params[i]] = db_pushplus[ofield];
-			//alert(i);
-		}
+        var otoken = p + "_config_token_" + field;
+        var otopic = p + "_config_topic_" + field;
+        if (typeof db_pushplus[otoken] == "undefined") {
+            obj=null
+        }else{
+            obj["config_token"] = db_pushplus[otoken];
+            obj["config_topic"] = db_pushplus[otopic] || "";
+        }
 		if (obj != null) {
 			var node_i = parseInt(field);
 			if (node_i > node_max) {
@@ -465,12 +463,13 @@ function getAllConfigs() { //用dbus数据生成数据组，方便用于refresh_
 function refresh_html() { //用conf数据生成配置表格
 	confs = getAllConfigs();
 	var n = 0;
-	for (var i in confs) {
+	for (var i in confs) { //获取节点的数目
 		n++;
-	} //获取节点的数目
+	}
 	var html = '';
 	for (var field in confs) {
 		var c = confs[field];
+        if(!c["config_topic"]) c["config_topic"]=""
 		html = html + '<tr>';
 		html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_token"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:95%;margin-top: 3px;" disabled="disabled" /></td>';
         html = html + '<td><input type="password" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="' + c["config_topic"] + '" onBlur="switchType(this, false);" onFocus="switchType(this, true);" style="width:95%;margin-top: 3px;" disabled="disabled" /></td>';
@@ -495,7 +494,7 @@ function editlTr(o) { //编辑节点功能，显示编辑面板
 	var c = confs[id];
 
 	document.form.config_token.value = c["config_token"];
-    document.form.config_topic.value = c["config_topic"];
+    document.form.config_topic.value = c["config_topic"] || "";
 	myid = id; //返回ID号
 }
 
