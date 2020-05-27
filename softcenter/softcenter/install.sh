@@ -55,11 +55,12 @@ softcenter_install() {
 		[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
 		[ ! -L "/jffs/.asusrouter" ] && ln -sf /koolshare/bin/kscore.sh /jffs/.asusrouter
 		[ -L "/koolshare/bin/base64" ] && rm -rf /koolshare/bin/base64
-		if [ "$ROG" == "1" -o "$TUF" == "1" ]; then
-			# for offcial mod, RT-AC86U, GT-AC5300
+		#if [ "$ROG" == "1" -o "$TUF" == "1" ]; then
+		if [ -n "$(nvram get extendno | grep koolshare)" ];then
+			# for offcial mod, RT-AC86U, GT-AC5300, TUF-AX3000, RT-AX86U, etc
 			[ ! -L "/jffs/etc/profile" ] && ln -sf /koolshare/scripts/base.sh /jffs/etc/profile
 		else
-			# for Merlin mod, RT-AX88U, RT-AC86U
+			# for Merlin mod, RT-AX88U, RT-AC86U, etc
 			[ ! -L "/jffs/configs/profile.add" ] && ln -sf /koolshare/scripts/base.sh /jffs/configs/profile.add
 		fi
 
