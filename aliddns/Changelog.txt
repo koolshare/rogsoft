@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
+2.1
+   - update	移除在【网络地图】首页显示aliddns域名的功能，因为这和系统DDNS有冲突并导致大量错误日志
+
 2.0
    - update	同名不同类型的DNS将获取到两个id导致更新记录失败，所以加上了强制类型为A记录。（thx to @whyic）
    - update	更换新纪录的时候会删除旧记录

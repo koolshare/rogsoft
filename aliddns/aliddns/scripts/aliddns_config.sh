@@ -88,7 +88,7 @@ start_aliddns(){
 	echo_date "Aliddns：开启Aliddns服务！"
 	
 	# prepare
-	firmware_ddns_service
+	# firmware_ddns_service
 
 	# try to delete first
 	sed -i '/aliddns_checker/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
@@ -109,7 +109,7 @@ start_aliddns(){
 
 stop_aliddns(){
 	# prepare
-	firmware_ddns_service
+	# firmware_ddns_service
 
 	# kill crontab job
 	jobexist=$(cru l|grep aliddns_checker)

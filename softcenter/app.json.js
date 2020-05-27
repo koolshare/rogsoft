@@ -12,15 +12,15 @@
             "version": "3.0"
         }, 
         {
-            "build_date": "2020-04-12_10:59:33", 
+            "build_date": "2020-05-27_22:00:58", 
             "changelog": "", 
             "description": "aliddns", 
             "home_url": "Module_aliddns.asp", 
-            "md5": "50c986a86edd72add608d5f6313a44bd", 
+            "md5": "f31ff29af9fcc086bce553f13b6aa279", 
             "name": "aliddns", 
             "tar_url": "aliddns/aliddns.tar.gz", 
             "title": "阿里DDNS", 
-            "version": "2.0"
+            "version": "2.1"
         }, 
         {
             "build_date": "2020-04-12_16:42:24", 

@@ -76,6 +76,12 @@ else
 fi
 [ ! -L "/koolshare/init.d/S98Aliddns.sh" ] && ln -sf /koolshare/scripts/aliddns_config.sh /koolshare/init.d/S98Aliddns.sh
 
+# 兼容
+if [ "$(nvram get ddns_server_x)" == "CUSTOM" ];then
+	nvram set ddns_server_x="WWW.ASUS.COM"
+	nvram commit
+fi
+
 # 离线安装需要向skipd写入安装信息
 dbus set aliddns_version="$(cat $DIR/version)"
 dbus set softcenter_module_aliddns_version="$(cat $DIR/version)"
