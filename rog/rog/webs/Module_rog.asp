@@ -470,16 +470,27 @@ function menu_hook(title, tab) {
 													</tr>
 												</thead>
 												<tr>
+													<th>固件版本</th>
+													<td id="rog_ver"></td>
+													<script type="text/javascript">
+														var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
+														var FWVER = '<% nvram_get("innerver"); %>';
+														if (FWVER.indexOf('koolshare') != -1){
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;官改固件");
+														}else{
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;梅林改版固件");
+														}
+													</script>
+												</tr>
+												<tr>
 													<th>系统时间</th>
-													<td>
-														<span id="rog_time"></span>
-													</td>
+													<td id="rog_time"></td>
 												</tr>
 												<tr>
 													<th>开机时间</a></th>
-														<td>
-															<span id="boot_days"></span> 天 <span id="boot_hours"></span> 时 <span id="boot_minutes"></span> 分 <span id="boot_seconds"></span> 秒
-														</td>
+													<td>
+														<span id="boot_days"></span> 天 <span id="boot_hours"></span> 时 <span id="boot_minutes"></span> 分 <span id="boot_seconds"></span> 秒
+													</td>
 												</tr>
 												<tr>
 													<th>CPU温度</th>

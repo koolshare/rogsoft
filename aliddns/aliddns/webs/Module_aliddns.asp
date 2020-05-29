@@ -152,7 +152,7 @@ function change_url() {
 		var ddns_hostname_x_t = E("aliddns_name").value + "." + E("aliddns_domain").value;
 	}
 	if (misc_http_x == "0"){
-		E("wan_access_url").innerHTML = "【从互联网设置 <% nvram_get("productid"); %>】未启用，请前往<a href=" + "/Advanced_System_Content.asp" + "><em><u>系统管理 -系统设置</u></em></a>页面设置！";
+		E("wan_access_url").innerHTML = "检测到【从互联网设置 <% nvram_get("productid"); %>】未启用，请前往<a href=" + "/Advanced_System_Content.asp" + "><em><u>系统管理 -系统设置</u></em></a>页面设置！";
 	}else if (ddns_hostname_x_t.length != 0 && E("aliddns_enable").checked == true){
 		E("wan_access_url").innerHTML = "&nbsp;Aliddns远程访问地址：<a href=\"https://" + ddns_hostname_x_t + ":" + misc_httpsport_x + "\" target=\"_blank\" style=\"color:#00ffe4;text-decoration: underline; font-family:Lucida Console;\"><em>https://" + ddns_hostname_x_t + ":" + misc_httpsport_x + "</em></a></em>";
 	}

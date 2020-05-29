@@ -1,9 +1,9 @@
 {
-"version":"3.0",
-"md5":"117ca0b5782ea1b65b777357f24eaea3",
+"version":"3.1",
+"md5":"6e875e973d3a1d13311d6c96c8d6766e",
 "home_url":"Module_rog.asp",
 "title":"ROG工具箱",
 "description":"一些小功能的插件",
 "changelog":"",
-"build_date":"2020-04-27_11:10:49"
+"build_date":"2020-05-29_16:49:57"
 }
