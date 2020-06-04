@@ -23,8 +23,8 @@ case $(uname -m) in
 		fi
 		;;
 	armv7l)
-		if [ "$MODEL" == "TUF-AX3000" -a -d "/koolshare" ];then
-			echo_date 固件TUF-AX3000 koolshare官改固件符合安装要求，开始安装插件！
+		if [ "$MODEL" == "TUF-AX3000" -o "$MODEL" == "RT-AX82U" ] && [ -d "/koolshare" ];then
+			echo_date 固件$MODEL koolshare官改固件符合安装要求，开始安装插件！
 		else
 			echo_date 本插件适用于【koolshare merlin hnd/axhnd aarch64】固件平台，你的固件平台不能安装！！！
 			echo_date 退出安装！
