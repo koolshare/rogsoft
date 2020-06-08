@@ -28,12 +28,13 @@ clean(){
 }
 
 detect_package(){
+	local TEST_WORD="$1"
 	local ILLEGAL_KEYWORDS="ss|ssr|shadowsocks|shadowsocksr|v2ray|trojan|clash|wireguard|koolss|brook"
-	local KEY_MATCH=$(echo $soft_name | grep -Eo "$ILLEGAL_KEYWORDS")
+	local KEY_MATCH=$(echo "${TEST_WORD}" | grep -Eo "$ILLEGAL_KEYWORDS")
 	
 	if [ -n "$KEY_MATCH" ]; then
 		echo_date =======================================================
-		echo_date "检测到离线安装包名：${soft_name} 含有非法关键词！！！"
+		echo_date "检测到离线安装包：${soft_name} 含非法关键词！！！"
 		echo_date "根据法律规定，koolshare软件中心将不会安装此插件！！！"
 		echo_date "删除相关文件并退出..."
 		echo_date =======================================================
@@ -45,7 +46,7 @@ detect_package(){
 install_tar(){
 
 	# do the right thing
-	detect_package
+	detect_package "$soft_name"
 	
 	name=$(echo "$soft_name"|sed 's/.tar.gz//g'|awk -F "_" '{print $1}'|awk -F "-" '{print $1}')
 	INSTALL_SUFFIX=_install
@@ -84,6 +85,10 @@ install_tar(){
 		if [ -n "$INSTALL_SCRIPT" -a -f "$INSTALL_SCRIPT" ];then
 			SCRIPT_AB_DIR=$(dirname $INSTALL_SCRIPT)
 			MODULE_NAME=${SCRIPT_AB_DIR##*/}
+
+			# do the right thing
+			detect_package "$MODULE_NAME"
+			
 			echo_date 准备安装$MODULE_NAME插件！
 			echo_date 找到安装脚本！
 			chmod +x $INSTALL_SCRIPT >/dev/null 2>&1
