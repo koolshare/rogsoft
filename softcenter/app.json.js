@@ -166,15 +166,15 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-06-05_11:11:50", 
+            "build_date": "2020-06-09_09:58:18", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "6539ff4522ba405a1e333ba0e42a0b4a", 
+            "md5": "c1435a2b73caea8c8f9c13753aae02bb", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "3.1"
+            "version": "3.2"
         }, 
         {
             "build_date": "2020-06-05_11:40:02", 

@@ -478,7 +478,8 @@ function menu_hook(title, tab) {
 														if (FWVER.indexOf('koolshare') != -1){
 															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;官改固件");
 														}else{
-															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;梅林改版固件");
+															var FWVER_M = '<% nvram_get("buildno"); %>';
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER_M + "&nbsp;&nbsp;梅林改版固件");
 														}
 													</script>
 												</tr>
