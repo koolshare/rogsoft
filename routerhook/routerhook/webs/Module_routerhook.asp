@@ -332,6 +332,7 @@
                 "routerhook_info_system",
                 "routerhook_info_temp",
                 "routerhook_info_wan",
+                "routerhook_info_pub",
                 "routerhook_info_usb",
                 "routerhook_info_lan",
                 "routerhook_info_lan_macoff",
@@ -1340,6 +1341,14 @@
                                                     <td>
                                                         <input type="checkbox" id="routerhook_info_wan"
                                                             checked="checked" onclick="oncheckclick(this);">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="20%">公网信息(netINFO.WAN[x].pubIPvX)</th>
+                                                    <td>
+                                                        <input type="checkbox" id="routerhook_info_pub"
+                                                            checked="checked" onclick="oncheckclick(this);">
+                                                        <label>是否需要通过ip.sb获取公网IP,若你的wanIP就是公网IP则不建议开启</label>
                                                     </td>
                                                 </tr>
                                                 <tr>

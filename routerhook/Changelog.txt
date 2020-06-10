@@ -1,5 +1,9 @@
 Koolshare hnd/axhnd router software center routerhook Changelog
 ===========================================
+1.2
+   - fix 修复请求https://ip.sb时由于证书过期导致无法获取IP的问题
+   - feat 增加公网IP开关，可选择关闭获取公网IP
+
 1.1
    - fix 修复重启后不添加定时任务的问题
    - fix 统一log输出格式为[routerhook]:开头

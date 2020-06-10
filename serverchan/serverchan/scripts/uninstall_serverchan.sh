@@ -1,5 +1,5 @@
 #!/bin/sh
-eval `dbus export serverchan_`
+eval $(dbus export serverchan_)
 source /koolshare/scripts/base.sh
 logger "[软件中心]: 正在卸载serverChan..."
 MODULE=serverchan
@@ -13,10 +13,9 @@ rm -rf /koolshare/res/icon-serverchan.png >/dev/null 2>&1
 rm -rf /koolshare/webs/Module_serverchan.asp >/dev/null 2>&1
 rm -rf /tmp/serverchan* >/dev/null 2>&1
 
-values=`dbus list serverchan | cut -d "=" -f 1`
-for value in $values
-do
-dbus remove $value 
+values=$(dbus list serverchan | cut -d "=" -f 1)
+for value in $values; do
+    dbus remove $value
 done
 
 cru d serverchan_check >/dev/null 2>&1

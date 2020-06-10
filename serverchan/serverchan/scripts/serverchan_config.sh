@@ -1,15 +1,15 @@
 #!/bin/sh
 
 source /koolshare/scripts/base.sh
-eval `dbus export serverchan_`
+eval $(dbus export serverchan_)
 # for long message job remove
-remove_cron_job(){
+remove_cron_job() {
     logger "[ServerChan]: 关闭自动发送状态消息..."
     cru d serverchan_check >/dev/null 2>&1
 }
 
 # for long message job creat
-creat_cron_job(){
+creat_cron_job() {
     remove_cron_job
     logger "[ServerChan]: 启动自动发送状态消息..."
     if [[ "${serverchan_status_check}" == "1" ]]; then
@@ -27,15 +27,15 @@ creat_cron_job(){
             cru a serverchan_check ${serverchan_check_time_min} ${serverchan_check_time_hour}" */"${serverchan_check_inter_day} " * * /koolshare/scripts/serverchan_check_task.sh"
         fi
     elif [[ "${serverchan_status_check}" == "5" ]]; then
-        check_custom_time=`dbus get serverchan_check_custom | base64_decode`
+        check_custom_time=$(dbus get serverchan_check_custom | base64_decode)
         cru a serverchan_check ${serverchan_check_time_min} ${check_custom_time}" * * * /koolshare/scripts/serverchan_check_task.sh"
     fi
 }
 
-creat_trigger_dhcp(){
+creat_trigger_dhcp() {
     logger "[ServerChan]: 添加DHCP触发器"
     sed -i '/serverchan_dhcp_trigger/d' /jffs/configs/dnsmasq.d/dhcp_trigger.conf
-    echo "dhcp-script=/koolshare/scripts/serverchan_dhcp_trigger.sh" >> /jffs/configs/dnsmasq.d/dhcp_trigger.conf
+    echo "dhcp-script=/koolshare/scripts/serverchan_dhcp_trigger.sh" >>/jffs/configs/dnsmasq.d/dhcp_trigger.conf
     [ "${serverchan_info_logger}" == "1" ] && logger "[ServerChan]: 重启DNSMASQ！"
     #service restart_dnsmasq
     killall dnsmasq
@@ -43,14 +43,14 @@ creat_trigger_dhcp(){
     dnsmasq --log-async
 }
 
-remove_trigger_dhcp(){
+remove_trigger_dhcp() {
     logger "[ServerChan]: 移除DHCP触发器"
     sed -i '/serverchan_dhcp_trigger/d' /jffs/configs/dnsmasq.d/dhcp_trigger.conf
     [ "${serverchan_info_logger}" == "1" ] && logger "[ServerChan]: 重启DNSMASQ！"
     service restart_dnsmasq
 }
 
-creat_trigger_ifup(){
+creat_trigger_ifup() {
     logger "[ServerChan]: 添加WAN触发器"
     rm -f /koolshare/init.d/S99serverchan.sh
     if [[ "${serverchan_trigger_ifup}" == "1" ]]; then
@@ -60,12 +60,12 @@ creat_trigger_ifup(){
     fi
 }
 
-remove_trigger_ifup(){
+remove_trigger_ifup() {
     logger "[ServerChan]: 移除WAN触发器"
     rm -f /koolshare/init.d/S99serverchan.sh
 }
 
-onstart(){
+onstart() {
     creat_cron_job
     creat_trigger_ifup
     if [ "${serverchan_trigger_dhcp}" == "1" ]; then
