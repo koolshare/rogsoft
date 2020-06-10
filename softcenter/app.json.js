@@ -1,15 +1,15 @@
 {
     "apps": [
         {
-            "build_date": "2020-06-10_09:39:40", 
+            "build_date": "2020-06-10_10:06:11", 
             "changelog": "", 
             "description": "自动部署SSL证书", 
             "home_url": "Module_acme.asp", 
-            "md5": "76b82d28aae69a9ed4d4589c1b3c65d9", 
+            "md5": "2702f88c1aea1c7b960b94f5da2dae73", 
             "name": "acme", 
             "tar_url": "acme/acme.tar.gz", 
             "title": "Let's Encrypt", 
-            "version": "3.1"
+            "version": "3.2"
         }, 
         {
             "build_date": "2020-06-05_11:24:38", 

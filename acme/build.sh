@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="acme"
-VERSION="3.1"
+VERSION="3.2"
 TITLE="Let's Encrypt"
 DESCRIPTION="自动部署SSL证书"
 HOME_URL="Module_acme.asp"
