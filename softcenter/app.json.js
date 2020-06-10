@@ -133,15 +133,15 @@
             "version": "1.3"
         }, 
         {
-            "build_date": "2020-06-05_11:37:57", 
+            "build_date": "2020-06-10_09:38:14", 
             "changelog": "", 
             "description": "通过pushplus将路由器状态推送到微信上", 
             "home_url": "Module_pushplus.asp", 
-            "md5": "c597e95559630f6a3e6a11aac45bef24", 
+            "md5": "b25f1810b0957abb839085949c8e510d", 
             "name": "pushplus", 
             "tar_url": "pushplus/pushplus.tar.gz", 
             "title": "pushplus全能推送", 
-            "version": "0.2"
+            "version": "0.3"
         }, 
         {
             "build_date": "2020-06-05_11:38:13", 
@@ -181,22 +181,22 @@
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_routerhook.asp", 
-            "md5": "aa9731c276bed7ae87c17a505a738e25", 
+            "md5": "", 
             "name": "routerhook", 
             "tar_url": "routerhook/routerhook.tar.gz", 
             "title": "RouterHook事件回调", 
-            "version": "1.1"
+            "version": "1.2"
         }, 
         {
             "build_date": "2020-06-05_11:38:33", 
             "changelog": "", 
             "description": "从路由器推送状态及通知的工具", 
             "home_url": "Module_serverchan.asp", 
-            "md5": "694b7ad7be916dcea1f8529db78fadf7", 
+            "md5": "", 
             "name": "serverchan", 
             "tar_url": "serverchan/serverchan.tar.gz", 
             "title": "serverChan微信推送", 
-            "version": "1.3"
+            "version": "1.4"
         }, 
         {
             "build_date": "2020-06-05_11:38:44", 
