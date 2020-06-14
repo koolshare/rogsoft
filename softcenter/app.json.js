@@ -166,15 +166,15 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-06-09_09:58:18", 
+            "build_date": "2020-06-14_22:12:49", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "c1435a2b73caea8c8f9c13753aae02bb", 
+            "md5": "b2f6ab5646370382ddc8c40fe1741130", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "3.2"
+            "version": "3.3"
         }, 
         {
             "build_date": "2020-06-10_09:38:48", 
@@ -208,6 +208,17 @@
             "tar_url": "shellinabox/shellinabox.tar.gz", 
             "title": "shellinabox", 
             "version": "1.5"
+        }, 
+        {
+            "build_date": "2020-06-13_17:33:17", 
+            "changelog": "", 
+            "description": "上海电信IPTV，4K IPTV 一键开启", 
+            "home_url": "Module_shiptv.asp", 
+            "md5": "b9da0681a410f7631197724e4b938a19", 
+            "name": "shiptv", 
+            "tar_url": "shiptv/shiptv.tar.gz", 
+            "title": "上海电信IPTV", 
+            "version": "1.0"
         }, 
         {
             "build_date": "2020-06-05_11:38:58", 

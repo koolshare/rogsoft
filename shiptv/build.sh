@@ -1,10 +1,10 @@
 #!/bin/sh
 
-MODULE="rog"
-VERSION="3.3"
-TITLE="ROG工具箱"
-DESCRIPTION="一些小功能的插件"
-HOME_URL="Module_rog.asp"
+MODULE="shiptv"
+VERSION="1.0"
+TITLE="上海电信IPTV"
+DESCRIPTION="上海电信IPTV，4K IPTV 一键开启"
+HOME_URL="Module_shiptv.asp"
 
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"

@@ -474,12 +474,12 @@ function menu_hook(title, tab) {
 													<td id="rog_ver"></td>
 													<script type="text/javascript">
 														var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-														var FWVER = '<% nvram_get("innerver"); %>';
+														var BUILD = '<% nvram_get("buildno"); %>'
+														var FWVER = '<% nvram_get("extendno"); %>';
 														if (FWVER.indexOf('koolshare') != -1){
-															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;官改固件");
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
 														}else{
-															var FWVER_M = '<% nvram_get("buildno"); %>';
-															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER_M + "&nbsp;&nbsp;梅林改版固件");
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "&nbsp;&nbsp;梅林改版固件");
 														}
 													</script>
 												</tr>
