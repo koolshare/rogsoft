@@ -93,7 +93,7 @@ function detect(){
 	}
 	if(MODEL != "RT-AX86U"){
 		hide_elem();
-		$('#warn_msg_1').html('<h2><font color="#FF6600">哦豁！</font></h2><h2>【上海电信IPTV】插件在你的机型：' + MODEL + '上不可用！</h2><h2>本插件目前仅针对<font color="#00CCFF">RT-AX86U</font>开放测试！</h2><h2>其它机型请耐心等待！</h2>');
+		$('#warn_msg_1').html('<h2><font color="#FF6600">哦豁！</font></h2><h2>【上海电信IPTV】插件在你的机型：' + MODEL + '上不可用！</h2><h2>本插件目前仅针对<font color="#00CCFF">RT-AX86U</font>开放测试！</h2><h2>其它机型请耐心等待！</h2><h2>更多信息请见：<a href="https://koolshare.cn/thread-183914-1-1.html"><u><font color="#00CCFF">https://koolshare.cn/thread-183914-1-1.html</font><u></a></h2>');
 	}
 }
 
