@@ -76,6 +76,9 @@ if [ "$MODEL" == "TUF-AX3000" ];then
 	TUF=1
 fi
 
+# 安装前先关闭
+[ "$shiptv_dhcp" == "1" -o "$shiptv_vlan" == "1" ] && sh /koolshare/scripts/shiptv_config.sh stop 2>/dev/null
+
 # 安装插件
 cp -rf /tmp/$module/scripts/* /koolshare/scripts/
 cp -rf /tmp/$module/webs/* /koolshare/webs/
@@ -100,6 +103,9 @@ dbus set softcenter_module_${module}_description="${DESCRIPTION}"
 dbus set softcenter_module_${module}_install="1"
 dbus set softcenter_module_${module}_name="${module}"
 dbus set softcenter_module_${module}_title="${TITLE}"
+
+# 安装后需要开启
+[ "$shiptv_dhcp" == "1" -o "$shiptv_vlan" == "1" ] && sh /koolshare/scripts/shiptv_config.sh start 2>/dev/null
 
 # 完成
 echo_date "【${TITLE}】插件安装完毕！"
