@@ -71,7 +71,7 @@ function init() {
 	get_dbus_data();
 	hook_funcion();
 	setTimeout("get_status();", 1000);
-	//detect();
+	detect();
 }
 
 function hide_elem(){

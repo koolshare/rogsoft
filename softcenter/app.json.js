@@ -210,11 +210,11 @@
             "version": "1.5"
         }, 
         {
-            "build_date": "2020-06-13_17:33:17", 
+            "build_date": "2020-06-15_08:18:37", 
             "changelog": "", 
             "description": "上海电信IPTV，4K IPTV 一键开启", 
             "home_url": "Module_shiptv.asp", 
-            "md5": "b9da0681a410f7631197724e4b938a19", 
+            "md5": "2af45651488a4cb23c20a480cf66eea9", 
             "name": "shiptv", 
             "tar_url": "shiptv/shiptv.tar.gz", 
             "title": "上海电信IPTV", 
