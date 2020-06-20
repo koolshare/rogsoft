@@ -214,6 +214,10 @@ function conf2obj(){
 		E("wifiboost_active_btn").style.display = "";
 		E("wifiboost_authorized_btn").style.display = "none";
 	}
+	if (dbus["wifiboost_warn"]){
+		E("wifiboost_info").rows = 5
+		E("qrcode_show").style.height = "505px"
+	}
 }
 function show_err_code() {
 	var err_code = dbus["wifiboost_warn"];
@@ -223,57 +227,39 @@ function show_err_code() {
 	}
 	switch(err_code){
 		case "1":
-			err_mesg = "错误代码1：当前路由【RAX80】不支持wifiboost插件！";
+			err_mesg = '<span style="color: #CC3300">错误代码1：当前路由【RAX80】不支持wifiboost插件！</span>';
 		break;
 		case "2":
-			err_mesg = "错误代码2：当前路由不支持wifiboost插件！请尝试重刷正确的固件后重试！！";
+			err_mesg = '<span style="color: #CC3300">错误代码2：当前路由不支持wifiboost插件！请尝试重刷正确的固件后重试！！</span>';
 		break;
 		case "3":
-			err_mesg = "错误代码3：读取wlan硬件设备数量错误！请重启或重置路由器后重试！！<br/>可能是错误的nvram值导致的！请尝试重置路由器后重试！！";
+			err_mesg = '<span style="color: #CC3300">错误代码3：读取wlan硬件设备数量错误！请重启或重置路由器后重试！！<br/>可能是错误的nvram值导致的！请尝试重置路由器后重试！！</span>';
 		break;
 		case "4":
-			err_mesg = "错误代码4：读取原厂wlan配置失败，重启或重置路由器后重试！！";
+			err_mesg = '<span style="color: #CC3300">错误代码4：读取原厂wlan配置失败，重启或重置路由器后重试！！</span>';
 		break;
 		case "5":
-			err_mesg = "错误代码5：读取原厂wlan配置失败，重启或重置路由器后重试！！";
+			err_mesg = '<span style="color: #CC3300">错误代码5：读取原厂wlan配置失败，重启或重置路由器后重试！！</span>';
 		break;
 		case "6":
-			err_mesg = "错误代码6：检测到你的路由器不是国行机器！！<br/>如果你需要将机器刷成国行，请联系QQ: 196040627";
+			err_mesg = '<span style="color: #CC3300">错误代码6：检测到你的路由器不是国行机器！！</span><br/><br/>非国行机器因无法选择澳大利亚区域从而使得插件无法发挥作用！！<br/>如果你需要将机器刷成国行，请联系QQ: 196040627<br/>如果你已经改cfe为国行了，请重装wifi boost插件重新获得机器码！';
 		break;
 		case "7":
-			err_mesg = "错误代码7：检测到你的路由器出厂配置有误！！";
+			err_mesg = '<span style="color: #CC3300">错误代码7：检测到你的路由器出厂配置有误！！</span>';
 		break;
 	}
 	require(['/res/layer/layer.js'], function(layer) {
-		layer.confirm('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/><br/><span style="color: #CC3300">' + err_mesg + '</span><br/><br/>出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/>点击确定将关闭此窗口，且不再弹出该提示！', {
+		layer.alert('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/><br/>' + err_mesg + '<br/><br/>出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/><br/>点击确定将关闭此窗口，如果错误未解决，此窗口下次还会和你相见！', {
 			time: 3e4,
 			shade: 0.8,
 			maxWidth: '600px'
-		}, function(index) {
-			layer.close(index);
-			close_warn();
-			return true;
 		}, function(index) {
 			layer.close(index);
 			return false;
 		});
 	});
 }
-function close_warn(){
-	var dbus_new = {}
-	dbus_new["wifiboost_warn"] = "";
-	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "dummy_script.sh", "params": [1], "fields": dbus_new};
-	$.ajax({
-		type: "POST",
-		url: "/_api/",
-		data: JSON.stringify(postData),
-		dataType: "json",
-		success: function(response) {
-			console.log(response);
-		}
-	});
-}
+
 function get_wl_status(){
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "wifiboost_status", "params":[2], "fields": ""};
