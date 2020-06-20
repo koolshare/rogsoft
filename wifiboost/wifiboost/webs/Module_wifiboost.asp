@@ -104,10 +104,12 @@ input[type=checkbox]{
 	color: #ff002f;
 	font-style: normal;
 }
+#wifiboost_main { border:1px solid #91071f; } /* W3C rogcss */
 .SimpleNote { padding:5px 10px;}
 </style>
 <script>
 var orig_region = '<% nvram_get("location_code"); %>';
+var odm = '<% nvram_get("productid"); %>'
 var refresh_flag=1;
 var params_chk = ['wifiboost_boost_24', 'wifiboost_boost_52', 'wifiboost_boost_58'];
 var params_inp = ['wifiboost_boost_val', 'wifiboost_key'];
@@ -127,7 +129,7 @@ function toggle_func() {
 		});
 }
 function show_hide_elem(){
-	if(isSupport("triband")){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -190,6 +192,10 @@ function conf2obj(){
 		if (dbus[params_inp[i]]) {
 			$("#" + params_inp[i]).val(dbus[params_inp[i]]);
 		}
+	}
+	//write version
+	if (dbus["wifiboost_version"]){
+		E("wifiboost_version").innerHTML = " - " + dbus["wifiboost_version"]
 	}
 	if (dbus["wifiboost_mcode"]){
 		E("wifiboost_info").innerHTML = "订单号：xxx&#10;机器码：" +  dbus["wifiboost_mcode"];
@@ -306,7 +312,7 @@ function get_wl_status(){
 }
 function boost_now(action){
 	var dbus_new = {}
-	if(isSupport("triband")){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
@@ -350,7 +356,7 @@ function boost_now(action){
 	for (var i = 0; i < params_inp.length; i++) {
 		dbus_new[params_inp[i]] = E(params_inp[i]).value;
 	}
-	if(!isSupport("triband")){
+	if(odm != "GT-AC5300" && odm != "GT-AX11000"){
 		dbus_new["wifiboost_boost_58"] = "0";
 	}
 	E("wifiboost_apply_1").disabled=true;
@@ -599,15 +605,18 @@ function pop_help() {
 													<input class="button_gen" type="button" onclick="close_info();" value="关闭">
 												</div>
 											</div>
-											<div class="formfonttitle">wifi boost</div>
+											<div class="formfonttitle">wifi boost<lable id="wifiboost_version"><lable></div>
 											<div style="float:right; width:15px; height:25px;margin-top:-20px">
 												<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
-												<li>wifi boost可以极大的增强路由器wifi的发射功率，增强信号覆盖范围。</li>
+												<span>wifi boost可以极大的增强路由器wifi的发射功率，增强信号覆盖范围。
+													<a type="button" href="https://github.com/koolshare/rogsoft/blob/master/wifiboost/Changelog.txt" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >更新日志</a>
+												</span>
 											</div>
-											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
+											<div id="wifiboost_main">
+											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable">
 												<thead>
 													<tr>
 														<td colspan="2">wifi boost 设定</td>
@@ -618,11 +627,12 @@ function pop_help() {
 													<td id="wifiboost_ver"></td>
 													<script type="text/javascript">
 														var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-														var FWVER = '<% nvram_get("innerver"); %>';
+														var BUILD = '<% nvram_get("buildno"); %>'
+														var FWVER = '<% nvram_get("extendno"); %>';
 														if (FWVER.indexOf('koolshare') != -1){
-															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;官改固件");
+															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
 														}else{
-															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + FWVER + "&nbsp;&nbsp;梅林改版固件");
+															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "&nbsp;&nbsp;梅林改版固件");
 														}
 													</script>
 												</tr>
@@ -683,6 +693,7 @@ function pop_help() {
 													</td>
 												</tr>
 											</table>
+											</div>
 											<div class="apply_gen">
 												<input class="button_gen" id="wifiboost_apply_1" onClick="boost_now(1)" type="button" value="boost" />
 												<input class="button_gen" id="wifiboost_apply_2" onClick="boost_now(2)" type="button" value="恢复原厂功率" />
