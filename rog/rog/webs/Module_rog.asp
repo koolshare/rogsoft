@@ -94,9 +94,18 @@ function init() {
 }
 
 function show_ui_switch(){
+	var EXT_NU = '<% nvram_get("extendno"); %>';
+	EXT_NU = EXT_NU.match(/(\S*)_/)[1];
+	console.log(EXT_NU);
 	if(productid == "RT-AC86U"){
-		$("#FANC").hide();
-		get_dbus_data();
+		if(EXT_NU < "81918"){
+			$("#FANC").hide();
+			get_dbus_data();
+		}else{
+			$("#UI_SWITCH").hide();
+			$("#FANC").hide();
+			$("#msg2").hide();
+		}
 	}else if(productid == "RAX80"){
 		$("#UI_SWITCH").hide();
 		$("#msg2").hide();
