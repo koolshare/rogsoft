@@ -94,13 +94,20 @@ function init() {
 }
 
 function show_ui_switch(){
-	var EXT_NU = '<% nvram_get("extendno"); %>';
-	EXT_NU = EXT_NU.match(/(\S*)_/)[1];
-	console.log(EXT_NU);
+	var EXT = '<% nvram_get("extendno"); %>';
 	if(productid == "RT-AC86U"){
-		if(EXT_NU < "81918"){
-			$("#FANC").hide();
-			get_dbus_data();
+		if (EXT.indexOf('koolshare') != -1){
+			EXT_1 = EXT.match(/(\S*)_/)[1];
+			if(EXT_1 < "81918"){
+				$("#FANC").hide();
+				$("#UI_SWITCH").show();
+				$("#msg2").show();
+				get_dbus_data();
+			}else{
+				$("#UI_SWITCH").hide();
+				$("#FANC").hide();
+				$("#msg2").hide();
+			}
 		}else{
 			$("#UI_SWITCH").hide();
 			$("#FANC").hide();
