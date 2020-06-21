@@ -43,9 +43,16 @@ BIN_NAME="${BIN_NAME%.*}"
 if [ "$ACTION" != "" ]; then
 	BIN_NAME=$ACTION
 fi
+ROG_86U=0
+EXT_NU=$(nvram get extendno)
+EXT_NU=${EXT_NU%_*}
+
+if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
+	ROG_86U=1
+fi
 
 MODEL=$(nvram get productid)
-if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+if [ "$MODEL" == "GT-AC5300" -o "$MODEL" == "GT-AX11000" -o "$ROG_86U" == "1" ];then
 	# 官改固件，骚红皮肤
 	ROG=1
 fi
@@ -171,7 +178,17 @@ install_module() {
 
 		chmod a+x /tmp/${softcenter_installing_module}/install.sh
 		sh /tmp/${softcenter_installing_module}/install.sh
-		sleep 3
+		sleep 1
+
+		if [ "$ROG" == "1" ];then
+			continue
+		else
+			if [ "$TUF" == "1" ];then
+				sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${softcenter_installing_module}.asp >/dev/null 2>&1
+			else
+				sed -i '/rogcss/d' /koolshare/webs/Module_${softcenter_installing_module}.asp >/dev/null 2>&1
+			fi
+		fi
 
 		rm -f ${FNAME}
 		rm -rf "/tmp/$softcenter_installing_module"

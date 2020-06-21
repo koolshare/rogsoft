@@ -8,7 +8,15 @@ alias echo_date='echo 【$(date +%Y年%m月%d日\ %X)】:'
 eval $(dbus export soft)
 TARGET_DIR=/tmp/upload
 MODEL=$(nvram get productid)
-if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" ];then
+ROG_86U=0
+EXT_NU=$(nvram get extendno)
+EXT_NU=${EXT_NU%_*}
+
+if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
+	ROG_86U=1
+fi
+
+if [ "$MODEL" == "GT-AC5300" -o "$MODEL" == "GT-AX11000" -o "$ROG_86U" == "1" ];then
 	# 官改固件，骚红皮肤
 	ROG=1
 fi
@@ -122,6 +130,17 @@ install_tar(){
 				echo XU6J03M6
 				exit
 			fi
+
+			if [ "$ROG" == "1" ];then
+				continue
+			else
+				if [ "$TUF" == "1" ];then
+					sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+				else
+					sed -i '/rogcss/d' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+				fi
+			fi
+
 			echo_date ====================== step 3 ===========================
 			dbus set "softcenter_module_${MODULE_NAME}${NAME_SUFFIX}=${MODULE_NAME}"
 			dbus set "softcenter_module_${MODULE_NAME}${INSTALL_SUFFIX}=1"
