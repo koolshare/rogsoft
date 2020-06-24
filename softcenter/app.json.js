@@ -45,11 +45,11 @@
             "version": "1.0"
         }, 
         {
-            "build_date": "2020-06-24_08:28:34", 
+            "build_date": "2020-06-24_08:33:14", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
-            "md5": "7bbb2b71ead0ad5cadd88044f6a65a0f", 
+            "md5": "4bba247c6c38e86f65257de002ce551e", 
             "name": "cfetool", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 

@@ -382,7 +382,7 @@ function pop_help() {
 												</span>
 											</div>
 											<div id="log_content">
-												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">sadog is very handosme!</textarea>
+												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
 											<div id="cfetool_main" style="margin-top:10px;display: none;">
 												<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable">
