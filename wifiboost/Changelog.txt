@@ -1,5 +1,7 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+1.3
+   - update	优化日志显示，精简代码；
 
 1.2
    - fix	修复三频wifi机器5G-2选项不显示导致无法修改功率的问题；

@@ -1,10 +1,10 @@
 #!/bin/sh
 
-MODULE="wifiboost"
-VERSION="1.3"
-TITLE="wifi boost"
-DESCRIPTION="wifi boost 路由器功率增强，强过澳大利亚"
-HOME_URL="Module_wifiboost.asp"
+MODULE="cfetool"
+VERSION="1.0"
+TITLE="CFE工具箱"
+DESCRIPTION="CFE工具箱，查看CFE信息，改机器为国区"
+HOME_URL="Module_cfetool.asp"
 
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"

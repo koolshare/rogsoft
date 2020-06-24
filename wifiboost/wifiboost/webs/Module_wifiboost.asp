@@ -564,7 +564,7 @@ function pop_help() {
 												<div style="margin-top:0px;margin-left:4%;width:96%;text-align:left;">
 													<div id="info0" style="font-size:16px;color:#000;"><i>激活码获取:</i></div>
 													<div id="info1" style="font-size:12px;color:#000;">1.扫描上方其中一个二维码，付款30元人民币给开发者，即可购买wifi boost激活码。</div>
-													<div id="info2" style="font-size:12px;color:#000;">2.复制下面文本框内容，替换xxx为支付订单号，发送邮件到：<a id="wifiboost_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=wifi boost插件购买&body=这是邮件的内容">mjy211@gmail.com</a></div>
+													<div id="info2" style="font-size:12px;color:#000;">2.复制下面文本框内容，替换xxx为<a type="button" href="javascript:void(0);" style="cursor: pointer;color:#FF3300;" onclick="pop_help();"><u>支付订单号</u></a>，发送邮件到：<a id="wifiboost_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=CFE工具箱插件购买&body=这是邮件的内容">mjy211@gmail.com</a></div>
 													<div id="info3" style="font-size:12px;color:#000;">3.目前订单处理为人工，激活码会在一个工作日左右发送到你的邮箱，请耐心等待。</div>
 												</div>
 												<div style="margin-top:5px;padding-bottom:10px;margin-left:4%;width:92%;text-align:left;">
@@ -598,6 +598,7 @@ function pop_help() {
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<span>wifi boost可以极大的增强路由器wifi的发射功率，增强信号覆盖范围。
+													<a type="button" href="https://koolshare.cn/thread-184369-1-1.html" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >使用交流</a>
 													<a type="button" href="https://github.com/koolshare/rogsoft/blob/master/wifiboost/Changelog.txt" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >更新日志</a>
 												</span>
 											</div>

@@ -45,6 +45,17 @@
             "version": "1.0"
         }, 
         {
+            "build_date": "2020-06-24_08:28:34", 
+            "changelog": "", 
+            "description": "CFE工具箱，查看CFE信息，改机器为国区", 
+            "home_url": "Module_cfetool.asp", 
+            "md5": "7bbb2b71ead0ad5cadd88044f6a65a0f", 
+            "name": "cfetool", 
+            "tar_url": "cfetool/cfetool.tar.gz", 
+            "title": "CFE工具箱", 
+            "version": "1.0"
+        }, 
+        {
             "build_date": "2020-06-05_11:36:38", 
             "changelog": "", 
             "description": "ddnspod", 
@@ -254,15 +265,15 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-06-20_22:59:31", 
+            "build_date": "2020-06-24_08:28:26", 
             "changelog": "", 
             "description": "wifi boost 路由器功率增强，强过澳大利亚", 
             "home_url": "Module_wifiboost.asp", 
-            "md5": "06a142fa626a78c5faee3f0ba012535f", 
+            "md5": "515451c87f4513b66f98ecd602589116", 
             "name": "wifiboost", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "1.2"
+            "version": "1.3"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
