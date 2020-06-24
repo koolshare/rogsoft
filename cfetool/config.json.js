@@ -1,9 +1,9 @@
 {
-"version":"1.0",
-"md5":"4bba247c6c38e86f65257de002ce551e",
+"version":"1.1",
+"md5":"a27560af443f8575e6223b23a8f425e9",
 "home_url":"Module_cfetool.asp",
 "title":"CFE工具箱",
 "description":"CFE工具箱，查看CFE信息，改机器为国区",
 "changelog":"",
-"build_date":"2020-06-24_08:33:14"
+"build_date":"2020-06-24_08:48:55"
 }
