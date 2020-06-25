@@ -25,7 +25,7 @@
 <style>
 .cfetool_btn {
 	border: none;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -37,21 +37,7 @@
 }
 .cfetool_btn:hover {
 	border: none;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-}
-.loading_bar {
-	width:250px;
-	border: 0px;
-}
-.loading_bar > div {
-	margin-left:-10px;
-	background-color:white;
-	border-radius:7px;
-	padding:1px;
-}
-.status_bar {
-	height:18px;
-	border-radius:7px;
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
 }
 .FormTable th{
 	width:16%;
@@ -62,7 +48,6 @@
 	-moz-border-radius: 5px;
 	border-radius:10px;
 	z-index: 10;
-	/*background-color:#2B373B;*/
 	top: 80px;
 	return height:auto;
 	box-shadow: 3px 3px 10px #000;
@@ -72,25 +57,6 @@
 	width:580px;
 	height:520px;
 	display: none;
-}
-.popup_bar_bg_ks{
-	position:fixed;	
-	margin: auto;
-	top: 0;
-	left: 0;
-	width:100%;
-	height:100%;
-	z-index:99;
-	/*background-color: #444F53;*/
-	filter:alpha(opacity=90);  /*IE5、IE5.5、IE6、IE7*/
-	background-repeat: repeat;
-	visibility:hidden;
-	overflow:hidden;
-	/*background:rgba(68, 79, 83, 0.9) none repeat scroll 0 0 !important;*/
-	background: url(/images/New_ui/login_bg.png);
-	background-position: 0 0;
-	background-size: cover;
-	opacity: .94;
 }
 input:focus {
 	outline: none;
@@ -127,7 +93,6 @@ input[type=checkbox]{
 	background:#475A5F;
 	background:transparent; /* rogcss */
 }
-
 </style>
 <script>
 var params_inp = ['cfetool_key'];
@@ -154,7 +119,6 @@ function conf2obj(){
 			$("#" + params_inp[i]).val(dbus[params_inp[i]]);
 		}
 	}
-	//write version
 	if (dbus["cfetool_version"]){
 		E("cfetool_version").innerHTML = " - " + dbus["cfetool_version"]
 	}
@@ -245,7 +209,6 @@ function get_log(action){
 			var retArea = E("log_content_text");
 			if (response.search("XU6J03M6") != -1) {
 				retArea.value = response.replace("XU6J03M6", " ");
-				//retArea.scrollTop = retArea.scrollHeight;
 				if(action){
 					refreshpage();
 				}else{
@@ -309,7 +272,6 @@ function pop_help() {
 		});
 	});
 }
-
 </script>
 </head>
 <body onload="init();">
@@ -376,10 +338,7 @@ function pop_help() {
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
-												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。
-													<a type="button" href="https://koolshare.cn/thread-184507-1-1.html" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >使用交流</a>
-													<a type="button" href="https://github.com/koolshare/rogsoft/blob/master/cfetool/Changelog.txt" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >更新日志</a>
-												</span>
+												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。</span>
 											</div>
 											<div id="log_content">
 												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
@@ -427,4 +386,3 @@ function pop_help() {
 	<div id="footer"></div>
 </body>
 </html>
-
