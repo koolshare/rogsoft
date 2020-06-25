@@ -337,7 +337,7 @@ function pop_help() {
 												<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
-											<div class="SimpleNote">
+											<div>
 												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。</span>
 											</div>
 											<div id="log_content">
