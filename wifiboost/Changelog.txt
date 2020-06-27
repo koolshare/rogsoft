@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+1.4
+   - update	优化修改运行过程。
+
 1.3
    - update	优化日志显示，精简代码；
 
