@@ -102,9 +102,10 @@ dbus set softcenter_module_${module}_description="${DESCRIPTION}"
 dbus set softcenter_module_${module}_install="1"
 dbus set softcenter_module_${module}_name="${module}"
 dbus set softcenter_module_${module}_title="${TITLE}"
-
+dbus remove wifiboost_warn
 sync
 echo_date "【${TITLE}】插件正在安装，请稍后！"
-/koolshare/bin/wifiboost install
+#cd /koolshare/bin && ./wifiboost install
+start-stop-daemon -S -q -b -x /koolshare/bin/wifiboost -- install
 echo_date "【${TITLE}】插件安装完毕！"
 exit_install
