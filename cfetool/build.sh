@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="cfetool"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="CFE工具箱"
 DESCRIPTION="CFE工具箱，查看CFE信息，改机器为国区"
 HOME_URL="Module_cfetool.asp"
