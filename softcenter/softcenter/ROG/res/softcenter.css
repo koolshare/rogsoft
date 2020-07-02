@@ -144,4 +144,30 @@
 	font-size: 12px;
 	border-radius: 5px 5px 0px 0px;
 }
-
+.soft_setting_log{
+	margin-top:10px;
+	display:block;
+	overflow:hidden;
+	outline: 1px solid #222;
+	outline: 1px solid #91071f;
+}
+.soft_setting_log1{
+	width:97%;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	margin-top:1px;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+.SimpleNote {
+	padding:5px 10px;
+}

@@ -2,6 +2,17 @@
 
 # for hnd platform
 
+#####
+#####
+#####
+#####
+#####
+#####
+#####
+#####
+#####
+#####
+
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 alias echo_date='echo 【$(date +%Y年%m月%d日\ %X)】:'
@@ -37,10 +48,10 @@ clean(){
 
 detect_package(){
 	local TEST_WORD="$1"
-	local ILLEGAL_KEYWORDS="ss|ssr|shadowsocks|shadowsocksr|v2ray|trojan|clash|wireguard|koolss|brook"
+	local ILLEGAL_KEYWORDS="ss|ssr|shadowsocks|shadowsocksr|v2ray|trojan|clash|wireguard|koolss|brook|fuck"
 	local KEY_MATCH=$(echo "${TEST_WORD}" | grep -Eo "$ILLEGAL_KEYWORDS")
 	
-	if [ -n "$KEY_MATCH" ]; then
+	if [ -n "${KEY_MATCH}" ]; then
 		echo_date =======================================================
 		echo_date "检测到离线安装包：${soft_name} 含非法关键词！！！"
 		echo_date "根据法律规定，koolshare软件中心将不会安装此插件！！！"
@@ -52,10 +63,17 @@ detect_package(){
 }
 
 install_tar(){
-
-	# do the right thing
+	#####
+	#####
+	#####
+	#####
+	#####
 	detect_package "$soft_name"
-	
+	#####
+	#####
+	#####
+	#####
+	#####	
 	name=$(echo "$soft_name"|sed 's/.tar.gz//g'|awk -F "_" '{print $1}'|awk -F "-" '{print $1}')
 	INSTALL_SUFFIX=_install
 	VER_SUFFIX=_version
@@ -77,7 +95,7 @@ install_tar(){
 			echo_date 估计是错误或者不完整的的离线安装包！
 			echo_date 删除相关文件并退出...
 			clean
-			dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
+			dbus remove "softcenter_module_${MODULE_NAME}$INSTALL_SUFFIX"
 			echo_date ======================== end ============================
 			echo XU6J03M6
 			exit
@@ -93,23 +111,30 @@ install_tar(){
 		if [ -n "$INSTALL_SCRIPT" -a -f "$INSTALL_SCRIPT" ];then
 			SCRIPT_AB_DIR=$(dirname $INSTALL_SCRIPT)
 			MODULE_NAME=${SCRIPT_AB_DIR##*/}
-
-			# do the right thing
-			detect_package "$MODULE_NAME"
-			
-			echo_date 准备安装$MODULE_NAME插件！
+			#####
+			#####
+			#####
+			#####
+			#####
+			detect_package "${MODULE_NAME}"
+			#####
+			#####
+			#####
+			#####
+			#####
+			echo_date 准备安装${MODULE_NAME}插件！
 			echo_date 找到安装脚本！
 			chmod +x $INSTALL_SCRIPT >/dev/null 2>&1
 			echo_date 运行安装脚本...
 			echo_date ====================== step 2 ===========================
 
-			if [ -d /tmp/$MODULE_NAME/GT-AC5300 -a "$ROG" == "1" ]; then
-				cp -rf /tmp/$MODULE_NAME/GT-AC5300/* /tmp/$MODULE_NAME/
+			if [ -d /tmp/${MODULE_NAME}/GT-AC5300 -a "$ROG" == "1" ]; then
+				cp -rf /tmp/${MODULE_NAME}/GT-AC5300/* /tmp/${MODULE_NAME}/
 			fi
 
-			if [ -d /tmp/$MODULE_NAME/ROG -a "$ROG" == "1" ]; then
+			if [ -d /tmp/${MODULE_NAME}/ROG -a "$ROG" == "1" ]; then
 				echo_date "检测到ROG官改皮肤，安装中..."
-				cp -rf /tmp/$MODULE_NAME/ROG/* /tmp/$MODULE_NAME/
+				cp -rf /tmp/${MODULE_NAME}/ROG/* /tmp/${MODULE_NAME}/
 			fi
 
 			if [ -d /tmp/${MODULE_NAME}/ROG -a "$TUF" == "1" ]; then

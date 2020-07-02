@@ -22,6 +22,7 @@ fi
 softcenter_install() {
 	if [ -d "/tmp/softcenter" ]; then
 		# make some folders
+		# chmod 755 /koolshare/scripts/ks_tar_install.sh
 		mkdir -p /jffs/configs/dnsmasq.d
 		mkdir -p /jffs/scripts
 		mkdir -p /jffs/etc
@@ -41,13 +42,19 @@ softcenter_install() {
 		# coping files
 		cp -rf /tmp/softcenter/webs/* /koolshare/webs/
 		cp -rf /tmp/softcenter/res/* /koolshare/res/
+		# ----ui------
 		if [ "$ROG" == "1" ]; then
 			cp -rf /tmp/softcenter/ROG/res/* /koolshare/res/
 		fi
 		if [ "$TUF" == "1" ]; then
-			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/$MODULE/ROG/res/*.css >/dev/null 2>&1
+			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/softcenter/ROG/res/*.css >/dev/null 2>&1
+			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/softcenter/webs/*.asp >/dev/null 2>&1
 			cp -rf /tmp/softcenter/ROG/res/* /koolshare/res/
 		fi
+		if [ -z "$TUF" -a -z "$ROG" ]; then
+			sed -i '/rogcss/d' /koolshare/webs/Module_Softsetting.asp >/dev/null 2>&1
+		fi
+		# -------------
 		cp -rf /tmp/softcenter/init.d/* /koolshare/init.d/
 		cp -rf /tmp/softcenter/bin/* /koolshare/bin/
 		#for axhnd
@@ -57,7 +64,22 @@ softcenter_install() {
 		cp -rf /tmp/softcenter/perp /koolshare/
 		cp -rf /tmp/softcenter/scripts /koolshare/
 		cp -rf /tmp/softcenter/.soft_ver /koolshare/
-
+		# ---------------------
+		# do some trick
+		# sync
+		# local TARGET=/koolshare/scripts/ks_tar_install.sh
+		# local FUNC=$(head -200 /dev/urandom | md5sum | cut -d " " -f 1|cut -c 1-12|sed 's/^[0-9]\+//g')
+		# local VARI=$(head -200 /dev/urandom | md5sum | cut -d " " -f 1|cut -c 1-12|sed 's/^[0-9]\+//g')
+		# local RAND=$(shuf -i 1-29 -n 1)
+		# local LINES=$(sed -n '/#####/=' $TARGET | shuf -n $RAND | sort -rn)
+		# sed -i "s/detect_package/${FUNC}/g" $TARGET
+		# sed -i "s/MODULE_NAME/${VARI}/g" $TARGET
+		# for LINE in $LINES
+		# do
+		# 	sed -i "${LINE}d" $TARGET
+		# done
+		# sync
+		# ---------------------
 		# make some link
 		[ ! -L "/koolshare/bin/base64_decode" ] && ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
 		[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
@@ -138,6 +160,7 @@ softcenter_install() {
 		chmod 755 /koolshare/perp/.control/*
 		chmod 755 /koolshare/perp/httpdb/*
 		chmod 755 /koolshare/scripts/*
+		# chmod 555 /koolshare/scripts/ks_tar_install.sh
 		#============================================
 		# now try to reboot httpdb if httpdb not started
 		# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh
