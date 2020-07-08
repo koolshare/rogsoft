@@ -87,6 +87,11 @@ if [ ! -x /koolshare/bin/jq ]; then
 	cp -f /tmp/rog/bin/jq /koolshare/bin/
 	chmod +x /koolshare/bin/jq
 fi
+
+if [ "$MODEL" == "GT-AC5300" -a ! -x /koolshare/bin/wl ];then
+	cp -rf /tmp/rog/bin/wl /koolshare/bin/
+fi
+
 cp -rf /tmp/rog/scripts/* /koolshare/scripts/
 cp -rf /tmp/rog/webs/* /koolshare/webs/
 cp -rf /tmp/rog/res/* /koolshare/res/
