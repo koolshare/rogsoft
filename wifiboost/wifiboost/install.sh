@@ -77,11 +77,16 @@ if [ "$MODEL" == "TUF-AX3000" ];then
 fi
 
 # 安装插件
-cp -rf /tmp/$module/bin/* /koolshare/bin/
+cp -rf /tmp/$module/bin/wifiboost /koolshare/bin/
 cp -rf /tmp/$module/scripts/* /koolshare/scripts/
 cp -rf /tmp/$module/webs/* /koolshare/webs/
 cp -rf /tmp/$module/res/* /koolshare/res/
 cp -rf /tmp/$module/uninstall.sh /koolshare/scripts/uninstall_${module}.sh
+
+if [ "$MODEL" == "GT-AC5300" -a ! -x /koolshare/bin/wl ];then
+	cp -rf /tmp/$module/bin/wl /koolshare/bin/
+fi
+
 if [ "$ROG" == "1" ];then
 	continue
 else
@@ -91,7 +96,7 @@ else
 		sed -i '/rogcss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
 	fi
 fi
-chmod +x /koolshare/bin/${module}
+chmod +x /koolshare/bin/*
 chmod +x /koolshare/scripts/${module}*
 chmod +x /koolshare/scripts/uninstall_${module}.sh
 

@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+1.6
+   - fix	修复GT-AC5300无法查询到功率的问题。
+
 1.5
    - fix	修复运行提示错误3的问题。
 
