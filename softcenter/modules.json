@@ -1,4 +1,7 @@
 [
-{"module": "linkease", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"}
+{"module": "linkease", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
+{"module": "xunyou", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"}
 ]
+
+
 
