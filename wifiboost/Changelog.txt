@@ -1,5 +1,11 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+1.7
+   - add	新增24dbm - 26dbm区间的功率条件，方便三频路由进行更为精细的调整；
+   - update	功率调节选择栏更换为功率调节滑动条，更加方便直观；
+   - update	优化主程序，现在程序运行更快一些了；
+   - update	更换了wifi boost新图标，感谢amienmi**！如果更新后图标没有变化，请ctrl + f5刷新浏览器缓存。
+
 1.6
    - fix	修复GT-AC5300无法查询到功率的问题。
 

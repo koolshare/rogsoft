@@ -65,8 +65,16 @@ case $(uname -m) in
 	;;
 esac
 
+ROG_86U=0
+EXT_NU=$(nvram get extendno)
+EXT_NU=${EXT_NU%_*}
+
+if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
+	ROG_86U=1
+fi
+
 # 判断固件需要什么UI
-if [ "$MODEL" == "GT-AC5300" ] || [ "$MODEL" == "GT-AX11000" ] || [ -n "$(nvram get extendno | grep koolshare)" -a "$MODEL" == "RT-AC86U" ];then
+if [ "$MODEL" == "GT-AC5300" -o "$MODEL" == "GT-AX11000" -o "$ROG_86U" == "1" ];then
 	# 官改固件，骚红皮肤
 	ROG=1
 fi

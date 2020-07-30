@@ -13,14 +13,12 @@
 <link rel="stylesheet" type="text/css" href="css/element.css">
 <link rel="stylesheet" type="text/css" href="res/softcenter.css">
 <link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
-<script language="JavaScript" type="text/javascript" src="/state.js"></script>
-<script language="JavaScript" type="text/javascript" src="/help.js"></script>
-<script language="JavaScript" type="text/javascript" src="/general.js"></script>
+<script src="/state.js"></script>
+<script src="/general.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
 <script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
-<script language="JavaScript" type="text/javascript" src="/validator.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
+<script src="/js/jquery.js"></script>
+<script src="/calendar/jquery-ui.js"></script> 
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
 .wifiboost_btn {
@@ -100,36 +98,171 @@ input:focus {
 input[type=checkbox]{
 	vertical-align:middle;
 }
+a:focus {
+	outline: none;
+}
 .FormTitle i {
 	color: #ff002f;
 	font-style: normal;
 }
 #wifiboost_main { border:1px solid #91071f; } /* W3C rogcss */
 .SimpleNote { padding:5px 10px;}
+.ui-slider {
+	position: relative;
+	text-align: left;
+}
+.ui-slider .ui-slider-handle {
+	position: absolute;
+	width: 12px;
+	height: 12px;
+}
+.ui-slider .ui-slider-range {
+	position: absolute;
+}
+.ui-slider-horizontal {
+	height: 6px;
+}
+
+.ui-widget-content {
+	/*border: 2px solid #000;*/
+	background-color:#000;
+	background-color:#700618; /* W3C rogcss */
+}
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+	border: 1px solid ;
+	background: #e6e6e6;
+	background: #cf0a2c; /* W3C rogcss */
+	margin-top:-4px;
+	margin-left:-6px;
+}
+
+/* Corner radius */
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+	border-top-left-radius: 4px;
+}
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+	border-top-right-radius: 4px;
+}
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+	border-bottom-left-radius: 4px;
+}
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+	border-bottom-right-radius: 4px;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+	top: 0;
+	height: 100%;
+}
+
+#slider .ui-slider-range {
+	background: #93E7FF; 
+	border-top-left-radius: 3px;
+	border-top-right-radius: 1px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 1px;
+}
+#slider .ui-slider-handle {
+	border-color: #93E7FF;
+	border-color: #cf0a2c; /* W3C rogcss */
+}
+.parental_th{
+	color:white;
+	background:#2F3A3E;
+	cursor: pointer;
+	width:160px;
+	height:22px;
+	border-bottom:solid 1px black;
+	border-right:solid 1px black;
+}
 </style>
 <script>
 var orig_region = '<% nvram_get("location_code"); %>';
 var odm = '<% nvram_get("productid"); %>'
 var refresh_flag=1;
 var params_chk = ['wifiboost_boost_24', 'wifiboost_boost_52', 'wifiboost_boost_58'];
-var params_inp = ['wifiboost_boost_val', 'wifiboost_key'];
+var params_inp = ['wifiboost_key'];
+var boost_dbm;
 var x = 6;
 function init() {
 	show_menu(menu_hook);
 	write_location();
 	show_hide_elem();
-	get_dbus_data();
 	get_wl_status();
-	toggle_func();
+	get_dbus_data();
 }
-function toggle_func() {
+
+function register_event(){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U"){
+		var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+		var current_maxp58 = '<% nvram_get("3:maxp5gb0a0"); %>';
+	}else if(odm == "RT-AX88U"){
+		var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+	}else{
+		// RT-AC86U, RT-AX82U, RT-AX86U, TUF-AX3000
+		var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+	}
+
+	if(E("wifiboost_boost_24").checked == true){
+		var maxp = current_maxp24;
+	}else{
+		if (E("wifiboost_boost_52").checked == true){
+			var maxp = current_maxp52;
+		}else{
+			if (E("wifiboost_boost_58").checked == true){
+				var maxp = current_maxp58 || current_maxp24;
+			}else{
+				var maxp = current_maxp24;
+			}
+		}
+	}
+	var current_dec = parseInt(maxp);
+	var current_dbm = ((current_dec - 6)/4).toFixed(2);
+	var current_pwr = Math.pow(10,(current_dec - 6)/4/10).toFixed(2);
+	$(function() {
+		$( "#slider" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			min: 24.00,
+			max: 28.50,
+			value: current_dbm,
+			step: 0.25,
+			slide:function(event, ui){
+				var dbm = ui.value.toFixed(2);
+				var power = Math.pow(10,ui.value/10).toFixed(2);
+				document.getElementById('tx_power_desc').innerHTML = ui.value + " dBm / " + power + " mw";
+			},
+			stop:function(event, ui){
+				boost_dbm = ui.value;
+			},
+		}); 
+	});
+	document.getElementById('tx_power_desc').innerHTML = current_dbm + " dBm / " + current_pwr + " mw";
 	$("#log_content2").click(
 		function() {
 			x = -1;
-		});
+		});	
 }
+
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -145,6 +278,7 @@ function get_dbus_data(){
 			dbus = data.result[0];
 			conf2obj();
 			show_err_code();
+			register_event();
 		}
 	});
 }
@@ -297,8 +431,8 @@ function get_wl_status(){
 	});
 }
 function boost_now(action){
-	var dbus_new = {}
-	if(odm == "GT-AC5300" || odm == "GT-AX11000"){
+	var dbus_new = {};
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
@@ -344,6 +478,15 @@ function boost_now(action){
 	}
 	if(odm != "GT-AC5300" && odm != "GT-AX11000"){
 		dbus_new["wifiboost_boost_58"] = "0";
+	}
+	// boost_dbm
+	if(boost_dbm){
+		dbus_new["wifiboost_boost_dbm"] = boost_dbm;
+	}else{
+		if(action == 1){
+			alert("功率值没有任何变化！插件将不会继续运行!\n\n请拉动功率调节条后再使用boost按钮！");
+			return false;
+		}
 	}
 	E("wifiboost_apply_1").disabled=true;
 	E("wifiboost_apply_2").disabled=true;
@@ -456,6 +599,12 @@ function get_log(){
 			setTimeout("get_log();", 200);
 			retArea.value = response.replace("XU6J03M6", " ");
 			retArea.scrollTop = retArea.scrollHeight;
+		},
+		error: function(xhr) {
+			E("loading_block3").innerHTML = "暂无wifi boost日志信息 ...";
+			E("log_content3").value = "日志文件为空，请关闭本窗口！";
+			E("ok_button").style.display = "";
+			return false;
 		}
 	});
 }
@@ -463,7 +612,7 @@ function show_log() {
 	x = -1;
 	refresh_flag = 0;
 	get_log();
-	//E("ok_button1").value = "关闭日志";
+	E("ok_button1").value = "关闭日志";
 }
 function menu_hook(title, tab) {
 	tabtitle[tabtitle.length - 1] = new Array("", "wifi boost");
@@ -514,7 +663,9 @@ function pop_help() {
 		});
 	});
 }
-
+function verifyFields(r) {
+	register_event();
+}
 </script>
 </head>
 <body onload="init();">
@@ -653,30 +804,25 @@ function pop_help() {
 													</td>
 												</tr>
 												<tr>
-													<th>修改功率</th>
+													<th>功率调节</th>
 													<td>
-														<input type="checkbox" id="wifiboost_boost_24" style="vertical-align: middle;" checked=true /><lable id="LABLE_24">2.4G</lable>
-														<input type="checkbox" id="wifiboost_boost_52" style="vertical-align: middle;" checked=true /><lable id="LABLE_52">5G</lable>
-														<input type="checkbox" id="wifiboost_boost_58" style="vertical-align: middle;display: none" checked=true /><lable id="LABLE_58" style="display: none;">5G-2</lable>
-														<select id="wifiboost_boost_val" class="input_option" style="vertical-align: middle;">
-															<option value="1">26.00 dBm / 398.11 mw</option>
-															<option value="2">26.25 dBm / 421.70 mw</option>
-															<option value="3">26.50 dBm / 446.68 mw</option>
-															<option value="4">26.75 dBm / 473.15 mw</option>
-															<option value="5" selected="selected">27.00 dBm / 501.19 mw</option>
-															<option value="6">27.25 dBm / 530.88 mw</option>
-															<option value="7">27.50 dBm / 562.34 mw</option>
-															<option value="8">27.75 dBm / 595.66 mw</option>
-															<option value="9">28.00 dBm / 630.96 mw</option>
-															<option value="10">28.25 dBm / 668.34 mw</option>
-															<option value="11">28.50 dBm / 707.95 mw</option>
-															<!--<option value="12">28.75 dBm / 749.89 mw</option>
-															<option value="13">29.00 dBm / 794.33 mw</option>
-															<option value="14">29.25 dBm / 841.40 mw</option>
-															<option value="15">29.50 dBm / 891.25 mw</option>
-															<option value="16">29.75 dBm / 944.06 mw</option>
-															<option value="17">30.00 dBm / 1000 mw</option>-->
-														</select>
+														<div>
+															<table>
+																<tr>
+																	<td style="border:0px;padding-left:0px;">
+																		<input type="checkbox" id="wifiboost_boost_24" onchange="verifyFields(this, 1);" style="vertical-align: middle;" checked=true /><lable id="LABLE_24">2.4G</lable>
+																		<input type="checkbox" id="wifiboost_boost_52" onchange="verifyFields(this, 1);" style="vertical-align: middle;" checked=true /><lable id="LABLE_52">5G</lable>
+																		<input type="checkbox" id="wifiboost_boost_58" onchange="verifyFields(this, 1);" style="vertical-align: middle;display: none" checked=true /><lable id="LABLE_58" style="display: none;">5G-2</lable>
+																	</td>									
+																	<td style="border:0px;padding-left:8px;">
+																		<div id="slider" style="width:220px;"></div>
+																	</td>									
+																	<td style="border:0px;width:60px;">
+																		<div id="tx_power_desc" style="width:150px;font-size:14px;"></div>
+																	</td>					
+																</tr>
+															</table>
+														</div>
 													</td>
 												</tr>
 											</table>
@@ -708,4 +854,3 @@ function pop_help() {
 	<div id="footer"></div>
 </body>
 </html>
-
