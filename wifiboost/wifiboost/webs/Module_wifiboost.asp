@@ -189,6 +189,11 @@ a:focus {
 	border-bottom:solid 1px black;
 	border-right:solid 1px black;
 }
+body .layui-layer-lan .layui-layer-btn0 {border-color:#22ab39; background-color:#22ab39;color:#fff; background:#22ab39}
+body .layui-layer-lan .layui-layer-btn .layui-layer-btn1 {border-color:#1678ff; background-color:#1678ff;color:#fff;}
+body .layui-layer-lan .layui-layer-btn2 {border-color:#FF6600; background-color:#FF6600;color:#fff;}
+body .layui-layer-lan .layui-layer-title {background: #1678ff;}
+body .layui-layer-lan .layui-layer-btn a{margin:8px 8px 0;padding:5px 18px;}
 </style>
 <script>
 var orig_region = '<% nvram_get("location_code"); %>';
@@ -204,6 +209,33 @@ function init() {
 	show_hide_elem();
 	get_wl_status();
 	get_dbus_data();
+	try_activate();
+}
+
+function getQueryVariable(variable){
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+			if(vars[i].indexOf("key") != -1){
+				var key_value = vars[i].split("key=")[1];
+				return key_value;
+			}
+	}
+	return(false);
+}
+
+function try_activate(){
+	var key = getQueryVariable("key");
+	if(key){
+		if(!$("#wifiboost_key").val()){
+			console.log("有激活码: ", key)
+			$("#wifiboost_key").val(key);
+			boost_now(3);
+		}else{
+			//已经激活了，跳转
+			location.href = "/Module_wifiboost.asp"
+		}
+	}
 }
 
 function register_event(){
@@ -351,6 +383,9 @@ function conf2obj(){
 	if (dbus["wifiboost_warn"]){
 		E("wifiboost_info").rows = 5
 		E("qrcode_show").style.height = "505px"
+		E("wifiboost_buy_btn").style.display = "none";
+		E("wifiboost_active_btn").style.display = "none";
+		E("wifiboost_authorized_btn").style.display = "none";
 	}
 }
 function show_err_code() {
@@ -376,7 +411,7 @@ function show_err_code() {
 			err_mesg = '<span style="color: #CC3300">错误代码5：读取原厂wlan配置失败，重启或重置路由器后重试！！</span>';
 		break;
 		case "6":
-			err_mesg = '<span style="color: #CC3300">错误代码6：检测到你的路由器不是国行机器！！</span><br/><br/>非国行机器因无法选择澳大利亚区域从而使得插件无法发挥作用！！<br/>如果你需要将机器刷成国行，请联系QQ: 196040627<br/>如果你已经改cfe为国行了，请重装wifi boost插件重新获得机器码！';
+			err_mesg = '<span style="color: #CC3300">错误代码6：检测到你的路由器不是国行机器！！</span><br/><br/>非国行机器因无法选择澳大利亚区域从而使得插件无法发挥作用！！<br/>如果你需要将机器刷成国行，请<a style="color: #1678ff" href="https://rogsoft.ddnsto.com/cfetool/cfetool.tar.gz">下载并离线安装CFE工具箱。</a>';
 		break;
 		case "7":
 			err_mesg = '<span style="color: #CC3300">错误代码7：检测到你的路由器出厂配置有误！！</span>';
@@ -445,7 +480,7 @@ function boost_now(action){
 	}
 	var wb_key = E("wifiboost_key").value;
 	if(!wb_key){
-		alert("请先输入激活码后再点击激活按钮！");
+		alert("请先购买激活码并输入后再点击激活按钮！");
 		return false;
 	}
 	if (wb_key.indexOf('wb_') == -1){
@@ -500,7 +535,7 @@ function boost_now(action){
 		success: function(response) {
 			E("wifiboost_apply_1").disabled=false;
 			E("wifiboost_apply_2").disabled=false;
-			get_log();
+			get_log(3);
 		}
 	});
 }
@@ -579,7 +614,7 @@ function count_down_close() {
 		--x;
 	setTimeout("count_down_close();", 1000);
 }
-function get_log(){
+function get_log(flag){
 	E("ok_button").style.display = "none";
 	showWBLoadingBar();
 	$.ajax({
@@ -593,10 +628,14 @@ function get_log(){
 				retArea.value = response.replace("XU6J03M6", " ");
 				E("ok_button").style.display = "";
 				retArea.scrollTop = retArea.scrollHeight;
-				count_down_close();
-				return true;
+				if(flag == 3){
+					location.href = "/Module_wifiboost.asp"
+				}else{
+					count_down_close();
+					return true;
+				}
 			}
-			setTimeout("get_log();", 200);
+			setTimeout("get_log(" + flag + ");", 200);
 			retArea.value = response.replace("XU6J03M6", " ");
 			retArea.scrollTop = retArea.scrollHeight;
 		},
@@ -618,13 +657,53 @@ function menu_hook(title, tab) {
 	tabtitle[tabtitle.length - 1] = new Array("", "wifi boost");
 	tablink[tablink.length - 1] = new Array("", "Module_wifiboost.asp");
 }
-function close_buy(){
+function close_mail_buy(){
 	$("#qrcode_show").fadeOut(300);
+	open_buy();
 }
-function open_buy(){
-	$("#qrcode_show").css("margin-top", "-50px");
-	$("#qrcode_show").fadeIn(300);
+
+function open_buy() {
+	var current_url = window.location.href;
+	net_address = current_url.split("/Module")[0];
+	
+	note = "<h2><font color='#FF6600'>wifi boost是一款付费插件，价格为30元人民币。</font></h2>"
+	note += "<hr>"
+	note += "<h3><font color='#22ab39'>微信支付</font>/<font color='#1678ff'>支付宝</font>购买wifi boost为即时激活！</h2>"
+	note += "<li>扫码并支付后，会跳转到wifi boost插件页面并自动激活，建议在PC上使用chrome浏览器操作；</li>"
+	note += "<li>若购买后跳转到路由器登陆界面，请登陆后重新点击下方<font color='#22ab39'>微信支付</font>/<font color='#1678ff'>支付宝</font>按钮，即可在线激活。</li>"
+	note += "<li>如果上一步无法解决，或者购买页面错误，请点击<font color='#FF6600'>人工邮件购买</font>，并根据购买流程进行购买！</li>"
+	note += "<li>对于购买、使用有疑问的，可以前往：<a style='color:#22ab39' href='https://koolshare.cn/thread-184369-1-1.html'><u>wifi boost介绍/交流贴</u></a>，和开发者或其他使用者交流！</li>"
+	note += "<h4 style='text-align:right'>客服邮箱：<a style='color:#22ab39;' href='mailto:mjy211@gmail.com?subject=wifi boost咨询&body=这是邮件的内容'>mjy211@gmail.com</a> 客服：sadog</h4>"
+	require(['/res/layer/layer.js'], function(layer) {
+		layer.open({
+			type: 0,
+			skin: 'layui-layer-lan',
+			shade: 0.8,
+			title: '请选择wifi boost购买方式！',
+			time: 0,
+			area: '660px',
+			offset: '250px',
+			btnAlign: 'c',
+			maxmin: true,
+			content: note,
+			btn: ['微信支付', '支付宝', '人工邮件购买'],
+			btn1: function() {
+				//window.open("http://47.108.206.248:8083/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address);
+				//layer.closeAll();
+				location.href = "http://47.108.206.248:8083/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+			},
+			btn2: function() {
+				//window.open("http://47.108.206.248:8083/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address);
+				location.href = "http://47.108.206.248:8083/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+			},
+			btn3: function() {
+				$("#qrcode_show").css("margin-top", "-50px");
+				$("#qrcode_show").fadeIn(300);
+			},
+		});
+	});
 }
+
 function close_info(){
 	$("#activated_info").fadeOut(300);
 }
@@ -633,18 +712,19 @@ function open_info(){
 	$("#activated_info").fadeIn(300);
 }
 function pop_help() {
-	close_buy();
+	$("#qrcode_show").fadeOut(300);
 	require(['/res/layer/layer.js'], function(layer) {
 		layer.open({
 			type: 1,
 			title: false,
 			closeBtn: false,
 			area: '600px;',
+			offset: '250px',
 			shade: 0.8,
 			shadeClose: 1,
 			scrollbar: false,
 			id: 'LAY_layuipro',
-			btn: ['关闭窗口'],
+			btn: ['返回'],
 			btnAlign: 'c',
 			moveType: 1,
 			content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">\
@@ -657,7 +737,8 @@ function pop_help() {
 				wifi boost的激活码为一机一码，一次激活终身使用。<br>\
 				</div>',
 			yes: function(index, layero){
-				open_buy();
+				$("#qrcode_show").css("margin-top", "-50px");
+				$("#qrcode_show").fadeIn(300);
 				layer.close(index);
 			}
 		});
@@ -713,9 +794,9 @@ function verifyFields(r) {
 													<img style="height:250px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/sadog.png"/>
 												</div>
 												<div style="margin-top:0px;margin-left:4%;width:96%;text-align:left;">
-													<div id="info0" style="font-size:16px;color:#000;"><i>激活码获取:</i></div>
+													<div id="info0" style="font-size:16px;color:#000;"><i>人工邮件购买激活码:</i></div>
 													<div id="info1" style="font-size:12px;color:#000;">1.扫描上方其中一个二维码，付款30元人民币给开发者，即可购买wifi boost激活码。</div>
-													<div id="info2" style="font-size:12px;color:#000;">2.复制下面文本框内容，替换xxx为<a type="button" href="javascript:void(0);" style="cursor: pointer;color:#FF3300;" onclick="pop_help();"><u>支付订单号</u></a>，发送邮件到：<a id="wifiboost_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=CFE工具箱插件购买&body=这是邮件的内容">mjy211@gmail.com</a></div>
+													<div id="info2" style="font-size:12px;color:#000;">2.复制下面文本框内容，替换xxx为<a type="button" href="javascript:void(0);" style="cursor: pointer;color:#FF3300;" onclick="pop_help();"><u>支付订单号</u></a>，发送邮件到：<a id="wifiboost_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=wifi_boost插件购买&body=这是邮件的内容">mjy211@gmail.com</a></div>
 													<div id="info3" style="font-size:12px;color:#000;">3.目前订单处理为人工，激活码会在一个工作日左右发送到你的邮箱，请耐心等待。</div>
 												</div>
 												<div style="margin-top:5px;padding-bottom:10px;margin-left:4%;width:92%;text-align:left;">
@@ -723,7 +804,7 @@ function verifyFields(r) {
 												</div>
 												<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
 													<input class="button_gen" type="button" onclick="pop_help();" value="帮助">
-													<input class="button_gen" type="button" onclick="close_buy();" value="关闭">
+													<input class="button_gen" type="button" onclick="close_mail_buy();" value="返回">
 												</div>
 											</div>
 											<div id="activated_info" class="content_status" style="height:240px;top:150px">
