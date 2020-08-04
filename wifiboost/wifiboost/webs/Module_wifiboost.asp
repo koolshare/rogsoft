@@ -194,6 +194,7 @@ body .layui-layer-lan .layui-layer-btn .layui-layer-btn1 {border-color:#1678ff; 
 body .layui-layer-lan .layui-layer-btn2 {border-color:#FF6600; background-color:#FF6600;color:#fff;}
 body .layui-layer-lan .layui-layer-title {background: #1678ff;}
 body .layui-layer-lan .layui-layer-btn a{margin:8px 8px 0;padding:5px 18px;}
+body .layui-layer-lan .layui-layer-btn {text-align:center}
 </style>
 <script>
 var orig_region = '<% nvram_get("location_code"); %>';
