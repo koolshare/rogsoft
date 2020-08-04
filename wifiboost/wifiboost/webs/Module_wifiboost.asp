@@ -667,22 +667,21 @@ function open_buy() {
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
 	
-	note = "<h2><font color='#FF6600'>wifi boost是一款付费插件，价格为30元人民币。</font></h2>"
-	note += "<hr>"
-	note += "<h3><font color='#22ab39'>微信支付</font>/<font color='#1678ff'>支付宝</font>购买wifi boost为即时激活！</h2>"
-	note += "<li>扫码并支付后，会跳转到wifi boost插件页面并自动激活，建议在PC上使用chrome浏览器操作；</li>"
-	note += "<li>若购买后跳转到路由器登陆界面，请登陆后重新点击下方<font color='#22ab39'>微信支付</font>/<font color='#1678ff'>支付宝</font>按钮，即可在线激活。</li>"
-	note += "<li>如果上一步无法解决，或者购买页面错误，请点击<font color='#FF6600'>人工邮件购买</font>，并根据购买流程进行购买！</li>"
-	note += "<li>对于购买、使用有疑问的，可以前往：<a style='color:#22ab39' href='https://koolshare.cn/thread-184369-1-1.html'><u>wifi boost介绍/交流贴</u></a>，和开发者或其他使用者交流！</li>"
-	note += "<h4 style='text-align:right'>客服邮箱：<a style='color:#22ab39;' href='mailto:mjy211@gmail.com?subject=wifi boost咨询&body=这是邮件的内容'>mjy211@gmail.com</a> 客服：sadog</h4>"
+	note = "<h2><font color='#FF6600'>【wifi boost】是一款付费插件，价格为30元人民币。</font></h2>";
+	note += "<hr>";
+	note += "<h3>建议选择 <font color='#22ab39'>微信支付</font> / <font color='#1678ff'>支付宝</font> 购买，可以即时激活【wifi boost】！</h2>";
+	note += "<li>建议在PC上使用chrome浏览器进行购买、激活操作，以免出现未知问题；</li>";
+	note += "<li>扫码支付后，会立即跳转到激活码发放页面，根据页面提示即可激活插件；</li>";
+	note += "<li>如遇到无法支付、无法获得激活码等问题，可以联系下方客服邮箱解决。</li>";
+	note += "<h4 style='text-align:right'>客服邮箱：<a style='color:#22ab39;' href='mailto:mjy211@gmail.com?subject=wifi boost咨询&body=这是邮件的内容'>mjy211@gmail.com</a></h4>";
 	require(['/res/layer/layer.js'], function(layer) {
 		layer.open({
 			type: 0,
 			skin: 'layui-layer-lan',
 			shade: 0.8,
-			title: '请选择wifi boost购买方式！',
+			title: '请选择【wifi boost】购买方式！',
 			time: 0,
-			area: '660px',
+			area: '540px',
 			offset: '250px',
 			btnAlign: 'c',
 			maxmin: true,
