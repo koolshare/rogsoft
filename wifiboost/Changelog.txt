@@ -1,6 +1,6 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
-2.0
+2.0 - 2.1
    - add	添加RT-AX86U/RT-AX82U高达定制固件的支持；
 
 1.9
