@@ -13,6 +13,7 @@
 <link rel="stylesheet" type="text/css" href="css/element.css">
 <link rel="stylesheet" type="text/css" href="res/softcenter.css">
 <link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
+<script type="text/javascript" src="/res/Browser.js"></script>
 <script src="/state.js"></script>
 <script src="/general.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
@@ -206,6 +207,24 @@ var boost_dbm;
 var x = 6;
 function init() {
 	show_menu(menu_hook);
+	detect_brower();
+}
+
+function detect_brower() {
+	var info = new Browser();
+	console.log("您使用的浏览器为：", info.browser);
+	if(info.device!='Mobile'){
+		if (info.browser == "360EE"){
+			$("#wifiboost_main").hide();
+			$("#wifiboost_apply_1").hide();
+			$("#wifiboost_apply_2").hide();
+			$("#wifiboost_apply_3").hide();
+			$(".SimpleNote").hide();
+			$('#warn_msg_1').html('<h1><font color="#FF6600">错误！</font></h1><h2><font color="#FF6666">360浏览器/IE</font>下使用【wifi boost】插件会出现兼容性问题！<h2>为了保证使用本插件的最佳使用体验:</h2><h2>建议使用<em>谷歌chrome浏览器</em>或者其它<em>Chromium内核</em>的浏览器！</h2>');
+			$("#warn_msg_1").show();
+			return false;
+		}
+	}
 	write_location();
 	show_hide_elem();
 	get_wl_status();
@@ -688,12 +707,9 @@ function open_buy() {
 			content: note,
 			btn: ['微信支付', '支付宝', '人工邮件购买'],
 			btn1: function() {
-				//window.open("http://47.108.206.248:8083/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address);
-				//layer.closeAll();
 				location.href = "http://47.108.206.248:8083/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
 			},
 			btn2: function() {
-				//window.open("http://47.108.206.248:8083/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address);
 				location.href = "http://47.108.206.248:8083/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
 			},
 			btn3: function() {
@@ -827,7 +843,7 @@ function verifyFields(r) {
 											<div style="float:right; width:15px; height:25px;margin-top:-20px">
 												<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 											</div>
-											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
+											<div id="spl1" style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<span>wifi boost可以极大的增强路由器wifi的发射功率，增强信号覆盖范围。
 													<a type="button" href="https://koolshare.cn/thread-184369-1-1.html" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >使用交流</a>
@@ -913,8 +929,8 @@ function verifyFields(r) {
 												<input class="button_gen" id="wifiboost_apply_2" onClick="boost_now(2)" type="button" value="恢复原厂功率" />
 												<input class="button_gen" id="wifiboost_apply_3" onClick="show_log()" type="button" value="显示日志" />
 											</div>
-											<div id="warning" style="font-size:14px;margin:20px auto;"></div>
-											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
+											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
+											<div id="spl2" style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<li id="msg1">wifi boost通过修改机器出厂wlan设置，突破出厂设定的最大发射功率，须知修改出厂wlan设置有风险，由此带来的风险请自行承担！</li>
 												<li id="msg2">更高的发射功率可能影响速率、稳定性等，甚至有烧功放的风险，请勿盲目追求过高的发射功率，建议设定不超过27.00dBm！</li>

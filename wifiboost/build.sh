@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="wifiboost"
-VERSION="2.1"
+VERSION="2.2"
 TITLE="wifi boost"
 DESCRIPTION="wifi boost 路由器功率增强，强过澳大利亚"
 HOME_URL="Module_wifiboost.asp"

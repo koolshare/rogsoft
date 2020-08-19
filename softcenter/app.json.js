@@ -254,15 +254,15 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-08-05_23:35:29", 
+            "build_date": "2020-08-19_23:29:48", 
             "changelog": "", 
             "description": "wifi boost 路由器功率增强，强过澳大利亚", 
             "home_url": "Module_wifiboost.asp", 
-            "md5": "5561e477aa8163724929cc9e04d5edc4", 
+            "md5": "ae7f131f66d139b5d76d8eff5e42f9e4", 
             "name": "wifiboost", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "2.1"
+            "version": "2.2"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 

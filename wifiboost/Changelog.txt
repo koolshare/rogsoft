@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+2.2
+   - update	因360浏览器/IE浏览器使用wifi boost有兼容性问题，所以禁用这两款浏览器，建议使用谷歌chrome浏览器或者其它Chromium内核的浏览器；
+
 2.0 - 2.1
    - add	添加RT-AX86U/RT-AX82U高达定制固件的支持；
 
