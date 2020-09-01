@@ -1,0 +1,17 @@
+#!/bin/sh
+
+export KSROOT=/koolshare
+source $KSROOT/scripts/base.sh
+
+LAN_PORT=$(nvram get http_lanport)
+
+if [ "${LAN_PORT}" != "81" ];then
+	nvram set http_lanport=81
+	nvram commit
+	service restart_httpd
+fi
+
+exec /koolshare/bin/httpdb -p 80 -r 127.0.0.1:81 >/dev/null 2>&1
+
+# exec 2>&1
+# exec httpdb
