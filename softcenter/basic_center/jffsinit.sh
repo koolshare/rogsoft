@@ -44,4 +44,4 @@ if [ ! -f "/jffs/.koolshare/bin/skipd" -o "$COMP" == "1" ]; then
 fi
 
 # 运行软件中心
-sh /kooshare/bin/kscore.sh
+sh /koolshare/bin/kscore.sh
