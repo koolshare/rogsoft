@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+2.4
+   - update	todo
+
 2.3
    - update	现在点击boost，如果当前无线地区不是澳大利亚，会更改为澳大利亚地区，以减少重启次数；
    - update	现在点击boost，会检测【无线传输公平性】和【通用 Beamforming】两项配置，如果是开启的，则会将其关闭，以保证无线性能和增加功率后的效果；

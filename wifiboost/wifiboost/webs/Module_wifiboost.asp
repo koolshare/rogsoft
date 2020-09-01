@@ -11,16 +11,16 @@
 <link rel="stylesheet" type="text/css" href="index_style.css"/> 
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="css/element.css">
-<link rel="stylesheet" type="text/css" href="res/softcenter.css">
+<link rel="stylesheet" type="text/css" href="/res/softcenter.css">
 <link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
 <script type="text/javascript" src="/res/Browser.js"></script>
-<script src="/state.js"></script>
-<script src="/general.js"></script>
-<script language="JavaScript" type="text/javascript" src="/popup.js"></script>
-<script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
-<script src="/js/jquery.js"></script>
-<script src="/calendar/jquery-ui.js"></script> 
 <script type="text/javascript" src="/res/softcenter.js"></script>
+<script type="text/javascript" src="/state.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
+<script type="text/javascript" src="/general.js"></script>
+<script type="text/javascript" src="/popup.js"></script>
+<script src="/calendar/jquery-ui.js"></script> 
 <style>
 .wifiboost_btn {
 	border: none;
@@ -263,6 +263,10 @@ function register_event(){
 		var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
 		var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		var current_maxp58 = '<% nvram_get("3:maxp5gb0a0"); %>';
+	}else if(odm == "RT-AX95Q"){
+		var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+		var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
 	}else if(odm == "RT-AX88U"){
 		var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
 		var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
@@ -314,7 +318,7 @@ function register_event(){
 }
 
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -481,13 +485,13 @@ function get_wl_status(){
 			}else{
 				E("wifiboost_wl_ver_tr").style.display = "none";
 			}
-			setTimeout("get_wl_status();", 2000);
+			setTimeout("get_wl_status();", 8000);
 		}
 	});
 }
 function boost_now(action){
 	var dbus_new = {};
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
@@ -866,8 +870,10 @@ function verifyFields(r) {
 														var FWVER = '<% nvram_get("extendno"); %>';
 														if (FWVER.indexOf('koolshare') != -1){
 															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
-														}else{
+														}else if(FWVER == "0"){
 															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "&nbsp;&nbsp;梅林改版固件");
+														}else{
+															$("#wifiboost_ver").html(MODEL + "&nbsp;&nbsp;" + "<% nvram_get("firmver"); %>" + "." + BUILD + "_" + FWVER + "&nbsp;&nbsp;华硕官方固件");
 														}
 													</script>
 												</tr>

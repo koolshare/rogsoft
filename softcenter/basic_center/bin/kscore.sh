@@ -24,8 +24,8 @@ P2=$(pidof skipd)
 #fi
 
 if [ -n "${P1}" -a -n "${P2}" ];then
-	echo "插件底层程序已经启动！"
+	echo "【basic_center】: 已经成功启动！"
 else
-	echo "启动插件底层程序！"
+	echo "【basic_center】: 开始启动！"
 	/koolshare/bin/start-stop-daemon -S -q -b -x /koolshare/bin/ks-bcm-start.sh -- start
 fi
