@@ -23,12 +23,16 @@ ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver)
 COMP=$(/rom/etc/koolshare/bin/versioncmp $CUR_VERSION $ROM_VERSION)
 
 if [ ! -f "/jffs/.koolshare/bin/skipd" -o "$COMP" == "1" ]; then
-	# make folder for basioc center
+	# make folder for basic center
 	mkdir -p /jffs/.koolshare
+	mkdir -p /jffs/.koolshare/bin
+	mkdir -p /jffs/.koolshare/scripts
+	mkdir -p /jffs/.koolshare/init.d
+	mkdir -p /jffs/.koolshare/res/
 	mkdir -p /jffs/.koolshare/configs/
 
 	# copy files form /rom to /jffs
-	#cp -rf /rom/etc/koolshare/* /jffs/.koolshare/
+	# cp -rf /rom/etc/koolshare/* /jffs/.koolshare/
 	cp -rf /rom/etc/koolshare/bin/* /jffs/.koolshare/bin/
 	cp -rf /rom/etc/koolshare/init.d/* /jffs/.koolshare/init.d/
 	cp -rf /rom/etc/koolshare/res/* /jffs/.koolshare/res/

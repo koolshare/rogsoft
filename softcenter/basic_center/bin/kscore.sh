@@ -1,5 +1,6 @@
 #!/bin/sh
 
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 JFFS=$(mount|grep /jffs)
 echo ${JFFS} >> /tmp/jffs_mount_status.txt
 
@@ -24,8 +25,9 @@ P2=$(pidof skipd)
 #fi
 
 if [ -n "${P1}" -a -n "${P2}" ];then
-	echo "【basic_center】: 已经成功启动！"
+	continue
+	#echo_date "【basic_center】已经成功启动！"
 else
-	echo "【basic_center】: 开始启动！"
+	echo_date "【basic_center】开始启动！"
 	/koolshare/bin/start-stop-daemon -S -q -b -x /koolshare/bin/ks-bcm-start.sh -- start
 fi
