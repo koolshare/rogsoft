@@ -205,6 +205,7 @@ var params_chk = ['wifiboost_boost_24', 'wifiboost_boost_52', 'wifiboost_boost_5
 var params_inp = ['wifiboost_key'];
 var boost_dbm;
 var x = 6;
+var asus = 0;
 function init() {
 	show_menu(menu_hook);
 	detect_brower();
@@ -224,6 +225,20 @@ function detect_brower() {
 			$("#warn_msg_1").show();
 			return false;
 		}
+	}
+	var current_url = window.location.href;
+	var net_address = current_url.split("/Module")[0];
+	var port = net_address.split(":")[2];
+	//console.log(port);
+	if(port && port != "80" && asus == "1"){
+		$("#wifiboost_main").hide();
+		$("#wifiboost_apply_1").hide();
+		$("#wifiboost_apply_2").hide();
+		$("#wifiboost_apply_3").hide();
+		$(".SimpleNote").hide();
+		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
+		$("#warn_msg_1").show();
+		return false;
 	}
 	write_location();
 	show_hide_elem();
@@ -259,23 +274,30 @@ function try_activate(){
 }
 
 function register_event(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U"){
-		var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
-		var current_maxp58 = '<% nvram_get("3:maxp5gb0a0"); %>';
-	}else if(odm == "RT-AX95Q"){
-		var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
-		var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
-	}else if(odm == "RT-AX88U"){
-		var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
-	}else{
-		// RT-AC86U, RT-AX82U, RT-AX86U, TUF-AX3000
-		var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
-	}
 
+	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q"){
+		// three wifi router
+		if(!current_maxp24_tmp){
+			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
+			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+			var current_maxp58 = '<% nvram_get("3:maxp5gb0a0"); %>';
+		}else{
+			var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
+			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+			var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
+		}
+	}else{
+		// two wifi router
+		if(!current_maxp24_tmp){
+			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
+			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+		}else{
+			var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
+			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+		}
+	}
+		
 	if(E("wifiboost_boost_24").checked == true){
 		var maxp = current_maxp24;
 	}else{
