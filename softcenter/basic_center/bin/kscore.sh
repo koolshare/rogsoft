@@ -2,7 +2,6 @@
 
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 
-LINE=$(cat /tmp/jffs_mount_status.txt|wc -l)
 P1=$(pidof httpdb)
 P2=$(pidof skipd)
 
