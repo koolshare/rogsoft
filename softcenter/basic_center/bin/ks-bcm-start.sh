@@ -4,27 +4,6 @@ export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 ACTION=$1
 
-logger "【basic_center】: 检测jffs分区挂载情况！"
-detect_jffs(){
-	i=120
-	JFFS=$(mount|grep /jffs)
-	until [ -n "${JFFS}" ]
-	do
-		i=$(($i-1))
-		    JFFS=$(mount|grep /jffs)
-		if [ "$i" -lt 1 ];then
-		    logger "【basic_center】: 错误，jffs分区未能成功挂载！"
-		    exit
-		fi
-		sleep 1
-	done
-	logger "【basic_center】: jffs分区已经成功挂载！"
-}
-
-detect_jffs
-mkdir -p /tmp/upload
-
-
 if [ $# -lt 1 ]; then
     printf "Usage: $0 {start|stop|restart|reconfigure|check|kill}\n" >&2
     exit 1
