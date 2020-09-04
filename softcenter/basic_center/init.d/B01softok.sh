@@ -36,8 +36,8 @@ detect_httpdb(){
 
 start(){
 	sh /koolshare/perp/perp.sh
-	detect_skipd
-	detect_httpdb
+	#detect_skipd
+	#detect_httpdb
 }
 
 start
