@@ -1,7 +1,6 @@
 #!/bin/sh
 
-export KSROOT=/koolshare
-source $KSROOT/scripts/base.sh
+source /koolshare/scripts/base.sh
 ACTION=$1
 
 if [ $# -lt 1 ]; then
