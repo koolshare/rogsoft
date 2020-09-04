@@ -62,6 +62,7 @@
 }
 </style>
 <script>
+var asus = 0;
 var cpu_info_old = new Array();
 var core_num = '<%cpu_core_num();%>';
 var cpu_usage_array = new Array();
@@ -86,6 +87,18 @@ var params_inp = ['rog_fan_level'];
 
 function init() {
 	show_menu(menu_hook);
+	var current_url = window.location.href;
+	var net_address = current_url.split("/Module")[0];
+	var port = net_address.split(":")[2];
+	//console.log(port);
+	if(port && port != "80" && asus == "1"){
+		$("#rog_main").hide();
+		$("#msg2").hide();
+		$(".SimpleNote").hide();
+		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
+		$("#warn_msg_1").show();
+		return false;
+	}
 	detect_CPU_RAM();
 	get_temperature();
 	showbootTime();
@@ -479,7 +492,7 @@ function menu_hook(title, tab) {
 											<div class="SimpleNote">
 												<li>ROG 工具箱是软件中心的一个辅助工具，用以实现一些简单的功能的工具箱。</li>
 											</div>
-											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
+											<table id="rog_main" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<thead>
 													<tr>
 														<td colspan="2">ROG 工具箱设置</td>
@@ -577,6 +590,7 @@ function menu_hook(title, tab) {
 											<!--<div class="apply_gen">
 												<input class="button_gen" id="cmdBtn" onClick="save();" type="button" value="提交" />
 											</div>-->
+											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<li id="msg1">本插件支持温度显示等一些简单功能，用以弥补官改固件没有温度显示的遗憾。</li>
