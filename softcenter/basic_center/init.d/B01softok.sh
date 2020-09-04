@@ -35,14 +35,9 @@ detect_httpdb(){
 }
 
 start(){
-	if [ "$(nvram get http_lanport)" != "81" ];then
-		nvram set http_lanport=81
-		nvram commit
-		service restart_httpd
-	fi
 	sh /koolshare/perp/perp.sh
-	#detect_skipd
-	#detect_httpdb
+	detect_skipd
+	detect_httpdb
 }
 
 start
