@@ -114,6 +114,8 @@ function init() {
 		$("#log_content").hide();
 		$("#cfetool_main").hide();
 		$("#message").hide();
+		$(".apply_gen").hide();
+		$("#spl").show();
 		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
 		$("#warn_msg_1").show();
 		return false;
@@ -447,7 +449,6 @@ function pop_help() {
 												<input class="button_gen" id="cfetool_apply_2" onClick="cfeit(2)" type="button" value="一键改国行" style="display: none;"/>
 												<input class="button_gen" id="cfetool_apply_3" onClick="cfeit(3)" type="button" value="恢复原始CFE" style="display: none;"/>
 											</div>
-											<div id="warning" style="font-size:14px;margin:20px auto;"></div>
 											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;display: none;" class="splitLine" id="spl"></div>
 											<div class="SimpleNote" id="message" style="display: none;">
