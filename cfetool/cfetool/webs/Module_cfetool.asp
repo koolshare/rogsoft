@@ -102,8 +102,22 @@ body .layui-layer-lan .layui-layer-btn {text-align:center}
 </style>
 <script>
 var params_inp = ['cfetool_key'];
+var asus = 0;
 function init() {
 	show_menu(menu_hook);
+	var current_url = window.location.href;
+	var net_address = current_url.split("/Module")[0];
+	var port = net_address.split(":")[2];
+	//console.log(port);
+	if(port && port != "80" && asus == "1"){
+		$("#head_note").hide();
+		$("#log_content").hide();
+		$("#cfetool_main").hide();
+		$("#message").hide();
+		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
+		$("#warn_msg_1").show();
+		return false;
+	}
 	get_dbus_data();
 	get_log();
 	try_activate();
@@ -404,7 +418,7 @@ function pop_help() {
 												<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
-											<div>
+											<div id="head_note">
 												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。</span>
 											</div>
 											<div id="log_content">
@@ -434,6 +448,7 @@ function pop_help() {
 												<input class="button_gen" id="cfetool_apply_3" onClick="cfeit(3)" type="button" value="恢复原始CFE" style="display: none;"/>
 											</div>
 											<div id="warning" style="font-size:14px;margin:20px auto;"></div>
+											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;display: none;" class="splitLine" id="spl"></div>
 											<div class="SimpleNote" id="message" style="display: none;">
 												<li id="msg1">本插件通过修改底层CFE来实现修改路由器国家地区，须知修改CFE有风险，由此带来的风险请自行承担！</li>
