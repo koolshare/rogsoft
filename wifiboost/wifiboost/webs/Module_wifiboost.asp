@@ -442,32 +442,32 @@ function show_err_code() {
 	}
 	switch(err_code){
 		case "1":
-			err_mesg = '<span style="color: #CC3300">错误代码1：当前路由【RAX80】不支持wifiboost插件！</span>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码1：当前路由【RAX80】不支持wifiboost插件！</span><br/><br>';
 		break;
 		case "2":
-			err_mesg = '<span style="color: #CC3300">错误代码2：当前路由不支持wifiboost插件！请尝试重刷正确的固件后重试！！</span>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码2：当前路由不支持wifiboost插件！请尝试重刷正确的固件后重试！！</span><br/><br>';
 		break;
 		case "3":
-			err_mesg = '<span style="color: #CC3300">错误代码3：读取wlan硬件设备数量错误！请重启或重置路由器后重试！！<br/>可能是错误的nvram值导致的！请尝试重置路由器后重试！！</span>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码3：读取wlan硬件设备数量错误！请重启或重置路由器后重试！！<br/>可能是错误的nvram值导致的！请尝试重置路由器后重试！！</span><br/><br>';
 		break;
 		case "4":
-			err_mesg = '<span style="color: #CC3300">错误代码4：读取原厂wlan配置失败，重启或重置路由器后重试！！</span>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码4：读取原厂wlan配置失败，重启或重置路由器后重试！！</span><br/><br>';
 		break;
 		case "5":
-			err_mesg = '<span style="color: #CC3300">错误代码5：读取原厂wlan配置失败，重启或重置路由器后重试！！</span>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码5：读取原厂wlan配置失败，重启或重置路由器后重试！！</span><br/><br>';
 		break;
 		case "6":
-			err_mesg = '<span style="color: #CC3300">错误代码6：检测到你的路由器不是国行机器！！</span><br/><br/>非国行机器因无法选择澳大利亚区域从而使得插件无法发挥作用！！<br/>如果你需要将机器刷成国行，请<a style="color: #1678ff" href="https://rogsoft.ddnsto.com/cfetool/cfetool.tar.gz">下载并离线安装CFE工具箱。</a>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码6：检测到你的路由器不是国行机器！！</span><hr>非国行机器因【无线网络】-【专业设置】中没有澳大利亚区域选项，从而使得插件无法发挥作用！！<br/>如果你需要将机器刷成国行，可以使用【CFE工具箱】，即可将路由器改为国行！<br/><br/>CFE工具箱安装方法如下：<br/>1. 带软件中心的固件，请下载<a style="color: #1678ff" href="https://rogsoft.ddnsto.com/cfetool/cfetool.tar.gz">CFE工具箱离线安装包</a>后离线安装后<br/>2. 无软件中心的【华硕官方/梅林原版】固件请参考<a style="color: #1678ff" target="_blank" href="https://github.com/koolshare/rogsoft/tree/master/cfetool#cfe%E5%B7%A5%E5%85%B7%E7%AE%B1">CFE工具箱文档</a>进行安装！<br/><hr>';
 		break;
 		case "7":
-			err_mesg = '<span style="color: #CC3300">错误代码7：检测到你的路由器出厂配置有误！！</span>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码7：检测到你的路由器出厂配置有误！！</span><br/><br>';
 		break;
 	}
 	require(['/res/layer/layer.js'], function(layer) {
-		layer.alert('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/><br/>' + err_mesg + '<br/><br/>出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/><br/>点击确定将关闭此窗口，如果错误未解决，此窗口下次还会和你相见！', {
+		layer.alert('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/>' + err_mesg + '出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/>点击确定将关闭此窗口，如果错误未解决，此窗口下次还会和你相见！', {
 			time: 3e4,
 			shade: 0.8,
-			maxWidth: '600px'
+			maxWidth: '800px'
 		}, function(index) {
 			layer.close(index);
 			return false;
