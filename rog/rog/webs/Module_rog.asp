@@ -507,10 +507,12 @@ function menu_hook(title, tab) {
 														var FWVER = '<% nvram_get("extendno"); %>';
 														if (FWVER.indexOf('koolshare') != -1){
 															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
-														}else{
+														}else if(FWVER == "0"){
 															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "&nbsp;&nbsp;梅林改版固件");
+														}else{
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + "<% nvram_get("firmver"); %>" + "." + BUILD + "_" + FWVER + "&nbsp;&nbsp;华硕官方固件");
 														}
-													</script>
+													</script>													
 												</tr>
 												<tr>
 													<th>系统时间</th>

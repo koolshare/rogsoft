@@ -36,7 +36,7 @@ GT-AC5300|GT-AX11000)
 		
 		[ -n "${interface_5g2_power}" ] && interface_5g2_power_d="${interface_5g2_power} dBm" || interface_5g2_power_d="offline"
 		[ -n "${interface_5g2_power}" ] && interface_5g2_power_p="$(awk -v x=${interface_5g2_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g2_power_p="offline"
-		wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+		wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G-1：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
 	else
 		wl_txpwr=""
 	fi
