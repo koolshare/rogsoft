@@ -1,8 +1,73 @@
 ## CFE工具箱
 
 1. CFE工具箱可以检测如硬件版本，主板型号，生产日期，MAC地址，机器地区代码等。
+2. CFE工具箱可以修改路由器的地区代码，可以将比如`美版/欧版/日版/亚太版/澳洲版`等各种版本的机器改为`国行`。
 
-2. CFE工具箱可以修改路由器的地区代码，可以将比如美版/欧版/日版等各种版本的机器改为国行。
+## 安装方法
+
+### 1. 软件中心版本【CFE工具箱】
+
+如果你使用的是带软件中心的固件，如`koolshare 华硕官改固件`，`koolshare梅林改版固件`，你可以下载【CFE工具箱】离线安装包：[下载地址1（国内镜像）](https://rogsoft.ddnsto.com/cfetool/cfetool.tar.gz)，[下载地址2（Github镜像）](https://github.com/koolshare/rogsoft/blob/master/cfetool/cfetool.tar.gz)，然后在软件中心的离线安装标签页内进行离线安装。
+
+### 2. 一键脚本版本【CFE工具箱】
+
+如果你使用的固件没有软件中心，比如：`华硕官方固件`、`梅林原版固件`，你可以使用以下一键命令安装CFE工具箱，安装完成后CFE工具箱会出现在路由器后台的侧边栏中。
+
+   ```bash
+# 安装CFE工具箱
+curl -4sSL https://rogsoft.ddnsto.com/softcenter/ks_cfetool_setup.sh|sh
+
+# 卸载CFE工具箱
+/koolshare/bin/ks_cfetool_setup uninstall
+   ```
+
+## 机型支持
+
+### 1. 软件中心版本
+
+只要是华硕的以下机型，如果安装了支持koolshare软件中心的固件，均可以使用`软件中心版本`的`CFE工具箱`
+
+| 机型支持                                                  | 固件类型 | CPU/SOC | 平台       |
+| --------------------------------------------------------- | -------- | ------- | ---------- |
+| [RT-AC86U](http://koolshare.cn/thread-127878-1-1.html)    | ML改     | BCM4906 | hnd        |
+| [RT-AC86U](http://koolshare.cn/thread-139965-1-1.html)    | 官改     | BCM4906 | hnd        |
+| [GT-AC5300](http://koolshare.cn/thread-130902-1-1.html)   | 官改     | BCM4908 | hnd        |
+| [RT-AX88U](http://koolshare.cn/thread-158199-1-1.html)    | ML改     | BCM4908 | axhnd      |
+| [GT-AX11000](http://koolshare.cn/thread-159465-1-1.html)  | 官改     | BCM4908 | axhnd      |
+| [RT-AX86U](https://koolshare.cn/thread-181845-1-1.html)   | 官改     | BCM4908 | axhnd.675x |
+| [RT-AX82U](https://koolshare.cn/thread-xxxxxx-1-1.html)   | 官改     | BCM6750 | axhnd.675x |
+| [TUF-AX3000](https://koolshare.cn/thread-179968-1-1.html) | 官改     | BCM6750 | axhnd.675x |
+
+### 2. 一键脚本版本
+
+- 一键脚本版本的CFE工具箱仅支持`华硕官方固件`、`梅林原版固件`，不支持带软件中心的固件
+- 华硕官方固件不论是384还是386版本均支持
+| 机型支持                         | 固件类型                  | CPU/SOC | 平台       |
+| -------------------------------- | ------------------------- | ------- | ---------- |
+| RT-AC86U                         | 华硕官方固件/梅林原版固件 | BCM4906 | hnd        |
+| RT-AC2900                        | 华硕官方固件              | BCM4906 | hnd        |
+| GT-AC2900                        | 华硕官方固件              | BCM4906 | hnd        |
+| GT-AC5300                        | 华硕官方固件              | BCM4908 | hnd        |
+| GT-AX11000                       | 华硕官方固件              | BCM4908 | axhnd      |
+| RT-AX88U                         | 华硕官方固件/梅林原版固件 | BCM4908 | axhnd      |
+| RT-AX92U                         | 华硕官方固件              | BCM4906 | axhnd      |
+| RT-AX56U                         | 华硕官方固件/梅林原版固件 | BCM6755 | axhnd.675x |
+| RT-AX58U                         | 华硕官方固件/梅林原版固件 | BCM6750 | axhnd.675x |
+| RT-AX82U                         | 华硕官方固件              | BCM6750 | axhnd.675x |
+| RT-AX86U                         | 华硕官方固件              | BCM4908 | axhnd.675x |
+| RT-AX3000                        | 华硕官方固件/梅林原版固件 | BCM6750 | axhnd.675x |
+| TUF-AX3000                       | 华硕官方固件              | BCM6750 | axhnd.675x |
+| ZenWiFi AX/灵耀 AX6600M/RT-AX95Q | 华硕官方固件              | BCM6755 | axhnd.675x |
+
+### 3. 其它说明
+
+网件RAX80，虽然是axhnd机型，但是其梅林固件属于移植固件，并且其bootloader和cfe使用的网件的而不是华硕的，因此不支持CFE工具箱。
+
+老的ARMv7机型比如RT-AC68U、RT-AC88U、RT-AC5300等，目前暂不支持CFE工具箱，不过针对这些机型目前已经有现成的修改CFE教程教程：
+
+- SDK4708，适用于RT-AC68U: https://koolshare.cn/thread-3557-1-1.html
+
+- SDK7/SDK7114，适用于RT-AC88U、RT-AC3100、RT-AC5300: https://koolshare.cn/thread-175962-1-1.html。
 
 ## 注意事项
 
