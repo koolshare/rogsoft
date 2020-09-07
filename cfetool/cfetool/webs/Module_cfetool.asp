@@ -26,6 +26,7 @@
 .cfetool_btn {
 	border: none;
 	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -38,6 +39,7 @@
 .cfetool_btn:hover {
 	border: none;
 	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
 }
 .FormTable th{
 	width:16%;
@@ -74,7 +76,6 @@ input[type=checkbox]{
 	display:block;
 	overflow:hidden;
 	outline: 1px solid #222;
-	outline: 1px solid #91071f; /* rogcss */
 }
 #log_content_text{
 	width:97%;
@@ -91,15 +92,62 @@ input[type=checkbox]{
 	margin-top:1px;
 	border:0px solid #222;
 	background:#475A5F;
-	background:transparent; /* rogcss */
 }
+body .layui-layer-lan .layui-layer-btn0 {border-color:#22ab39; background-color:#22ab39;color:#fff; background:#22ab39}
+body .layui-layer-lan .layui-layer-btn .layui-layer-btn1 {border-color:#1678ff; background-color:#1678ff;color:#fff;}
+body .layui-layer-lan .layui-layer-btn2 {border-color:#FF6600; background-color:#FF6600;color:#fff;}
+body .layui-layer-lan .layui-layer-title {background: #1678ff;}
+body .layui-layer-lan .layui-layer-btn a{margin:8px 8px 0;padding:5px 18px;}
+body .layui-layer-lan .layui-layer-btn {text-align:center}
 </style>
 <script>
 var params_inp = ['cfetool_key'];
+var asus = 0;
 function init() {
 	show_menu(menu_hook);
+	var current_url = window.location.href;
+	var net_address = current_url.split("/Module")[0];
+	var port = net_address.split(":")[2];
+	//console.log(port);
+	if(port && port != "80" && asus == "1"){
+		$("#head_note").hide();
+		$("#log_content").hide();
+		$("#cfetool_main").hide();
+		$("#message").hide();
+		$(".apply_gen").hide();
+		$("#spl").show();
+		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
+		$("#warn_msg_1").show();
+		return false;
+	}
 	get_dbus_data();
 	get_log();
+	try_activate();
+}
+function getQueryVariable(variable){
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+			if(vars[i].indexOf("key") != -1){
+				var key_value = vars[i].split("key=")[1];
+				return key_value;
+			}
+	}
+	return(false);
+}
+
+function try_activate(){
+	var key = getQueryVariable("key");
+	if(key){
+		if(!$("#cfetool_key").val()){
+			console.log("有激活码: ", key)
+			$("#cfetool_key").val(key);
+			cfeit(4);
+		}else{
+			//已经激活了，跳转
+			location.href = "/Module_cfetool.asp"
+		}
+	}
 }
 function get_dbus_data(){
 	$.ajax({
@@ -230,9 +278,42 @@ function menu_hook(title, tab) {
 function close_buy(){
 	$("#qrcode_show").fadeOut(300);
 }
-function open_buy(){
-	$("#qrcode_show").css("margin-top", "-50px");
-	$("#qrcode_show").fadeIn(300);
+function open_buy() {
+	var current_url = window.location.href;
+	net_address = current_url.split("/Module")[0];
+	
+	note = "<h2><font color='#FF6600'>【CFE工具箱】修改国行需要付费，价格为40元人民币。</font></h2>"
+	note += "<hr>"
+	note += "<h3>建议选择 <font color='#22ab39'>微信支付</font> / <font color='#1678ff'>支付宝</font> 购买，可以即时激活【CFE工具箱】！</h2>"
+	note += "<li>建议在PC上使用chrome浏览器进行购买、激活操作，以免出现未知问题；</li>"
+	note += "<li>扫码支付后，会立即跳转到激活码发放页面，根据页面提示即可激活插件；</li>"
+	note += "<li>如遇到无法支付、无法获得激活码等问题，可以联系下方客服邮箱解决。</li>"
+	note += "<h4 style='text-align:right'>客服邮箱：<a style='color:#22ab39;' href='mailto:mjy211@gmail.com?subject=【CFE工具箱】咨询&body=这是邮件的内容'>mjy211@gmail.com</a></h4>"
+	require(['/res/layer/layer.js'], function(layer) {
+		layer.open({
+			type: 0,
+			skin: 'layui-layer-lan',
+			shade: 0.8,
+			title: '请选择【CFE工具箱】购买方式！',
+			time: 0,
+			area: '580px',
+			offset: '250px',
+			btnAlign: 'c',
+			maxmin: true,
+			content: note,
+			btn: ['微信支付', '支付宝', '人工邮件购买'],
+			btn1: function() {
+				location.href = "http://47.108.206.248:8083/pay_cfe.php?paytype=1&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+			},
+			btn2: function() {
+				location.href = "http://47.108.206.248:8083/pay_cfe.php?paytype=2&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+			},
+			btn3: function() {
+				$("#qrcode_show").css("margin-top", "-50px");
+				$("#qrcode_show").fadeIn(300);
+			},
+		});
+	});
 }
 function close_info(){
 	$("#activated_info").fadeOut(300);
@@ -242,13 +323,14 @@ function open_info(){
 	$("#activated_info").fadeIn(300);
 }
 function pop_help() {
-	close_buy();
+	$("#qrcode_show").fadeOut(300);
 	require(['/res/layer/layer.js'], function(layer) {
 		layer.open({
 			type: 1,
 			title: false,
 			closeBtn: false,
 			area: '600px;',
+			offset: '250px',
 			shade: 0.8,
 			shadeClose: 1,
 			scrollbar: false,
@@ -266,7 +348,8 @@ function pop_help() {
 				CFE工具箱的激活码为一机一码，一次激活终身使用。<br>\
 				</div>',
 			yes: function(index, layero){
-				open_buy();
+				$("#qrcode_show").css("margin-top", "-50px");
+				$("#qrcode_show").fadeIn(300);
 				layer.close(index);
 			}
 		});
@@ -303,10 +386,10 @@ function pop_help() {
 													<img style="height:285px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/sadog.png"/>
 												</div>
 												<div style="margin-top:5px;margin-left:4%;width:96%;text-align:left;">
-													<div id="info0" style="font-size:16px;color:#000;"><i>激活码获取:</i></div>
-													<div id="info1" style="font-size:12px;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;1.扫描上方其中一个二维码，付款40元人民币，即可购买【CFE工具箱】激活码。</div>
+													<div id="info0" style="font-size:16px;color:#000;"><i>【CFE工具箱】人工邮件购买流程：</i></div>
+													<div id="info1" style="font-size:12px;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;1.扫描上方其中一个二维码，付款40元人民币。</div>
 													<div id="info2" style="font-size:12px;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;2.复制下面文本框内容，替换xxx为<a type="button" href="javascript:void(0);" style="cursor: pointer;color:#FF3300;" onclick="pop_help();"><u>支付订单号</u></a>，发送邮件到：<a id="cfetool_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=CFE工具箱插件购买&body=这是邮件的内容">mjy211@gmail.com</a></div>
-													<div id="info3" style="font-size:12px;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;3.目前订单处理为人工，激活码会在一个工作日左右发送到你的邮箱，请耐心等待。</div>
+													<div id="info3" style="font-size:12px;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;3.此方式购买订单为人工处理，激活码会在一个工作日左右发送到你的邮箱，请耐心等待。</div>
 												</div>
 												<div style="margin-top:5px;padding-bottom:10px;margin-left:4%;width:95%;text-align:left;">
 													<textarea name="test" id="cfetool_info" rows="3" cols="50" style="border:1px solid #000;width:96%;font-family:'Lucida Console';font-size:12px;background:transparent;color:#000;outline:none;resize:none;padding-top: 5px;">订单号：xxxx&#10;机器码：xxxxx</textarea>
@@ -337,7 +420,7 @@ function pop_help() {
 												<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
-											<div>
+											<div id="head_note">
 												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。</span>
 											</div>
 											<div id="log_content">
@@ -366,7 +449,7 @@ function pop_help() {
 												<input class="button_gen" id="cfetool_apply_2" onClick="cfeit(2)" type="button" value="一键改国行" style="display: none;"/>
 												<input class="button_gen" id="cfetool_apply_3" onClick="cfeit(3)" type="button" value="恢复原始CFE" style="display: none;"/>
 											</div>
-											<div id="warning" style="font-size:14px;margin:20px auto;"></div>
+											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;display: none;" class="splitLine" id="spl"></div>
 											<div class="SimpleNote" id="message" style="display: none;">
 												<li id="msg1">本插件通过修改底层CFE来实现修改路由器国家地区，须知修改CFE有风险，由此带来的风险请自行承担！</li>
