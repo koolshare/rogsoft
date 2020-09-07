@@ -20,7 +20,7 @@ clang_action="$1"
 if [[ "${clang_action}" == "task" ]]; then
     if [[ "${pushplus_info_silent_send}" == "0" ]]; then
         if [[ "${pushplus_silent_time}" == "1" ]]; then
-            router_now_hour=$(date "+%H")
+            router_now_hour=$(TZ=UTC-8 date "+%H")
             if [[ "${router_now_hour}" -ge "${pushplus_silent_time_start_hour}" ]] || [[ "${router_now_hour}" -lt "${pushplus_silent_time_end_hour}" ]]; then
                 [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 推送时间在消息免打扰时间内，推送任务通道静默！"
                 exit

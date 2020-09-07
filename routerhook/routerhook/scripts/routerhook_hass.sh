@@ -18,7 +18,7 @@ clang_action="$1"
 if [[ "${clang_action}" == "task" ]]; then
     if [[ "${routerhook_info_silent_send}" == "0" ]]; then
         if [[ "${routerhook_silent_time}" == "1" ]]; then
-            router_now_hour=$(date "+%H")
+            router_now_hour=$(TZ=UTC-8 date "+%H")
             if [[ "${router_now_hour}" -ge "${routerhook_silent_time_start_hour}" ]] || [[ "${router_now_hour}" -lt "${routerhook_silent_time_end_hour}" ]]; then
                 [ "${routerhook_info_logger}" == "1" ] && logger "[routerhook]: 推送时间在消息免打扰时间内，推送任务通道静默！"
                 exit

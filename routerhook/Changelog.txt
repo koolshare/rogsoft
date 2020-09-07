@@ -1,5 +1,8 @@
 Koolshare hnd/axhnd router software center routerhook Changelog
 ===========================================
+1.3
+   - fix 修复免打扰时间的时区异常问题
+
 1.2
    - fix 修复请求https://ip.sb时由于证书过期导致无法获取IP的问题
    - feat 增加公网IP开关，可选择关闭获取公网IP

@@ -1,5 +1,8 @@
 Koolshare hnd/axhnd router software center pushplus Changelog
 ===========================================
+0.4
+   - fixed the silent hour`s timezone to UTC-8
+
 0.3
    - add switch for public ip
    - fix SSL invalided
