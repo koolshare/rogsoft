@@ -1,0 +1,55 @@
+# serverless.yaml
+# 配置文件，详见：https://cloud.tencent.com/document/product/1154/39271
+
+component: scf # (必填) 引用 component 的名称，当前用到的是 tencent-scf 组件
+name: RouterHookDemo # (必填) 该组件创建的实例名称
+
+org: RouterHook # (可选) 用于记录组织信息，默认值为您的腾讯云账户 appid
+app: RouterHook # (可选) 该 SCF 应用名称
+stage: dev # (可选) 用于区分环境信息，默认值是 dev
+
+inputs:
+  name: ${name} # 云函数SCF的名称，默认同项目name（如有需要请更改项目name）
+  src:
+    src: ./
+    exclude: # 忽略目录
+      - "res/**"
+      - "README.md"
+      - ".env"
+      - "package-lock.json"
+  description: RouterHook服务端Demo
+  handler: index.main_handler
+  runtime: Nodejs12.16
+  namespace: default
+  region: ${env:REGION}
+  memorySize: 64
+  timeout: 3
+  vpcConfig: # 私有网络VPC配置
+    vpcId: ${env:VPCID}
+    subnetId: ${env:SUBNETID}
+  cfs: # cfs文件存储配置
+    - cfsId: ${env:CFSID}
+      mountInsId: ${env:CFSID}
+      localMountDir: /mnt/
+      remoteMountDir: /
+  events:
+    - apigw:
+        parameters:
+          protocols:
+            - http
+            - https
+          netTypes:
+            - OUTER
+          description: The service of Serverless Framework
+          environment: release
+          endpoints:
+            - path: /routerhook
+              method: POST
+              description: RouterHook回调插件接口
+              param:
+                - name: basicAuth
+                  position: HEADER
+                  required: TRUE
+                  type: string
+                  defaultValue: IAmTrump
+                  desc: 在Header中固定一个字符串用于简单校验
