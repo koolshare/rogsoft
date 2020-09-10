@@ -557,7 +557,7 @@ function boost_now(action){
 	for (var i = 0; i < params_inp.length; i++) {
 		dbus_new[params_inp[i]] = E(params_inp[i]).value;
 	}
-	if(odm != "GT-AC5300" && odm != "GT-AX11000"){
+	if(odm != "GT-AC5300" && odm != "GT-AX11000" && odm != "RT-AX92U" && odm != "RT-AX95Q"){
 		dbus_new["wifiboost_boost_58"] = "0";
 	}
 	// boost_dbm
