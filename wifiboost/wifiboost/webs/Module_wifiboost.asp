@@ -294,7 +294,7 @@ function register_event(){
 			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		}else{
 			var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
-			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 		}
 	}
 		

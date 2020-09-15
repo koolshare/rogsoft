@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+2.6
+   - fix	修复部分机型，比如RT-AX82U单独勾选5G的时候，功率条不显示当前5G功率的问题。
+
 2.5
    - fix	修复RT-AX92U和ZenWiFi AX两款机型，5G2勾选后boost，日志显示未勾选的问题。
 
