@@ -4,21 +4,26 @@
 
 ## 机型支持
 
-| 机型/固件下载                                                | 类型   | CPU/SOC | 平台       | CPU     | 架构  | 内核   | 皮肤        |
-| ------------------------------------------------------------ | ------ | ------- | ---------- | ------- | ----- | ------ | ----------- |
-| [RT-AC86U](http://koolshare.cn/thread-127878-1-1.html)       | 梅林改 | BCM4906 | hnd        | BCM4906 | ARMV8 | 4.1.27 | asuswrt     |
-| [RT-AX88U](http://koolshare.cn/thread-158199-1-1.html)       | 梅林改 | BCM4908 | axhnd      | BCM4908 | ARMV8 | 4.1.51 | asuswrt     |
-| [NETGEAR RAX80](https://koolshare.cn/thread-177255-1-1.html) | 梅林改 | BCM4908 | axhnd      | BCM4908 | ARMV8 | 4.1.51 | asuswrt     |
-| [RT-AC86U](http://koolshare.cn/thread-139965-1-1.html)       | 官改   | BCM4906 | hnd        | BCM4906 | ARMV8 | 4.1.27 | rog  (红色) |
-| [GT-AC5300](http://koolshare.cn/thread-130902-1-1.html)      | 官改   | BCM4908 | hnd        | BCM4908 | ARMV8 | 4.1.27 | rog  (红色) |
-| [GT-AX11000](http://koolshare.cn/thread-159465-1-1.html)     | 官改   | BCM4908 | axhnd      | BCM4908 | ARMV8 | 4.1.51 | rog  (红色) |
-| [TUF-AX3000](https://koolshare.cn/thread-179968-1-1.html)    | 官改   | BCM6750 | axhnd.675x | BCM6750 | ARMV7 | 4.1.52 | tuf（橙色） |
-| [RT-AX86U](https://koolshare.cn/thread-181845-1-1.html)      | 官改   | BCM4908 | axhnd.675x | BCM4908 | ARMV8 | 4.1.52 | asuswrt     |
-| [RT-AX82U](https://koolshare.cn/thread-xxxxxx-1-1.html)      | 官改   | BCM6750 | axhnd.675x | BCM6750 | ARMV7 | 4.1.52 | asuswrt     |
+| 机型/固件下载                                                | 类型     | CPU/SOC | 平台       | 架构  | 内核   | 皮肤               |
+| ------------------------------------------------------------ | -------- | ------- | ---------- | ----- | ------ | ------------------ |
+| [RT-AC86U](http://koolshare.cn/thread-127878-1-1.html)       | ks梅林改 | BCM4906 | hnd        | ARMV8 | 4.1.27 | asuswrt            |
+| [RT-AX88U](http://koolshare.cn/thread-158199-1-1.html)       | ks梅林改 | BCM4908 | axhnd      | ARMV8 | 4.1.51 | asuswrt            |
+| [NETGEAR RAX80](https://koolshare.cn/thread-177255-1-1.html) | ks梅林改 | BCM4908 | axhnd      | ARMV8 | 4.1.51 | asuswrt            |
+| [GT-AX11000](http://koolshare.cn/thread-159465-1-1.html)     | ks官改   | BCM4908 | axhnd      | ARMV8 | 4.1.51 | rog  (红色)        |
+| [RT-AC86U](http://koolshare.cn/thread-139965-1-1.html)       | ks官改   | BCM4906 | hnd        | ARMV8 | 4.1.27 | rog  (红色)**[1]** |
+| [GT-AC5300](http://koolshare.cn/thread-130902-1-1.html)      | ks官改   | BCM4908 | hnd        | ARMV8 | 4.1.27 | rog  (红色)        |
+| [RT-AX86U/RT-AX86U高达版](https://koolshare.cn/thread-181845-1-1.html) | ks官改   | BCM4908 | axhnd.675x | ARMV8 | 4.1.52 | asuswrt            |
+| [TUF-AX3000](https://koolshare.cn/thread-179968-1-1.html)    | ks官改   | BCM6750 | axhnd.675x | ARMV7 | 4.1.52 | tuf（橙色）        |
+| [RT-AX82U/RT-AX82U高达版](https://koolshare.cn/thread-xxxxxx-1-1.html) | ks官改   | BCM6750 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
+| [ZenWiFi AX/灵耀 AX6600M/RT-AX95Q](https://koolshare.cn/thread-187704-1-1.html) | ks官改   | BCM6755 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
 
-- 点击表格中的机型可以前往对应机型的koolshare固件下载。
-
-- rogsfot软件中心支持的新机型支持将不断添加，请关注本项目。
+- 点击表格中的机型可以前往对应机型的koolshare固件下载；
+- ks梅林改代表koolshare开发组发布的梅林改版固件；
+- ks官改代表koolshare开发组发布的官方固件改版固件；
+- rogsfot软件中心支持的新机型支持将不断添加，请关注本项目；
+- RT-AX86U、RT-AX82U的高达使用的固件和和其非高达版的固件/软件中心都是一样的；
+- ZenWiFi AX/灵耀 AX6600M/RT-AX95Q 这三个名字代表的是一个机型。
+- **[1]**：RT-AC86U从384_81918_koolshare固件版本开始，使用的是asuswrt风格ui，而不是rog风格。
 
 ## 用户须知
 
