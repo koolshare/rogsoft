@@ -13,7 +13,7 @@ cpu_temperature="CPU：$(awk 'BEGIN{printf "%.1f\n",('$cpu_temperature_origin'/'
 
 #网卡温度
 case "$model" in
-GT-AC5300|GT-AX11000)
+GT-AC5300|GT-AX11000|RT-AX95Q)
 	interface_2g=$(nvram get wl0_ifname)
 	interface_5g1=$(nvram get wl1_ifname)
 	interface_5g2=$(nvram get wl2_ifname)
