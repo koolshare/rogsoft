@@ -486,6 +486,8 @@ function init(cb) {
 				return result;
 			}
 		//将本地和远程进行一次对比合并
+		var usb_apps = ["aria2", "swap", "usb2jffs", "easyexplorer", "linkease"];
+		var ro_model = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
 		function _mergeData(remoteData) {
 			var result = {};
 			var localData = _formatLocalData(db_softcenter_);
@@ -493,8 +495,16 @@ function init(cb) {
 				var name = app.name;
 				var oldApp = localData[name] || {};
 				var install = (parseInt(oldApp.install, 10) === 1 && app.version !== oldApp.version) ? 2 : oldApp.install || "0";
-				result[name] = $.extend(oldApp, app);
-				result[name].install = install;
+				if(ro_model == "ZenWiFi_XD4"){
+					var usb_app = usb_apps.includes(name);
+					if(usb_app == false){
+						result[name] = $.extend(oldApp, app);
+						result[name].install = install;
+					}
+				}else{
+					result[name] = $.extend(oldApp, app);
+					result[name].install = install;
+				}
 			});
 			$.map(localData, function(app, name) {
 				if (!result[name]) {
