@@ -4,4 +4,4 @@ export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 
 cd /koolshare/bin
-exec skipd >/dev/null 2>&1
+exec skipd -d /jffs/ksdb >/dev/null 2>&1
