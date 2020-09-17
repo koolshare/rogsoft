@@ -16,13 +16,15 @@
 | [TUF-AX3000](https://koolshare.cn/thread-179968-1-1.html)    | ks官改   | BCM6750 | axhnd.675x | ARMV7 | 4.1.52 | tuf（橙色）        |
 | [RT-AX82U/RT-AX82U高达版](https://koolshare.cn/thread-xxxxxx-1-1.html) | ks官改   | BCM6750 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
 | [ZenWiFi AX/灵耀 AX6600M/RT-AX95Q](https://koolshare.cn/thread-187704-1-1.html) | ks官改   | BCM6755 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
+| [ZenWiFi_XD4/灵耀AX魔方/RT-AX56_XD4](https://koolshare.cn/thread-187744-1-1.html) | ks官改   | BCM6755 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
 
 - 点击表格中的机型可以前往对应机型的koolshare固件下载；
 - ks梅林改代表koolshare开发组发布的梅林改版固件；
 - ks官改代表koolshare开发组发布的官方固件改版固件；
 - rogsfot软件中心支持的新机型支持将不断添加，请关注本项目；
 - RT-AX86U、RT-AX82U的高达使用的固件和和其非高达版的固件/软件中心都是一样的；
-- ZenWiFi AX/灵耀 AX6600M/RT-AX95Q 这三个名字代表的是一个机型。
+- ZenWiFi AX/灵耀 AX6600M/RT-AX95Q 这三个名字代表的是一个机型；
+- ZenWiFi_XD4/灵耀AX魔方/RT-AX56_XD4 这三个名字代表的是一个机型；
 - **[1]**：RT-AC86U从384_81918_koolshare固件版本开始，使用的是asuswrt风格ui，而不是rog风格。
 
 ## 用户须知
