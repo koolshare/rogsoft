@@ -1,9 +1,9 @@
 {
 "version":"1.9",
-"md5":"ee6b2c31be8473d6e21c20d163991a8b",
+"md5":"e15b75aafc5dfad88e3f9fbae926956a",
 "home_url":"Module_softether.asp",
 "title":"SoftEther_VPN_Server",
 "description":"VPN全家桶, ver 4.29 build 9680",
 "changelog":"",
-"build_date":"2020-09-16_10:10:06"
+"build_date":"2020-09-17_10:40:58"
 }
