@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
 ===========================================
+1.7
+   - add	添加华硕ZenWiFi系列机型支持；
+
 1.6
    - add	添加RT-AX86U/RT-AX82U高达定制固件的支持；
 
