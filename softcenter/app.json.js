@@ -254,11 +254,11 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-09-21_19:57:22", 
+            "build_date": "2020-09-21_19:58:36", 
             "changelog": "", 
             "description": "wifi boost 路由器功率增强，强过澳大利亚", 
             "home_url": "Module_wifiboost.asp", 
-            "md5": "8894df6363eb92eed87abf28c95c99c2", 
+            "md5": "7dced66796d5a7304fce37db1722b6d9", 
             "name": "wifiboost", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
