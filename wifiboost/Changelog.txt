@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+2.8
+   - fix	修复部分机型因升级到386-RC2测试固件后，因生成了错误的机器码而无法购买的问题；
+
 2.7
    - fix	添加ZenWiFi_XD4支持；
 
