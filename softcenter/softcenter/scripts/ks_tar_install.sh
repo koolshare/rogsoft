@@ -94,9 +94,9 @@ install_tar(){
 			detect_package "${MODULE_NAME}"
 			
 			# 检查下安装包是否是hnd的
-			if [ -f "${SCRIPT_AB_DIR}/.valid" ] && -n [ "$(grep hnd ${SCRIPT_AB_DIR}/.valid)" ];then
+			if [ -f "${SCRIPT_AB_DIR}/.valid" -a -n "$(grep hnd ${SCRIPT_AB_DIR}/.valid)" ];then
 				continue
-			elif [ -f "${MODULE_NAME}" == "shadowsocks" ];then
+			elif [ "${MODULE_NAME}" == "shadowsocks" ];then
 				# hnd的不可描述包没有校验字符串，避免安装失败
 				continue
 			else
