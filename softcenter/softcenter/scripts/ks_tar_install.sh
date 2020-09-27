@@ -2,17 +2,6 @@
 
 # for hnd platform
 
-#####
-#####
-#####
-#####
-#####
-#####
-#####
-#####
-#####
-#####
-
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 alias echo_date='echo 【$(date +%Y年%m月%d日\ %X)】:'
@@ -63,17 +52,7 @@ detect_package(){
 }
 
 install_tar(){
-	#####
-	#####
-	#####
-	#####
-	#####
 	detect_package "$soft_name"
-	#####
-	#####
-	#####
-	#####
-	#####	
 	name=$(echo "$soft_name"|sed 's/.tar.gz//g'|awk -F "_" '{print $1}'|awk -F "-" '{print $1}')
 	INSTALL_SUFFIX=_install
 	VER_SUFFIX=_version
@@ -111,17 +90,26 @@ install_tar(){
 		if [ -n "$INSTALL_SCRIPT" -a -f "$INSTALL_SCRIPT" ];then
 			SCRIPT_AB_DIR=$(dirname $INSTALL_SCRIPT)
 			MODULE_NAME=${SCRIPT_AB_DIR##*/}
-			#####
-			#####
-			#####
-			#####
-			#####
+			
 			detect_package "${MODULE_NAME}"
-			#####
-			#####
-			#####
-			#####
-			#####
+			
+			# 检查下安装包是否是hnd的
+			if [ -f "${SCRIPT_AB_DIR}/.valid" ] && -n [ "$(grep hnd ${SCRIPT_AB_DIR}/.valid)" ];then
+				continue
+			elif [ -f "${MODULE_NAME}" == "shadowsocks" ];then
+				# hnd的不可描述包没有校验字符串，避免安装失败
+				continue
+			else
+				echo_date 你上传的离线安装包不是hnd/axhnd/axhnd.675x平台的离线包！！！
+				echo_date 请上传正确的离线安装包！！！
+				echo_date 删除相关文件并退出...
+				clean
+				dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
+				echo_date ======================== end ============================
+				echo XU6J03M6
+				exit
+			fi
+
 			echo_date 准备安装${MODULE_NAME}插件！
 			echo_date 找到安装脚本！
 			chmod +x $INSTALL_SCRIPT >/dev/null 2>&1

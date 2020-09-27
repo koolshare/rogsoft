@@ -276,7 +276,7 @@ function try_activate(){
 function register_event(){
 
 	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
 		// three wifi router
 		if(!current_maxp24_tmp){
 			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
@@ -340,7 +340,7 @@ function register_event(){
 }
 
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -513,7 +513,7 @@ function get_wl_status(){
 }
 function boost_now(action){
 	var dbus_new = {};
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
@@ -557,7 +557,7 @@ function boost_now(action){
 	for (var i = 0; i < params_inp.length; i++) {
 		dbus_new[params_inp[i]] = E(params_inp[i]).value;
 	}
-	if(odm != "GT-AC5300" && odm != "GT-AX11000" && odm != "RT-AX92U" && odm != "RT-AX95Q"){
+	if(odm != "GT-AC5300" && odm != "GT-AX11000" && odm != "RT-AX92U" && odm != "RT-AX95Q" || odm != "RT-AC5300"){
 		dbus_new["wifiboost_boost_58"] = "0";
 	}
 	// boost_dbm
@@ -979,3 +979,4 @@ function verifyFields(r) {
 	<div id="footer"></div>
 </body>
 </html>
+

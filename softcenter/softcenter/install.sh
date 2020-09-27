@@ -64,22 +64,6 @@ softcenter_install() {
 		cp -rf /tmp/softcenter/perp /koolshare/
 		cp -rf /tmp/softcenter/scripts /koolshare/
 		cp -rf /tmp/softcenter/.soft_ver /koolshare/
-		# ---------------------
-		# do some trick
-		# sync
-		# local TARGET=/koolshare/scripts/ks_tar_install.sh
-		# local FUNC=$(head -200 /dev/urandom | md5sum | cut -d " " -f 1|cut -c 1-12|sed 's/^[0-9]\+//g')
-		# local VARI=$(head -200 /dev/urandom | md5sum | cut -d " " -f 1|cut -c 1-12|sed 's/^[0-9]\+//g')
-		# local RAND=$(shuf -i 1-29 -n 1)
-		# local LINES=$(sed -n '/#####/=' $TARGET | shuf -n $RAND | sort -rn)
-		# sed -i "s/detect_package/${FUNC}/g" $TARGET
-		# sed -i "s/MODULE_NAME/${VARI}/g" $TARGET
-		# for LINE in $LINES
-		# do
-		# 	sed -i "${LINE}d" $TARGET
-		# done
-		# sync
-		# ---------------------
 		# make some link
 		[ ! -L "/koolshare/bin/base64_decode" ] && ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
 		[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
