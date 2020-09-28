@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="swap"
-VERSION="2.0"
+VERSION="2.1"
 TITLE="虚拟内存"
 DESCRIPTION="让路由器运行更稳定~"
 HOME_URL="Module_swap.asp"

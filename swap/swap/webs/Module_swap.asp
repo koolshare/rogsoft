@@ -51,7 +51,8 @@
 <script>
 var db_swap_ = {};
 var dbus = {};
-var usbDevicesList
+var usbDevicesList;
+var disk_format;
 
 function init() {
 	show_menu();
@@ -84,7 +85,8 @@ function get_disks(){
 				//append options
 				$("#select_disk").append("<option value='"  + usbDevicesList[i].partition[j].mountPoint + "'>" + usbDevicesList[i].partition[j].partName + "</option>");
 				//check for swap exist
-				if(usbDevicesList[i].partition[j].format.indexOf("ext") != -1){
+				disk_format = usbDevicesList[i].partition[j].format
+				if(disk_format.indexOf("ext") != -1){
 					dbus["swap_check_partName_" + (parseInt(i)) + "_" + (parseInt(j))] = '/mnt/' + usbDevicesList[i].partition[j].partName || "";
 				}
 				//write table
@@ -98,9 +100,9 @@ function get_disks(){
 				html += '<td>' + totalsize + " GB" + '</td>'
 				html += '<td>' + used + '</td>'
 				html += '<td>' + usbDevicesList[i].partition[j].status + '</td>'
-				html += '<td>' + usbDevicesList[i].partition[j].format + '</td>'
+				html += '<td>' + disk_format + '</td>'
 				html += '<td>' + usbDevicesList[i].partition[j].mountPoint + '</td>'
-				html += '<td>' + '/mnt/' + usbDevicesList[i].partition[j].partName + '</td>'
+				html += '<td>' + '/tmp/mnt/' + usbDevicesList[i].partition[j].partName + '</td>'
 				html += '</tr>'
 			}
 		}
@@ -165,6 +167,11 @@ function conf2obj() {
 	});
 }
 
+function show_log(){
+	x = -1;
+	get_log(3);
+}
+
 function get_log(action){
 	showSWAPLoadingBar(action);
 	$.ajax({
@@ -178,7 +185,6 @@ function get_log(action){
 				retArea.value = response.replace("XU6J03M6", " ");
 				E("ok_button").style.display = "";
 				retArea.scrollTop = retArea.scrollHeight;
-				x = 10;
 				count_down_close();
 				return true;
 			}
@@ -247,6 +253,8 @@ function LoadingSWAPProgress(action){
 		E("loading_block3").innerHTML = "创建虚拟内存 ..."
 	}else if (action == 2){
 		E("loading_block3").innerHTML = "删除虚拟内存 ..."
+	}else if (action == 3){
+		E("loading_block3").innerHTML = "查看日志"
 	}
 }
 
@@ -271,6 +279,17 @@ function count_down_close() {
 }
 
 function makeswap(action){
+	if(action == 1){
+		if(disk_format.indexOf("ext") != -1){
+			if(!confirm('\n检测到你的磁盘格式为：' + disk_format + '！该磁盘格式符合虚拟内存创建要求！\n\n【虚拟内存】插件将会在你指定的磁盘分区里创建文件名为：swapfile 的虚拟内存文件！\n\n一般来说，此操作不会影响到USB磁盘分区内已有的任何文件。\n但是还是强烈建议你先备份磁盘内的重要文件，再进行虚拟内存的创建！')){
+				return false;
+			}
+		}else{
+			if(!confirm('\n检测到你的磁盘格式为：' + disk_format + '！该磁盘格式符合虚拟内存创建要求！\n\n点击确定按钮后，【虚拟内存】插件将自动格式化磁盘分区为ext3格式，然后创建文件名为：swapfile 的虚拟内存文件！\n\n请注意：此过程中，你磁盘上的数据将会全部丢失！！！\n\n强烈建议你先备份磁盘内的重要文件，再进行虚拟内存的创建！')){
+				return false;
+			}
+		}
+	}
 	var dbus = {};
 	dbus["swap_make_part_mount"] = $("#select_disk").val();
 	dbus["swap_make_part_partname"] = $("#select_disk option:selected").text();
@@ -359,9 +378,9 @@ function reload_Soft_Center() {
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="formfontdesc" style="padding-top:5px;margin-top:0px;" id="cmdDesc">创建虚拟内存，让路由运行更顺畅</div>
 										<div style="padding-top:5px;margin-left:0px;" id="NoteBox" >
-											<li style="margin-top:5px;">通过本插件创建虚拟内存，请先只插入一个USB设备。 </li>
-											<li style="margin-top:5px;">如果你通过其它方式创建了虚拟内存，可以不用使用该工具，或者删除后再使用本工具。</li>
-											<li style="margin-top:5px;">强烈建议使用RT-AC86U的朋友使用虚拟内存！</li>					
+											<li style="margin-top:5px;">通过本插件创建虚拟内存，请先只插入一个具有较好读写速度的USB磁盘设备。 </li>
+											<li style="margin-top:5px;">如果你通过其它方式创建了虚拟内存，可以不用使用该工具，也可以删除之前的虚拟内存后再使用本工具。</li>
+											<li style="margin-top:5px;">如果你的磁盘不是ext2/ext3/ext4格式，使用本工具创建虚拟内存将会自动进行磁盘格式转换，同时磁盘内的所有数据将会被清空！</li>					
 										</div>
 										<table style="margin:0px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" id="disk_table">
 										</table>
@@ -415,12 +434,13 @@ function reload_Soft_Center() {
 												<td>
 													<input type="button" id="mkswap" class="button_gen" onclick="makeswap(1);" value="创建虚拟内存">
 													<input type="button" id="dlswap" class="button_gen" onclick="makeswap(2);" value="删除虚拟内存">
+													<input type="button" id="log1" class="button_gen" onclick="show_log();" value="查看日志">
 												</td>
 											</tr>
 										</table>
 										<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 										<div class="KoolshareBottom">论坛技术支持： <a href="http://www.koolshare.cn" target="_blank"> <i><u>koolshare.cn</u></i> </a>
-											<br/>Github项目： <a href="https://github.com/koolshare/rogsoft" target="_blank"> <i><u>github.com/koolshare</u></i> </a>
+											<br/>Github项目： <a href="https://github.com/koolshare/qcasoft" target="_blank"> <i><u>github.com/koolshare</u></i> </a>
 											<br/>Shell & Web by： <a href="mailto:sadoneli@gmail.com"> <i>sadog</i> </a>, <i>Xiaobao</i>
 										</div>
 

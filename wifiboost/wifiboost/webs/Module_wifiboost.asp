@@ -801,7 +801,7 @@ function verifyFields(r) {
 				<div id="loading_block3" style="margin:10px auto;margin-left:10px;width:85%; font-size:12pt;"></div>
 				<div id="loading_block2" style="margin:10px auto;width:95%;"></div>
 				<div id="log_content2" style="margin-left:15px;margin-right:15px;margin-top:10px;overflow:hidden">
-					<textarea cols="50" rows="25" wrap="off" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Lucida Console'; font-size:11px;background:transparent;color:#FFFFFF;outline: none;padding-left:3px;padding-right:22px;overflow-x:hidden"></textarea>
+					<textarea cols="50" rows="30" wrap="off" readonly="readonly" id="log_content3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Lucida Console'; font-size:11px;background:transparent;color:#FFFFFF;outline: none;padding-left:3px;padding-right:22px;overflow-x:hidden"></textarea>
 				</div>
 				<div id="ok_button" class="apply_gen" style="background: #000;display: none;">
 					<input id="ok_button1" class="button_gen" type="button" onclick="hideWBLoadingBar()" value="确定">
