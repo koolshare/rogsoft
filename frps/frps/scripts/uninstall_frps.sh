@@ -17,7 +17,7 @@ values=`dbus list ${MODULE} | cut -d "=" -f 1`
 
 for value in $values
 do
-dbus remove $value 
+dbus remove $value
 done
 dbus remove __event__onwanstart_${MODULE}
 dbus remove __event__onnatstart_${MODULE}
