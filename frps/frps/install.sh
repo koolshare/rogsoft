@@ -75,13 +75,13 @@ fi
 # 安装插件
 cd /
 rm -f /koolshare/init.d/S97frps.sh
-cp -f /tmp/$MODULE/bin/* /koolshare/bin/
-cp -f /tmp/$MODULE/scripts/* /koolshare/scripts/
-cp -f /tmp/$MODULE/res/* /koolshare/res/
-cp -f /tmp/$MODULE/webs/* /koolshare/webs/
-cp -f /tmp/$MODULE/init.d/* /koolshare/init.d/
+cp -f /tmp/${module}/bin/* /koolshare/bin/
+cp -f /tmp/${module}/scripts/* /koolshare/scripts/
+cp -f /tmp/${module}/res/* /koolshare/res/
+cp -f /tmp/${module}/webs/* /koolshare/webs/
+cp -f /tmp/${module}/init.d/* /koolshare/init.d/
 rm -fr /tmp/frps* >/dev/null 2>&1
-killall ${MODULE}
+killall ${module}
 if [ "$ROG" == "1" ];then
 	continue
 else
@@ -92,7 +92,7 @@ else
 	fi
 fi
 
-chmod +x /koolshare/bin/${MODULE}
+chmod +x /koolshare/bin/${module}
 chmod +x /koolshare/scripts/config-frps.sh
 chmod +x /koolshare/scripts/frps_status.sh
 chmod +x /koolshare/scripts/uninstall_frps.sh
@@ -100,19 +100,19 @@ chmod +x /koolshare/init.d/S97frps.sh
 sleep 1
 
 # 离线安装用
-dbus set ${MODULE}_version="${VERSION}"
+dbus set ${module}_version="${VERSION}"
 #dbus set __event__onwanstart_frps=/koolshare/scripts/config-frps.sh
-dbus set ${MODULE}_client_version=`/koolshare/bin/${MODULE} --version`
-dbus set ${MODULE}_common_cron_hour_min="hour"
-dbus set ${MODULE}_common_cron_time="12"
-dbus set softcenter_module_${MODULE}_install=1
-dbus set softcenter_module_${MODULE}_name=${MODULE}
-dbus set softcenter_module_${MODULE}_title="Frps内网穿透"
-dbus set softcenter_module_${MODULE}_description="Frps路由器服务端，内网穿透利器。"
-dbus set softcenter_module_${MODULE}_version="${VERSION}"
-en=`dbus get ${MODULE}_enable`
+dbus set ${module}_client_version=`/koolshare/bin/${module} --version`
+dbus set ${module}_common_cron_hour_min="hour"
+dbus set ${module}_common_cron_time="12"
+dbus set softcenter_module_${module}_install=1
+dbus set softcenter_module_${module}_name=${module}
+dbus set softcenter_module_${module}_title="Frps内网穿透"
+dbus set softcenter_module_${module}_description="Frps路由器服务端，内网穿透利器。"
+dbus set softcenter_module_${module}_version="${VERSION}"
+en=`dbus get ${module}_enable`
 if [ "$en" == "1" ]; then
-    /koolshare/scripts/config-${MODULE}.sh
+    /koolshare/scripts/config-${module}.sh
 fi
-echo "${MODULE} ${VERSION} install completed!"
+echo "${module} ${VERSION} install completed!"
 
