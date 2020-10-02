@@ -100,17 +100,6 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-09-30_13:52:02", 
-            "changelog": "", 
-            "description": "内网穿透利器，谁用谁知道。", 
-            "home_url": "Module_frps.asp", 
-            "md5": "804aa9477d45bbaace72c8f56e89de7e", 
-            "name": "frps", 
-            "tar_url": "frps/frps.tar.gz", 
-            "title": "frps穿透服务器", 
-            "version": "1.4.16"
-        }, 
-        {
             "build_date": "2020-09-27_11:08:34", 
             "changelog": "", 
             "description": "kms", 
@@ -265,15 +254,15 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-09-27_11:08:34", 
+            "build_date": "2020-10-02_21:52:49", 
             "changelog": "", 
             "description": "wifi boost 路由器功率增强，强过澳大利亚", 
             "home_url": "Module_wifiboost.asp", 
-            "md5": "6aa1cb747372d3dedf416364d98a2bcd", 
+            "md5": "375e1ac2f77d56741c27627fc8b74ea4", 
             "name": "wifiboost", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "2.9"
+            "version": "3.0"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 

@@ -141,7 +141,6 @@ input[type=button]:focus {
 <script type="text/javascript" src="/calendar/jquery-ui.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
-<script type="text/javascript" src="/dbconf?p=frps&v=<% uptime(); %>"></script>
 <script type="text/javascript" src="/res/frps-menu.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script>
@@ -262,7 +261,7 @@ function check_FRPS_status(){
 }
 function toggle_switch(){ //根据frps_enable的值，打开或者关闭开关
     var rrt = document.getElementById("switch");
-    if (document.form.frps_enable.value != "1") {
+    if (E("frps_enable").value != "1") {
         rrt.checked = false;
     } else {
         rrt.checked = true;
@@ -273,10 +272,10 @@ function buildswitch(){ //生成开关的功能，checked为开启，此时传�
     $j("#switch").click(
     function(){
         if(document.getElementById('switch').checked){
-            document.form.frps_enable.value = 1;
+            E("frps_enable").value = 1;
             
         }else{
-            document.form.frps_enable.value = 0;
+            E("frps_enable").value = 0;
         }
     });
 }

@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+3.0
+   - fix	修复部分机型5G-2 Wi-Fi 无法boost的问题。
+
 2.9
    - fix	修复2.8版本无法boost，无法购买的问题。
 
