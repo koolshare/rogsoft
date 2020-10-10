@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
 ===========================================
+2.0
+   - add	添加华硕RT-AX56U修改国行支持；
+
 1.9
    - add	添加华硕GT-AX11000使命召唤黑色行动版本修改国行支持；
 
