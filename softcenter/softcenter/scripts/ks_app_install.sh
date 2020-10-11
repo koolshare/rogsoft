@@ -254,12 +254,12 @@ install_ks_module() {
 
 	# 17. 运行install.sh进行插件安装
 	echo_date "使用插件【${softcenter_installing_name}】提供的install.sh脚本进行安装..."
-	echo_date =========================== step 2 ================================
+	[ "${softcenter_installing_name}" != "softcenter" ] && echo_date =========================== step 2 ================================
 	chmod a+x /tmp/${softcenter_installing_todo}/install.sh
 	# 使用start-stop-daemon，而不是shell fork，避免可能得install.sh问题导致ks_app_install.sh卡死
 	# sh /tmp/${softcenter_installing_todo}/install.sh
 	start-stop-daemon -S -q -x /tmp/${softcenter_installing_todo}/install.sh 2>&1
-	echo_date =========================== step 3 ================================
+	[ "${softcenter_installing_name}" != "softcenter" ] && echo_date =========================== step 3 ================================
 
 	# 18. 安装完毕，写入安装相关的值
 	if [ "$softcenter_installing_todo" != "softcenter" ]; then
