@@ -144,7 +144,16 @@ softcenter_install() {
 		chmod 755 /koolshare/perp/.control/*
 		chmod 755 /koolshare/perp/httpdb/*
 		chmod 755 /koolshare/scripts/*
-		# chmod 555 /koolshare/scripts/ks_tar_install.sh
+
+		# reset some default value
+		if [ -n "$(pidof skipd)" && -f "/usr/bin/dbus" ];then
+			/usr/bin/dbus set softcenter_installing_todo=""
+			/usr/bin/dbus set softcenter_installing_title=""
+			/usr/bin/dbus set softcenter_installing_name=""
+			/usr/bin/dbus set softcenter_installing_tar_url=""
+			/usr/bin/dbus set softcenter_installing_version=""
+			/usr/bin/dbus set softcenter_installing_md5=""
+		fi
 		#============================================
 		# now try to reboot httpdb if httpdb not started
 		# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh

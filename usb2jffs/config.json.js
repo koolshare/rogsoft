@@ -1,9 +1,9 @@
 {
 "version":"1.6",
-"md5":"a75ca9457ac2fdf09b5e54a08cac6f13",
+"md5":"8334de259d193bd2f616a147298e0f60",
 "home_url":"Module_usb2jffs.asp",
 "title":"USB2JFFS",
 "description":"轻松用U盘挂载jffs",
 "changelog":"",
-"build_date":"2020-09-27_11:08:34"
+"build_date":"2020-10-11_15:04:49"
 }
