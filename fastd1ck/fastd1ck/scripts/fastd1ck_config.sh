@@ -3,7 +3,7 @@
 eval `dbus export fastd1ck_`
 source /koolshare/scripts/base.sh
 timestamp=$(date +'%Y/%m/%d %H:%M:%S')
-alias echo_date='echo $timestamp'
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 NAME=fastd1ck_main
 LOG_FILE=/tmp/upload/fastd1ck_log.txt
 

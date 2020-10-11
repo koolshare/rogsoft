@@ -1,7 +1,7 @@
 #!/bin/sh
 
 timestamp=$(date +'%Y/%m/%d %H:%M:%S')
-alias echo_date='echo $timestamp'
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 
