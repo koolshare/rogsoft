@@ -146,7 +146,7 @@ softcenter_install() {
 		chmod 755 /koolshare/scripts/*
 
 		# reset some default value
-		if [ -n "$(pidof skipd)" && -f "/usr/bin/dbus" ];then
+		if [ -n "$(pidof skipd)" -a -f "/usr/bin/dbus" ];then
 			/usr/bin/dbus set softcenter_installing_todo=""
 			/usr/bin/dbus set softcenter_installing_title=""
 			/usr/bin/dbus set softcenter_installing_name=""
