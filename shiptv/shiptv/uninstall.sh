@@ -2,7 +2,7 @@
 source /koolshare/scripts/base.sh
 
 # stop before ubinstall
-sh /koolshare/scripts/shiptv_config.sh stop
+sh /koolshare/scripts/shiptv_config.sh stop >/dev/null 2>&1
 
 # remove files
 rm -rf /koolshare/res/icon-shiptv.png
