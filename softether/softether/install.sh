@@ -84,7 +84,6 @@ cp -rf /tmp/softether/softether /koolshare/
 cp -rf /tmp/softether/scripts/* /koolshare/scripts/
 cp -rf /tmp/softether/webs/* /koolshare/webs/
 cp -rf /tmp/softether/res/* /koolshare/res/
-rm -rf /tmp/softether* >/dev/null 2>&1
 chmod 755 /koolshare/softether/*
 chmod 755 /koolshare/scripts/*
 ln -sf /koolshare/softether/softether.sh /koolshare/init.d/S98SoftEther.sh
