@@ -210,7 +210,6 @@ function init() {
 	show_menu(menu_hook);
 	detect_brower();
 }
-
 function detect_brower() {
 	var info = new Browser();
 	console.log("您使用的浏览器为：", info.browser);
@@ -246,7 +245,6 @@ function detect_brower() {
 	get_dbus_data();
 	try_activate();
 }
-
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
 	var vars = query.split("&");
@@ -258,7 +256,6 @@ function getQueryVariable(variable){
 	}
 	return(false);
 }
-
 function try_activate(){
 	var key = getQueryVariable("key");
 	if(key){
@@ -272,9 +269,7 @@ function try_activate(){
 		}
 	}
 }
-
 function register_event(){
-
 	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
 	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
 		// three wifi router
@@ -287,8 +282,12 @@ function register_event(){
 			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 			var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		}
+	}else if(odm == "RT-AX55"){
+		// wuo wifi router new format
+		var current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
 	}else{
-		// two wifi router
+		// two wifi router old format
 		if(!current_maxp24_tmp){
 			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
 			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
@@ -297,7 +296,6 @@ function register_event(){
 			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 		}
 	}
-		
 	if(E("wifiboost_boost_24").checked == true){
 		var maxp = current_maxp24;
 	}else{
@@ -338,7 +336,6 @@ function register_event(){
 			x = -1;
 		});	
 }
-
 function show_hide_elem(){
 	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
 		E("wifiboost_boost_58").style.display = "";
@@ -474,7 +471,6 @@ function show_err_code() {
 		});
 	});
 }
-
 function get_wl_status(){
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "wifiboost_status", "params":[2], "fields": ""};
@@ -640,7 +636,6 @@ function LoadingWBProgress(){
 	$("#loading_block2").html("<font color='#ffcc00'>----------------------------------------------------------------------------------------------------------------------------------");
 	E("loading_block3").innerHTML = "wifi boost修改最大功率应用中，请稍后 ...";
 }
-
 function hideWBLoadingBar(){
 	x = -1;
 	E("LoadingBar").style.visibility = "hidden";
@@ -707,7 +702,6 @@ function close_mail_buy(){
 	$("#qrcode_show").fadeOut(300);
 	open_buy();
 }
-
 function open_buy() {
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
@@ -745,7 +739,6 @@ function open_buy() {
 		});
 	});
 }
-
 function close_info(){
 	$("#activated_info").fadeOut(300);
 }
