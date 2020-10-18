@@ -52,7 +52,7 @@ case $(uname -m) in
 		fi
 		;;
 	armv7l)
-		if [ "$MODEL" == "TUF-AX3000" -o "$MODEL" == "RT-AX82U" -o "$MODEL" == "RT-AX95Q" -o "$MODEL" == "RT-AX56_XD4" ] && [ -d "/koolshare" ];then
+		if [ "$MODEL" == "TUF-AX3000" -o "$MODEL" == "RT-AX82U" -o "$MODEL" == "RT-AX95Q" -o "$MODEL" == "RT-AX56_XD4" -o "$MODEL" == "RT-AX56_V2" ] && [ -d "/koolshare" ];then
 			echo_date 机型：$MODEL $(_get_type) 符合安装要求，开始安装插件！
 		else
 			exit_install 1
