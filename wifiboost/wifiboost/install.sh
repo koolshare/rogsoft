@@ -5,6 +5,9 @@ DIR=$(cd $(dirname $0); pwd)
 module=wifiboost
 TITLE="Wi-Fi Boost"
 DESCRIPTION="路由器功率增强，强过澳大利亚！"
+ROG_86U=0
+EXT_NU=$(nvram get extendno)
+EXT_NU=${EXT_NU%_*}
 odmpid=$(nvram get odmpid)
 productid=$(nvram get productid)
 [ -n "${odmpid}" ] && MODEL="${odmpid}" || MODEL="${productid}"
@@ -54,9 +57,6 @@ else
 fi
 
 # 判断固件UI类型
-ROG_86U=0
-EXT_NU=$(nvram get extendno)
-EXT_NU=${EXT_NU%_*}
 if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
 	ROG_86U=1
 fi

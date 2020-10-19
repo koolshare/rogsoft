@@ -3,6 +3,9 @@ source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 DIR=$(cd $(dirname $0); pwd)
 module=cfetool
+ROG_86U=0
+EXT_NU=$(nvram get extendno)
+EXT_NU=${EXT_NU%_*}
 TITLE="CFE工具箱"
 DESCRIPTION="CFE工具箱，查看CFE信息，改机器为国区"
 odmpid=$(nvram get odmpid)
@@ -54,9 +57,6 @@ else
 fi
 
 # 判断固件UI类型
-ROG_86U=0
-EXT_NU=$(nvram get extendno)
-EXT_NU=${EXT_NU%_*}
 if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
 	ROG_86U=1
 fi

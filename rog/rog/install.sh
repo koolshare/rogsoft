@@ -3,6 +3,9 @@ source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 DIR=$(cd $(dirname $0); pwd)
 module=rog
+ROG_86U=0
+EXT_NU=$(nvram get extendno)
+EXT_NU=${EXT_NU%_*}
 odmpid=$(nvram get odmpid)
 productid=$(nvram get productid)
 [ -n "${odmpid}" ] && MODEL="${odmpid}" || MODEL="${productid}"
@@ -52,9 +55,6 @@ else
 fi
 
 # 判断固件UI类型
-ROG_86U=0
-EXT_NU=$(nvram get extendno)
-EXT_NU=${EXT_NU%_*}
 if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
 	ROG_86U=1
 fi
