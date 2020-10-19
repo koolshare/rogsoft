@@ -166,11 +166,11 @@
             "version": "0.6"
         }, 
         {
-            "build_date": "2020-10-18_23:03:02", 
+            "build_date": "2020-10-19_10:48:01", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "md5": "241c62aead2874e24d285fa8a0ef667e", 
+            "md5": "1f73a21f8e074e40fc4cb2b403f0ed04", 
             "name": "rog", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
@@ -254,11 +254,11 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-10-16_10:37:12", 
+            "build_date": "2020-10-19_10:48:05", 
             "changelog": "", 
             "description": "wifi boost 路由器功率增强，强过澳大利亚", 
             "home_url": "Module_wifiboost.asp", 
-            "md5": "e851758f281512b58e505c6eebab3fe7", 
+            "md5": "56c6d10b620fb5181a3341de1ea94986", 
             "name": "wifiboost", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 

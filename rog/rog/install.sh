@@ -2,10 +2,11 @@
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 DIR=$(cd $(dirname $0); pwd)
-MODEL=$(nvram get productid)
 module=rog
 odmpid=$(nvram get odmpid)
-LINUX_VER=$(cat /proc/version|awk '{print $3}'|awk -F"." '{print $1$2}')
+productid=$(nvram get productid)
+[ -n "${odmpid}" ] && MODEL="${odmpid}" || MODEL="${productid}"
+LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
 
 # 获取固件类型
 _get_type() {
@@ -42,42 +43,27 @@ exit_install(){
 	esac
 }
 
-# 判断路由架构和平台
-case $(uname -m) in
-	aarch64)
-		if [ "$(uname -o|grep Merlin)" -a -d "/koolshare" ];then
-			echo_date 机型：$MODEL $(_get_type) 符合安装要求，开始安装插件！
-		else
-			exit_install 1
-		fi
-		;;
-	armv7l)
-		if [ "$MODEL" == "TUF-AX3000" -o "$MODEL" == "RT-AX82U" -o "$MODEL" == "RT-AX95Q" -o "$MODEL" == "RT-AX56_XD4" -o "$MODEL" == "RT-AX55" ] && [ -d "/koolshare" ];then
-			echo_date 机型：$MODEL $(_get_type) 符合安装要求，开始安装插件！
-		else
-			exit_install 1
-		fi
-		;;
-	*)
-		exit_install 1
-	;;
-esac
+# 判断路由架构和平台：koolshare固件，并且linux版本大于等于4.1
+if [ -d "/koolshare" -a -f "/usr/bin/skipd" -a "${LINUX_VER}" -ge "41" ];then
+	echo_date 机型：${MODEL} $(_get_type) 符合安装要求，开始安装插件！
+else
+	exit_install 1
+fi
 
+# 判断固件UI类型
 ROG_86U=0
 EXT_NU=$(nvram get extendno)
 EXT_NU=${EXT_NU%_*}
-
 if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" ];then
 	ROG_86U=1
 fi
 
-# 判断固件需要什么UI
-if [ "$MODEL" == "GT-AC5300" -o "$MODEL" == "GT-AX11000" -o "$ROG_86U" == "1" ];then
+if [ "${MODEL}" == "GT-AC5300" -o "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4"  -o "$ROG_86U" == "1" ];then
 	# 官改固件，骚红皮肤
 	ROG=1
 fi
 
-if [ "$MODEL" == "TUF-AX3000" ];then
+if [ "${MODEL}" == "TUF-AX3000" ];then
 	# 官改固件，橙色皮肤
 	TUF=1
 fi
@@ -88,14 +74,14 @@ if [ ! -x /koolshare/bin/jq ]; then
 	chmod +x /koolshare/bin/jq
 fi
 
-if [ "$MODEL" == "GT-AC5300" -a ! -x /koolshare/bin/wl ];then
+if [ "${MODEL}" == "GT-AC5300" -a ! -x /koolshare/bin/wl ];then
 	cp -rf /tmp/rog/bin/wl /koolshare/bin/
 fi
 
 cp -rf /tmp/rog/scripts/* /koolshare/scripts/
 cp -rf /tmp/rog/webs/* /koolshare/webs/
 cp -rf /tmp/rog/res/* /koolshare/res/
-if [ -n "$odmpid" -a "$odmpid" == "RAX80" ];then
+if [ "${MODEL}" == "RAX80" ];then
 	cp -rf /tmp/rog/init.d/* /koolshare/init.d/
 fi
 cp -rf /tmp/rog/uninstall.sh /koolshare/scripts/uninstall_rog.sh
