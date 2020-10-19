@@ -9,7 +9,7 @@
 | [RT-AC86U](http://koolshare.cn/thread-127878-1-1.html)       | ks梅林改 | BCM4906 | hnd        | ARMV8 | 4.1.27 | asuswrt            |
 | [RT-AX88U](http://koolshare.cn/thread-158199-1-1.html)       | ks梅林改 | BCM4908 | axhnd      | ARMV8 | 4.1.51 | asuswrt            |
 | [NETGEAR RAX80](https://koolshare.cn/thread-177255-1-1.html) | ks梅林改 | BCM4908 | axhnd      | ARMV8 | 4.1.51 | asuswrt            |
-| [GT-AX11000](http://koolshare.cn/thread-159465-1-1.html)     | ks官改   | BCM4908 | axhnd      | ARMV8 | 4.1.51 | rog  (红色)        |
+| [GT-AX11000/GT-AX11000_BO4](http://koolshare.cn/thread-159465-1-1.html) | ks官改   | BCM4908 | axhnd      | ARMV8 | 4.1.51 | rog  (红色)        |
 | [RT-AC86U](http://koolshare.cn/thread-139965-1-1.html)       | ks官改   | BCM4906 | hnd        | ARMV8 | 4.1.27 | rog  (红色)**[1]** |
 | [GT-AC5300](http://koolshare.cn/thread-130902-1-1.html)      | ks官改   | BCM4908 | hnd        | ARMV8 | 4.1.27 | rog  (红色)        |
 | [RT-AX86U/RT-AX86U高达版](https://koolshare.cn/thread-181845-1-1.html) | ks官改   | BCM4908 | axhnd.675x | ARMV8 | 4.1.52 | asuswrt            |
@@ -17,6 +17,7 @@
 | [RT-AX82U/RT-AX82U高达版](https://koolshare.cn/thread-xxxxxx-1-1.html) | ks官改   | BCM6750 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
 | [ZenWiFi AX/灵耀 AX6600M/RT-AX95Q](https://koolshare.cn/thread-187704-1-1.html) | ks官改   | BCM6755 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
 | [ZenWiFi_XD4/灵耀AX魔方/RT-AX56_XD4](https://koolshare.cn/thread-187744-1-1.html) | ks官改   | BCM6755 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
+| [RT-AX56U_V2/RT-AX6U青春版/热血版/刺客信条版](https://koolshare.cn/thread-188683-1-1.html) | ks官改   | BCM6755 | axhnd.675x | ARMV7 | 4.1.52 | asuswrt            |
 
 - 点击表格中的机型可以前往对应机型的koolshare固件下载；
 - ks梅林改代表koolshare开发组发布的梅林改版固件；
@@ -25,6 +26,7 @@
 - RT-AX86U、RT-AX82U的高达使用的固件和和其非高达版的固件/软件中心都是一样的；
 - ZenWiFi AX/灵耀 AX6600M/RT-AX95Q 这三个名字代表的是一个机型；
 - ZenWiFi_XD4/灵耀AX魔方/RT-AX56_XD4 这三个名字代表的是一个机型；
+- RT-AX56U_V2/RT-AX56U青春版/RT-AX56U热血版/RT-AX56U刺客信条版，这四个名字代表一个机型。
 - **[1]**：RT-AC86U从384_81918_koolshare固件版本开始，使用的是asuswrt风格ui，而不是rog风格。
 
 ## 用户须知
