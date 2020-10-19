@@ -1,6 +1,8 @@
 #!/bin/sh
 
-MODEL=$(nvram get productid)
+odmpid=$(nvram get odmpid)
+productid=$(nvram get productid)
+[ -n "${odmpid}" ] && MODEL="${odmpid}" || MODEL="${productid}"
 ROG_86U=0
 EXT_NU=$(nvram get extendno)
 EXT_NU=${EXT_NU%_*}
@@ -9,7 +11,7 @@ if [ -n "$(nvram get extendno | grep koolshare)" -a "$(nvram get productid)" == 
 	ROG_86U=1
 fi
 
-if [ "$MODEL" == "GT-AC5300" -o "$MODEL" == "GT-AX11000" -o "$ROG_86U" == "1" ];then
+if [ "$MODEL" == "GT-AC5300" -o "$MODEL" == "GT-AX11000" -o "$MODEL" == "GT-AX11000_BO4" -o "$ROG_86U" == "1" ];then
 	# 官改固件，骚红皮肤
 	ROG=1
 fi
@@ -38,6 +40,12 @@ softcenter_install() {
 		[ -L "/jffs/configs/profile" ] && rm -rf /jffs/configs/profile
 		[ -L "/koolshare/webs/files" ] && rm -rf /koolshare/webs/files
 		[ -d "/tmp/files" ] && rm -rf /tmp/files
+
+		# do not install some file for some model
+		JFFS_TOTAL=$(df|grep -Ew "/jffs" | awk '{print $2}')
+		if [ -n "${JFFS_TOTAL}" -a "${JFFS_TOTAL}" -le "20000" ];then
+			rm -rf /tmp/softcenter/bin/htop
+		fi
 		
 		# coping files
 		cp -rf /tmp/softcenter/webs/* /koolshare/webs/
@@ -58,7 +66,7 @@ softcenter_install() {
 		cp -rf /tmp/softcenter/init.d/* /koolshare/init.d/
 		cp -rf /tmp/softcenter/bin/* /koolshare/bin/
 		#for axhnd
-		if [ "$MODEL" == "RT-AX88U" ] || [ "$MODEL" == "GT-AX11000" ];then
+		if [ "${MODEL}" == "RT-AX88U" ] || [ "${MODEL}" == "GT-AX11000" ];then
 			cp -rf /tmp/softcenter/axbin/* /koolshare/bin/
 		fi
 		cp -rf /tmp/softcenter/perp /koolshare/
