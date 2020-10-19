@@ -486,7 +486,7 @@ function init(cb) {
 				var name = app.name;
 				var oldApp = localData[name] || {};
 				var install = (parseInt(oldApp.install, 10) === 1 && app.version !== oldApp.version) ? 2 : oldApp.install || "0";
-				if(ro_model == "ZenWiFi_XD4"){
+				if(ro_model == "ZenWiFi_XD4" || ro_model == "RT-AX56U_V2"){
 					var usb_app = usb_apps.includes(name);
 					if(usb_app == false){
 						result[name] = $.extend(oldApp, app);
@@ -790,7 +790,7 @@ function ks_online() {
 			shadeClose: 0,
 			scrollbar: false,
 			id: 'LAY_layuipro',
-			btn: ['关闭窗口', '参加KsOnline计划'],
+			btn: ['关闭窗口', '参加【Ks Online】计划'],
 			btnAlign: 'c',
 			moveType: 1,
 			content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">\
@@ -798,14 +798,14 @@ function ks_online() {
 				<p>\
 				向大家介绍一下我们最近做的一个项目，叫：Ks Online<br>\
 				<br>\
-				参加Ks Online计划后，会有一个KsOnline脚本发送你路由器的型号，固件版本等信息到一个在线的数据库服务器。<br>\
-				KsOnline脚本提交到服务器的信息是100%匿名的，并且只会被用于数据统计用途。<br>\
-				<b>KsOnline脚本在任何情况下都不会搜集或发送你的隐私或者个人数据（比如：MAC地址，IP地址等信息）!</b><br>\
-				KsOnline脚本是完全开放的，并且是纯bash脚本，所有人都可以自由的查看自己路由器中该脚本将要搜集和发送到数据库的信息。<br>\
+				参加Ks Online计划后，会有一个叫ks_online.sh的脚本发送你路由器的型号，固件版本等信息到一个在线的数据库服务器。<br>\
+				ks_online.sh脚本提交到服务器的信息是100%匿名的，并且只会被用于数据统计用途。<br>\
+				<b>ks_online.sh脚本在任何情况下都不会搜集或发送你的隐私或者个人数据（比如：MAC地址，IP地址等信息）!</b><br>\
+				ks_online.sh脚本是完全开放的，并且是纯shell脚本，其安装在固件的/koolshare/scripts目录下，所有人都可以自由的查看自己路由器中该脚本将要搜集和发送到数据库的信息。<br>\
 				<\p>\
 				<br>\
 				<p>\
-				KsOnline脚本搜集的数据可以在此<a style="color:#e7bd16" target="_blank" href="https://ksonline.ddnsto.com"><u>Ks Online 统计页面</u></a>查看到。<br>\
+				ks_online.sh脚本搜集的数据可以在此<a style="color:#e7bd16" target="_blank" href="https://ksonline.ddnsto.com"><u>Ks Online 统计页面</u></a>查看到。<br>\
 				该信息可以在一定程度上帮助你选择最佳的路由器版本，或者帮助需要购买路由器的朋友了解到当前最流行的型号。<br>\
 				因为你可以直观的看到使用人数最多的固件版本、路由器型号，也可以根据开机时间、路由器温度等信息找到你认为稳定的型号。<br>\
 				如果你对上传并共享你的路由器相关信息感到不满，你可以随时在此页面关闭【Ks Online】功能。<br>\
@@ -813,7 +813,7 @@ function ks_online() {
 				<\p>\
 				<br>\
 				<p>\
-				以下是KsOnline脚本将会搜集并发送的全部信息：<br>\
+				以下是ks_online.sh脚本将会搜集并发送的全部信息：<br>\
 				<\p>\
 				<ul>\
 				<li>LAN MAC地址的md5校验值 - 用以提供路由器的唯一识别码, 例如: fab3201b83137711623c97504bd8b51c</li>\
@@ -866,7 +866,7 @@ function ks_online() {
 													<div class="user_title">软件中心 - 日志记录</div>
 													<div style="margin-left:15px" id="softcenter_log_title"></div>
 													<div style="margin: 10px 10px 10px 10px;width:98%;text-align:center;overflow:hidden;">
-														<textarea cols="63" rows="25" wrap="off" readonly="readonly" id="log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+														<textarea cols="63" rows="25" wrap="on" readonly="readonly" id="log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 													</div>
 													<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
 														<input class="button_gen" type="button" style="display:none;min-width: 88px;" id="clean_log" value="清空日志">

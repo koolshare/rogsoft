@@ -5,6 +5,8 @@
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 alias echo_date='echo 【$(date +%Y年%m月%d日\ %X)】:'
+LOG_FILE=/tmp/upload/soft_log.txt
+LOG_FILE_BACKUP=/tmp/upload/soft_install_log_backup.txt
 eval $(dbus export soft)
 TARGET_DIR=/tmp/upload
 MODEL=$(nvram get productid)
@@ -25,6 +27,11 @@ if [ "$(nvram get productid)" == "TUF-AX3000" ];then
 	# 官改固件，橙色皮肤
 	TUF=1
 fi
+
+jffs_space(){
+	local JFFS_AVAL=$(df | grep -w "/jffs" | awk '{print $4}')
+	echo ${JFFS_AVAL}
+}
 
 clean(){
 	[ -n "$name" ] && rm -rf /tmp/$name >/dev/null 2>&1
@@ -74,7 +81,6 @@ install_tar(){
 			echo_date 估计是错误或者不完整的的离线安装包！
 			echo_date 删除相关文件并退出...
 			clean
-			dbus remove "softcenter_module_${MODULE_NAME}$INSTALL_SUFFIX"
 			echo_date ======================== end ============================
 			echo XU6J03M6
 			exit
@@ -92,6 +98,29 @@ install_tar(){
 			MODULE_NAME=${SCRIPT_AB_DIR##*/}
 			
 			detect_package "${MODULE_NAME}"
+
+			# 检查jffs空间，不可描述不做检测，交给插件自己处理
+			local JFFS_AVAL=$(jffs_space)
+			if [ "${MODULE_NAME}" != "shadowsocks" ];then
+				echo_date "检测jffs分区剩余空间..."
+				local JFFS_NEED=$(du -s /tmp/${MODULE_NAME} | awk '{print $1}')
+				local TAR_SIZE=$(du -s /tmp/${soft_name} | awk '{print $1}')
+				### echo_date "JFFS剩余空间：${JFFS_AVAL}KB"
+				### echo_date "插件文件夹大小：${JFFS_NEED}KB"
+				### echo_date "插件压缩包大小：${TAR_SIZE}KB"
+				if [ "${JFFS_AVAL}" -lt "${JFFS_NEED}" ];then
+					echo_date "-------------------------------------------------------------------"
+					echo_date "软件中心：当前jffs分区剩余${JFFS_AVAL}KB, 插件安装大致需要${JFFS_NEED}KB，空间不足！"
+					echo_date "请清理jffs分区内不要的文件，或者使用USB2JFFS插件对jffs分区进行扩容后再试！！"
+					echo_date "-------------------------------------------------------------------"
+					echo_date "本次插件安装失败！退出！"
+					clean
+					echo_date ======================== end ============================
+					echo XU6J03M6
+					exit
+				fi
+				echo_date "软件中心：当前jffs分区剩余：${JFFS_AVAL}KB, 空间满足，继续安装！"
+			fi
 			
 			# 检查下安装包是否是hnd的
 			if [ -f "${SCRIPT_AB_DIR}/.valid" -a -n "$(grep hnd ${SCRIPT_AB_DIR}/.valid)" ];then
@@ -104,7 +133,7 @@ install_tar(){
 				echo_date 请上传正确的离线安装包！！！
 				echo_date 删除相关文件并退出...
 				clean
-				dbus remove "softcenter_module_$MODULE_NAME$INSTALL_SUFFIX"
+				dbus remove "softcenter_module_${MODULE_NAME}${INSTALL_SUFFIX}"
 				echo_date ======================== end ============================
 				echo XU6J03M6
 				exit
@@ -189,6 +218,20 @@ install_tar(){
 			done
 			echo_date 离线包安装完成！
 			echo_date 一点点清理工作...
+
+			# 安装完毕，打印剩余空间
+			local JFFS_AVAL_2=$(jffs_space)
+			local JFFS_USED=$(($JFFS_AVAL - $JFFS_AVAL_2))
+			if [ "${JFFS_USED}" -ge "0" ];then
+				echo_date "软件中心：本次安装占用了${JFFS_USED}KB空间，目前jffs分区剩余容量：${JFFS_AVAL_2}KB"
+			elif [ "${JFFS_USED}" -lt "0" ];then
+				local JFFS_RELEASED=${JFFS_USED#-}
+				echo_date "软件中心：本次安装释放了${JFFS_RELEASED}KB空间，目前jffs分区剩余容量：${JFFS_AVAL_2}KB"
+			fi
+			if [ "${JFFS_AVAL_2}" -lt "2000" ];then
+				echo_date "软件中心：注意！目前jffs分区剩余容量只剩下：${JFFS_AVAL_2}KB，已不足2MB！"
+			fi
+			
 			clean
 			echo_date 完成！离线安装插件成功，现在你可以退出本页面~
 		else
@@ -206,7 +249,23 @@ install_tar(){
 	echo XU6J03M6
 }
 
-echo " " > /tmp/upload/soft_log.txt
+clean_backup_log() {
+	local LOG_MAX=1000
+	[ $(wc -l "$LOG_FILE_BACKUP" | awk '{print $1}') -le "$LOG_MAX" ] && return
+	local logdata=$(tail -n 500 "$LOG_FILE_BACKUP")
+	echo "$logdata" > $LOG_FILE_BACKUP 2> /dev/null
+	unset logdata
+}
+
+backup_log_file(){
+	sleep 3
+	clean_backup_log
+	echo XU6J03M6 | tee -a $LOG_FILE
+	cat $LOG_FILE >> $LOG_FILE_BACKUP
+}
+
+true > $LOG_FILE
 http_response "$1"
-install_tar > /tmp/upload/soft_log.txt
+install_tar | tee -a $LOG_FILE
+backup_log_file
 

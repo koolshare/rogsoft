@@ -28,6 +28,10 @@ input[type=button]:focus {
 <script>
 var _responseLen;
 var noChange = 0;
+String.prototype.myReplace = function(f, e){
+	var reg = new RegExp(f, "g"); 
+	return this.replace(reg, e); 
+}
 function init(menu_hook) {
 	show_menu();
 	get_log();
@@ -97,7 +101,7 @@ function get_log(s) {
 		cache: false,
 		success: function(response) {
 			if (response.search("XU6J03M6") != -1) {
-				retArea.value = response.replace("XU6J03M6", " ");
+				retArea.value = response.myReplace("XU6J03M6", " ");
 				retArea.scrollTop = retArea.scrollHeight;
 				if (s) {
 					setTimeout("window.location.reload()", 3000);

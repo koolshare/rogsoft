@@ -224,7 +224,7 @@ install_ks_module() {
 	# 	quit_ks_install
 	# fi
 	
-	# 14. 复制uninstall.sh
+	# 14. 复制uninstall.sh，在运行install.sh之前进行，避免安装包/文件夹被install.sh删掉
 	if [ -f /tmp/${softcenter_installing_todo}/uninstall.sh ]; then
 		chmod 755 /tmp/${softcenter_installing_todo}/uninstall.sh
 		cp -rf /tmp/${softcenter_installing_todo}/uninstall.sh /koolshare/scripts/uninstall_${softcenter_installing_todo}.sh
@@ -259,6 +259,14 @@ install_ks_module() {
 	# 使用start-stop-daemon，而不是shell fork，避免可能得install.sh问题导致ks_app_install.sh卡死
 	# sh /tmp/${softcenter_installing_todo}/install.sh
 	start-stop-daemon -S -q -x /tmp/${softcenter_installing_todo}/install.sh 2>&1
+	if [ "$?" != "0" ];then
+		rm -rf /koolshare/scripts/uninstall_${softcenter_installing_todo}.sh
+		echo_date "-------------------------------------------------------------------"
+		echo_date "软件中心：插件安装失败！请联系插件作者或者koolshare开发组以解决问题！"
+		echo_date "-------------------------------------------------------------------"
+		echo_date "本次插件安装失败！退出！"
+		quit_ks_install
+	fi
 	[ "${softcenter_installing_todo}" != "softcenter" ] && echo_date =========================== step 3 ================================
 
 	# 18. 安装完毕，写入安装相关的值
