@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin softeware center Changelog
 ===========================================
+1.6.5
+   - fix	更新web，修复一些小问题；
+
 1.6.4
    - add	添加RT-AX56U_V2(RT-AX56U青春版/热血版/刺客信条版)支持；
    - add	添加GT-AX11000使命召唤黑色行动版支持；

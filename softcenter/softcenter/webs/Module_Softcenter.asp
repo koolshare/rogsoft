@@ -221,7 +221,7 @@ input[type=button]:focus {
 	width:980px;
 	return height:auto;
 	box-shadow: 3px 3px 10px #000;
-	background: rgba(0,0,0,0.75);
+	background: rgba(0,0,0,0.90);
 	visibility:hidden;
 	margin-left:0px;
 	width:728px;
@@ -240,7 +240,7 @@ input[type=button]:focus {
 	visibility:hidden;
 	overflow:hidden;
 	/*background: url(/images/New_ui/login_bg.png);*/
-	background:rgba(68, 79, 83, 0.85) none repeat scroll 0 0 !important;
+	background:rgba(68, 79, 83, 0.94) none repeat scroll 0 0 !important;
 	background-position: 0 0;
 	background-size: cover;
 	opacity: .94;
@@ -263,6 +263,10 @@ input[type=button]:focus {
 	color: #FFFFFF;
 	outline: none;
 	overflow-x: hidden;
+}
+#softcenter_log_title i{
+	color: #FC0;
+	font-style: normal;
 }
 </style>
 <script>
@@ -608,13 +612,14 @@ $(function() {
 				appInstallModule(softInfo[name]);
 			});
 			//保留日志显示窗口
-			$("#softcenter_log_pannel").click(
+			$(".popup_bar_bg_ks").click(
 				function() {
 					count_down = -1;
 				});
 			//窗口大小调整
 			$(window).resize(function(){
 				if($('.content_status').css("visibility") == "visible"){
+					document.scrollingElement.scrollTop = 0;
 					var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 					var page_w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 					var log_h = E("softcenter_log_pannel").clientHeight;
@@ -682,6 +687,9 @@ function count_down_close() {
 function close_softcenter_log() {
 	E("softcenter_shade_pannel").style.visibility = "hidden";
 	E("softcenter_log_pannel").style.visibility = "hidden";
+	E("download_log").style.visibility = "hidden";
+	E("close_log").style.visibility = "hidden";
+	E("clean_log").style.visibility = "hidden";
 	if (refresh_flag == "1"){
 		refreshpage();
 	}
@@ -689,18 +697,19 @@ function close_softcenter_log() {
 }
 function get_log(flag) {
 	if (flag){
-		E("download_log").style.display = "";
-		E("clean_log").style.display = "";
-		E("close_log").style.display = "";
-		E("log_content").rows = "36";
+		E("download_log").style.visibility = "visible";
+		E("close_log").style.visibility = "visible";
+		E("clean_log").style.visibility = "visible";
+		E("log_content").rows = "32";
 		var LOG_FILE = '/_temp/soft_install_log_backup.txt';
 	}else{
-		E("download_log").style.display = "none";
-		E("clean_log").style.display = "none";
-		E("close_log").style.display = "none";
+		E("download_log").style.visibility = "hidden";
+		E("close_log").style.visibility = "hidden";
+		E("clean_log").style.visibility = "hidden";
 		E("log_content").rows = "26";
 		var LOG_FILE = '/_temp/soft_install_log.txt';
 	}
+	document.scrollingElement.scrollTop = 0;
 	var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	var page_w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 	var log_h = E("softcenter_log_pannel").clientHeight;
@@ -709,8 +718,8 @@ function get_log(flag) {
 	var log_w_offset = (page_w - log_w) / 2 + 90;
 	$('#softcenter_log_pannel').offset({top: log_h_offset, left: log_w_offset});
 
-	E("softcenter_log_pannel").style.visibility = "visible";
 	E("softcenter_shade_pannel").style.visibility = "visible";
+	E("softcenter_log_pannel").style.visibility = "visible";
 	
 	$.ajax({
 		url: LOG_FILE,
@@ -727,7 +736,7 @@ function get_log(flag) {
 			if (response.search("XU6J03M6") != -1) {
 				E("log_content").value = response.myReplace("XU6J03M6", " ");
 				E("log_content").scrollTop = E("log_content").scrollHeight;
-				E("close_log").style.display = "";
+				E("close_log").style.visibility = "visible";
 				if (flag){
 					count_down = -1;
 				}else{
@@ -743,7 +752,7 @@ function get_log(flag) {
 		error: function(xhr) {
 			E("softcenter_log_title").innerHTML = "<i>&nbsp;&nbsp;&nbsp;&nbsp;暂无软件中心日志信息</i>";
 			E("log_content").value = "日志文件为空，请关闭本窗口！";
-			E("close_log").style.display = "";
+			E("close_log").style.visibility = "visible";
 			return false;
 		}
 	});
@@ -833,6 +842,21 @@ function ks_online() {
 <body>
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
+	<div id="softcenter_shade_pannel" class="popup_bar_bg_ks">
+		<!-- this is the popup area for install/uninstall log status -->
+		<div id="softcenter_log_pannel" class="content_status">
+			<div class="user_title">软件中心 - 日志记录</div>
+			<div style="margin-left:15px" id="softcenter_log_title"></div>
+			<div style="margin: 10px 10px 10px 10px;width:98%;text-align:center;overflow:hidden;">
+				<textarea cols="63" rows="25" wrap="on" readonly="readonly" id="log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+			</div>
+			<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
+				<input class="button_gen" type="button" style="visibility:hidden;min-width:88px;" id="download_log" value="下载日志">
+				<input class="button_gen" type="button" style="visibility:hidden;min-width:88px;margin-left: 10px;" id="close_log" value="关闭日志">
+				<input class="button_gen" type="button" style="visibility:hidden;min-width:88px;margin-left: 10px;" id="clean_log" value="清空日志">
+			</div>
+		</div>
+	</div>
 	<table class="content" align="center" cellpadding="0" cellspacing="0">
 		<tr>
 			<td width="17">&nbsp;</td>
@@ -860,20 +884,6 @@ function ks_online() {
 													<!--<a type="button" class="ks_btn" style="margin-left: 5px;" href="javascript:void(0);" onclick="ks_online()">ks online</a>-->
 												</div>
 												<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
-												<div id="softcenter_shade_pannel" class="popup_bar_bg_ks"></div>
-												<!-- this is the popup area for install/uninstall log status -->
-												<div id="softcenter_log_pannel" class="content_status">
-													<div class="user_title">软件中心 - 日志记录</div>
-													<div style="margin-left:15px" id="softcenter_log_title"></div>
-													<div style="margin: 10px 10px 10px 10px;width:98%;text-align:center;overflow:hidden;">
-														<textarea cols="63" rows="25" wrap="on" readonly="readonly" id="log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-													</div>
-													<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
-														<input class="button_gen" type="button" style="display:none;min-width: 88px;" id="clean_log" value="清空日志">
-														<input class="button_gen" type="button" style="display:none;min-width: 88px;margin-left: 10px;" id="download_log" value="下载日志">
-														<input class="button_gen" type="button" style="display:none;min-width: 88px;margin-left: 10px;" id="close_log" value="关闭日志">
-													</div>
-												</div>
 													<table id="ks_info" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 													</table>
 													<table id="ks_pannel" width="100%" height="150px" style="border-collapse:collapse;">
