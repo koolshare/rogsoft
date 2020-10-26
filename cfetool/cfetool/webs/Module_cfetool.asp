@@ -71,28 +71,6 @@ input[type=checkbox]{
 	font-style: normal;
 }
 .SimpleNote { padding:5px 10px;}
-#log_content{
-	margin-top:10px;
-	display:block;
-	overflow:hidden;
-	outline: 1px solid #222;
-}
-#log_content_text{
-	width:97%;
-	padding-top:4px;
-	padding-bottom:4px;
-	padding-left:4px;
-	padding-right:37px;
-	font-family:'Lucida Console';
-	font-size:11px;
-	line-height:1.5;
-	color:#FFFFFF;
-	outline:none;
-	overflow-x:hidden;
-	margin-top:1px;
-	border:0px solid #222;
-	background:#475A5F;
-}
 body .layui-layer-lan .layui-layer-btn0 {border-color:#22ab39; background-color:#22ab39;color:#fff; background:#22ab39}
 body .layui-layer-lan .layui-layer-btn .layui-layer-btn1 {border-color:#1678ff; background-color:#1678ff;color:#fff;}
 body .layui-layer-lan .layui-layer-btn2 {border-color:#FF6600; background-color:#FF6600;color:#fff;}
@@ -423,8 +401,8 @@ function pop_help() {
 											<div id="head_note">
 												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。</span>
 											</div>
-											<div id="log_content">
-												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+											<div id="log_content" class="soft_setting_log">
+												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
 											<div id="cfetool_main" style="margin-top:10px;display: none;">
 												<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable">

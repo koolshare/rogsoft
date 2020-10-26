@@ -77,8 +77,7 @@ cp -f /tmp/${module}/scripts/* /koolshare/scripts/
 cp -f /tmp/${module}/res/* /koolshare/res/
 cp -f /tmp/${module}/webs/* /koolshare/webs/
 cp -f /tmp/${module}/init.d/* /koolshare/init.d/
-rm -fr /tmp/frps* >/dev/null 2>&1
-killall ${module}
+killall ${module} >/dev/null 2>&1
 if [ "$ROG" == "1" ];then
 	continue
 else
@@ -94,9 +93,9 @@ chmod +x /koolshare/scripts/config-frps.sh
 chmod +x /koolshare/scripts/frps_status.sh
 chmod +x /koolshare/scripts/uninstall_frps.sh
 chmod +x /koolshare/init.d/S97frps.sh
-sleep 1
 
 # 离线安装用
+VERSION=$(cat $DIR/version)
 dbus set ${module}_version="${VERSION}"
 dbus set ${module}_client_version=`/koolshare/bin/${module} --version`
 dbus set ${module}_common_cron_hour_min="hour"
@@ -110,5 +109,6 @@ en=`dbus get ${module}_enable`
 if [ "$en" == "1" ]; then
     /koolshare/scripts/config-${module}.sh
 fi
-echo "${module} ${VERSION} install completed!"
 
+echo_date "${module}-${VERSION}安装完毕！"
+exit_install

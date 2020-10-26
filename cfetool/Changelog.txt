@@ -1,5 +1,11 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
 ===========================================
+2.2
+   - add	添加TUF-AX3000刺客信条版本支持；
+
+2.1
+   - add	添加华硕RT-AX56U_V2修改国行支持；
+
 2.0
    - add	添加华硕RT-AX56U修改国行支持；
 
