@@ -69,15 +69,20 @@ if [ "${MODEL}" == "TUF-AX3000" ];then
 	TUF=1
 fi
 
+# stop first
+enable=$(dbus get frps_enable)
+if [ "${enable}" == "1" ]
+	echo_date "先关闭frps插件..."
+	sh /koolshare/scrips/frp_config.sh stop
+fi
+
+echo_date "安装frps插件..."
 # 安装插件
 cd /
-rm -f /koolshare/init.d/S97frps.sh
 cp -f /tmp/${module}/bin/* /koolshare/bin/
 cp -f /tmp/${module}/scripts/* /koolshare/scripts/
 cp -f /tmp/${module}/res/* /koolshare/res/
 cp -f /tmp/${module}/webs/* /koolshare/webs/
-cp -f /tmp/${module}/init.d/* /koolshare/init.d/
-killall ${module} >/dev/null 2>&1
 if [ "$ROG" == "1" ];then
 	continue
 else
@@ -89,26 +94,28 @@ else
 fi
 
 chmod +x /koolshare/bin/${module}
-chmod +x /koolshare/scripts/config-frps.sh
-chmod +x /koolshare/scripts/frps_status.sh
+chmod +x /koolshare/scripts/frps*.sh
 chmod +x /koolshare/scripts/uninstall_frps.sh
-chmod +x /koolshare/init.d/S97frps.sh
 
-# 离线安装用
+# default value
 VERSION=$(cat $DIR/version)
 dbus set ${module}_version="${VERSION}"
-dbus set ${module}_client_version=`/koolshare/bin/${module} --version`
+dbus set ${module}_client_version=$(/koolshare/bin/${module} --version`)
 dbus set ${module}_common_cron_hour_min="hour"
 dbus set ${module}_common_cron_time="12"
+
+# 离线安装用
 dbus set softcenter_module_${module}_install=1
 dbus set softcenter_module_${module}_name=${module}
 dbus set softcenter_module_${module}_title="Frps内网穿透"
 dbus set softcenter_module_${module}_description="Frps路由器服务端，内网穿透利器。"
 dbus set softcenter_module_${module}_version="${VERSION}"
-en=`dbus get ${module}_enable`
-if [ "$en" == "1" ]; then
-    /koolshare/scripts/config-${module}.sh
-fi
 
 echo_date "${module}-${VERSION}安装完毕！"
+
+if [ "${enable}" == "1" ]; then
+	echo_date "重新开启frps插件..."
+    /koolshare/scripts/frp_config.sh restart
+fi
+
 exit_install
