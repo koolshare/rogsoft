@@ -2,7 +2,7 @@
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 
-sh /koolshare/scrips/frp_config.sh stop >/dev/null 2>&1
+sh /koolshare/scripts/frps_config.sh stop >/dev/null 2>&1
 
 rm -f /koolshare/bin/frps
 find /koolshare/init.d/ -name "*frps*" | xargs rm -rf

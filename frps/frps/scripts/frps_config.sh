@@ -5,7 +5,7 @@ eval $(dbus export frps_)
 INI_FILE=/koolshare/configs/frps.ini
 LOG_FILE=/tmp/upload/frps_log.txt
 LOCK_FILE=/var/lock/frps.lock
-alias echo_date='echo $(date +%Y年%m月%d日\ %X):'
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 true > $LOG_FILE
 
 set_lock() {

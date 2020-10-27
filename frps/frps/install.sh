@@ -73,7 +73,7 @@ fi
 enable=$(dbus get frps_enable)
 if [ "${enable}" == "1" ];then
 	echo_date "先关闭frps插件..."
-	sh /koolshare/scrips/frps_config.sh stop
+	sh /koolshare/scripts/frps_config.sh stop
 fi
 
 echo_date "安装frps插件..."
