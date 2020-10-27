@@ -73,7 +73,7 @@ fi
 enable=$(dbus get frps_enable)
 if [ "${enable}" == "1" ];then
 	echo_date "先关闭frps插件..."
-	sh /koolshare/scrips/frp_config.sh stop
+	sh /koolshare/scrips/frps_config.sh stop
 fi
 
 echo_date "安装frps插件..."
@@ -113,9 +113,9 @@ dbus set softcenter_module_${module}_version="${VERSION}"
 
 echo_date "${module}-${VERSION}安装完毕！"
 
-if [ "${enable}" == "1" ]; then
+if [ "${enable}" == "1" ];then
 	echo_date "重新开启frps插件..."
-    /koolshare/scripts/frp_config.sh restart
+	sh /koolshare/scripts/frps_config.sh restart
 fi
 
 exit_install
