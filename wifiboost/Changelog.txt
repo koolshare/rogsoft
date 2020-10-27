@@ -1,9 +1,9 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
 3.2
-   - fix	修复路由器使用了entware环境时，无法修改国行的问题。
    - add	添加对RT-AX56U青春版/热血版(RT-AX56U_V2)的支持。
    - add	完善对RT-AX56U_V2/TUF-AX3000刺客信条版的支持。
+   - update 优化web
 
 3.1
    - fix	修复路由器使用了entware环境时，无法boost的问题。
