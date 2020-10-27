@@ -71,7 +71,7 @@ fi
 
 # stop first
 enable=$(dbus get frps_enable)
-if [ "${enable}" == "1" ]
+if [ "${enable}" == "1" ];then
 	echo_date "先关闭frps插件..."
 	sh /koolshare/scrips/frp_config.sh stop
 fi
