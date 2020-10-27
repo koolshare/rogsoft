@@ -100,12 +100,12 @@ chmod +x /koolshare/scripts/uninstall_frps.sh
 # default value
 VERSION=$(cat $DIR/version)
 dbus set ${module}_version="${VERSION}"
-dbus set ${module}_client_version=$(/koolshare/bin/${module} --version`)
+dbus set ${module}_client_version=$(/koolshare/bin/${module} --version)
 dbus set ${module}_common_cron_hour_min="hour"
 dbus set ${module}_common_cron_time="12"
 
 # 离线安装用
-dbus set softcenter_module_${module}_install=1
+dbus set softcenter_module_${module}_install="1"
 dbus set softcenter_module_${module}_name=${module}
 dbus set softcenter_module_${module}_title="Frps内网穿透"
 dbus set softcenter_module_${module}_description="Frps路由器服务端，内网穿透利器。"
