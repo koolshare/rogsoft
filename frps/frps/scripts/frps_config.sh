@@ -45,7 +45,7 @@ fun_nat_start(){
 }
 onstart() {
 	# 插件开启的时候同步一次时间
-	if [ "${frps_enable}" == "1" ];then
+	if [ "${frps_enable}" == "1" -a -n "$(which ntpclient)" ];then
 		sync_ntp
 	fi
 

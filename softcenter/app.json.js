@@ -100,15 +100,15 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-10-27_14:28:01", 
+            "build_date": "2020-10-28_10:30:38", 
             "changelog": "", 
             "description": "内网穿透利器，谁用谁知道。", 
             "home_url": "Module_frps.asp", 
-            "md5": "b5fcb90853df0e4e147deb58b4d884a2", 
+            "md5": "3b727d46f355b9de007bc3f4c832d6aa", 
             "name": "frps", 
             "tar_url": "frps/frps.tar.gz", 
             "title": "frps穿透服务器", 
-            "version": "1.5.1"
+            "version": "1.5.2"
         }, 
         {
             "build_date": "2020-10-19_14:55:33", 
