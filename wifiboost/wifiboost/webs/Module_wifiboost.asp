@@ -214,6 +214,10 @@ var boost_dbm;
 var	refresh_flag;
 var count_down;
 var asus = 0;
+var dbus;
+var pay_server = '42.192.18.234';
+var pay_port = '8083';
+var online_ver;
 function init() {
 	show_menu(menu_hook);
 	detect_brower();
@@ -252,6 +256,7 @@ function detect_brower() {
 	get_wl_status();
 	get_dbus_data();
 	try_activate();
+	get_pay_server();
 }
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
@@ -424,15 +429,20 @@ function conf2obj(){
 	}
 	//write version
 	if (dbus["wifiboost_version"]){
-		E("wifiboost_version").innerHTML = " - " + dbus["wifiboost_version"]
+		E("wifiboost_version").innerHTML = " - " + dbus["wifiboost_version"];
 	}
-	if (dbus["wifiboost_mcode"]){
+	if (dbus["wifiboost_mcode"] && dbus["wifiboost_key"]){
+		E("wifiboost_a_info").innerHTML = "机器码：" +  dbus["wifiboost_mcode"] + "&#10;激活码：" + dbus["wifiboost_key"];
+		E("wifiboost_a_mail").href = "mailto:mjy211@gmail.com?subject=wifi boost插件购买&body=我的wifiboost插件就激活码遗失了，需要找回！%0d%0a机器码：" +  dbus["wifiboost_mcode"];
+	} else if (dbus["wifiboost_mcode"] && !dbus["wifiboost_key"]) {
 		E("wifiboost_info").innerHTML = "订单号：xxx&#10;机器码：" +  dbus["wifiboost_mcode"];
 		E("wifiboost_mail").href = "mailto:mjy211@gmail.com?subject=wifi boost插件购买&body=订单号：xxx%0d%0a机器码：" +  dbus["wifiboost_mcode"];
 	}
-	if (dbus["wifiboost_mcode"] &&  dbus["wifiboost_key"]){
-		E("wifiboost_a_info").innerHTML = "机器码：" +  dbus["wifiboost_mcode"] + "&#10;激活码：" + dbus["wifiboost_key"];
-		E("wifiboost_a_mail").href = "mailto:mjy211@gmail.com?subject=wifi boost插件购买&body=我的wifiboost插件就激活码遗失了，需要找回！%0d%0a机器码：" +  dbus["wifiboost_mcode"];
+	if (!dbus["wifiboost_mcode"]){
+		dbus["wifiboost_warn"] = "8";
+		E("wifiboost_buy_btn").style.display = "none";
+		E("wifiboost_active_btn").style.display = "none";
+		E("wifiboost_authorized_btn").style.display = "none";
 	}
 	if(dbus["wifiboost_key"]){
 		E("wifiboost_buy_btn").style.display = "none";
@@ -478,6 +488,9 @@ function show_err_code() {
 		break;
 		case "7":
 			err_mesg = '<br/><span style="color: #CC3300">错误代码7：检测到你的路由器出厂配置有误！！</span><br/><br>';
+		break;
+		case "8":
+			err_mesg = '<br/><span style="color: #CC3300">错误代码8：无法购买！因为检测到插件安装有问题，请尝试卸载并重装插件后再试！</span><br/><br>';
 		break;
 	}
 	require(['/res/layer/layer.js'], function(layer) {
@@ -599,7 +612,7 @@ function boost_now(action){
 }
 function showWBLoadingBar(){
 	document.scrollingElement.scrollTop = 0;
-	E("loading_block_title").innerHTML = "wifi boost修改最大功率应用中，请稍后 ...";
+	E("loading_block_title").innerHTML = "wifi boost 运行中，请稍后 ...";
 	E("LoadingBar").style.visibility = "visible";
 	var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	var page_w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -668,6 +681,64 @@ function menu_hook(title, tab) {
 	tabtitle[tabtitle.length - 1] = new Array("", "wifi boost");
 	tablink[tablink.length - 1] = new Array("", "Module_wifiboost.asp");
 }
+function ValidateIPaddress(ipaddress) {  
+	if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
+		return ipaddress;
+	}
+}
+function versionCompare(v1, v2, options) {
+	var lexicographical = options && options.lexicographical,
+		zeroExtend = options && options.zeroExtend,
+		v1parts = v1.split('.'),
+		v2parts = v2.split('.');
+	function isValidPart(x) {
+		return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+	}
+	if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+		return NaN;
+	}
+	if (zeroExtend) {
+		while (v1parts.length < v2parts.length) v1parts.push("0");
+		while (v2parts.length < v1parts.length) v2parts.push("0");
+	}
+	if (!lexicographical) {
+		v1parts = v1parts.map(Number);
+		v2parts = v2parts.map(Number);
+	}
+	for (var i = 0; i < v1parts.length; ++i) {
+		if (v2parts.length == i) {
+			return true;
+		}
+		if (v1parts[i] == v2parts[i]) {
+			continue;
+		} else if (v1parts[i] > v2parts[i]) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if (v1parts.length != v2parts.length) {
+		return false;
+	}
+	return false;
+}
+function get_pay_server() {
+	$.ajax({
+		url: 'https://rogsoft.ddnsto.com/wifiboost/config.json.js',
+		type: 'GET',
+		dataType: 'jsonp',
+		success: function(res) {
+			pay_server = ValidateIPaddress(res.server) || pay_server;
+			pay_port = res.port || pay_port;
+			online_ver = res.version;
+			if (res["version"]) {
+				if (versionCompare(res["version"], dbus["wifiboost_version"])) {
+					E("wifiboost_o_version").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;<em>有新版本: " + res["version"] + "</em>";
+				}
+			}
+		}
+	});
+}
 function close_mail_buy(){
 	$("#qrcode_show").fadeOut(300);
 	open_buy();
@@ -697,10 +768,10 @@ function open_buy() {
 			content: note,
 			btn: ['微信支付', '支付宝', '人工邮件购买'],
 			btn1: function() {
-				location.href = "http://47.108.206.248:8083/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+				location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
 			},
 			btn2: function() {
-				location.href = "http://47.108.206.248:8083/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+				location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
 			},
 			btn3: function() {
 				$("#qrcode_show").css("margin-top", "-50px");
@@ -827,7 +898,7 @@ function verifyFields(r) {
 												<input class="button_gen" type="button" onclick="close_info();" value="关闭">
 											</div>
 										</div>
-										<div class="formfonttitle">wifi boost<lable id="wifiboost_version"><lable></div>
+										<div class="formfonttitle">wifi boost<lable id="wifiboost_version"></lable></div>
 										<div style="float:right; width:15px; height:25px;margin-top:-20px">
 											<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 										</div>
@@ -836,6 +907,7 @@ function verifyFields(r) {
 											<span>wifi boost可以极大的增强路由器wifi的发射功率，增强信号覆盖范围。
 												<a type="button" href="https://koolshare.cn/thread-184369-1-1.html" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >使用交流</a>
 												<a type="button" href="https://github.com/koolshare/rogsoft/blob/master/wifiboost/Changelog.txt" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >更新日志</a>
+												<lable id="wifiboost_o_version"></lable>
 											</span>
 										</div>
 										<div id="wifiboost_main">
@@ -927,6 +999,7 @@ function verifyFields(r) {
 											<li id="msg3">虽然插件可以保证修改过程相对安全，但还是强烈建议不要过于频繁的进行修改，以免发生意外导致机器wlan出厂设置被损坏。</li>
 											<li id="msg4">修改后需要将wifi区域更改为澳大利亚才会有效果，非澳大利亚的功率和修改前一样。如果修改后功率未起作用，请重置一次路由。</li>
 											<li id="msg5">修改完成后，卸载wifi boost插件、升级固件版本、刷三方固件/原厂固件等操作均会保持最后一次的功率修改效果。</li>
+											<li id="msg6">wifi boost是开发者sadog个人作品，软件中心仅提供上线平台，wifi boost产品经营与koolshare软件中心/koolshare无关。</li>
 										</div>
 									</td>
 								</tr>

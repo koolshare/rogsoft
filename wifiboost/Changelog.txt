@@ -1,9 +1,14 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+3.3
+   - update	优化支付。
+   - update	优化插件安装后，如果出现错误的提示。
+   - update	为了方便官方/原版梅林的wifiboost用户即时更新插件，现在插件有更新的话，会在插件内提醒。
+
 3.2
    - add	添加对RT-AX56U青春版/热血版(RT-AX56U_V2)的支持。
    - add	完善对RT-AX56U_V2/TUF-AX3000刺客信条版的支持。
-   - update	优化web
+   - update	优化web。
 
 3.1
    - fix	修复路由器使用了entware环境时，无法boost的问题。
