@@ -439,7 +439,9 @@ function conf2obj(){
 		E("wifiboost_mail").href = "mailto:mjy211@gmail.com?subject=wifi boost插件购买&body=订单号：xxx%0d%0a机器码：" +  dbus["wifiboost_mcode"];
 	}
 	if (!dbus["wifiboost_mcode"]){
-		dbus["wifiboost_warn"] = "8";
+		if(!dbus["wifiboost_warn"]){
+			dbus["wifiboost_warn"] = "8";
+		}
 		E("wifiboost_buy_btn").style.display = "none";
 		E("wifiboost_active_btn").style.display = "none";
 		E("wifiboost_authorized_btn").style.display = "none";

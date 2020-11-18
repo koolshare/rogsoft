@@ -265,11 +265,11 @@
             "version": "1.6"
         }, 
         {
-            "build_date": "2020-11-18_11:21:14", 
+            "build_date": "2020-11-18_11:27:48", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
-            "md5": "3934af39122c0250cb47fca245300453", 
+            "md5": "b533fab3697722488f349759e8d68383", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
