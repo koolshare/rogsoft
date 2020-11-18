@@ -81,6 +81,10 @@ body .layui-layer-lan .layui-layer-btn {text-align:center}
 <script>
 var params_inp = ['cfetool_key'];
 var asus = 0;
+var dbus;
+var pay_server = '42.192.18.234';
+var pay_port = '8083';
+var online_ver;
 function init() {
 	show_menu(menu_hook);
 	var current_url = window.location.href;
@@ -101,6 +105,7 @@ function init() {
 	get_dbus_data();
 	get_log();
 	try_activate();
+	get_pay_server();
 }
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
@@ -253,6 +258,65 @@ function menu_hook(title, tab) {
 	tabtitle[tabtitle.length - 1] = new Array("", "cfetool");
 	tablink[tablink.length - 1] = new Array("", "Module_cfetool.asp");
 }
+function ValidateIPaddress(ipaddress) {  
+	if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
+		return ipaddress;
+	}
+}
+function versionCompare(v1, v2, options) {
+	var lexicographical = options && options.lexicographical,
+		zeroExtend = options && options.zeroExtend,
+		v1parts = v1.split('.'),
+		v2parts = v2.split('.');
+	function isValidPart(x) {
+		return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+	}
+	if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+		return NaN;
+	}
+	if (zeroExtend) {
+		while (v1parts.length < v2parts.length) v1parts.push("0");
+		while (v2parts.length < v1parts.length) v2parts.push("0");
+	}
+	if (!lexicographical) {
+		v1parts = v1parts.map(Number);
+		v2parts = v2parts.map(Number);
+	}
+	for (var i = 0; i < v1parts.length; ++i) {
+		if (v2parts.length == i) {
+			return true;
+		}
+		if (v1parts[i] == v2parts[i]) {
+			continue;
+		} else if (v1parts[i] > v2parts[i]) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if (v1parts.length != v2parts.length) {
+		return false;
+	}
+	return false;
+}
+function get_pay_server() {
+	$.ajax({
+		url: 'https://rogsoft.ddnsto.com/cfetool/config.json.js',
+		type: 'GET',
+		dataType: 'jsonp',
+		success: function(res) {
+			pay_server = ValidateIPaddress(res.server) || pay_server;
+			pay_port = res.port || pay_port;
+			online_ver = res.version;
+			console.log(pay_server);
+			if (res["version"]) {
+				if (versionCompare(res["version"], dbus["cfetool_version"])) {
+					E("cfetool_o_version").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;<em>有新版本: " + res["version"] + "</em>";
+				}
+			}
+		}
+	});
+}
 function close_buy(){
 	$("#qrcode_show").fadeOut(300);
 }
@@ -281,10 +345,10 @@ function open_buy() {
 			content: note,
 			btn: ['微信支付', '支付宝', '人工邮件购买'],
 			btn1: function() {
-				location.href = "http://47.108.206.248:8083/pay_cfe.php?paytype=1&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+				location.href = "http://" + pay_server + ":" + pay_port + "/pay_cfe.php?paytype=1&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
 			},
 			btn2: function() {
-				location.href = "http://47.108.206.248:8083/pay_cfe.php?paytype=2&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+				location.href = "http://" + pay_server + ":" + pay_port + "/pay_cfe.php?paytype=2&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
 			},
 			btn3: function() {
 				$("#qrcode_show").css("margin-top", "-50px");
@@ -400,6 +464,7 @@ function pop_help() {
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div id="head_note">
 												<span>【CFE工具箱】可以查看机器CFE内相关信息，并支持非国行机器改国行(收费功能)。</span>
+												<lable id="cfetool_o_version"></lable>
 											</div>
 											<div id="log_content" class="soft_setting_log">
 												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
