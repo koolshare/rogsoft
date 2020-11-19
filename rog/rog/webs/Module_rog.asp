@@ -26,6 +26,7 @@
 .rog_btn {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -35,6 +36,7 @@
 .rog_btn:hover {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -60,6 +62,7 @@
 }
 </style>
 <script>
+var asus = 0;
 var cpu_info_old = new Array();
 var core_num = '<%cpu_core_num();%>';
 var cpu_usage_array = new Array();
@@ -84,6 +87,18 @@ var params_inp = ['rog_fan_level'];
 
 function init() {
 	show_menu(menu_hook);
+	var current_url = window.location.href;
+	var net_address = current_url.split("/Module")[0];
+	var port = net_address.split(":")[2];
+	//console.log(port);
+	if(port && port != "80" && asus == "1"){
+		$("#rog_main").hide();
+		$("#msg2").hide();
+		$(".SimpleNote").hide();
+		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
+		$("#warn_msg_1").show();
+		return false;
+	}
 	detect_CPU_RAM();
 	get_temperature();
 	showbootTime();
@@ -92,9 +107,25 @@ function init() {
 }
 
 function show_ui_switch(){
+	var EXT = '<% nvram_get("extendno"); %>';
 	if(productid == "RT-AC86U"){
-		$("#FANC").hide();
-		get_dbus_data();
+		if (EXT.indexOf('koolshare') != -1){
+			EXT_1 = EXT.match(/(\S*)_/)[1];
+			if(EXT_1 < "81918"){
+				$("#FANC").hide();
+				$("#UI_SWITCH").show();
+				$("#msg2").show();
+				get_dbus_data();
+			}else{
+				$("#UI_SWITCH").hide();
+				$("#FANC").hide();
+				$("#msg2").hide();
+			}
+		}else{
+			$("#UI_SWITCH").hide();
+			$("#FANC").hide();
+			$("#msg2").hide();
+		}
 	}else if(productid == "RAX80"){
 		$("#UI_SWITCH").hide();
 		$("#msg2").hide();
@@ -461,23 +492,37 @@ function menu_hook(title, tab) {
 											<div class="SimpleNote">
 												<li>ROG 工具箱是软件中心的一个辅助工具，用以实现一些简单的功能的工具箱。</li>
 											</div>
-											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
+											<table id="rog_main" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<thead>
 													<tr>
 														<td colspan="2">ROG 工具箱设置</td>
 													</tr>
 												</thead>
 												<tr>
+													<th>固件版本</th>
+													<td id="rog_ver"></td>
+													<script type="text/javascript">
+														var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
+														var BUILD = '<% nvram_get("buildno"); %>'
+														var FWVER = '<% nvram_get("extendno"); %>';
+														if (FWVER.indexOf('koolshare') != -1){
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
+														}else if(FWVER == "0"){
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "&nbsp;&nbsp;梅林改版固件");
+														}else{
+															$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + "<% nvram_get("firmver"); %>" + "." + BUILD + "_" + FWVER + "&nbsp;&nbsp;华硕官方固件");
+														}
+													</script>													
+												</tr>
+												<tr>
 													<th>系统时间</th>
-													<td>
-														<span id="rog_time"></span>
-													</td>
+													<td id="rog_time"></td>
 												</tr>
 												<tr>
 													<th>开机时间</a></th>
-														<td>
-															<span id="boot_days"></span> 天 <span id="boot_hours"></span> 时 <span id="boot_minutes"></span> 分 <span id="boot_seconds"></span> 秒
-														</td>
+													<td>
+														<span id="boot_days"></span> 天 <span id="boot_hours"></span> 时 <span id="boot_minutes"></span> 分 <span id="boot_seconds"></span> 秒
+													</td>
 												</tr>
 												<tr>
 													<th>CPU温度</th>
@@ -547,6 +592,7 @@ function menu_hook(title, tab) {
 											<!--<div class="apply_gen">
 												<input class="button_gen" id="cmdBtn" onClick="save();" type="button" value="提交" />
 											</div>-->
+											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<li id="msg1">本插件支持温度显示等一些简单功能，用以弥补官改固件没有温度显示的遗憾。</li>

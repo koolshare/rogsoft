@@ -7,7 +7,7 @@
 <meta HTTP-EQUIV="Expires" CONTENT="-1"/>
 <link rel="shortcut icon" href="images/favicon.png"/>
 <link rel="icon" href="images/favicon.png"/>
-<title>软件中心 - koolproxy</title>
+<title>软件中心 - Kids Protect</title>
 <link rel="stylesheet" type="text/css" href="index_style.css"/>
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="usp_style.css"/>
@@ -27,6 +27,7 @@
 .kp_btn {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -36,6 +37,7 @@
 .kp_btn:hover {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -60,6 +62,7 @@
 	border-radius:10px;
 	z-index: 10;
 	background-color:#2B373B;
+	background-color:none; /* W3C rogcss */
 	margin-left: -215px;
 	top: 240px;
 	width:980px;
@@ -82,17 +85,21 @@
 	color:#FFFFFF;
 	font-family: Lucida Console;
 	font-size:12px;
+	border:1px solid #91071f; /* W3C rogcss */
+	background-color: #3e030d; /* W3C rogcss */
 }
 
 .FormTable1{
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	border: 1px solid #000000;
+	border: none; /* W3C rogcss */
 	border-collapse: collapse;
 }
 .FormTable1 th{
 	font-family:Arial, Helvetica, sans-serif;
 	background-color:#1F2D35;
+	background-color:none; /* W3C rogcss */
 	color:#FFFFFF;	/*Viz add*/
 	/*font-weight:normal;*/
 	line-height:15px;
@@ -102,8 +109,8 @@
 	width:35%;	/*Viz add*/
 	padding-left: 10px;
 	border-collapse: collapse;
-	background:#2F3A3E;
-	border: 1px solid #000000;
+	background:#2F3A3E; /* W3C rogcss */
+	border: 1px solid #000000; /* W3C rogcss */
 }
 .FormTable1 thead td{
 	color: #FFF;
@@ -111,7 +118,6 @@
 	background-color:#4D595D;
 	text-align:left;
 	font-weight:bolder;
-	border: 1px solid #222;
 	padding: 3px;
 	padding-left: 10px;
 	border-collapse: collapse;
@@ -122,13 +128,19 @@
 	background: -o-linear-gradient(top,  #92A0A5 0%, #66757C 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #92A0A5  0%, #66757C 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #92A0A5  0%, #66757C 100%); /* W3C */
+	border: 1px solid #222;
+	background: none;
+	background: #91071f; /* W3C rogcss */
 }
 .FormTable1 td{
 	/*padding-left: 10px;*/
 	background-color:#475A5F;
+	background-color:none; /* W3C rogcss */
 	border: 1px solid #000000;
+	border: 1px solid #91071f; /* W3C rogcss */
 	border-collapse: collapse;
 	word-break: break-word;
+	background:transparent; /* W3C rogcss */
 }
 .input_ss_table {
 	font-size: 12px;
@@ -136,6 +148,10 @@
 }
 input[type=button]:focus {
 	outline: none;
+}
+#basic_settings, #rule_table_div, #ACL_table_div{
+	border:none;
+	border:1px solid #91071f; /* W3C rogcss */
 }
 textarea{
 	width:97%;
@@ -147,6 +163,8 @@ textarea{
 	outline: none;
 	background:#475A5F;
 	border:1px solid #222;
+	background:transparent; /* W3C rogcss */
+	border:1px solid #91071f; /* W3C rogcss */
 }
 </style>
 <script>
@@ -460,9 +478,9 @@ function LoadingKPProgress(seconds){
 	} else {
 		$("#loading_block2").html("<font color='#ffcc00'>----------------------------------------------------------------------------------------------------------------------------------");
 		if (dbus["koolproxy_basic_action"] == 1){
-			E("loading_block3").innerHTML = "开启koolproxy ..."
+			E("loading_block3").innerHTML = "开启Kids Protect ..."
 		}else if (dbus["koolproxy_basic_action"] == 2){
-			E("loading_block3").innerHTML = "更新koolproxy规则列表 ..."
+			E("loading_block3").innerHTML = "更新Kids Protect规则列表 ..."
 		}else if (dbus["koolproxy_basic_action"] == 3){
 			E("loading_block3").innerHTML = "上传证书 ..."
 		}else if (dbus["koolproxy_basic_action"] == 4){
@@ -1099,7 +1117,7 @@ function openkpHint(itemNum) {
 	if (itemNum == 1) {
 		width = "650px";
 		_caption = "规则控制";
-		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;规则控制功能为大家提供了经过koolproxy兼容认证的规则，其中包括：静态规则、每日规则、视频规则、自定规则，koolproxy用户可以根据自己的需求选取相应的规则。"
+		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;规则控制功能为大家提供了经过Kids Protect兼容认证的规则，其中包括：静态规则、每日规则、视频规则、自定规则，koolproxy用户可以根据自己的需求选取相应的规则。"
 		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;</br></br><b>koolproxy兼容认证规则介绍：</b>"
 		//静态规则
 		statusmenu += "</br><font color='#CC0066'><b>1:静态规则（koolproxy.txt）：</b></font>"
@@ -1183,22 +1201,22 @@ function openkpHint(itemNum) {
 								<tr>
 									<td bgcolor="#4D595D" colspan="3" valign="top" style="border-radius: 8px">
 										<div>&nbsp;</div>
-										<div class="formfonttitle"><em>软件中心 - koolproxy</em></div>
+										<div class="formfonttitle"><em>软件中心 - KidsProtect</em></div>
 										<div style="float:right; width:15px; height:25px;margin-top:-20px">
 											<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
 											<li id="push_content1" style="margin-top:-5px;">
-												koolproxy是一款高效的基于规则过滤上网流量包的软件，用于过滤页面垃圾推广元素、不良信息、不健康内容等，并且支持https！
+												KP(KidsProtect)是一款高效的基于规则过滤上网流量包的软件，用于过滤页面垃圾推广元素、不良信息、不健康内容等，并且支持https！
 											</li>
 										</div>
 										<!-- this is the popup area for user rules -->
 										<div id="vpnc_settings" class="contentM_qis" style="box-shadow: 3px 3px 10px #000;margin-top: -65px;">
-											<div class="user_title">koolproxy自定义规则</div>
+											<div class="user_title">KidsProtect自定义规则</div>
 											<div style="margin-left:15px"><i>1&nbsp;&nbsp;点击【保存文件】按钮，文本框内的内容会保存到/koolshare/koolproxy/data/user.txt。</i></div>
-											<div style="margin-left:15px"><i>2&nbsp;&nbsp;如果你更改了user.txt，你需要重新重启koolproxy插件才，新加入的规则才能生效。</i></div>
-											<div style="margin-left:15px"><i>3&nbsp;&nbsp;虽然koolproxy支持adblock规则，但是我们一点都不建议你直接使用他们的规则内容，因为这极可能导致规则冲突。</i></div>
+											<div style="margin-left:15px"><i>2&nbsp;&nbsp;如果你更改了user.txt，你需要重新重启KidsProtect插件才，新加入的规则才能生效。</i></div>
+											<div style="margin-left:15px"><i>3&nbsp;&nbsp;虽然KidsProtect支持adblock规则，但是我们一点都不建议你直接使用他们的规则内容，因为这极可能导致规则冲突。</i></div>
 											<div id="user_tr" style="margin: 10px 10px 10px 10px;width:98%;text-align:center;">
 												<textarea cols="63" rows="36" wrap="off" id="usertxt" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
@@ -1217,7 +1235,7 @@ function openkpHint(itemNum) {
 												</thead>
 												<tr id="switch_tr">
 													<th>
-														<label>开启koolproxy</label>
+														<label>开启KidsProtect</label>
 													</th>
 													<td colspan="2">
 														<div class="switch_field" style="display:table-cell">
@@ -1237,7 +1255,7 @@ function openkpHint(itemNum) {
 													</td>
 												</tr>
 												<tr id="kp_status">
-													<th>koolproxy运行状态</th>
+													<th>kp运行状态</th>
 													<td><span id="koolproxy_status"></span></td>
 												</tr>
 												<tr id="policy_tr">
@@ -1298,12 +1316,10 @@ function openkpHint(itemNum) {
 													</td>
 												</tr>
 												<tr id="klloproxy_com">
-													<th width="35%">koolproxy交流</th>
+													<th width="35%">kp交流</th>
 													<td>
 														<a type="button" class="kp_btn" target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=d6c8af54e6563126004324b5d8c58aa972e21e04ec6f007679458921587db9b0">加入QQ群①</a>
-														<a type="button" class="kp_btn" target="_blank" href="https://jq.qq.com/?_wv=1027&k=49tpIKb">加入QQ群②</a>
 														<a type="button" class="kp_btn" target="_blank" href="https://t.me/joinchat/AAAAAD-tO7GPvfOU131_vg">加入电报群</a>
-														<a type="button" class="kp_btn" target="_blank" href="https://koolproxy.io">koolproxy官网</a>
 													</td>
 												</tr>
                                     		</table>
@@ -1475,7 +1491,7 @@ function openkpHint(itemNum) {
 										<div id="ACL_note" style="margin-top: 5px;">
 											<div><i>1&nbsp;&nbsp;过滤https站点需要为相应设备安装证书，并启用http + https过滤！</i></div>
 											<div><i>2&nbsp;&nbsp;在路由器下的设备，不管是电脑，还是移动设备，都可以在浏览器中输入<u><font color='#66FF00'>110.110.110.110</font></u>来下载证书。</i></div>
-											<div><i>3&nbsp;&nbsp;如果想在多台装有koolroxy的路由设备上使用一个证书，请用winscp软件备份/koolshare/koolproxy/data文件夹，并上传到另一台路由。</i></div>
+											<div><i>3&nbsp;&nbsp;如果想在多台装有KP的路由设备上使用一个证书，请用winscp软件备份/koolshare/koolproxy/data文件夹，并上传到另一台路由。</i></div>
 										</div>
 										<div class="apply_gen">
 											<input type="button" id="cmdBtn" class="button_gen" onclick="save();" value="提交"/>

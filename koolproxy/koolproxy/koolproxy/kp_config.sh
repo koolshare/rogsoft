@@ -59,7 +59,7 @@ detect_start_up(){
 
 start_koolproxy(){
 	write_sourcelist
-	echo_date 开启koolproxy主进程！
+	echo_date 开启KP主进程！
 	[ ! -L "$KSROOT/bin/koolproxy" ] && ln -sf $KSROOT/koolproxy/koolproxy $KSROOT/bin/koolproxy
 	cd $KP_DIR && koolproxy --mark -d
 	[ "$?" != "0" ] && dbus set koolproxy_enable=0 && exit 1
@@ -67,7 +67,7 @@ start_koolproxy(){
 
 stop_koolproxy(){
 	if [ -n "`pidof koolproxy`" ];then
-		echo_date 关闭koolproxy主进程...
+		echo_date 关闭KP主进程...
 		kill -9 `pidof koolproxy` >/dev/null 2>&1
 		killall koolproxy >/dev/null 2>&1
 	fi
@@ -293,7 +293,7 @@ dns_takeover(){
 
 detect_cert(){
 	if [ ! -f $KP_DIR/data/private/ca.key.pem ]; then
-		echo_date 检测到首次运行，开始生成koolproxy证书，用于https过滤！
+		echo_date 检测到首次运行，开始生成KP证书，用于https过滤！
 		cd $KP_DIR/data && sh gen_ca.sh
 		echo_date 证书生成完毕！！！
 	fi
@@ -304,7 +304,7 @@ start)
 	#开机触发，wan重启触发，所以需要先关后开
 	set_lock
 	if [ "$koolproxy_enable" == "1" ];then
-		logger "[软件中心]: 启动koolproxy插件！"
+		logger "[软件中心]: 启动KP插件！"
 		rm -rf /tmp/upload/user.txt && ln -sf $KSROOT/koolproxy/data/rules/user.txt /tmp/upload/user.txt
 		remove_reboot_job
 		flush_nat
@@ -318,7 +318,7 @@ start)
 		dns_takeover >> /tmp/syslog.log
 		write_reboot_job >> /tmp/syslog.log
 	else
-		logger "[软件中心]: koolproxy插件未开启，不启动！"
+		logger "[软件中心]: KP插件未开启，不启动！"
 	fi
 	unset_lock
 	;;
@@ -333,7 +333,7 @@ restart)
 	stop_koolproxy
 	remove_ipset_conf && restart_dnsmasq
 	# now start
-	echo_date ============================ koolproxy启用 ===========================
+	echo_date ============================ KP启用 ===========================
 	detect_cert
 	start_koolproxy
 	add_ipset_conf && restart_dnsmasq
@@ -342,7 +342,7 @@ restart)
 	dns_takeover
 	write_reboot_job
 	detect_start_up
-	echo_date koolproxy启用成功，请等待日志窗口自动关闭，页面会自动刷新...
+	echo_date KP启用成功，请等待日志窗口自动关闭，页面会自动刷新...
 	echo_date =====================================================================
 	unset_lock
 	;;
@@ -355,7 +355,7 @@ stop)
 	flush_nat
 	stop_koolproxy
 	remove_ipset_conf && restart_dnsmasq
-	echo_date koolproxy插件已关闭
+	echo_date KP插件已关闭
 	echo_date =====================================================================
 	unset_lock
 	;;
@@ -363,7 +363,7 @@ start_nat)
 	#nat重启触发，所以需要先关后开
 	set_lock
 	if [ "$koolproxy_enable" == "1" ];then
-		logger "[软件中心]: koolproxy nat重启！"
+		logger "[软件中心]: KP nat重启！"
 		rm -rf /tmp/upload/user.txt && ln -sf $KSROOT/koolproxy/data/rules/user.txt /tmp/upload/user.txt
 		remove_reboot_job
 		flush_nat

@@ -1,0 +1,11 @@
+{
+"version":"2.3",
+"md5":"7074b36532747038947dc248574bf96f",
+"home_url":"Module_cfetool.asp",
+"title":"CFE工具箱",
+"description":"CFE工具箱，查看CFE信息，改机器为国区",
+"changelog":"",
+"build_date":"2020-11-18_11:45:07",
+"server":"42.192.18.234",
+"port":"8083"
+}

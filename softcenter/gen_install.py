@@ -31,7 +31,7 @@ def work_paths_by_walk():
             print os.path.join(root,sub)
 
 def work_parent():
-    ignore_paths = frozenset(["maintain_files", "softcenter", "appledns", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel",  "phddns", "ssid", "koolproxy"])
+    ignore_paths = frozenset(["maintain_files", "softcenter", "appledns", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "cfetool"])
     fnames = os.listdir(parent_path)
     fnames.sort()
     for fname in fnames:
@@ -43,6 +43,21 @@ def work_parent():
         if os.path.isdir(path):
             #print fname
             #print path
+            yield fname, path
+
+def work_parent_ext():
+    contain_paths = frozenset(["cfetool"])
+    fnames = os.listdir(parent_path)
+    fnames.sort()
+    for fname in fnames:
+
+        if fname[0] == "." or fname not in contain_paths:
+            continue
+
+        path = os.path.join(parent_path, fname)
+        if os.path.isdir(path):
+            print fname
+            print path
             yield fname, path
 
 def work_files(parent, ext):
@@ -91,16 +106,39 @@ def gen_modules(modules):
             m = {"name":module, "title":module, "tar_url": module + "/" + module + ".tar.gz"}
         modules.append(m)
 
+def gen_modules_ext(modules):
+    for module, path in work_parent_ext():
+        conf = os.path.join(path, "config.json.js")
+
+        m = None
+        try:
+            with codecs.open(conf, "r", "utf-8") as fc:
+                m = json.loads(fc.read())
+                if m:
+                    m["name"] = module
+                    if "tar_url" not in m:
+                        m["tar_url"] = module + "/" + module + ".tar.gz"
+                    if "home_url" not in m:
+                        m["home_url"] = "Module_" + module + ".asp"
+        except:
+            pass
+
+        if not m:
+            m = {"name":module, "title":module, "tar_url": module + "/" + module + ".tar.gz"}
+        modules.append(m)
+
 if stage == "stage1":
     to_remove = open(os.path.join(curr_path, "to_remove.txt"), "w")
     check_and_cp()
     to_remove.close()
-else:
+elif stage == "stage2":
     gmodules = None
     with codecs.open(os.path.join(curr_path, "app.template.json.js"), "r", "utf-8") as fg:
         gmodules = json.loads(fg.read())
         gmodules["apps"] = []
+        #gmodules["apps1"] = []
     gen_modules(gmodules["apps"])
+    #gen_modules_ext(gmodules["apps1"])
 
     with codecs.open(os.path.join(curr_path, "config.json.js"), "r", "utf-8") as fc:
         conf = json.loads(fc.read())

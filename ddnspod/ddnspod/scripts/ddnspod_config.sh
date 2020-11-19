@@ -54,9 +54,14 @@ arDdnsUpdate() {
 }
 
 arDdnsCheck() {
-	postRS
+	local postRS
 	hostIP=$(arIpAdress)
-	lastIP=$(arNslookup "${2}.${1}")
+	if [ $2 == "@" ];then
+		lastIP=$(arNslookup "${1}")
+		echo "Spetial subDomain: $2"
+	else
+		lastIP=$(arNslookup "${2}.${1}")
+	fi
 	echo "hostIP: ${hostIP}"
 	echo "lastIP: ${lastIP}"
 	if [ "$lastIP" != "$hostIP" ]; then

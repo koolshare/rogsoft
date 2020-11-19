@@ -30,14 +30,19 @@
 .show-btn1, .show-btn2 {
     border: 1px solid #222;
     background: #576d73;
+    background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss*/
     font-size:10pt;
     color: #fff;
     padding: 10px 3.75px;
     border-radius: 5px 5px 0px 0px;
     width:15%;
+    border: 1px solid #91071f; /* W3C rogcss*/
+    background: none; /* W3C rogcss*/
     }
 .active {
     background: #2f3a3e;
+    background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss*/
+    border: 1px solid #91071f; /* W3C rogcss*/
 }
 .close {
     background: red;
@@ -83,6 +88,7 @@
 .frpc_btn {
     border: 1px solid #222;
     background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss*/
     font-size:10pt;
     color: #fff;
     padding: 5px 5px;
@@ -92,11 +98,23 @@
 .frpc_btn:hover {
     border: 1px solid #222;
     background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss*/
     font-size:10pt;
     color: #fff;
     padding: 5px 5px;
     border-radius: 5px 5px 5px 5px;
     width:16%;
+}
+#frpc_config {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px; background:#475A5F;
+	color:#FFFFFF;
+	text-transform:none;
+	margin-top:5px;
+	overflow:scroll;
+	background:transparent; /* W3C rogcss*/
+	border:1px solid #91071f; /* W3C rogcss*/
 }
 .formbottomdesc {
     margin-top:10px;
@@ -1065,7 +1083,7 @@ function openssHint(itemNum) {
                                                     <label><input type="checkbox" id="frpc_customize_conf" name="frpc_customize_conf"><i>自定义配置</i>
                                                 </th>
                                                 <td>
-                                                    <textarea cols="50" rows="40" id="frpc_config" name="frpc_config" style="width:99%; font-family:'Lucida Console'; font-size:12px; background:#475A5F; color:#FFFFFF; text-transform:none; margin-top:5px; overflow:scroll;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="[common]&#13;&#10;server_addr = 127.0.0.1&#13;&#10;server_port = 7000&#10;&#10;[ssh]&#10;type = tcp&#10;local_ip = 127.0.0.1&#10;local_port = 22&#10;remote_port = 6000" ></textarea>
+                                                    <textarea cols="50" rows="40" id="frpc_config" name="frpc_config" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="[common]&#13;&#10;server_addr = 127.0.0.1&#13;&#10;server_port = 7000&#10;&#10;[ssh]&#10;type = tcp&#10;local_ip = 127.0.0.1&#10;local_port = 22&#10;remote_port = 6000" ></textarea>
                                                 </td>
                                             </tr>
                                     </table>

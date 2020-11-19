@@ -5,13 +5,13 @@ alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 LOG_FILE=/tmp/upload/rog_log.txt
 
 # 具有ROG的插件： acme aria2 cfddns ddnsto easyexplorer fastd1ck frpc koolproxy mdial qiaodao rog serverchan softcenter shadowsocks
-# 无ROG的插件： aliddns ddnspod kms shellinabox ssid ssserver swap
+# 无ROG的插件： ddnspod kms shellinabox ssid ssserver swap
 
 switch_ui(){
 	WGET="wget -4 --no-check-certificate --quiet --timeout=15"
 	softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
 	app_file=/tmp/.app.json.js
-	ROGUI="softcenter|acme|aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|koolproxy|mdial|qiaodao|rog|serverchan"
+	ROGUI="softcenter|aliddns|acme|aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|koolproxy|mdial|qiaodao|rog|serverchan|usb2jffs|routerhook"
 	BASE_FOLDER=/tmp/ks_ui
 	rm -rf ${BASE_FOLDER}
 	rm -rf ${serverchan_info_text} ${app_file}
@@ -47,7 +47,7 @@ switch_ui(){
 	app_nu_online=$(cat ${app_file} | jq '.apps|length')
 	for app in ${soft_lists}
 	do
-		i=0
+		i=-1
 		until [ "${i}" == "${app_nu_online}" ];	do
 			i=$(($i+1))
 			soft_match=$(cat ${app_file} | jq .apps[${i}] | grep -w "${app}")
@@ -115,7 +115,7 @@ _get_plugin_name(){
 		echo "【ServerChan 微信推送】"
 		;;
 	rog)
-		echo "ROG工具箱"
+		echo "【ROG工具箱】"
 		;;
 	*)
 		echo "【$1】"
@@ -129,18 +129,12 @@ download_ui(){
 	case ${app} in
 	softcenter)
 		echo_date "切换$(_get_plugin_name $app)的webui为$(_get_ui_name $type)风格！"
-		$WGET -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}${EXT}/webs/Module_Softcenter.asp
-		$WGET -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}${EXT}/webs/Module_Softsetting.asp
 		$WGET -P ${BASE_FOLDER}/res https://rogsoft.ddnsto.com/${app}/${app}${EXT}/res/softcenter.css
 		;;
-	acme)
+	*)
 		echo_date "切换$(_get_plugin_name $app)的webui为$(_get_ui_name $type)风格！"
 		wget -4 --no-check-certificate --quiet -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}/webs/Module_${app}.asp
 		[ "$?" == "0" -a "$type" == "2" ] && sed -i '/rogcss/d' ${BASE_FOLDER}/webs/Module_${app}.asp >/dev/null 2>&1
-		;;
-	aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|mdial|qiaodao|rog|serverchan)
-		echo_date "切换$(_get_plugin_name $app)的webui为$(_get_ui_name $type)风格！"
-		$WGET -P ${BASE_FOLDER}/webs https://rogsoft.ddnsto.com/${app}/${app}${EXT}/webs/Module_${app}.asp
 		;;
 	esac
 }

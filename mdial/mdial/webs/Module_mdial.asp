@@ -27,20 +27,20 @@
 	.show-btn1, .show-btn2, .show-btn3 {
 		border: 1px solid #222;
 		background: linear-gradient(to bottom, #919fa4  0%, #67767d 100%); /* W3C */
-		/*background: linear-gradient(to bottom, #91071f  0%, #700618 100%);*/ /* W3C */
+		background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss*/
 		font-size:10pt;
 		color: #fff;
 		padding: 10px 3.75px;
 		border-radius: 5px 5px 0px 0px;
 		width:8.45601%;
-		/*border: 1px solid #91071f;*/
-		/*background: none;*/
+		border: 1px solid #91071f; /* W3C rogcss*/
+		background: none; /* W3C rogcss*/
 	}
 	.active {
 		background: #2f3a3e;
 		background: linear-gradient(to bottom, #61b5de  0%, #279fd9 100%); /* W3C */
-		/*background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);*/ /* W3C */
-		/*border: 1px solid #91071f;*/
+		background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss*/
+		border: 1px solid #91071f; /* W3C rogcss*/
 	}
 	.popup_bar_bg_ks{
 		position:fixed;	
@@ -56,15 +56,15 @@
 		overflow:hidden;
 		background-color: #444F53;*/
 		background:rgba(68, 79, 83, 0.9) none repeat scroll 0 0 !important;
-		/*background: url(/images/New_ui/login_bg.png);
-		background-position: 0 0;
-		background-size: cover;
-		opacity: .94;*/
+		background: url(/images/New_ui/login_bg.png); /* W3C rogcss*/
+		background-position: 0 0; /* W3C rogcss*/
+		background-size: cover; /* W3C rogcss*/
+		opacity: .94; /* W3C rogcss*/
 	}
 	.ss_btn {
 		border: 1px solid #222;
 		background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
-		/*background: linear-gradient(to bottom, #91071f  0%, #700618 100%);*/ /* W3C */
+		background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss*/
 		font-size:10pt;
 		color: #fff;
 		padding: 5px 5px;
@@ -74,7 +74,7 @@
 	.ss_btn:hover {
 		border: 1px solid #222;
 		background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-		/*background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);*/ /* W3C */
+		background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss*/
 		font-size:10pt;
 		color: #fff;
 		padding: 5px 5px;
@@ -87,9 +87,10 @@
 		font-size:12px;
 		color:#FFFFFF;
 		background:#475A5F;
-		/*background:transparent;*/
-		/*border:1px solid #91071f;*/
+		background:transparent; /* W3C rogcss*/
+		border:1px solid #91071f; /* W3C rogcss*/
 	}
+	#mdial_switch, #mdial_status, #mdial_settings, #mdial_log, #mdial_help {border:1px solid #91071f;} /* W3C rogcss*/
 	input[type=button]:focus {
 		outline: none;
 	}

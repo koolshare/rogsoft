@@ -71,6 +71,7 @@
 .easyexplorer_btn {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333 0%, #000000 100%);
+	background: linear-gradient(to bottom, #91071f 0%, #700618 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -80,6 +81,7 @@
 .easyexplorer_btn:hover {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #27c9c9 0%, #279fd9 100%);
+	background: linear-gradient(to bottom, #cf0a2c 0%, #91071f 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;

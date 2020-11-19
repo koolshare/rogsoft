@@ -1,9 +1,9 @@
 {
-"version":"0.4",
-"md5":"dfd49186fad844ff2e22d7ff93e2ca20",
+"version":"1.2",
+"md5":"a76cb321ac5a9e2e07c80d8ea0cbc88a",
 "home_url":"Module_routerhook.asp",
 "title":"RouterHook事件回调",
 "description":"从路由器推送状态及通知的工具",
 "changelog":"",
-"build_date":"2020-04-03_22:58:05"
+"build_date":"2020-10-19_14:55:34"
 }

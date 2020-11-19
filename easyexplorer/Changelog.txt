@@ -1,5 +1,8 @@
 Koolshare serverChan for hnd router Changelog
 ===========================================
+2.4.1
+  - update	修复卸载插件无法删除主程序的问题
+
 2.4
   - update	更新主程序20200206.024836
 
