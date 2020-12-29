@@ -13,8 +13,8 @@ arIpAdress() {
 # 查询域名地址
 # 参数: 待查询域名
 arNslookup() {
-    local inter="http://119.29.29.29/d?dn="
-    wget --quiet --output-document=- $inter$1
+    local dnspodIP="119.29.29.29"
+    nslookup "$1" $dnspodIP | sed '1,4d' | awk '{print $3}' | grep -v : | awk 'NR==1{print}' 2>/dev/null
 }
 
 # 读取接口数据
