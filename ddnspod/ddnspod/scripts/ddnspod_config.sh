@@ -35,7 +35,7 @@ arDdnsUpdate() {
 	domainID=$(echo $domainID | sed 's/.*"id":"\([0-9]*\)".*/\1/')
 	
     # 获得记录ID
-    recordID=$(arApiPost "Record.List" "domain_id=${domainID}&sub_domain=${2}")
+    recordID=$(arApiPost "Record.List" "domain_id=${domainID}&sub_domain=${2}&record_type=A")
     recordID=$(echo $recordID | sed 's/.*\[{"id":"\([0-9]*\)".*/\1/')
     # 更新记录IP
     myIP=$($inter)
