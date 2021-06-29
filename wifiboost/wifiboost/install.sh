@@ -162,6 +162,7 @@ install_now(){
 	dbus set softcenter_module_${module}_description="${DESCR}"
 	dbus remove wifiboost_warn
 	sync
+	echo 1 > /proc/sys/vm/drop_caches
 	sleep 2
 	echo_date "【${TITLE}】插件正在安装，请稍后！"
 	if [ -x "/koolshare/bin/start-stop-daemon" ];then
