@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="ngfix"
-VERSION="1.2"
+VERSION="1.3"
 TITLE="RAX80 Toolbox"
 DESCRIPTION="帮助RAX80刷回网件原厂固件，修复RAX80网件原厂分区"
 HOME_URL="Module_ngfix.asp"
