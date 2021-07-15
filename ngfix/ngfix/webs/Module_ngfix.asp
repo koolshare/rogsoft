@@ -108,6 +108,9 @@ function conf2obj(){
 	if (dbus["ngfix_flag"] == "2"){
 		E("ngfix_apply_4").style.display = "";
 	}
+	if (dbus["ngfix_fixed"] == "1"){
+		E("ngfix_apply_5").style.display = "";
+	}	
 }
 function fixit(action){
 	var dbus_new = {};
@@ -133,9 +136,14 @@ function fixit(action){
 			dbus_new[params_inp[i]] = E(params_inp[i]).value;
 		}
 	}
+	if(action == 3){
+		dbus_new["ngfix_flag"] = "1";
+	}
 	E("ngfix_apply_1").disabled = true;
 	E("ngfix_apply_2").disabled = true;
 	E("ngfix_apply_3").disabled = true;
+	E("ngfix_apply_4").disabled = true;
+	E("ngfix_apply_5").disabled = true;
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "ngfix_config", "params": [action], "fields": dbus_new};
 	$.ajax({
@@ -215,14 +223,15 @@ function nvram_erase(){
 function ofw_guide() {
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
-	
-	note = "<h2><font color='#FF6600'>网件RAX80梅林固件刷回网件官方固件</font></h2>"
+	note = "<font color='#FF0000'>提醒1：刷机有风险，请严格按照刷机流程操作，刷机带来的风险请自行承担！</font>"
+	note += "<br />"
+	note += "<font color='#FF0000'>提醒2：请全程插网线，使用PC + 谷歌浏览器进行操作，刷机前先移除路由器上的USB设备！</font>"
 	note += "<hr>"
 	note += "<h4>1. 下载Merlin to OFW固件：<a style='color:#22ab39;' href='https://firmware.koolshare.cn/Koolshare_RMerl_New_Gen_386/Netgear/RAX80/Merlin%20to%20OFW/RAX80-OFW-V1.0.0.30_1.0.17.w'><u>RAX80-OFW-V1.0.0.30_1.0.17.w</u></a></h4>"
 	note += "<h4>2. 核对固件md5校验值：<font color='#1678ff'>420FEB0CF64C5D0C2B232014BF671748</font></h4>"
 	note += "<h4>3. 校验核对无误后，点击此<a style='margin: 8px 2px 0;padding: 5px 5px;border-color: #ee1f60;background-color: #ee1f60;color: #fff;background: #ee1f60;border-radius: 2px;cursor: pointer;' onclick='nvram_erase();'>nvram erase</a>按钮，等待页面弹出成功提示!</h4>"
 	note += "<h4>4. 前往固件升级页面：<a style='color:#22ab39;' href='/Advanced_FirmwareUpgrade_Content.asp'>Advanced_FirmwareUpgrade_Content.asp</a>，上传Merlin to OFW固件</h4>"
-	note += "<h4>5. 成功升级到网件官方固件后，请恢复一次出厂设置。</h4>"
+	note += "<h4>5. 升级OFW固件后，请不要关闭RAX80，等待路由器自己重启，直到出现WiFi信号。</h4>"
 	note += "<div id='ofw_help' style='display:none;'>"
 	note += "<hr>"
 	note += "<font color='#676767'>&nbsp;&nbsp;&nbsp;&nbsp;点击</font><font color='#1678ff'>nvram erase</font><font color='#676767'>按钮并弹出成功提示后，等同于使用SSH命令在路由器后台运行<font color='#1678ff'>nvram erase</font>命令，这将会清除当前RAX80梅林固件的所有nvram配置！包括但不限于路由器账号、密码；网络拨号账号密码；wifi SSID与密码等...</font>"
@@ -237,7 +246,7 @@ function ofw_guide() {
 			type: 0,
 			skin: 'layui-layer-lan',
 			shade: 0.8,
-			title: '请严格按照下面流程进行',
+			title: '网件RAX80梅林固件刷回网件官方固件',
 			time: 0,
 			area: '660px',
 			btnAlign: 'c',
@@ -346,6 +355,7 @@ function ofw_guide() {
 											</div>
 											<div class="apply_gen">
 												<input class="button_gen" id="ngfix_apply_1" onClick="fixit(1)" type="button" value="开始检测" />
+												<input class="button_gen" id="ngfix_apply_5" onClick="fixit(3)" type="button" value="重新修复" style="display: none;"/>
 												<input class="button_gen" id="ngfix_apply_4" onClick="ofw_guide()" type="button" value="RAX80 OFW 向导" style="display: none;"/>
 												<input class="button_gen" id="ngfix_apply_2" onClick="fixit(2)" type="button" value="开始修复" style="display: none;"/>
 												<input class="button_gen" id="ngfix_apply_3" onClick="open_help()" type="button" value="修复帮助" style="display: none;"/>
