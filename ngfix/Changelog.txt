@@ -1,0 +1,5 @@
+Koolshare Asuswrt-Merlin ngfix Changelog for HND/AXHND platform
+===========================================
+
+1.0
+   - add	添加RAX80 Toolbox插件。

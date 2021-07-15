@@ -144,6 +144,19 @@
             "version": "1.3"
         }, 
         {
+            "build_date": "2021-07-14_23:38:02", 
+            "changelog": "", 
+            "description": "帮助RAX80刷回网件原厂固件，修复RAX80网件原厂分区", 
+            "home_url": "Module_ngfix.asp", 
+            "md5": "a96fc27ca0c7d0ac7ccecc169fca7faf", 
+            "name": "ngfix", 
+            "port": "", 
+            "server": "", 
+            "tar_url": "ngfix/ngfix.tar.gz", 
+            "title": "RAX80 Toolbox", 
+            "version": "1.0"
+        }, 
+        {
             "build_date": "2021-04-06_22:53:02", 
             "changelog": "", 
             "description": "通过pushplus将路由器状态推送到微信上", 
@@ -290,7 +303,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "c1421da403c193d658f3fb1f871e7e09", 
+    "md5": "e45a9e7ccdf2aef3318681e6b48460f3", 
     "tar_url": "softcenter/softcenter.tar.gz", 
-    "version": "1.7.1"
+    "version": "1.7.2"
 }

@@ -195,7 +195,12 @@ install_ks_module() {
 
 	# 6. 下载准备，再删除一次插件包，避免 xxx.tar.gz 下载为 xxx.tar.gz1等名字
 	rm -rf /tmp/*.tar.gz* >/dev/null 2>&1
-	local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh")
+	local MAXDEPTH_SUPP=$(find --help 2>&1|grep -Eco maxdepth)
+	if [ "${MAXDEPTH_SUPP}" == "1" ];then
+		local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh" -maxdepth 2)
+	else
+		local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh")
+	fi
 	local SCRIPT_AB_DIR_TMP=$(dirname ${INSTALL_SCRIPT_TMP})
 	rm -rf ${SCRIPT_AB_DIR_TMP} >/dev/null 2>&1
 	echo_date "插件【${softcenter_installing_title}】将会被安装到/jffs文件夹..."
