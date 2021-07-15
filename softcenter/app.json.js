@@ -144,17 +144,17 @@
             "version": "1.3"
         }, 
         {
-            "build_date": "2021-07-15_17:11:13", 
+            "build_date": "2021-07-15_17:25:50", 
             "changelog": "", 
             "description": "帮助RAX80刷回网件原厂固件，修复RAX80网件原厂分区", 
             "home_url": "Module_ngfix.asp", 
-            "md5": "583d45bfa82e138ca375b4e11cbbbcd7", 
+            "md5": "bb7e23991067127016f79bea3880e2de", 
             "name": "ngfix", 
             "port": "", 
             "server": "", 
             "tar_url": "ngfix/ngfix.tar.gz", 
             "title": "RAX80 Toolbox", 
-            "version": "1.3"
+            "version": "1.4"
         }, 
         {
             "build_date": "2021-04-06_22:53:02", 

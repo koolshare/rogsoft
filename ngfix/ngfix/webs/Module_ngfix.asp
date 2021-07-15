@@ -98,19 +98,20 @@ function conf2obj(){
 			$("#" + params_inp[i]).val(dbus[params_inp[i]]);
 		}
 	}
+	if (dbus["ngfix_fixed"] == "1"){
+		E("ngfix_apply_5").style.display = "";
+	}	
 	if (dbus["ngfix_flag"] == "1"){
 		E("ngfix_main").style.display = "";
 		E("ngfix_apply_2").style.display = "";
 		E("ngfix_apply_3").style.display = "";
+		E("ngfix_apply_5").style.display = "none";
 		E("message").style.display = "";
 		E("spl").style.display = "";
 	}
 	if (dbus["ngfix_flag"] == "2"){
 		E("ngfix_apply_4").style.display = "";
 	}
-	if (dbus["ngfix_fixed"] == "1"){
-		E("ngfix_apply_5").style.display = "";
-	}	
 }
 function fixit(action){
 	var dbus_new = {};
