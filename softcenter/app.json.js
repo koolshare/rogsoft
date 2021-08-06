@@ -295,6 +295,20 @@
             "version": "1.4.1"
         }, 
         {
+            "author": "", 
+            "build_date": "2021-08-06_20:19:37", 
+            "changelog": "", 
+            "description": "Sftp Server", 
+            "home_url": "Module_sftpserver.asp", 
+            "link": "", 
+            "md5": "a6438d7ba16ce8fa749bd92e2985c469", 
+            "name": "sftpserver", 
+            "tags": "其它", 
+            "tar_url": "sftpserver/sftpserver.tar.gz", 
+            "title": "Sftp Server", 
+            "version": "1.0"
+        }, 
+        {
             "author": "sadog", 
             "build_date": "2021-08-05_21:06:17", 
             "changelog": "", 
