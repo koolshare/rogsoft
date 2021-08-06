@@ -1,4 +1,7 @@
 Koolshare Asuswrt-Merlin Entware Changelog for HND/AXHND platform
 ===========================================
+1.1
+   - fix	修复一个type error。
+
 1.0
    - add	添加Entware插件，轻松安装/管理Entware环境。

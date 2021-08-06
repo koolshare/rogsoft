@@ -100,17 +100,17 @@
         }, 
         {
             "author": "", 
-            "build_date": "2021-08-06_19:18:10", 
+            "build_date": "2021-08-06_20:34:43", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "83ae18a2363f6c309319b0abd838bfe2", 
+            "md5": "8cb0f4f38fdf31a3939cfe9ab65f23e6", 
             "name": "entware", 
             "tags": "其它", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
-            "version": "1.0"
+            "version": "1.1"
         }, 
         {
             "author": "sadog", 
