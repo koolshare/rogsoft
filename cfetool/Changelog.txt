@@ -1,0 +1,31 @@
+Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
+===========================================
+2.4 - 2.5
+   - add	修复修改国行后，还原原始CFE无法使用的问题；
+
+2.3
+   - add	优化支付；
+
+2.2
+   - add	添加TUF-AX3000刺客信条版本支持；
+
+2.1
+   - add	添加华硕RT-AX56U_V2修改国行支持；
+
+2.0
+   - add	添加华硕RT-AX56U修改国行支持；
+
+1.9
+   - add	添加华硕GT-AX11000使命召唤黑色行动版本修改国行支持；
+
+1.7
+   - add	添加华硕ZenWiFi系列机型支持；
+
+1.6
+   - add	添加RT-AX86U/RT-AX82U高达定制固件的支持；
+
+1.1
+   - fix	修复一点小问题
+
+1.0
+   - add	添加CFE工具箱插件，查看CFE信息，改机器为国区。

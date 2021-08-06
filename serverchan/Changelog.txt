@@ -1,0 +1,38 @@
+Koolshare hnd/axhnd router software center serverchan Changelog
+===========================================
+1.4
+   - fix 修复请求https://ip.sb时由于证书过期导致无法获取IP的问题
+   - feat 增加公网IP开关，可选择关闭获取公网IP
+
+1.3
+   - feat Add Support For xxx by Koolshare
+
+1.2
+   - fix 修复重启后定时任务失效问题
+   - feat 优化logger输出
+   
+1.1
+   - fix ASP文件中的样式多了个return的问题
+   - fix 优化卸载脚本逻辑（从armsoft上Copy过来的）
+   - fix 修复遗留的路径BUG
+   - fix 与armsoft统一代码，便于后期维护
+   - feat 新增公网IPv6地址
+
+1.0
+   - fix 修复安装时没有正确安装卸载脚本的bug
+   - fix 修复触发器配置无法保存的bug
+   - fix 调成dhcp触发器删除策略，实现与RouterHook插件共存
+
+0.9
+   - fix	Fixed conflict with RT-AC86U 384_81049
+
+0.8
+   - fix	Fixed a bug with auto push failed, thx to xpc0938
+   - fix	fix a show issue for the temperature of 2.4GHz and 5GHz wireless network card, thx to xpc0938
+
+0.7
+   - fix	修复关闭mac地址显示无效的问题
+   - fix	修复RT-AC86U等机型无法显示温度的问题
+
+0.6
+   - fix	修复温度显示

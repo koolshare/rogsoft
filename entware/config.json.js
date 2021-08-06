@@ -1,0 +1,12 @@
+{
+"version":"1.0",
+"md5":"83ae18a2363f6c309319b0abd838bfe2",
+"home_url":"Module_entware.asp",
+"title":"Entware",
+"description":"轻松安装/管理Entware环境",
+"tags":"其它",
+"author":"",
+"link":"",
+"changelog":"",
+"build_date":"2021-08-06_19:18:10"
+}
