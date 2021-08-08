@@ -317,6 +317,13 @@ function register_event(){
 			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 		}
 	}
+
+	if(MODEL == "RAX50"){
+		var current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+	}
+
+
 	if(E("wifiboost_boost_24").checked == true){
 		var maxp = current_maxp24;
 	}else{
@@ -374,6 +381,24 @@ function show_hide_elem(){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
+	}
+	if(MODEL == "RAX80"){
+		E("msg1").style.display = "none";
+		E("msg3").style.display = "none";
+		E("msg6").style.display = "none";
+		E("msg5").innerHTML = "修改完成后，卸载wifi boost插件、重置/双清固件、升级固件版本（梅林）、等操作均会保持最后一次的功率修改效果。";
+		E("msg7").innerHTML = "但是由于RAX80为移植机型，在刷回网件后将失去boost效果，再刷回梅林固件后，需要重新安装插件再进行一次boost操作。";
+	}else if(MODEL == "RAX50"){
+		E("msg1").style.display = "none";
+		E("msg3").style.display = "none";
+		E("msg6").style.display = "none";
+		E("msg5").innerHTML = "修改完成后，卸载wifi boost插件、重置/双清固件、升级梅林/网件远程固件、等操作均会保持最后一次的功率修改效果。";
+		E("msg7").innerHTML = "虽然RAX50为梅林移植机型，但是即使其刷回网件原厂固件后再刷回梅林固件，其wifi boost的修改效果也不会丢失！";
+	} else {
+		E("msg1").style.display = "";
+		E("msg3").style.display = "";
+		E("msg6").style.display = "";
+		E("msg7").style.display = "none";
 	}
 }
 function get_dbus_data(){
@@ -479,7 +504,7 @@ function show_err_code() {
 	}
 	switch(err_code){
 		case "1":
-			err_mesg = '<br/><span style="color: #CC3300">错误代码1：当前路由【' + MODEL + '】不支持wifiboost插件！</span><br/><br>';
+			err_mesg = '<br/><span style="color: #CC3300">错误代码1：' + MODEL + '在当前固件版本下不支持wifiboost插件，请升级至最新的386梅林改版固件后以获取支持！</span><br/><br>';
 		break;
 		case "2":
 			err_mesg = '<br/><span style="color: #CC3300">错误代码2：当前路由不支持wifiboost插件！请尝试重刷正确的固件后重试！！</span><br/><br>';
@@ -516,7 +541,7 @@ function show_err_code() {
 }
 function get_wl_status(){
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "wifiboost_status", "params":[2], "fields": ""};
+	var postData = {"id": id, "method": "wifiboost_status.sh", "params":[2], "fields": ""};
 	$.ajax({
 		type: "POST",
 		cache:false,
@@ -642,7 +667,7 @@ function boost_now(action){
 	E("wifiboost_apply_1").disabled = true;
 	E("wifiboost_apply_2").disabled = true;
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "wifiboost_config", "params": [action], "fields": dbus_new};
+	var postData = {"id": id, "method": "wifiboost_config.sh", "params": [action], "fields": dbus_new};
 	$.ajax({
 		type: "POST",
 		url: "/_api/",
@@ -1046,9 +1071,10 @@ function verifyFields(r) {
 											<li id="msg1">wifi boost通过修改机器出厂wlan设置，突破出厂设定的最大发射功率，须知修改出厂wlan设置有风险，由此带来的风险请自行承担！</li>
 											<li id="msg2">更高的发射功率可能影响速率、稳定性等，甚至有烧功放的风险，请勿盲目追求过高的发射功率，建议设定不超过27.00dBm！</li>
 											<li id="msg3">虽然插件可以保证修改过程相对安全，但还是强烈建议不要过于频繁的进行修改，以免发生意外导致机器wlan出厂设置被损坏。</li>
-											<li id="msg4">修改后需要将wifi区域更改为澳大利亚才会有效果，非澳大利亚的功率和修改前一样。如果修改后功率未起作用，请重置一次路由。</li>
+											<li id="msg4">修改后插件会自动将地区切换为澳大利亚以发挥效果，非澳大利亚的功率和修改前一样。如果修改后功率未起作用，请重置一次路由。</li>
 											<li id="msg5">修改完成后，卸载wifi boost插件、升级固件版本、刷三方固件/原厂固件等操作均会保持最后一次的功率修改效果。</li>
 											<li id="msg6">wifi boost是开发者sadog个人作品，软件中心仅提供上线平台，wifi boost产品经营与koolshare软件中心/koolshare无关。</li>
+											<li id="msg7"></li>
 										</div>
 									</td>
 								</tr>
