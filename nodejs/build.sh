@@ -1,10 +1,10 @@
 #!/bin/sh
 
-MODULE="sftpserver"
-VERSION="1.1"
-TITLE="Sftp Server"
-DESCRIPTION="Sftp Server"
-HOME_URL="Module_sftpserver.asp"
+MODULE="nodejs"
+VERSION="1.0"
+TITLE="Node.js"
+DESCRIPTION="Node.js"
+HOME_URL="Module_nodejs.asp"
 
 # Check and include base
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
