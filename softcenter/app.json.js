@@ -212,17 +212,17 @@
         }, 
         {
             "author": "", 
-            "build_date": "2021-08-08_12:55:31", 
+            "build_date": "2021-08-08_13:08:48", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "e80935cf0cd8476d21803d9018ba0cdf", 
+            "md5": "7ee66347a97fd4cb63b886cf3ca23c63", 
             "name": "nodejs", 
             "tags": "其它", 
             "tar_url": "nodejs/nodejs.tar.gz", 
             "title": "Node.js", 
-            "version": "1.0"
+            "version": "1.1"
         }, 
         {
             "author": "囍冯总囍", 

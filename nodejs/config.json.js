@@ -1,6 +1,6 @@
 {
-"version":"1.0",
-"md5":"e80935cf0cd8476d21803d9018ba0cdf",
+"version":"1.1",
+"md5":"7ee66347a97fd4cb63b886cf3ca23c63",
 "home_url":"Module_nodejs.asp",
 "title":"Node.js",
 "description":"Node.js",
@@ -8,5 +8,5 @@
 "author":"",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-08_12:55:31"
+"build_date":"2021-08-08_13:08:48"
 }

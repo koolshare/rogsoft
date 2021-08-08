@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="nodejs"
-VERSION="1.0"
+VERSION="1.1"
 TITLE="Node.js"
 DESCRIPTION="Node.js"
 HOME_URL="Module_nodejs.asp"
