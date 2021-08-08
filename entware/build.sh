@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="entware"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="Entware"
 DESCRIPTION="轻松安装/管理Entware环境"
 HOME_URL="Module_entware.asp"

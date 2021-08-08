@@ -1,6 +1,6 @@
 {
-"version":"1.1",
-"md5":"8cb0f4f38fdf31a3939cfe9ab65f23e6",
+"version":"1.2",
+"md5":"46127d5ad847968eab5d3b972a58c915",
 "home_url":"Module_entware.asp",
 "title":"Entware",
 "description":"轻松安装/管理Entware环境",
@@ -8,5 +8,5 @@
 "author":"",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-06_20:34:43"
+"build_date":"2021-08-08_13:26:53"
 }

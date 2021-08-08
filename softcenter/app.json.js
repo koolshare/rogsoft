@@ -100,17 +100,17 @@
         }, 
         {
             "author": "", 
-            "build_date": "2021-08-06_20:34:43", 
+            "build_date": "2021-08-08_13:26:53", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "8cb0f4f38fdf31a3939cfe9ab65f23e6", 
+            "md5": "46127d5ad847968eab5d3b972a58c915", 
             "name": "entware", 
             "tags": "其它", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
-            "version": "1.1"
+            "version": "1.2"
         }, 
         {
             "author": "sadog", 
@@ -212,12 +212,12 @@
         }, 
         {
             "author": "", 
-            "build_date": "2021-08-08_13:08:48", 
+            "build_date": "2021-08-08_13:10:42", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "7ee66347a97fd4cb63b886cf3ca23c63", 
+            "md5": "e3ba14afa01d3cd53db290520d1feb91", 
             "name": "nodejs", 
             "tags": "其它", 
             "tar_url": "nodejs/nodejs.tar.gz", 
