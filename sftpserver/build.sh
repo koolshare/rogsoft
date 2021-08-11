@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="sftpserver"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="Sftp Server"
 DESCRIPTION="Sftp Server"
 HOME_URL="Module_sftpserver.asp"

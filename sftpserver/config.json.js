@@ -1,6 +1,6 @@
 {
-"version":"1.1",
-"md5":"9ad8e088d358b60f193e126e2a46d09b",
+"version":"1.2",
+"md5":"4e1934f1481f28449ba58bea7bb9fbbb",
 "home_url":"Module_sftpserver.asp",
 "title":"Sftp Server",
 "description":"Sftp Server",
@@ -8,5 +8,5 @@
 "author":"",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-08_12:55:12"
+"build_date":"2021-08-11_11:11:43"
 }
