@@ -52,11 +52,7 @@ fi
 DDNSTO_STATUS=$(ps | grep -w ddnsto | grep -cv grep)
 DDNSTO_PID=$(pidof ddnsto)
 
-BOOT_CFG=$(nvram get ddnsto_boot_cfg)
-DDNSTO_DEVICE_ID=
-if [ -n "${BOOT_CFG}" ]; then
-  DDNSTO_DEVICE_ID=$(/koolshare/bin/ddnsto -w|cut -d ' ' -f2)
-fi
+DDNSTO_DEVICE_ID=$(/koolshare/bin/ddnsto -w|cut -d ' ' -f2)
 
 get_current_jffs_status
 
