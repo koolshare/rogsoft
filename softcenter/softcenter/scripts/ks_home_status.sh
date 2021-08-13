@@ -24,7 +24,7 @@ _get_mac(){
 
 get_current_jffs_status(){
   local cur_patition=$(df | /bin/grep /jffs)
-  if [ -z "${cur_patition}" ];then
+  if [ -n "${cur_patition}" ];then
     local used=$(echo ${cur_patition} | awk '{print $3}')
     local total=$(echo ${cur_patition} | awk '{print $2}')
     echo "${used} ${total}"
