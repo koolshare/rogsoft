@@ -25,11 +25,11 @@ _get_mac(){
 get_current_jffs_status(){
   local cur_patition=$(df | /bin/grep /jffs)
   if [ -n "${cur_patition}" ];then
-    local used=$(echo ${cur_patition} | awk '{print $3}')
-    local total=$(echo ${cur_patition} | awk '{print $2}')
-    echo "${used} ${total}"
+    JFFS_USED=$(echo ${cur_patition} | awk '{print $3}')
+    JFFS_TOTAL=$(echo ${cur_patition} | awk '{print $2}')
   else
-    echo "0 0"
+    JFFS_USED=0
+    JFFS_TOTAL=0
   fi
 }
 
@@ -58,5 +58,7 @@ if [ -n "${BOOT_CFG}" ]; then
   DDNSTO_DEVICE_ID=$(/koolshare/bin/ddnsto -w|cut -d ' ' -f2)
 fi
 
-RESP=$(echo '{\"ddnsto_url\":\"'${DDNSTO_URL}'\",\"ddnsto_token\":\"'${ddnsto_token}'\",\"ddnsto_install\":'${DDNSTO_INSTALL}',\"ddnsto_status\":'${DDNSTO_STATUS}',\"ddnsto_device_id\":\"'${DDNSTO_DEVICE_ID}'\",\"ddnsto_pid\":\"'${DDNSTO_PID}'\",\"jffs_status\":\"'$(get_current_jffs_status)'\"}')
-http_response  "${RESP}"
+get_current_jffs_status
+
+RESP=$(echo '{\"ddnsto_url\":\"'${DDNSTO_URL}'\",\"ddnsto_token\":\"'${ddnsto_token}'\",\"ddnsto_install\":'${DDNSTO_INSTALL}',\"ddnsto_status\":'${DDNSTO_STATUS}',\"ddnsto_device_id\":\"'${DDNSTO_DEVICE_ID}'\",\"ddnsto_pid\":\"'${DDNSTO_PID}'\",\"jffs_used\":\"'${JFFS_USED}'\",\"jffs_total\":\"'${JFFS_TOTAL}'\"}')
+http_response "${RESP}"
