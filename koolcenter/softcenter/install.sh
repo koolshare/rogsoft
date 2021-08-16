@@ -14,6 +14,8 @@ MODEL=
 UI_TYPE=ASUSWRT
 FW_TYPE_CODE=
 FW_TYPE_NAME=
+DIR=$(cd $(dirname $0); pwd)
+module=${DIR##*/}
 
 get_model(){
 	local ODMPID=$(nvram get odmpid)
@@ -123,13 +125,35 @@ get_usb2jffs_status(){
 	return 0
 }
 
-softcenter_install() {
+center_install() {
 	local KSHOME=$1
 
-	if [ ! -d "/tmp/softcenter" ]; then
-		echo_date "没有找到 /tmp/softcenter 文件夹，退出！"
+	if [ ! -d "/tmp/${module}" ]; then
+		echo_date "没有找到 /tmp/${module} 文件夹，退出！"
 		return 1
 	fi
+
+	local CENTER_TYPE_1=$(cat /tmp/${module}/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+	if [ -z "${CENTER_TYPE_1}" ];then
+		echo_date "准备安装软件中心：koolcenter ..."
+	else
+		echo_date "准备安装软件中心：softcenter ..."
+	fi
+
+	# if [ -z "${CENTER_TYPE_1}" ];then
+	# 	# 安装koolcenter的话，检查softcenter版本号是否符合
+	# 	local NEED_VERSION="1.7.6"
+	# 	if [ -f "/koolshare/.soft_ver" ];then
+	# 		local CUR_VERSION=$(cat /koolshare/.soft_ver)
+	# 	else
+	# 		local CUR_VERSION="0"
+	# 	fi
+	# 	local COMP=$(/rom/etc/koolshare/bin/versioncmp ${CUR_VERSION} ${NEED_VERSION})
+	# 	if [ "${COMP}" == "1" ]; then
+	# 		echo_date "softcenter软件中心版本：${CUR_VERSION} 过低，不支持koolcenter升级，请将软件中心更新到最新后重试！" 
+	# 		exit 1
+	# 	fi
+	# fi	
 	
 	# make some folders
 	echo_date "创建软件中心相关的文件夹..."
@@ -154,39 +178,63 @@ softcenter_install() {
 	JFFS_TOTAL=$(df|grep -Ew "/${KSHOME}" | awk '{print $2}')
 	if [ -n "${JFFS_TOTAL}" -a "${JFFS_TOTAL}" -le "20000" ];then
 		echo_date "JFFS空间已经不足2MB！进行精简安装！"
-		rm -rf /tmp/softcenter/bin/htop
+		rm -rf /tmp/${module}/bin/htop
 	else
 		echo_date "JFFS空间足够，开始安装！"
 	fi
-	
+
+	# which center
+	if [ -f "/${KSHOME}/.koolshare/webs/Module_Softcenter.asp" ];then
+		local CENTER_TYPE_2=$(cat /${KSHOME}/.koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+		if [ -z "${CENTER_TYPE_2}" -a -z "${CENTER_TYPE_1}" ];then
+			echo_date "检测到当前软件中心为koolcenter，继续安装koolcenter！"
+		elif [ -z "${CENTER_TYPE_2}" -a -n "${CENTER_TYPE_1}" ];then
+			echo_date "检测到当前软件中心为koolcenter，将降级为softcenter！"
+			rm -rf /${KSHOME}/.koolshare/webs/Module_Softcenter_old.asp
+			rm -rf /${KSHOME}/.koolshare/.soft_ver_old
+			mv /${KSHOME}/.koolshare/webs/Module_Softcenter.asp /${KSHOME}/.koolshare/webs/Module_Softcenter_new.asp >/dev/null 2>&1
+			cp -rf /${KSHOME}/.koolshare/.soft_ver /${KSHOME}/.koolshare/.soft_ver_new
+		elif [ -n "${CENTER_TYPE_2}" -a -z "${CENTER_TYPE_1}" ];then
+			echo_date "检测到当前软件中心为softcenter，将升级为koolcenter！"
+			rm -rf /${KSHOME}/.koolshare/webs/Module_Softcenter_new.asp
+			rm -rf /${KSHOME}/.koolshare/.soft_ver_new
+			mv /${KSHOME}/.koolshare/webs/Module_Softcenter.asp /${KSHOME}/.koolshare/webs/Module_Softcenter_old.asp >/dev/null 2>&1
+			cp -rf /${KSHOME}/.koolshare/.soft_ver /${KSHOME}/.koolshare/.soft_ver_old
+		elif [ -n "${CENTER_TYPE_2}" -a -n "${CENTER_TYPE_1}" ];then
+			echo_date "检测到当前软件中心为softcenter，继续安装softcenter！"
+		fi
+	fi
+
 	# coping files
 	echo_date "开始复制软件中心相关文件..."
-	cp -rf /tmp/softcenter/webs/* /${KSHOME}/.koolshare/webs/
-	cp -rf /tmp/softcenter/res/* /${KSHOME}/.koolshare/res/
+	cp -rf /tmp/${module}/webs/* /${KSHOME}/.koolshare/webs/
+	cp -rf /tmp/${module}/res/* /${KSHOME}/.koolshare/res/
 	# ----ui------
 	echo_date "获取当前固件UI类型，UI_TYPE: ${UI_TYPE}"
 	if [ "${UI_TYPE}" == "ROG" ]; then
 		echo_date "为软件中心安装ROG风格的皮肤..."
-		cp -rf /tmp/softcenter/ROG/res/* /${KSHOME}/.koolshare/res/
+		cp -rf /tmp/${module}/ROG/res/* /${KSHOME}/.koolshare/res/
 	elif [ "${UI_TYPE}" == "TUF" ]; then
 		echo_date "为软件中心安装TUF风格的皮肤..."
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/softcenter/ROG/res/*.css >/dev/null 2>&1
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/softcenter/webs/*.asp >/dev/null 2>&1
-		cp -rf /tmp/softcenter/ROG/res/* /${KSHOME}/.koolshare/res/
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${module}/ROG/res/*.css >/dev/null 2>&1
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${module}/webs/*.asp >/dev/null 2>&1
+		cp -rf /tmp/${module}/ROG/res/* /${KSHOME}/.koolshare/res/
 	elif [ "${UI_TYPE}" == "ASUSWRT" ]; then
 		echo_date "为软件中心安装ASUSWRT风格的皮肤..."
-		sed -i '/rogcss/d' /${KSHOME}/.koolshare/webs/Module_Softsetting.asp >/dev/null 2>&1
+		if [ -f "/${KSHOME}/.koolshare/webs/Module_Softsetting.asp" ];then
+			sed -i '/rogcss/d' /${KSHOME}/.koolshare/webs/Module_Softsetting.asp >/dev/null 2>&1
+		fi
 	fi
 	# -------------
-	cp -rf /tmp/softcenter/init.d/* /${KSHOME}/.koolshare/init.d/
-	cp -rf /tmp/softcenter/bin/* /${KSHOME}/.koolshare/bin/
+	cp -rf /tmp/${module}/init.d/* /${KSHOME}/.koolshare/init.d/
+	cp -rf /tmp/${module}/bin/* /${KSHOME}/.koolshare/bin/
 	#for axhnd
 	if [ "${MODEL}" == "RT-AX88U" ] || [ "${MODEL}" == "GT-AX11000" ];then
-		cp -rf /tmp/softcenter/axbin/* /${KSHOME}/.koolshare/bin/
+		cp -rf /tmp/${module}/axbin/* /${KSHOME}/.koolshare/bin/
 	fi
-	cp -rf /tmp/softcenter/perp /${KSHOME}/.koolshare/
-	cp -rf /tmp/softcenter/scripts /${KSHOME}/.koolshare/
-	cp -rf /tmp/softcenter/.soft_ver /${KSHOME}/.koolshare/
+	cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
+	cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
+	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
 	echo_date "文件复制结束，开始创建相关的软连接..."
 	# make some link
 	[ ! -L "/${KSHOME}/.koolshare/bin/base64_decode" ] && ln -sf /${KSHOME}/.koolshare/bin/base64_encode /${KSHOME}/.koolshare/bin/base64_decode
@@ -283,6 +331,10 @@ softcenter_install() {
 
 	# reset some default value
 	echo_date "设定一些默认值..."
+	if [ -z "${CENTER_TYPE_1}" ];then
+		nvram set sc_url="https://rogsoft.ddnsto.com"
+		nvram commit
+	fi
 	if [ -n "$(pidof skipd)" -a -f "/usr/bin/dbus" ];then
 		/usr/bin/dbus set softcenter_installing_todo=""
 		/usr/bin/dbus set softcenter_installing_title=""
@@ -291,6 +343,21 @@ softcenter_install() {
 		/usr/bin/dbus set softcenter_installing_version=""
 		/usr/bin/dbus set softcenter_installing_md5=""
 	fi
+
+	if [ "${KSHOME}" == "cifs2" -a -f "/cifs2/ksdb/log" ];then
+		killall skipd >/dev/null 2>&1
+		kill -9 $(pidof skipd) >/dev/null 2>&1
+		/usr/bin/skipd -d /cifs2/ksdb >/dev/null 2>&1 &
+		sleep 2
+		local SOFTVER=$(cat /tmp/${module}/.soft_ver)
+		[ -n "${SOFTVER}" ] && dbus set softcenter_version=${SOFTVER}
+		sync
+		sleep 1
+		killall skipd >/dev/null 2>&1
+		kill -9 $(pidof skipd) >/dev/null 2>&1
+		service start_skipd >/dev/null 2>&1
+		sleep 2
+	fi
 	#============================================
 	# now try to reboot httpdb if httpdb not started
 	# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh
@@ -298,7 +365,6 @@ softcenter_install() {
 
 exit_install(){
 	local state=$1
-	local module=softcenter
 	case $state in
 		1)
 			echo_date "本软件中心适用于【koolshare 梅林改/官改 hnd/axhnd/axhnd.675x】固件平台！"
@@ -332,17 +398,17 @@ install_now(){
 		echo_date "检测到你使用USB磁盘挂载了/jffs！"
 		echo_date "软件中心此次将同时安装到系统jffs和usb jffs！"
 		echo_date "------------------ 更新软件中心到USB JFFS（/jffs）------------------"
-		softcenter_install jffs
+		center_install jffs
 		echo_date "----------------------------------------------------------------"
 		echo_date "------------------ 更新软件中心到系统 JFFS（/cifs2）----------------"
-		softcenter_install cifs2
+		center_install cifs2
 		echo_date "----------------------------------------------------------------"
 	else
 		echo_date "------------------ 更新软件中心到系统 JFFS（/jffs）-----------------"
-		softcenter_install jffs
+		center_install jffs
 		echo_date "----------------------------------------------------------------"
 	fi
-	rm -rf /tmp/softcenter*
+	rm -rf /tmp/${module}* >/dev/null 2>&1
 }
 
 install(){

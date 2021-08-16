@@ -1,7 +1,7 @@
 {
 	"version":"1.0.5",
 	"md5":"a16640f5a0df9186897be0de52e6629a",
-	"tar_url":"koolcenter/softcenter.tar.gz",
+	"tar_url":"koolcenter/koolcenter.tar.gz",
 	"home_url":"https://raw.githubusercontent.com/koolshare/koolshare.github.io/master",
 
 	"apps":
