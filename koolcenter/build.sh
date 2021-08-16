@@ -12,8 +12,8 @@ python ./gen_install.py stage1
 chmod 755 ./softcenter/scripts/app_install.sh
 
 tar -zcvf softcenter.tar.gz softcenter
-mv softcenter.tar.gz koolcenter.tar.gz
-md5value=`md5sum koolcenter.tar.gz|tr " " "\n"|sed -n 1p`
+cp -rf softcenter.tar.gz koolcenter.tar.gz
+md5value=`md5sum softcenter.tar.gz|tr " " "\n"|sed -n 1p`
 cat > ./version <<EOF
 $VERSION
 $md5value
