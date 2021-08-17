@@ -205,6 +205,12 @@ center_install() {
 		fi
 	fi
 
+	# remove before install
+	if [ -z "${CENTER_TYPE_1}" ];then
+		find /${KSHOME}/.koolshare/res/*/assets/*.js | xargs rm -rf
+		find /${KSHOME}/.koolshare/res/*/assets/*.css | xargs rm -rf
+	fi
+
 	# coping files
 	echo_date "开始复制软件中心相关文件..."
 	cp -rf /tmp/${module}/webs/* /${KSHOME}/.koolshare/webs/
