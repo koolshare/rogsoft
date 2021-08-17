@@ -207,8 +207,8 @@ center_install() {
 
 	# remove before install
 	if [ -z "${CENTER_TYPE_1}" ];then
-		find /${KSHOME}/.koolshare/res/*/assets/*.js | xargs rm -rf
-		find /${KSHOME}/.koolshare/res/*/assets/*.css | xargs rm -rf
+		find /jffs/.koolshare/res/*/assets/*.js | xargs rm -rf >/dev/null 2>&1
+		find /${KSHOME}/.koolshare/res/*/assets/*.css | xargs rm -rf >/dev/null 2>&1
 	fi
 
 	# coping files
