@@ -18,22 +18,23 @@ number_test(){
 }
 
 remove_center(){
-	# switch & remove
+	# switch
 	if [ -f /jffs/.koolshare/webs/Module_Softcenter_old.asp -a -f /jffs/.koolshare/.soft_ver_old ];then
 		switch_old jffs
-		rm -rf /jffs/.koolshare/webs/Module_Softcenter_new.asp
-		rm -rf /jffs/.koolshare/res/soft-v19
-		rm -rf /jffs/.koolshare/.soft_ver_new
-		echo_date "移除jffs内的koolcenter！"
 	fi
 
 	if [ -f /cifs2/.koolshare/webs/Module_Softcenter_old.asp -a -f /cifs2/.koolshare/.soft_ver_old ];then
 		switch_old cifs2
-		rm -rf /cifs2/.koolshare/webs/Module_Softcenter_new.asp
-		rm -rf /cifs2/.koolshare/res/soft-v19
-		rm -rf /cifs2/.koolshare/.soft_ver_new
-		echo_date "移除cifs2内的koolcenter！"
 	fi
+
+	# remove
+	rm -rf /jffs/.koolshare/webs/Module_Softcenter_new.asp >/dev/null 2>&1
+	rm -rf /jffs/.koolshare/res/soft-v19 >/dev/null 2>&1
+	rm -rf /jffs/.koolshare/.soft_ver_new >/dev/null 2>&1
+	rm -rf /cifs2/.koolshare/webs/Module_Softcenter_new.asp >/dev/null 2>&1
+	rm -rf /cifs2/.koolshare/res/soft-v19 >/dev/null 2>&1
+	rm -rf /cifs2/.koolshare/.soft_ver_new >/dev/null 2>&1
+	echo_date "移除koolcenter！"
 }
 
 switch_old(){
