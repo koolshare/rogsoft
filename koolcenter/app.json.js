@@ -43,6 +43,20 @@
             "version": "2.2"
         }, 
         {
+            "author": "", 
+            "build_date": "2021-08-17_20:28:26", 
+            "changelog": "", 
+            "description": "Node.js", 
+            "home_url": "koolcenter → softcenter 一键切换！", 
+            "link": "", 
+            "md5": "94c91043668f7119df0523523ffec4b8", 
+            "name": "center", 
+            "tags": "其它", 
+            "tar_url": "center/center.tar.gz", 
+            "title": "koolcenter 一键切换", 
+            "version": "1.0"
+        }, 
+        {
             "author": "sadog", 
             "build_date": "2021-08-05_21:06:17", 
             "changelog": "", 
@@ -424,7 +438,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "45ff0139b3d866ad58ad5143770b4833", 
+    "md5": "ec7b1fb6ea7afe4d3c2680d2fea7100c", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
     "version": "1.9.0.5"
 }
