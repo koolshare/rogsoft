@@ -1,12 +1,12 @@
 {
 "version":"1.2",
-"md5":"46127d5ad847968eab5d3b972a58c915",
+"md5":"1679e3628af25104f3e3f4672821721a",
 "home_url":"Module_entware.asp",
 "title":"Entware",
 "description":"轻松安装/管理Entware环境",
-"tags":"其它",
-"author":"",
+"tags":"Entware USB",
+"author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-08_13:26:53"
+"build_date":"2021-08-17_21:20:37"
 }

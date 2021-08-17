@@ -99,15 +99,15 @@
             "version": "2.4.1"
         }, 
         {
-            "author": "", 
-            "build_date": "2021-08-08_13:26:53", 
+            "author": "sadog", 
+            "build_date": "2021-08-17_21:20:37", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "46127d5ad847968eab5d3b972a58c915", 
+            "md5": "1679e3628af25104f3e3f4672821721a", 
             "name": "entware", 
-            "tags": "其它", 
+            "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
             "version": "1.2"
@@ -211,15 +211,15 @@
             "version": "1.8"
         }, 
         {
-            "author": "", 
-            "build_date": "2021-08-08_13:10:42", 
+            "author": "sadog", 
+            "build_date": "2021-08-17_21:20:42", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "e3ba14afa01d3cd53db290520d1feb91", 
+            "md5": "21eb5b3dd3146cb18acc823c9ba68300", 
             "name": "nodejs", 
-            "tags": "其它", 
+            "tags": "Entware", 
             "tar_url": "nodejs/nodejs.tar.gz", 
             "title": "Node.js", 
             "version": "1.1"
@@ -309,15 +309,15 @@
             "version": "1.4.1"
         }, 
         {
-            "author": "", 
-            "build_date": "2021-08-11_11:11:43", 
+            "author": "sadog", 
+            "build_date": "2021-08-17_21:20:45", 
             "changelog": "", 
             "description": "Sftp Server", 
             "home_url": "Module_sftpserver.asp", 
             "link": "", 
-            "md5": "4e1934f1481f28449ba58bea7bb9fbbb", 
+            "md5": "e9452ba8484fa7cab6e686bee3aff2d9", 
             "name": "sftpserver", 
-            "tags": "其它", 
+            "tags": "Entware", 
             "tar_url": "sftpserver/sftpserver.tar.gz", 
             "title": "Sftp Server", 
             "version": "1.2"

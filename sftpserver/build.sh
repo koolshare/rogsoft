@@ -5,6 +5,8 @@ VERSION="1.2"
 TITLE="Sftp Server"
 DESCRIPTION="Sftp Server"
 HOME_URL="Module_sftpserver.asp"
+TAGS="Entware"
+AUTHOR="sadog"
 
 # Check and include base
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

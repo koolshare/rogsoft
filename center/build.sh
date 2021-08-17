@@ -1,13 +1,12 @@
 #!/bin/sh
 
 MODULE="center"
-VERSION="1.2"
+VERSION="1.3"
 TITLE="koolcenter 一键切换"
 DESCRIPTION="Node.js"
 HOME_URL="koolcenter → softcenter 一键切换！"
 TAGS="辅助 工具"
-AUTHOR="xiaobao"
-LINK="https://www.ddnsto.com"
+AUTHOR="sadog"
 
 # Check and include base
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

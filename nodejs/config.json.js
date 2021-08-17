@@ -1,12 +1,12 @@
 {
 "version":"1.1",
-"md5":"e3ba14afa01d3cd53db290520d1feb91",
+"md5":"21eb5b3dd3146cb18acc823c9ba68300",
 "home_url":"Module_nodejs.asp",
 "title":"Node.js",
 "description":"Node.js",
-"tags":"其它",
-"author":"",
+"tags":"Entware",
+"author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-08_13:10:42"
+"build_date":"2021-08-17_21:20:42"
 }

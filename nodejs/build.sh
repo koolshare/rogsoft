@@ -5,6 +5,8 @@ VERSION="1.1"
 TITLE="Node.js"
 DESCRIPTION="Node.js"
 HOME_URL="Module_nodejs.asp"
+TAGS="Entware"
+AUTHOR="sadog"
 
 # Check and include base
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
