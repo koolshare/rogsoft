@@ -68,7 +68,7 @@ exit_install(){
 
 install_now(){
 	# default value
-	CENTER_TYPE=$(cat /${KSHOME}/.koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+	CENTER_TYPE=$(cat /jffs/.koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
 	if [ -z "$CENTER_TYPE" ];then
 		local TITLE="softcenter 一键切换"
 		local DESCR="softcenter → koolcenter 一键切换！"

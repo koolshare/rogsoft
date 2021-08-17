@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="center"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="koolcenter 一键切换"
 DESCRIPTION="Node.js"
 HOME_URL="koolcenter → softcenter 一键切换！"
