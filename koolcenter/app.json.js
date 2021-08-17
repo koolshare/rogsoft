@@ -438,7 +438,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "ec7b1fb6ea7afe4d3c2680d2fea7100c", 
+    "md5": "17476b5f13c346f00cac017c6b5e4267", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.0.5"
+    "version": "1.9.0.6"
 }
