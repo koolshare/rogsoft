@@ -1,5 +1,11 @@
 Koolshare Asuswrt-Merlin softeware center Changelog
 ===========================================
+1.7.7
+   - fix	修复软件中心自身离线安装的一些问题
+
+1.7.6
+   - fix	适配koolcenter离线安装
+
 1.7.5
    - fix	修复插件卸载问题
 

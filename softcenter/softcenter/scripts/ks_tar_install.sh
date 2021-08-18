@@ -160,6 +160,12 @@ exit_tar_install(){
 install_tar(){
 	echo_date "========================== step 1 ==============================="
 	echo_date "开启插件离线安装！"
+	local MAXDEPTH_SUPP=$(find --help 2>&1|grep -Eco maxdepth)
+	if [ "${MAXDEPTH_SUPP}" == "1" ];then
+		FARG="-maxdepth 2"
+	else
+		FARG=""
+	fi
 	
 	# 1. incase of dbus value pass error, ${TAR_NAME}: xxx.tar.gz
 	if [ -z "${TAR_NAME}" ];then
@@ -216,12 +222,7 @@ install_tar(){
 
 	# 8. before untar, remove some file/folder if exist：tar.gz file and folder contain install.sh
 	rm -rf /tmp/*.tar.gz >/dev/null 2>&1
-	local MAXDEPTH_SUPP=$(find --help 2>&1|grep -Eco maxdepth)
-	if [ "${MAXDEPTH_SUPP}" == "1" ];then
-		local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh" -maxdepth 2)
-	else
-		local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh")
-	fi
+	local INSTALL_SCRIPT_TMP=$(find /tmp $FARG -name "install.sh")
 	local SCRIPT_AB_DIR_TMP=$(dirname ${INSTALL_SCRIPT_TMP})
 	rm -rf ${SCRIPT_AB_DIR_TMP} >/dev/null 2>&1
 
@@ -252,13 +253,23 @@ install_tar(){
 		local SCRIPT_AB_DIR=$(dirname ${INSTALL_SCRIPT})
 		MODULE_NAME=${NAME_PREFIX}
 	else
-		local INSTALL_SCRIPT_NU=$(find /tmp -name "install.sh"|wc -l 2>/dev/null)
+		local INSTALL_SCRIPT_NU=$(find /tmp $FARG -name "install.sh"|wc -l 2>/dev/null)
 		if [ "${INSTALL_SCRIPT_NU}" == "1" ];then
-			local INSTALL_SCRIPT=$(find /tmp -name "install.sh")
+			local INSTALL_SCRIPT=$(find /tmp $FARG -name "install.sh")
 			local SCRIPT_AB_DIR=$(dirname ${INSTALL_SCRIPT})
 			MODULE_NAME=${SCRIPT_AB_DIR##*/}
-		else
+		elif [ "${INSTALL_SCRIPT_NU}" == "0" ];then
 			echo_date "没有找到安装脚本：install.sh"
+			echo_date "退出本次离线安装！"
+			exit_tar_install 1
+		elif [ "${INSTALL_SCRIPT_NU}" -gt "1" ];then
+			echo_date "找到多个安装脚本：install.sh，情况如下："
+			local INSTALL_SCRIPTS=$(find /tmp $FARG -name "install.sh")
+			for INSTALL_SCRIPT in $INSTALL_SCRIPTS
+			do
+				echo_date "$INSTALL_SCRIPT"
+			done
+			echo_date "请删除这些安装脚本，或者重启路由器后重试！"
 			echo_date "退出本次离线安装！"
 			exit_tar_install 1
 		fi

@@ -207,8 +207,8 @@ center_install() {
 
 	# remove before install
 	if [ -z "${CENTER_TYPE_1}" ];then
-		find /${KSHOME}/.koolshare/res/*/assets/*.js | xargs rm -rf
-		find /${KSHOME}/.koolshare/res/*/assets/*.css | xargs rm -rf
+		find /${KSHOME}/.koolshare/res/*/assets/*.js 2>/dev/null | xargs rm -rf >/dev/null 2>&1
+		find /${KSHOME}/.koolshare/res/*/assets/*.css 2>/dev/null | xargs rm -rf >/dev/null 2>&1
 	fi
 
 	# coping files
@@ -350,19 +350,26 @@ center_install() {
 		/usr/bin/dbus set softcenter_installing_md5=""
 	fi
 
+	local SOFTVER=$(cat /tmp/${module}/.soft_ver)
 	if [ "${KSHOME}" == "cifs2" -a -f "/cifs2/ksdb/log" ];then
 		killall skipd >/dev/null 2>&1
 		kill -9 $(pidof skipd) >/dev/null 2>&1
 		/usr/bin/skipd -d /cifs2/ksdb >/dev/null 2>&1 &
 		sleep 2
-		local SOFTVER=$(cat /tmp/${module}/.soft_ver)
-		[ -n "${SOFTVER}" ] && dbus set softcenter_version=${SOFTVER}
+		if [ -n "${SOFTVER}" ];then
+			dbus set softcenter_version=${SOFTVER}
+		fi
 		sync
 		sleep 1
 		killall skipd >/dev/null 2>&1
 		kill -9 $(pidof skipd) >/dev/null 2>&1
 		service start_skipd >/dev/null 2>&1
 		sleep 2
+	fi
+	if [ "${KSHOME}" == "jffs" -a -f "/cifs2/ksdb/log" ];then
+		if [ -n "${SOFTVER}" ];then
+			dbus set softcenter_version=${SOFTVER}
+		fi
 	fi
 	#============================================
 	# now try to reboot httpdb if httpdb not started

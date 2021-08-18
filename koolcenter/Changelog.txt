@@ -1,0 +1,8 @@
+Koolshare Asuswrt-Merlin softeware center Changelog
+===========================================
+
+1.9.0.1 - 1.9.0.8
+   - fix	各种细节调整和bug修复
+
+1.9.0.0
+   - add	koolcenter 首个alpha版本

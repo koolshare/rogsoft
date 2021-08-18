@@ -197,7 +197,7 @@ install_ks_module() {
 	rm -rf /tmp/*.tar.gz* >/dev/null 2>&1
 	local MAXDEPTH_SUPP=$(find --help 2>&1|grep -Eco maxdepth)
 	if [ "${MAXDEPTH_SUPP}" == "1" ];then
-		local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh" -maxdepth 2)
+		local INSTALL_SCRIPT_TMP=$(find /tmp -maxdepth 2 -name "install.sh")
 	else
 		local INSTALL_SCRIPT_TMP=$(find /tmp -name "install.sh")
 	fi
