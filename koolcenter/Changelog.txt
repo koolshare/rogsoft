@@ -1,6 +1,12 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
 
+1.9.0.10
+   - fix	修复页面宽度
+
+1.9.0.9
+   - fix	修复页面加载太慢的问题
+
 1.9.0.1 - 1.9.0.8
    - fix	各种细节调整和bug修复
 
