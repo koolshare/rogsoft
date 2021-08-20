@@ -1,12 +1,12 @@
 {
 "version":"2.2",
-"md5":"486edf1736ef9d69534a6209a0fd32a3",
+"md5":"857f76609d1e353998e0ca5a2ff7b655",
 "home_url":"Module_ddnsto.asp",
 "title":"ddnsto",
 "description":"ddnsto内网穿透",
-"tags":"内网穿透 DDNS",
+"tags":"穿透 DDNS",
 "author":"xiaobao",
 "link":"https://www.ddnsto.com",
 "changelog":"",
-"build_date":"2021-08-05_21:06:19"
+"build_date":"2021-08-20_22:31:30"
 }

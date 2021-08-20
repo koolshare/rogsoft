@@ -26,9 +26,9 @@
     <script type="text/javascript" src="/res/softcenter.js"></script>
     <script type="text/javascript" src="/form.js"></script>
     <!--  -->
-    <script type="module" crossorigin src="/res/soft-v19/assets/index.4c1141a5.js"></script>
+    <script type="module" crossorigin src="/res/soft-v19/assets/index.e8904594.js"></script>
     <link rel="modulepreload" href="/res/soft-v19/assets/vendor.cad358c0.js">
-    <link rel="stylesheet" href="/res/soft-v19/assets/style.e707abbd.css">
+    <link rel="stylesheet" href="/res/soft-v19/assets/style.efe652e0.css">
     <!--  -->
 </head>
 <script>
@@ -43,6 +43,7 @@
         ro_mac_addr: '<% nvram_get("et0macaddr"); %>',
         net_addr: '<% nvram_get("lan_ipaddr"); %>',
         home_url: '<% nvram_get("sc_url"); %>',
+        skin: '<% nvram_get("sc_skin"); %>'.toLowerCase(),
     }
 </script>
 
@@ -59,10 +60,11 @@
             </td>
             <td valign="top">
                 <div id="tabMenu" class="submenuBlock" style="display: none;"></div>
-                <table width="100%" style="width: calc( 100% - 6px);" border="0" align="left" cellpadding="0" cellspacing="0">
+                <table width="100%" style="width: calc( 100% - 6px);" border="0" align="left" cellpadding="0"
+                    cellspacing="0">
                     <tr>
                         <td align="left" valign="top">
-                            <div id="app"></div>
+                            <div id="app" skin='<%nvram_get("sc_skin");%>'></div>
                         </td>
                     </tr>
                 </table>

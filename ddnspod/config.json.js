@@ -1,12 +1,12 @@
 {
 "version":"1.5",
-"md5":"c3e7a5098da11df011f8892def5b53a6",
+"md5":"86a5d14c596bafefe2c2d2595f267d44",
 "home_url":"Module_ddnspod.asp",
 "title":"ddnspod",
 "description":"ddnspod",
-"tags":"网络 DDNS",
+"tags":"DDNS",
 "author":"freexiaoyao",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-05_21:06:19"
+"build_date":"2021-08-20_22:31:30"
 }

@@ -1,12 +1,12 @@
 {
 "version":"1.0",
-"md5":"fca779ad02125888d6011c037849bdfb",
+"md5":"3fc91618140276e2a4a407d65b08b0f2",
 "home_url":"Module_cfddns.asp",
 "title":"CloudFlare DDNS",
 "description":"CloudFlare DDNS",
-"tags":"网络 DDNS",
+"tags":"DDNS",
 "author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-05_21:06:17"
+"build_date":"2021-08-20_22:31:27"
 }
