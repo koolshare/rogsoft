@@ -5,7 +5,7 @@ VERSION="1.5.2"
 TITLE="frps穿透服务器"
 DESCRIPTION="内网穿透利器，谁用谁知道。"
 HOME_URL="Module_frps.asp"
-TAGS="内网穿透 DDNS"
+TAGS="网络 穿透"
 AUTHOR="clang"
 
 # Check and include base

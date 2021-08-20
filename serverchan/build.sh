@@ -5,7 +5,7 @@ VERSION="1.4.1"
 TITLE="serverChan微信推送"
 DESCRIPTION="从路由器推送状态及通知的工具"
 HOME_URL="Module_serverchan.asp"
-TAGS="通知"
+TAGS="推送"
 AUTHOR="clang"
 
 # Check and include base

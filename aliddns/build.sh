@@ -5,7 +5,7 @@ VERSION="2.1"
 TITLE="阿里DDNS"
 DESCRIPTION="aliddns"
 HOME_URL="Module_aliddns.asp"
-TAGS="网络 DDNS"
+TAGS="DDNS"
 AUTHOR="kyrios, sadog"
 
 # Check and include base

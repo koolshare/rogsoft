@@ -5,7 +5,7 @@ VERSION="1.7"
 TITLE="frpc内网穿透"
 DESCRIPTION="支持多种协议的内网穿透软件"
 HOME_URL="Module_frpc.asp"
-TAGS="内网穿透 DDNS"
+TAGS="网络 穿透"
 AUTHOR="clang"
 
 # Check and include base

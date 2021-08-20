@@ -5,7 +5,7 @@ VERSION="1.2"
 TITLE="RouterHook事件回调"
 DESCRIPTION="从路由器推送状态及通知的工具"
 HOME_URL="Module_routerhook.asp"
-TAGS="通知"
+TAGS="推送"
 AUTHOR="囍冯总囍"
 LINK="https://koolshare.cn/thread-178114-1-1.html"
 

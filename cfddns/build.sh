@@ -5,7 +5,7 @@ VERSION="1.0"
 TITLE="CloudFlare DDNS"
 DESCRIPTION="CloudFlare DDNS"
 HOME_URL="Module_cfddns.asp"
-TAGS="网络 DDNS"
+TAGS="DDNS"
 AUTHOR="sadog"
 
 # Check and include base

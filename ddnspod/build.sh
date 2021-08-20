@@ -5,7 +5,7 @@ VERSION="1.5"
 TITLE="ddnspod"
 DESCRIPTION="ddnspod"
 HOME_URL="Module_ddnspod.asp"
-TAGS="网络 DDNS"
+TAGS="DDNS"
 AUTHOR="freexiaoyao"
 
 # Check and include base

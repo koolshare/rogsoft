@@ -5,7 +5,7 @@ VERSION="2.2"
 TITLE="ddnsto"
 DESCRIPTION="ddnsto内网穿透"
 HOME_URL="Module_ddnsto.asp"
-TAGS="内网穿透 DDNS"
+TAGS="穿透 DDNS"
 AUTHOR="xiaobao"
 LINK="https://www.ddnsto.com"
 
