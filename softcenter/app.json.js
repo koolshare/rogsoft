@@ -116,17 +116,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2021-08-20_22:44:21", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "558991967af2d4e07530c1fd97e22b6b", 
+            "md5": "f62327685d05d437bd721fd2778ff431", 
             "name": "entware", 
             "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
-            "version": "1.2"
+            "version": "1.3"
         }, 
         {
             "author": "sadog", 
@@ -228,17 +228,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:30", 
+            "build_date": "2021-08-20_22:44:28", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "598b58304338464aa7b3bbc1cd1308f4", 
+            "md5": "ef4c54e24566b81ef62e81a72bf13486", 
             "name": "nodejs", 
             "tags": "Entware", 
             "tar_url": "nodejs/nodejs.tar.gz", 
             "title": "Node.js", 
-            "version": "1.1"
+            "version": "1.2"
         }, 
         {
             "author": "囍冯总囍", 
@@ -326,17 +326,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:30", 
+            "build_date": "2021-08-20_22:44:32", 
             "changelog": "", 
             "description": "Sftp Server", 
             "home_url": "Module_sftpserver.asp", 
             "link": "", 
-            "md5": "bad494095211bb254a05e3e8afe0c85e", 
+            "md5": "5cfd232f8c1fb888115f48b866919f78", 
             "name": "sftpserver", 
             "tags": "Entware", 
             "tar_url": "sftpserver/sftpserver.tar.gz", 
             "title": "Sftp Server", 
-            "version": "1.2"
+            "version": "1.3"
         }, 
         {
             "author": "sadog", 
