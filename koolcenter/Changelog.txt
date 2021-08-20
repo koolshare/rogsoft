@@ -1,5 +1,7 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.0.11
+   - add	添加UI code
 
 1.9.0.10
    - fix	修复页面宽度

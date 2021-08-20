@@ -59,7 +59,7 @@ get_ui_type(){
 	local EXT_NU=$(nvram get extendno)
 	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
 	local BUILDNO=$(nvram get buildno)
-	[ -z "${EXT_NU}" ] && EXT_NU="0" 
+	[ -z "${EXT_NU}" ] && EXT_NU="0"
 	# RT-AC86U
 	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
 		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
@@ -81,7 +81,7 @@ get_ui_type(){
 		UI_TYPE="ROG"
 	fi
 	# TUF UI
-	if [ "${MODEL}" == "TUF-AX3000" ];then
+	if [ "${MODEL%-*}" == "TUF" ];then
 		# 官改固件，橙色皮肤
 		UI_TYPE="TUF"
 	fi
@@ -215,20 +215,29 @@ center_install() {
 	echo_date "开始复制软件中心相关文件..."
 	cp -rf /tmp/${module}/webs/* /${KSHOME}/.koolshare/webs/
 	cp -rf /tmp/${module}/res/* /${KSHOME}/.koolshare/res/
+
 	# ----ui------
-	echo_date "获取当前固件UI类型，UI_TYPE: ${UI_TYPE}"
-	if [ "${UI_TYPE}" == "ROG" ]; then
-		echo_date "为软件中心安装ROG风格的皮肤..."
-		cp -rf /tmp/${module}/ROG/res/* /${KSHOME}/.koolshare/res/
-	elif [ "${UI_TYPE}" == "TUF" ]; then
-		echo_date "为软件中心安装TUF风格的皮肤..."
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${module}/ROG/res/*.css >/dev/null 2>&1
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${module}/webs/*.asp >/dev/null 2>&1
-		cp -rf /tmp/${module}/ROG/res/* /${KSHOME}/.koolshare/res/
-	elif [ "${UI_TYPE}" == "ASUSWRT" ]; then
-		echo_date "为软件中心安装ASUSWRT风格的皮肤..."
-		if [ -f "/${KSHOME}/.koolshare/webs/Module_Softsetting.asp" ];then
-			sed -i '/rogcss/d' /${KSHOME}/.koolshare/webs/Module_Softsetting.asp >/dev/null 2>&1
+	get_ui_type
+	if [ -z "${CENTER_TYPE_1}" ];then
+		# wirte skin code for softcenter
+		echo_date "为koolcenter软件中心安装${UI_TYPE}风格的皮肤..."
+		nvram set sc_skin="${UI_TYPE}"
+	else
+		# compatiable wit softcenter
+		echo_date "获取当前固件UI类型，UI_TYPE: ${UI_TYPE}"
+		if [ "${UI_TYPE}" == "ROG" ]; then
+			echo_date "为软件中心安装ROG风格的皮肤..."
+			cp -rf /tmp/${module}/ROG/res/* /${KSHOME}/.koolshare/res/
+		elif [ "${UI_TYPE}" == "TUF" ]; then
+			echo_date "为软件中心安装TUF风格的皮肤..."
+			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${module}/ROG/res/*.css >/dev/null 2>&1
+			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${module}/webs/*.asp >/dev/null 2>&1
+			cp -rf /tmp/${module}/ROG/res/* /${KSHOME}/.koolshare/res/
+		elif [ "${UI_TYPE}" == "ASUSWRT" ]; then
+			echo_date "为软件中心安装ASUSWRT风格的皮肤..."
+			if [ -f "/${KSHOME}/.koolshare/webs/Module_Softsetting.asp" ];then
+				sed -i '/rogcss/d' /${KSHOME}/.koolshare/webs/Module_Softsetting.asp >/dev/null 2>&1
+			fi
 		fi
 	fi
 	# -------------
@@ -428,7 +437,6 @@ install(){
 	get_model
 	get_fw_type
 	platform_test
-	get_ui_type
 	install_now
 }
 
