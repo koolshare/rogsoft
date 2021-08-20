@@ -5,7 +5,7 @@ VERSION="2.7"
 TITLE="虚拟内存"
 DESCRIPTION="让路由器运行更稳定~"
 HOME_URL="Module_swap.asp"
-TAGS="工具 USB"
+TAGS="USB"
 AUTHOR="sadog"
 
 # Check and include base

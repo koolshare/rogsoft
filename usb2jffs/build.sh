@@ -5,7 +5,7 @@ VERSION="1.9.8"
 TITLE="USB2JFFS"
 DESCRIPTION="使用U盘轻松挂载jffs"
 HOME_URL="Module_usb2jffs.asp"
-TAGS="工具 USB"
+TAGS="USB"
 AUTHOR="sadog"
 
 # Check and include base

@@ -5,7 +5,7 @@ VERSION="3.8.4.1"
 TITLE="KidsProtect"
 DESCRIPTION="KP: Kids Protect，互联网内容过滤，保护未成年人上网~"
 HOME_URL="Module_koolproxy.asp"
-TAGS="网络 工具"
+TAGS="网络 安全"
 AUTHOR="xiaobao crwnet"
 
 #  # get latest binary
