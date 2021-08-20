@@ -1,5 +1,12 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.0.13
+   - add	添加ROG UI支持
+
+1.9.0.12
+   - fix	修复日志窗口宽度问题
+   - fix	修复日志滚动问题
+
 1.9.0.11
    - add	添加UI code
 
