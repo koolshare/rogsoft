@@ -14,13 +14,13 @@
 | [GT-AC5300](http://koolshare.cn/thread-130902-1-1.html)      | BCM4908 | hnd          | ARMV8 | 4.1.27 | rog  (红色)         |
 | [GT-AX11000/GT-AX11000_BO4](http://koolshare.cn/thread-159465-1-1.html) | BCM4908 | axhnd        | ARMV8 | 4.1.51 | rog  (红色)         |
 | [RT-AX92U](https://koolshare.cn/thread-191634-1-1.html)      | BCM4906 | axhnd        | ARMV8 | 4.1.51 | asuswrt             |
-| [RT-AX86U/RT-AX86U高达版](https://koolshare.cn/thread-181845-1-1.html) | BCM4908 | p1axhnd.675x | ARMV8 | 4.1.52 | asuswrt             |
 | [TUF-AX3000/TUF-AX3000刺客信条版](https://koolshare.cn/thread-179968-1-1.html) | BCM6750 | axhnd.675x   | ARMV7 | 4.1.52 | tuf（橙色）         |
 | [RT-AX82U/RT-AX82U高达版](https://koolshare.cn/thread-xxxxxx-1-1.html) | BCM6750 | axhnd.675x   | ARMV7 | 4.1.52 | asuswrt             |
 | [ZenWiFi AX6600/灵耀 AX6600M](https://koolshare.cn/thread-187704-1-1.html) | BCM6755 | axhnd.675x   | ARMV7 | 4.1.52 | asuswrt             |
 | [ZenWiFi_XD4/灵耀AX魔方](https://koolshare.cn/thread-187744-1-1.html) | BCM6755 | axhnd.675x   | ARMV7 | 4.1.52 | asuswrt             |
 | [RT-AX56U青春/热血/刺客信条版](https://koolshare.cn/thread-188683-1-1.html) | BCM6755 | axhnd.675x   | ARMV7 | 4.1.52 | asuswrt             |
 | [RT-AX68U](https://koolshare.cn/thread-191640-1-1.html)      | BCM4906 | p1axhnd.675x | ARMV8 | 4.1.52 | asuswrt             |
+| [RT-AX86U/RT-AX86U高达版](https://koolshare.cn/thread-181845-1-1.html) | BCM4908 | p1axhnd.675x | ARMV8 | 4.1.52 | asuswrt             |
 
 - 点击表格中的机型可以前往对应机型的koolshare固件下载；
 - RT-AX56U_V2/RT-AX56U青春版/RT-AX56U热血版/RT-AX56U刺客信条版，这四个名字代表一个机型。
