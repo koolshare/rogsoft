@@ -5,7 +5,7 @@ VERSION="1.1"
 TITLE="上海电信IPTV"
 DESCRIPTION="上海电信IPTV，4K IPTV 一键开启"
 HOME_URL="Module_shiptv.asp"
-TAGS="网络 工具"
+TAGS="网络"
 AUTHOR="sadog"
 
 # Check and include base

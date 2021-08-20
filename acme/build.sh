@@ -5,7 +5,7 @@ VERSION="3.3"
 TITLE="Let's Encrypt"
 DESCRIPTION="自动部署SSL证书"
 HOME_URL="Module_acme.asp"
-TAGS="网络 工具"
+TAGS="网络 安全"
 AUTHOR="sadog"
 LINK="https://github.com/acmesh-official/acme.sh"
 

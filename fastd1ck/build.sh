@@ -5,7 +5,7 @@ VERSION="1.6"
 TITLE="迅雷快鸟"
 DESCRIPTION="迅雷快鸟，上网必备神器"
 HOME_URL="Module_fastd1ck.asp"
-TAGS="网络 工具"
+TAGS="网络"
 AUTHOR="sadog"
 
 # Check and include base
