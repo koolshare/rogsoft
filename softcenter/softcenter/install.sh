@@ -244,7 +244,7 @@ center_install() {
 	cp -rf /tmp/${module}/init.d/* /${KSHOME}/.koolshare/init.d/
 	cp -rf /tmp/${module}/bin/* /${KSHOME}/.koolshare/bin/
 	#for axhnd
-	if [ "${MODEL}" == "RT-AX88U" ] || [ "${MODEL}" == "GT-AX11000" ];then
+	if [ "${MODEL}" == "RT-AX88U" -o "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "RT-AX86U" -o "${MODEL}" == "RT-AX68U" ];then
 		cp -rf /tmp/${module}/axbin/* /${KSHOME}/.koolshare/bin/
 	fi
 	cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
