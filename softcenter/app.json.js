@@ -171,13 +171,13 @@
             "version": "1.5.2"
         }, 
         {
-            "author": "", 
-            "build_date": "2021-08-20_22:31:26", 
+            "author": "anonymous", 
+            "build_date": "2021-08-22_16:09:01", 
             "changelog": "", 
             "description": "kms", 
             "home_url": "Module_kms.asp", 
             "link": "", 
-            "md5": "511ec5573a9fdecef437fb5e70f0613e", 
+            "md5": "b2c24ae594c9566bcca2fa3a1606e19f", 
             "name": "kms", 
             "tags": "辅助 工具", 
             "tar_url": "kms/kms.tar.gz", 
