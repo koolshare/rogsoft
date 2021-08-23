@@ -185,13 +185,13 @@
             "version": "1.5.2"
         }, 
         {
-            "author": "", 
-            "build_date": "2021-08-20_22:31:26", 
+            "author": "anonymous", 
+            "build_date": "2021-08-22_16:09:01", 
             "changelog": "", 
             "description": "kms", 
             "home_url": "Module_kms.asp", 
             "link": "", 
-            "md5": "511ec5573a9fdecef437fb5e70f0613e", 
+            "md5": "b2c24ae594c9566bcca2fa3a1606e19f", 
             "name": "kms", 
             "tags": "辅助 工具", 
             "tar_url": "kms/kms.tar.gz", 
@@ -424,19 +424,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2021-08-22_23:26:00", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "f5211e635d2f02451a4c948f4597aa12", 
+            "md5": "c7768f4e2a35bed736b06e7f52b9898e", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.1"
+            "version": "4.2"
         }, 
         {
             "author": "sadog", 
@@ -454,7 +454,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "70c5d26279728a2c9f7e61f525a69b56", 
+    "md5": "716fe96a7211ee4bf4682ebd8e235543", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.0.15"
+    "version": "1.9.0.16"
 }
