@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.0.17
+   - update	更新kscore.sh
+
 1.9.0.16
    - update	继续改善web细节，同时初步支持ROG皮肤
 
