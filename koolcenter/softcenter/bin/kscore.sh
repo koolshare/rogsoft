@@ -148,6 +148,36 @@ set_premissions(){
 	chmod 755 /koolshare/scripts/* >/dev/null 2>&1
 }
 
+detect(){
+	if [ ! -d "/jffs/.koolshare" ];then
+		/usr/bin/jffsinit.sh
+	fi
+
+	chmod 755 /koolshare/bin/*
+	chmod 755 /koolshare/init.d/*
+	chmod 755 /koolshare/perp/*
+	chmod 755 /koolshare/perp/.boot/*
+	chmod 755 /koolshare/perp/.control/*
+	chmod 755 /koolshare/perp/httpdb/*
+	chmod 755 /koolshare/scripts/*
+	
+	# make some link
+	if [ ! -L "/koolshare/bin/base64_decode" -a -f "/koolshare/bin/base64_encode" ];then
+		ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
+	fi
+	if [ ! -L "/koolshare/scripts/ks_app_remove.sh" ];then
+		ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
+	fi
+	if [ -n "$(nvram get extendno | grep koolshare)" ];then
+		# for offcial mod, RT-AC86U, GT-AC5300, TUF-AX3000, RT-AX86U, etc
+		[ ! -L "/jffs/etc/profile" ] && ln -sf /koolshare/scripts/base.sh /jffs/etc/profile
+	else
+		# for Merlin mod, RT-AX88U, RT-AC86U, etc
+		[ ! -L "/jffs/configs/profile.add" ] && ln -sf /koolshare/scripts/base.sh /jffs/configs/profile.add
+	fi
+	sync
+}
+
 set_url(){
 	# set url
 	SC_URL=https://rogsoft.ddnsto.com
@@ -175,12 +205,30 @@ set_skin(){
 	nvram commit
 }
 
+stop_software_center(){
+	killall skipd >/dev/null 2>&1
+	killall perpboot >/dev/null 2>&1
+	killall tinylog >/dev/null 2>&1
+	killall perpd >/dev/null 2>&1
+	killall httpdb >/dev/null 2>&1
+	[ -n "$(pidof httpdb)" ] && kill -9 $(pidof httpdb) >/dev/null 2>&1
+}
+
+start_software_center(){
+	stop_software_center
+	service start_skipd >/dev/null 2>&1
+	/koolshare/perp/perp.sh start >/dev/null 2>&1
+}
+
 init_core(){
 	# prepare
 	mkdir -p /tmp/upload
 
+	# detect
+	detect
+
 	# start software center
-	sh /koolshare/perp/perp.sh
+	start_software_center
 
 	# check start
 	check_start
