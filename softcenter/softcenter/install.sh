@@ -381,7 +381,7 @@ center_install() {
 	fi
 
 	# remove some value discard exist
-	nvram usnet rc_service
+	nvram unset rc_service
 	nvram commit
 	#============================================
 	# now try to reboot httpdb if httpdb not started
