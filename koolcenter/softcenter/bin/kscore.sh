@@ -238,6 +238,7 @@ init_core(){
 
 	# set some default value
 	nvram set jffs2_scripts=1
+	nvram usnet rc_service
 	nvram commit
 
 	# set koolcenter

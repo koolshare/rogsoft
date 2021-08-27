@@ -348,7 +348,6 @@ center_install() {
 	echo_date "设定一些默认值..."
 	if [ -z "${CENTER_TYPE_1}" ];then
 		nvram set sc_url="https://rogsoft.ddnsto.com"
-		nvram commit
 	fi
 	if [ -n "$(pidof skipd)" -a -f "/usr/bin/dbus" ];then
 		/usr/bin/dbus set softcenter_installing_todo=""
@@ -380,6 +379,10 @@ center_install() {
 			dbus set softcenter_version=${SOFTVER}
 		fi
 	fi
+
+	# remove some value discard exist
+	nvram usnet rc_service
+	nvram commit
 	#============================================
 	# now try to reboot httpdb if httpdb not started
 	# /koolshare/bin/start-stop-daemon -S -q -x /koolshare/perp/perp.sh
