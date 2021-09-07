@@ -7,7 +7,10 @@
 		sub_domain = current_url.split("/")[2].split(".")[0];
 		if(current_url.indexOf("ddnsto") != -1){
 			location.href = "https://" + sub_domain + "-cmd.ddnsto.com/"
-		}else{
+		}else if(current_url.indexOf("kooldns") != -1){
+			location.href = "https://" + sub_domain + "-cmd.kooldns.cn/"
+		}
+		else{
 			location.href = "http://" + location.hostname + ":4200/"
 		}
 	}
