@@ -55,9 +55,9 @@
 2. 在程序方面：armv8架构机器的hnd/axhnd平台支持32+64位程序，armv7l架构机器的axhnd.675x平台仅支持32位程序。所以为了兼容所有机型，建议全部采用32位程序；即使是hnd/axhnd平台机型，比如RT-AX86U，其内核虽然是64位的，但是其userspace程序几乎都是32位的。
 3. 程序编译建议使用博通SDK中提供的工具链：[官方工具链](https://github.com/RMerl/am-toolchains/tree/master/brcm-arm-hnd)，使用arm工具链编译32位程序，并且为了保证在不同固件之间的正常运行，尽量使用全静态编译。
 4. hnd平台二进制编译使用：**crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25**，axhnd平台二进制编译使用：**crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1**，不过一般来说不论使用哪个工具链，编译出来的二进制都能在两个平台上同时使用。
-5. 因为rogsoft同时支持了多种不同皮肤的固件（普通的asuswrt皮肤，红色的rog皮肤，橙色的tuf皮肤），所以插件的制作需要考虑到多个不同风格的UI，建议可以用css或者定制不同的asp文件，但是后台脚本而二进制保持一致，也可以参考软件中心aliddns插件的作法，先判断固件需要的UI类型：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/install.sh#L51-L88，再在安装的时候更改不同css来控制UI：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/install.sh#L108-L124，当然，前提是asp、css文件预先留好匹配字段（本例中为`/* W3C rogcss */`）：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/webs/Module_aliddns.asp#L37-L38。tuf橙色皮肤采用rog皮肤为基础，通过颜色替换而来，所以在写rog UI的时候，请保证能将红色替换为橙色，以保证tuf皮肤正常。
+5. 因为rogsoft同时支持了多种不同皮肤的固件（普通的asuswrt皮肤，红色的rog皮肤，橙色的tuf皮肤），所以插件的制作需要考虑到多个不同风格的UI，建议可以用css或者定制不同的asp文件，但是后台脚本而二进制保持一致，也可以参考软件中心aliddns插件的作法，先判断固件需要的UI类型：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/install.sh#L51-L88 ，再在安装的时候更改不同css来控制UI：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/install.sh#L108-L124 ，当然，前提是asp、css文件预先留好匹配字段（本例中为`/* W3C rogcss */`）：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/webs/Module_aliddns.asp#L37-L38 。tuf橙色皮肤采用rog皮肤为基础，通过颜色替换而来，所以在写rog UI的时候，请保证能将红色替换为橙色，以保证tuf皮肤正常。
 6. 为了避免用户使用其它平台的离线安装包进行安装，因此，rogsoft软件中心需要对离线安装包需要做验证。安装时需要验证安装包内是否含有`.valid`文件，且文件内含有`hnd`字符串。
-7. 为了避免用户将本项目内的离线安装包用于其它不兼容的软件中心平台，而这些平台的软件中心有可能版本较老没有`.valid`检查，因此本项目中所有的安装包内的`install.sh`都需要进对安装的固件/平台进行检测：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/install.sh#L42-L49。
+7. 为了避免用户将本项目内的离线安装包用于其它不兼容的软件中心平台，而这些平台的软件中心有可能版本较老没有`.valid`检查，因此本项目中所有的安装包内的`install.sh`都需要进对安装的固件/平台进行检测：https://github.com/koolshare/rogsoft/blob/master/aliddns/aliddns/install.sh#L42-L49 。
 
 ## **koolshare几个版本的软件中心区别：**
 
