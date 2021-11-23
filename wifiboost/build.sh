@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MODULE="wifiboost"
-VERSION="4.2"
+VERSION="4.3"
 TITLE="wifi boost"
 DESCRIPTION="wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。"
 HOME_URL="Module_wifiboost.asp"

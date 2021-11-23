@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.3
+   - fix	修复部分机型的在线安装问题
+
 4.2
    - update	修复一个原始功率备份的问题
 

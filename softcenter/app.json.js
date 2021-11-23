@@ -410,19 +410,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-22_23:26:00", 
+            "build_date": "2021-11-23_15:33:03", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "c7768f4e2a35bed736b06e7f52b9898e", 
+            "md5": "bd3305a524f7073c371d6a99e2cf7329", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.2"
+            "version": "4.3"
         }, 
         {
             "author": "sadog", 
