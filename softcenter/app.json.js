@@ -116,17 +116,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:44:21", 
+            "build_date": "2021-11-23_12:01:41", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "f62327685d05d437bd721fd2778ff431", 
+            "md5": "79c8598ed0f84365994ee53684b4e7a1", 
             "name": "entware", 
             "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
-            "version": "1.3"
+            "version": "1.4"
         }, 
         {
             "author": "sadog", 
