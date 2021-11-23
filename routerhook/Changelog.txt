@@ -1,0 +1,44 @@
+Koolshare hnd/axhnd router software center routerhook Changelog
+===========================================
+1.2
+   - fix 修复请求https://ip.sb时由于证书过期导致无法获取IP的问题
+   - feat 增加公网IP开关，可选择关闭获取公网IP
+
+1.1
+   - fix 修复重启后不添加定时任务的问题
+   - fix 统一log输出格式为[routerhook]:开头
+   - feat 优化config执行顺序
+
+1.0
+   Breaking Change! 丰富功能，支持HASS
+   - fix 修复部分bug
+   - fix 修复发送结果判断不准确的bug
+   - feat 新增自定义Header，可以自定义添加Header
+   - feat 新增Header和URL中的动态变量
+   - feat 将发送请求的模块独立出来进行共用，提高复用，方便维护
+   - feat 新增虚拟传感器功能，支持HASS和IFTTT
+   - feat 完善界面，增加输入检查逻辑等
+
+0.4
+   - feat 新增回调URL中支持动态变量
+   - feat 触发类时间支持IFTTT消息格式
+   - fix 请求有wget改为curl，请求头content-type由'x-www-form-urlencode'修正为'application/json'
+   - bug 重启后定时任务消失，暂不知为何
+
+0.3
+   - fix 修复遗留Bug
+   - fix 优化卸载脚本
+   - feat 定时推送新增在线列表和dhcp列表
+   - feat 新增部分数据字段并修改部分字段类型为（数字+单位）的字符串
+
+0.2
+   - docs 完善ReadMe文档
+   - feat 替换了个好看点儿的ICON
+   - fix 调整了删除dhcp触发器的方式（删除文件改为删除行），实现与ServerChan的共存
+   
+0.1
+   - fix 部分配置开关无效的bug
+   - fix 安装时不安装卸载脚本的bug
+   - docs 新增数据格式文档
+   - feat 替换获取外网IP的API为ip.sb的API
+   - feat 新增获取外网IPv6

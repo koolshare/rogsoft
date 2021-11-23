@@ -1,0 +1,12 @@
+{
+"version":"1.5",
+"md5":"28e88564762292427836c3679d72add3",
+"home_url":"Module_qiandao.asp",
+"title":"自动签到",
+"description":"自动签到",
+"tags":"签到",
+"author":"Carseason",
+"link":"",
+"changelog":"",
+"build_date":"2021-08-20_22:31:28"
+}

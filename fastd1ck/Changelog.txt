@@ -1,0 +1,13 @@
+fastd1ck for asuswrt/merlin hnd platform
+----------------------
+1.5
+   - fix	修复开机启动/修复升级插件后未启动
+1.4
+   - fix	修复提速成功后开关自动关闭的bug
+1.3
+   - fix	修复可能的皮肤错乱，更新后请使用ctrl + f5强制刷新一次网页。
+1.1 - 1.2
+   - fix	修复因为缺少js库导致无法生成设备标识的问题。
+1.0
+   - add	添加迅雷快鸟插件，从https://github.com/sensec/luci-app-xlnetacc移植，感谢原作sensec！
+			特色：支持下行，上行提速；支持快鸟协议选择；良好的日志支持。

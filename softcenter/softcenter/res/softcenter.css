@@ -1,0 +1,131 @@
+/*  For software center  */
+.KoolshareBottom {
+	width: 205px;
+	height: 100px;
+	background: url(/res/koolshare.png) 0px 3px no-repeat;
+	text-align: left;
+	padding-left:150px;
+	padding-top:7px;
+	margin-top:20px;
+	float:right;
+}
+
+.input_ss_table{
+	margin-left:2px;
+	padding-left:0.4em;
+	height:21px;
+	width:158.2px;
+	line-height:23px \9;	/*IE*/
+	font-size:13px;
+	font-family: Lucida Console;
+	background-image:none;
+	background-color: #576d73;
+	border:1px solid gray;
+	color:#FFFFFF;
+}
+
+.FormTitle i {
+    color: #FC0;
+    font-style: normal;
+}
+.FormTitle em {
+    color: #00ffe4;
+    font-style: normal;
+}
+.FormTitle b {
+    color: #1cfe16;
+    font-style: normal;
+	font-weight:normal;
+}
+.FormTitle_firefox i {
+    color: #FC0;
+    font-style: normal;
+}
+.FormTitle_firefox em {
+    color: #00ffe4;
+    font-style: normal;
+}
+.FormTitle_firefox b {
+    color: #1cfe16;
+    font-style: normal;
+	font-weight:normal;
+}
+.IE8HACK{
+	display: none \9;
+}
+.splitLine{
+	background: #32393B;
+	background: -webkit-linear-gradient(#32393B 0%, #32393B 20%, #667881 80%, #667881 100%);
+	background: -o-linear-gradient(#32393B 0%, #32393B 20%, #667881 80%, #667881 100%);
+	background: linear-gradient(#32393B 0%, #32393B 20%, #667881 80%,#667881 100%);
+	height: 2px;
+	width: 740px;
+	margin: 1px 0;
+}
+.show-install-btn, .show-uninstall-btn {
+	border: none;
+	background: #444;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px 5px 0px 0px;
+}
+.active {
+	background: #444f53;
+	border: none;
+}
+#soft_log {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px;
+	background:#475A5F;
+	color:#FFFFFF;
+	border:none;
+}
+#IconContainer {
+	border: none;
+}
+.ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
+}
+.ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
+}
+.soft_setting_log{
+	margin-top:10px;
+	display:block;
+	overflow:hidden;
+	outline: 1px solid #222;
+}
+.soft_setting_log1{
+	width:97%;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	margin-top:1px;
+	border:0px solid #222;
+	background:#475A5F;
+}
+.SimpleNote {
+	padding:5px 10px;
+}

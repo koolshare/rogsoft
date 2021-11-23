@@ -1,0 +1,35 @@
+Koolshare Asuswrt-Merlin koolcenter center Changelog
+===========================================
+1.9.0.17
+   - update	更新kscore.sh
+
+1.9.0.16
+   - update	继续改善web细节，同时初步支持ROG皮肤
+
+1.9.0.15
+   - update	修复重置固件后，ROG机型软件中心皮肤出问题
+
+1.9.0.14
+   - fix	修复软件中心的一个安全问题
+
+1.9.0.13
+   - add	添加ROG UI支持（axhnd机型）
+
+1.9.0.12
+   - fix	修复日志窗口宽度问题
+   - fix	修复日志滚动问题
+
+1.9.0.11
+   - add	添加UI code
+
+1.9.0.10
+   - fix	修复页面宽度
+
+1.9.0.9
+   - fix	修复页面加载太慢的问题
+
+1.9.0.1 - 1.9.0.8
+   - fix	各种细节调整和bug修复
+
+1.9.0.0
+   - add	koolcenter 首个alpha版本

@@ -1,0 +1,15 @@
+{
+    "[shellscript]": {
+        "files.eol": "\n",
+        "editor.detectIndentation": false,
+        "files.encoding": "utf8"
+    },
+    "[bat]": {
+        "files.encoding": "gb2312",
+        "files.eol": "\r\n",
+    },
+    "files.associations": {
+        "*.sh": "shellscript",
+        "version": "shellscript"
+    }
+}
