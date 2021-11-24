@@ -1,4 +1,7 @@
 #!/bin/sh
+
+# build script for rogsoft project
+
 VERSION=1.8.2
 
 echo $VERSION > ./softcenter/.soft_ver

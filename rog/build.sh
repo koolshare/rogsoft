@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="rog"
 VERSION="4.3"
 TITLE="ROG工具箱"

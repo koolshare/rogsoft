@@ -91,10 +91,10 @@ function detect(){
 		hide_elem();
 		$('#warn_msg_1').html('<h2><font color="#FF6600">错误！</font></h2><h2>【上海电信IPTV】插件暂时不可用！因为你的设备工作在非路由模式下！</h2><h2>请前往【系统管理】-<a href="Advanced_OperationMode_Content.asp"><u><em>【操作模式】</em></u></a>中选择无线路由器模式！才能正常使用本插件！</h2>');
 	}
-	if(MODEL != "RT-AX86U"){
-		hide_elem();
-		$('#warn_msg_1').html('<h2><font color="#FF6600">哦豁！</font></h2><h2>【上海电信IPTV】插件在你的机型：' + MODEL + '上不可用！</h2><h2>本插件目前仅针对<font color="#00CCFF">RT-AX86U</font>开放测试！</h2><h2>其它机型请耐心等待！</h2><h2>更多信息请见：<a href="https://koolshare.cn/thread-183914-1-1.html"><u><font color="#00CCFF">https://koolshare.cn/thread-183914-1-1.html</font><u></a></h2>');
-	}
+	//if(MODEL != "RT-AX86U"){
+	//	hide_elem();
+	//	$('#warn_msg_1').html('<h2><font color="#FF6600">哦豁！</font></h2><h2>【上海电信IPTV】插件在你的机型：' + MODEL + '上不可用！</h2><h2>本插件目前仅针对<font color="#00CCFF">RT-AX86U</font>开放测试！</h2><h2>其它机型请耐心等待！</h2><h2>更多信息请见：<a href="https://koolshare.cn/thread-183914-1-1.html"><u><font color="#00CCFF">https://koolshare.cn/thread-183914-1-1.html</font><u></a></h2>');
+	//}
 }
 
 function get_dbus_data() {

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="mdial"
 VERSION="1.3"
 TITLE="单线多拨"

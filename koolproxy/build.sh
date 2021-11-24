@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="koolproxy"
 VERSION="3.8.4.1"
 TITLE="KidsProtect"

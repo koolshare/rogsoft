@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="cfetool"
 VERSION="3.1"
 TITLE="CFE工具箱"

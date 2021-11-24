@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="sftpserver"
 VERSION="1.3"
 TITLE="Sftp Server"

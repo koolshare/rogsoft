@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="frps"
 VERSION="1.5.2"
 TITLE="frps穿透服务器"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="nodejs"
 VERSION="1.2"
 TITLE="Node.js"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="kms"
 VERSION="1.6"
 TITLE="系统工具"

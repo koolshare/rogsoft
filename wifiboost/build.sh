@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="wifiboost"
 VERSION="4.3"
 TITLE="wifi boost"

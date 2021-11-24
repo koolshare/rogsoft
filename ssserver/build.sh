@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="ssserver"
 VERSION="1.2"
 TITLE="ss-server"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="uamas"
 VERSION="1.0"
 TITLE="Unlock AiMesh"

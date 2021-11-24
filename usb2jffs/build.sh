@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="usb2jffs"
 VERSION="1.9.8"
 TITLE="USB2JFFS"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="shellinabox"
 VERSION="1.6"
 TITLE="shellinabox"

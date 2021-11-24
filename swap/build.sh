@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="swap"
 VERSION="2.7"
 TITLE="虚拟内存"

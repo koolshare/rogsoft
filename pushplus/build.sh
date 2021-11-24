@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="pushplus"
 VERSION="0.4"
 TITLE="pushplus全能推送"

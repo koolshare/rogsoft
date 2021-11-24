@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="aliddns"
 VERSION="2.1"
 TITLE="阿里DDNS"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="frpc"
 VERSION="1.7"
 TITLE="frpc内网穿透"

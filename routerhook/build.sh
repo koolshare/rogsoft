@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="routerhook"
 VERSION="1.2"
 TITLE="RouterHook事件回调"

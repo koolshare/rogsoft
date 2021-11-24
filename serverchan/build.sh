@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="serverchan"
 VERSION="1.4.1"
 TITLE="serverChan微信推送"

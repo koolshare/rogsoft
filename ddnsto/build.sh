@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="ddnsto"
 VERSION="2.2"
 TITLE="ddnsto"

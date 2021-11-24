@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="center"
 VERSION="1.4"
 TITLE="软件中心一键切换"

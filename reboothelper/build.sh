@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="reboothelper"
 VERSION="0.6"
 TITLE="重启助手"

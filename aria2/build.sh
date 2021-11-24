@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="aria2"
 VERSION="2.2"
 TITLE="aria2"

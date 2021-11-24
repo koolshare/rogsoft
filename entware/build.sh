@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="entware"
 VERSION="1.4"
 TITLE="Entware"

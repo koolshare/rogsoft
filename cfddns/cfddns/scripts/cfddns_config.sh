@@ -10,6 +10,12 @@ LOGTIME=$(TZ=UTC-8 date -R "+%Y-%m-%d %H:%M:%S")
 [ "$cfddns_ttl" = "" ] && cfddns_ttl="1"
 get_type="A"
 
+if [ "$cfddns_name" = "@" ];then
+	cfddns_name_domain=$cfddns_domain
+else
+	cfddns_name_domain=$cfddns_name.$cfddns_domain
+fi
+
 get_bol() {
 	case "$cfddns_proxied" in
 		1)
@@ -22,7 +28,7 @@ get_bol() {
 }
 
 get_record_response() {
-	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/$cfddns_zid/dns_records?type=$get_type&name=$cfddns_name.$cfddns_domain&order=type&direction=desc&match=all" \
+	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/$cfddns_zid/dns_records?type=$get_type&name=${cfddns_name_domain}&order=type&direction=desc&match=all" \
 	-H "X-Auth-Email: $cfddns_email" \
 	-H "X-Auth-Key: $cfddns_akey" \
 	-H "Content-type: application/json"
@@ -33,7 +39,7 @@ update_record() {
 	-H "X-Auth-Email: $cfddns_email" \
 	-H "X-Auth-Key: $cfddns_akey" \
 	-H "Content-Type: application/json" \
-	--data '{"id":"'$cfddns_id'","type":"'$get_type'","name":"'$cfddns_name.$cfddns_domain'","content":"'$update_to_ip'","zone_id":"'$cfddns_zid'","zone_name":"'$cfddns_domain'","ttl":'$cfddns_ttl',"proxied":'$(get_bol)'}'
+	--data '{"type":"'$get_type'","name":"'${cfddns_name_domain}'","content":"'$update_to_ip'","ttl":'$cfddns_ttl',"proxied":'$(get_bol)'}'
 }
 
 get_info(){
@@ -43,7 +49,7 @@ get_info(){
 		# CFDDNS的A记录ID
 		cfddns_id=`echo $cfddns_result | awk -F"","" '{print $1}' | sed 's/{.*://g' | sed 's/\"//g'`
 		# CFDDNS的A记录IP
-		current_ip=`echo $cfddns_result | awk -F"","" '{print $4}' | grep -oE '([0-9]{1,3}\.?){4}'`
+		current_ip=`echo $cfddns_result | awk -F"","" '{print $6}' | grep -oE '([0-9]{1,3}\.?){4}'`
 		echo_date CloudFlare IP为 $current_ip
 	else
 		dbus set cfddns_status="【$LOGTIME】：获取IPV4解析记录错误！"
@@ -74,7 +80,7 @@ get_info_ipv6(){
 			# CFDDNS的AAAA记录ID
 			cfddns_id=`echo $cfddns_result | awk -F"","" '{print $1}' | sed 's/{.*://g' | sed 's/\"//g'`
 			# CFDDNS的AAAA记录IP
-			current_ipv6=`echo $cfddns_result | awk -F"","" '{print $4}' | grep -oE '([a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){0,7}::[a-f0-9]{0,4}(:[a-f0-9]{1,4}){0,7})'`
+			current_ipv6=`echo $cfddns_result | awk -F"","" '{print $6}' | grep -oE '([a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){0,7}::[a-f0-9]{0,4}(:[a-f0-9]{1,4}){0,7})'`
 			echo_date CfddsnIP为 $current_ipv6
 		else
 			dbus set cfddns_status="【$LOGTIME】：获取IPV6解析记录错误！"

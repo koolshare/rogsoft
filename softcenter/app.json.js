@@ -44,17 +44,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:27", 
+            "build_date": "2021-11-24_11:01:11", 
             "changelog": "", 
             "description": "CloudFlare DDNS", 
             "home_url": "Module_cfddns.asp", 
             "link": "", 
-            "md5": "3fc91618140276e2a4a407d65b08b0f2", 
+            "md5": "d101f1ea3dd21633480549cbe10f35f2", 
             "name": "cfddns", 
             "tags": "DDNS", 
             "tar_url": "cfddns/cfddns.tar.gz", 
             "title": "CloudFlare DDNS", 
-            "version": "1.0"
+            "version": "1.1"
         }, 
         {
             "author": "sadog", 

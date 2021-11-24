@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="ddnspod"
 VERSION="1.5"
 TITLE="ddnspod"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="softether"
 VERSION="1.9"
 TITLE="SoftEther_VPN_Server"

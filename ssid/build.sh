@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="ssid"
 VERSION="1.3"
 TITLE="中文SSID"

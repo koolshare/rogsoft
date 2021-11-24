@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="ngfix"
 VERSION="1.8"
 TITLE="RAX80 Toolbox"

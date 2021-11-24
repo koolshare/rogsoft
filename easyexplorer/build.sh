@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="easyexplorer"
 VERSION="2.4.1"
 TITLE="易有云"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="acme"
 VERSION="3.3"
 TITLE="Let's Encrypt"

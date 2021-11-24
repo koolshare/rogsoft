@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# build script for rogsoft project
+
 MODULE="zerotier"
 VERSION="1.3.8"
 TITLE="ZeroTier"
