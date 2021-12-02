@@ -85,6 +85,10 @@ var dbus;
 var pay_server = '42.192.18.234';
 var pay_port = '8083';
 var online_ver;
+String.prototype.myReplace = function(f, e){
+	var reg = new RegExp(f, "g"); 
+	return this.replace(reg, e); 
+}
 function init() {
 	show_menu(menu_hook);
 	var current_url = window.location.href;
@@ -178,13 +182,51 @@ function conf2obj(){
 }
 function cfeit(action){
 	var dbus_new = {}
+	var current_url = window.location.href;
+	net_address = current_url.split("/Module")[0];
 	if(action == 2 || action == 3 || action == 4){
 		var ct_key = E("cfetool_key").value;
 		if(!ct_key){
 			alert("请先输入激活码后再点击激活按钮！");
 			return false;
 		}
+		// cfetool-85f005d7-e9b3-48cb-9e7d-b275dbc232e8
+		if(action == 4 && ct_key.indexOf('cfetool-') != -1){
+
+			if(ct_key.length == "44" && ct_key.myReplace("-", "").length == "39"){
+
+				msg = '';
+				msg += '<span style="font-size: 18px;">你正在使用提货码进行激活</span>';
+				msg += '<br/>';
+				msg += '<br/>';
+				msg += '提货码：<span style="color: #CC3300">' + ct_key + '</span>';
+				msg += '<br/>';
+				msg += '<br/>';
+				msg += '提示：一个提货码只能用于一台路由器的wifi boost激活；';
+				msg += '<br/>';
+				msg += '点击立即激活，你将会获得wifi boost激活码，同时提货码将会失效。';
+				
+				require(['/res/layer/layer.js'], function(layer) {
+					layer.confirm(msg, {
+						btn: ['立即激活', '取消'],
+						shade: 0.8,
+						maxWidth: '600px'
+					}, function(index) {
+						layer.close(index);
+						location.href = "http://" + pay_server + ":" + pay_port + "/pay_cfe.php?paytype=3&uuid=" + ct_key + "&mcode=" + dbus["cfetool_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+						return true;
+					});
+				});
+				E("cfetool_key").value = "";
+				return true;
+			}else{
+				E("cfetool_key").value = "";
+				alert("请输入正确格式的cfetool提货码！");
+				return false;
+			}
+		}
 		if (ct_key.indexOf('ct_') == -1){
+			E("cfetool_key").value = "";
 			alert("请输入正确格式的激活码！");
 			return false;
 		}
@@ -239,8 +281,10 @@ function get_log(action){
 		success: function(response) {
 			var retArea = E("log_content_text");
 			if (response.search("XU6J03M6") != -1) {
-				retArea.value = response.replace("XU6J03M6", " ");
+				retArea.value = response.myReplace("XU6J03M6", " ");
 				if(action){
+					var newURL = location.href.split("?")[0];
+					window.history.pushState('object', document.title, newURL);
 					refreshpage();
 				}else{
 					return false;
@@ -249,7 +293,7 @@ function get_log(action){
 			if(action){
 				setTimeout("get_log(1);", 350);
 			}
-			retArea.value = response.replace("XU6J03M6", " ");
+			retArea.value = response.myReplace("XU6J03M6", " ");
 			retArea.scrollTop = retArea.scrollHeight;
 		}
 	});

@@ -1,5 +1,10 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
 ===========================================
+3.2
+   - update	新增提货码激活方式，在激活码栏输入提货码即可激活插件，提货码为cfetool-xxx-xxx...格式。
+   - update	优化支付体验；
+   - fix	修复有时候插件页面一直不断刷新的问题
+
 2.4 - 2.5
    - add	修复修改国行后，还原原始CFE无法使用的问题；
 
