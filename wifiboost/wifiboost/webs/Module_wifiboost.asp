@@ -71,7 +71,7 @@
 	background: #fff;
 	margin-left:120px;
 	width:520px;
-	height:470px;
+	height:500px;
 	display: none;
 }
 input:focus {
@@ -278,16 +278,18 @@ function getQueryVariable(variable){
 	return(false);
 }
 function try_activate(){
-	var key = getQueryVariable("key");
-	if(key){
-		if(!$("#wifiboost_key").val()){
-			console.log("有激活码: ", key)
-			$("#wifiboost_key").val(key);
+	var web_key = getQueryVariable("key");
+	var local_key = $("#wifiboost_key").val();
+	if(local_key){
+		var newURL = location.href.split("?")[0];
+		window.history.pushState('object', document.title, newURL);
+		return true;
+	}else{
+		if(web_key){
+			console.log("有激活码: ", web_key)
+			$("#wifiboost_key").val(web_key);
 			boost_now(3);
-		}else{
-			//已经激活了，跳转
-			location.href = "/Module_wifiboost.asp"
-		}
+		}		
 	}
 }
 function register_event(){
@@ -629,6 +631,7 @@ function boost_now(action){
 		}
 	}
 	if (wb_key.indexOf('wb_') == -1){
+		E("wifiboost_key").value = "";
 		alert("请输入正确格式的激活码！");
 		return false;
 	}
@@ -696,6 +699,8 @@ function hideWBLoadingBar(){
 	E("LoadingBar").style.visibility = "hidden";
 	E("ok_button").style.visibility = "hidden";
 	if (refresh_flag == "1"){
+		var newURL = location.href.split("?")[0];
+		window.history.pushState('object', document.title, newURL);
 		refreshpage();
 	}
 }
@@ -875,9 +880,7 @@ function pop_help() {
 			btnAlign: 'c',
 			moveType: 1,
 			content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">\
-				<b>wifi boost</b><br><br>\
-				wifi boost是一款付费插件，支持hnd/axhnd/axhnd.675x平台的机器，详情：<a style="color:#e7bd16" target="_blank" href="https://github.com/koolshare/rogsoft#%E6%9C%BA%E5%9E%8B%E6%94%AF%E6%8C%81"><u>机型支持</u></a><br>\
-				使用本插件有任何问题，可以前往<a style="color:#e7bd16" target="_blank" href="https://koolshare.cn/forum-98-1.html"><u>koolshare论坛插件板块</u></a>反馈~<br><br>\
+				<b>wifi boost 购买订单号获取</b><br><br>\
 				● 微信订单号获取：<span style="color:#e7bd16">我 → 支付 → 钱包 → 账单 → 点击付款订单 → 转账单号</span><br>\
 				● 支付宝订单号获取：<span style="color:#e7bd16">我的 → 账单 → 点击付款订单 → 订单号</span><br><br>\
 				目前订单处理方式为人工，最长大约需要一个工作日，会通过邮件返回激活码信息。<br>\
@@ -937,13 +940,13 @@ function verifyFields(r) {
 											</div>
 											<div id="qrcode" style="width:520px;height:250px;text-align:center;overflow:hidden" >
 												<canvas width="520px" height="360px" style="display: none;"></canvas>
-												<img style="height:250px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/sadog.png"/>
+												<img style="height:250px" src="https://fw.koolcenter.com/binary/image_bed/sadog/sadog.png"/>
 											</div>
 											<div style="margin-top:0px;margin-left:4%;width:96%;text-align:left;">
-												<div id="info0" style="font-size:16px;color:#000;"><i>人工邮件购买激活码:</i></div>
+												<div id="info0" style="font-size:16px;color:#000;margin:10px 0 10px 0"><i>人工邮件购买激活码流程:</i></div>
 												<div id="info1" style="font-size:12px;color:#000;">1.扫描上方其中一个二维码，付款30元人民币给开发者，即可购买wifi boost 激活码。</div>
 												<div id="info2" style="font-size:12px;color:#000;">2.复制下面文本框内容，替换xxx为<a type="button" href="javascript:void(0);" style="cursor: pointer;color:#FF3300;" onclick="pop_help();"><u>支付订单号</u></a>，发送邮件到：<a id="wifiboost_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=wifi_boost插件购买&body=这是邮件的内容">mjy211@gmail.com</a></div>
-												<div id="info3" style="font-size:12px;color:#000;">3.目前订单处理为人工，激活码会在一个工作日左右发送到你的邮箱，请耐心等待。</div>
+												<div id="info3" style="font-size:12px;color:#000;">3.此方式购买的订单为人工处理，激活码会在一个工作日左右发送到你的邮箱，请耐心等待。</div>
 											</div>
 											<div style="margin-top:5px;padding-bottom:10px;margin-left:4%;width:92%;text-align:left;">
 												<textarea name="test" id="wifiboost_info" rows="3" cols="50" style="border:1px solid #000;width:96%;font-family:'Lucida Console';font-size:12px;background:transparent;color:#000;outline:none;resize:none;padding-top: 5px;">订单号：xxxx&#10;机器码：xxxxx</textarea>
