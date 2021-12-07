@@ -349,13 +349,18 @@ function get_pay_server() {
 		type: 'GET',
 		dataType: 'jsonp',
 		success: function(res) {
-			pay_server = ValidateIPaddress(res.server) || pay_server;
-			pay_port = res.port || pay_port;
-			online_ver = res.version;
-			console.log(pay_server);
-			if (res["version"]) {
-				if (versionCompare(res["version"], dbus["cfetool_version"])) {
-					E("cfetool_o_version").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;<em>有新版本: " + res["version"] + "</em>";
+			if(res){
+				console.log(res);
+				pay_server = ValidateIPaddress(res.server) || pay_server;
+				pay_port = res.port || pay_port;
+				online_ver = res.version;
+				local_ver = dbus["cfetool_version"] || "0";
+				console.log(pay_server);
+				console.log(online_ver);
+				if (res.version) {
+					if (versionCompare(res.version, local_ver)) {
+						E("cfetool_o_version").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;<em>有新版本: " + res.version + "</em>";
+					}
 				}
 			}
 		}
