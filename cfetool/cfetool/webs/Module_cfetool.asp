@@ -202,9 +202,9 @@ function cfeit(action){
 				msg += '提货码：<span style="color: #CC3300">' + ct_key + '</span>';
 				msg += '<br/>';
 				msg += '<br/>';
-				msg += '提示：一个提货码只能用于一台路由器的wifi boost激活；';
+				msg += '提示：一个提货码只能用于一台路由器的【CFE工具箱】激活；';
 				msg += '<br/>';
-				msg += '点击立即激活，你将会获得wifi boost激活码，同时提货码将会失效。';
+				msg += '点击立即激活，你将会获得【CFE工具箱】激活码，同时提货码将会失效。';
 				
 				require(['/res/layer/layer.js'], function(layer) {
 					layer.confirm(msg, {
@@ -485,14 +485,13 @@ function pop_help() {
 													<input class="button_gen" type="button" onclick="close_buy();" value="关闭">
 												</div>
 											</div>
-											<div id="activated_info" class="content_status" style="height:230px;top:150px">
+											<div id="activated_info" class="content_status" style="height:205px;top:200px">
 												<div style="text-align: center;margin-top:15px;margin-bottom:15px">
 													<span id="qrtitle_1" style="font-size:16px;color:#000;"><i>你的【CFE工具箱】已经成功激活！</i></span>
 												</div>
 												<div style="margin-top:0px;margin-left:3%;width:97%;text-align:left;">
-													<div id="a_info1" style="font-size:12px;color:#000;">1.使用CFE工具箱有任何问题，可以前往<a style="color:#e7bd16" target="_blank" href="https://koolshare.cn/forum-98-1.html"><u>koolshare论坛插件板块</u></a>反馈。</div>
-													<div id="a_info2" style="font-size:12px;color:#000;">2.如果激活码遗失，请尝试重装插件找回，或者发送机器码到：<a id="cfetool_a_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=CFE工具箱插件购买&body=这是邮件的内容">mjy211@gmail.com</a>寻回。</div>
-													<div id="a_info3" style="font-size:12px;color:#000;">3.以下是你的机器码，激活码相关信息，请妥善保管。</div>
+													<div id="a_info1" style="font-size:12px;color:#000;">1.如果激活码遗失，可以重装插件找回，或者发送机器码到：<a id="cfetool_a_mail" style="font-size:12px;color:#CC0000;" href="mailto:mjy211@gmail.com?subject=CFE国行修改器插件购买&body=这是邮件的内容">mjy211@gmail.com</a>寻回。</div>
+													<div id="a_info2" style="font-size:12px;color:#000;">2.以下是你的机器码，激活码相关信息，请妥善保管。</div>
 												</div>
 												<div style="margin-top:5px;padding-bottom:10px;margin-left:3%;width:97%;text-align:left;">
 													<textarea name="test" id="cfetool_a_info" rows="3" cols="50" style="border:1px solid #000;width:96%;font-family:'Lucida Console';font-size:12px;background:transparent;color:#000;outline:none;resize:none;padding-top: 5px;">机器码：xxxx&#10;激活码：xxxx</textarea>
@@ -521,7 +520,7 @@ function pop_help() {
 														</tr>
 													</thead>
 													<tr>
-														<th>CFE工具箱激活码</th>
+														<th style="width:20%">CFE国行修改器激活码</th>
 														<td>
 															<input type="password" maxlength="100" id="cfetool_key" class="input_ss_table" style="width:415px;font-size: 85%;" readonly onblur="switchType(this, false);" onfocus="switchType(this, true);this.removeAttribute('readonly');" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" >
 															<button id="cfetool_active_btn" onclick="cfeit(4);" class="cfetool_btn" style="width:50px;cursor:pointer;vertical-align: middle;">激活</button>

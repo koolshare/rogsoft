@@ -2,7 +2,7 @@
 source /koolshare/scripts/base.sh
 
 # remove files
-rm -rf /koolshare/bin/cfetool >/dev/null 2>&1
+rm -rf /koolshare/bin/cfetool* >/dev/null 2>&1
 rm -rf /koolshare/scripts/cfetool* >/dev/null 2>&1
 rm -rf /koolshare/webs/Module_cfetool.asp >/dev/null 2>&1
 rm -rf /koolshare/res/icon-cfetool.png >/dev/null 2>&1

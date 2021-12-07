@@ -129,6 +129,10 @@ install_now(){
 	local DESCR="CFE工具箱，查看CFE信息，改机器为国区"
 	local PLVER=$(cat ${DIR}/version)
 
+	# remove file first
+	rm -rf /koolshare/bin/cfetool*
+	rm -rf /koolshare/scripts/cfetool_config*
+
 	# isntall file
 	echo_date "安装插件相关文件..."
 	cd /tmp
