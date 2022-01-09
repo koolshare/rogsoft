@@ -58,33 +58,33 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:27", 
+            "build_date": "2021-11-24_11:01:11", 
             "changelog": "", 
             "description": "CloudFlare DDNS", 
             "home_url": "Module_cfddns.asp", 
             "link": "", 
-            "md5": "3fc91618140276e2a4a407d65b08b0f2", 
+            "md5": "d101f1ea3dd21633480549cbe10f35f2", 
             "name": "cfddns", 
             "tags": "DDNS", 
             "tar_url": "cfddns/cfddns.tar.gz", 
             "title": "CloudFlare DDNS", 
-            "version": "1.0"
+            "version": "1.1"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:27", 
+            "build_date": "2021-12-09_20:51:50", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "aac2afc28b87c8cfc4c9106e8e39c44d", 
+            "md5": "17c59b16c47b6d168c14d201d4819a35", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.1"
+            "version": "3.3"
         }, 
         {
             "author": "freexiaoyao", 
@@ -130,17 +130,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:44:21", 
+            "build_date": "2021-11-23_12:01:41", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "f62327685d05d437bd721fd2778ff431", 
+            "md5": "79c8598ed0f84365994ee53684b4e7a1", 
             "name": "entware", 
             "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
-            "version": "1.3"
+            "version": "1.4"
         }, 
         {
             "author": "sadog", 
@@ -424,19 +424,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-22_23:26:00", 
+            "build_date": "2021-12-06_15:53:04", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "c7768f4e2a35bed736b06e7f52b9898e", 
+            "md5": "b5dded67a610f5e0586ca006caa01fd7", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.2"
+            "version": "4.4"
         }, 
         {
             "author": "sadog", 
@@ -454,7 +454,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "82e14a89c9855e034436d5714e8e9e28", 
+    "md5": "f98033579f27bb9dc750726bec459b6c", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.1"
+    "version": "1.9.1.2"
 }
