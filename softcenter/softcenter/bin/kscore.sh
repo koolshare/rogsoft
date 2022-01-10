@@ -180,9 +180,8 @@ detect(){
 
 set_url(){
 	# set url
-	SC_URL=https://rogsoft.ddnsto.com
 	local SC_URL=$(nvram get sc_url)
-	if [ -n "${sc_url}" ];then
+	if [ -n "${SC_URL}" ];then
 		return 0
 	fi
 	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')

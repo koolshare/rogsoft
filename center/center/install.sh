@@ -39,6 +39,45 @@ get_fw_type() {
 	fi
 }
 
+get_ui_type(){
+	# default value
+	[ "${MODEL}" == "RT-AC86U" ] && local ROG_RTAC86U=0
+	[ "${MODEL}" == "GT-AC2900" ] && local ROG_GTAC2900=1
+	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
+	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
+	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
+	local KS_TAG=$(nvram get extendno|grep koolshare)
+	local EXT_NU=$(nvram get extendno)
+	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
+	local BUILDNO=$(nvram get buildno)
+	[ -z "${EXT_NU}" ] && EXT_NU="0"
+	# RT-AC86U
+	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
+		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
+		ROG_RTAC86U=1
+	fi
+	# GT-AC2900
+	if [ "${MODEL}" == "GT-AC2900" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
+		# GT-AC2900从386.1开始已经支持梅林固件，其UI是ASUSWRT
+		ROG_GTAC2900=0
+	fi
+	# GT-AX11000
+	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
+		# GT-AX11000从386.2开始已经支持梅林固件，其UI是ASUSWRT
+		ROG_GTAX11000=0
+	fi
+	# ROG UI
+	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" ];then
+		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000全部版本，骚红皮肤
+		UI_TYPE="ROG"
+	fi
+	# TUF UI
+	if [ "${MODEL%-*}" == "TUF" ];then
+		# 官改固件，橙色皮肤
+		UI_TYPE="TUF"
+	fi
+}
+
 platform_test(){
 	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
 	if [ -d "/koolshare" -a -f "/usr/bin/skipd" -a "${LINUX_VER}" -ge "41" ];then
@@ -66,6 +105,28 @@ exit_install(){
 	esac
 }
 
+set_kc_value(){
+	local SC_URL=$(nvram get sc_url)
+
+	if [ -z "${SC_URL}" ];then
+		local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
+		if [ "${LINUX_VER}" -ge "41" ];then
+			nvram set sc_url=https://rogsoft.ddnsto.com
+			nvram commit
+		fi
+		if [ "${LINUX_VER}" -eq "26" ];then
+			nvram set sc_url=https://armsoft.ddnsto.com
+			nvram commit
+		fi
+	fi
+
+	local SC_SKN=$(nvram get sc_skin)
+	if [ -z "${SC_SKN}" ];then
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
+	fi
+}
+
 install_now(){
 	# default value
 	CENTER_TYPE=$(cat /jffs/.koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
@@ -78,14 +139,33 @@ install_now(){
 	fi	
 	local PLVER=$(cat ${DIR}/version)
 
-	# isntall file
+	# set koolcenter val
+	set_kc_value
+
+	# install file
 	echo_date "安装插件相关文件..."
 	cd /tmp
-	cp -rf /tmp/${module}/res/* /koolshare/res/
-	cp -rf /tmp/${module}/scripts/* /koolshare/scripts/
-	cp -rf /tmp/${module}/webs/* /koolshare/webs/
+	cp -rf /tmp/${module}/res/icon-center.png /koolshare/res/
+	cp -rf /tmp/${module}/scripts/center_config.sh /koolshare/scripts/
+	cp -rf /tmp/${module}/webs/Module_center.asp /koolshare/webs/
 	cp -rf /tmp/${module}/uninstall.sh /koolshare/scripts/uninstall_${module}.sh
 
+	# install softcenter/koolcenter web files
+	if [ -z "$CENTER_TYPE" ];then
+		# koolcenter is use, install softcenter
+		cp -rf /tmp/${module}/webs/Module_Softcenter_old.asp /koolshare/webs/
+		cp -rf /tmp/${module}/webs/Module_Softsetting.asp /koolshare/webs/
+		cp -rf /tmp/${module}/.soft_ver_old /koolshare/
+	else
+		# softcenter is use, install koolcenter
+		soft_folder=$(dirname /tmp/${module}/res/soft-v*/assets)
+		rm -rf /koolshare/res/soft-v*
+		cp -rf /tmp/${module}/webs/Module_Softcenter_new.asp /koolshare/webs/
+		cp -rf $soft_folder /koolshare/res/
+		cp -rf /tmp/${module}/scripts/ks_home_status.sh /koolshare/scripts/
+		cp -rf /tmp/${module}/.soft_ver_new /koolshare/
+	fi
+	
 	# Permissions
 	chmod 755 /koolshare/scripts/*.sh >/dev/null 2>&1
 

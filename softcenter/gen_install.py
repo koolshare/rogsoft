@@ -31,7 +31,7 @@ def work_paths_by_walk():
             print os.path.join(root,sub)
 
 def work_parent():
-    ignore_paths = frozenset(["koolcenter", "softcenter", "center", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "qiaodao", "uamas"])
+    ignore_paths = frozenset(["koolcenter", "softcenter", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "qiaodao", "uamas"])
     fnames = os.listdir(parent_path)
     fnames.sort()
     for fname in fnames:
