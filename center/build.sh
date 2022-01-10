@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="center"
-VERSION="1.4"
+VERSION="1.5"
 TITLE="软件中心一键切换"
 DESCRIPTION="koolcenter/softcenter 一键来回切换！"
 HOME_URL="Module_center.asp"
@@ -25,7 +25,7 @@ cp $DIR/../koolcenter/softcenter/.soft_ver $DIR/center/.soft_ver_new
 
 cp $DIR/../softcenter/softcenter/webs/Module_Softcenter.asp $DIR/center/webs/Module_Softcenter_old.asp
 cp $DIR/../softcenter/softcenter/webs/Module_Softsetting.asp $DIR/center/webs/Module_Softsetting.asp
-cp $DIR/../koolcenter/softcenter/.soft_ver $DIR/center/.soft_ver_old
+cp $DIR/../softcenter/softcenter/.soft_ver $DIR/center/.soft_ver_old
 
 # now include build_base.sh
 . $DIR/../softcenter/build_base.sh
