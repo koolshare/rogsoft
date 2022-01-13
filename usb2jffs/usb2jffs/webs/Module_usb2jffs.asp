@@ -729,7 +729,7 @@ function help(){
 										<div id="qrcode_show" class="content_status" style="box-shadow: 3px 3px 10px #000;margin-top:-40px;margin-left:120px;display: none;width:520px;height:340px;background: #fff;">
 											<div id="qrcode" style="margin: 10px 5px 10px 0px;width:520px;height:240px;text-align:center;overflow:hidden" >
 												<canvas width="520px" height="360px" style="display: none;"></canvas>
-												<img style="height:240px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/sadog.png"/>
+												<img style="height:240px" src="https://fw.koolcenter.com/binary/image_bed/sadog/sadog.png"/>
 											</div>
 											<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
 												<input class="button_gen" type="button" onclick="cleanCode();" value="关闭">

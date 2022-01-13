@@ -474,7 +474,7 @@ function pop_help() {
 												</div>
 												<div id="qrcode" style="width:580px;height:285px;text-align:center;overflow:hidden" >
 													<canvas width="580px" height="285px" style="display: none;"></canvas>
-													<img style="height:285px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/sadog.png"/>
+													<img style="height:285px" src="https://fw.koolcenter.com/binary/image_bed/sadog/sadog.png"/>
 												</div>
 												<div style="margin-top:5px;margin-left:4%;width:96%;text-align:left;">
 													<div id="info0" style="font-size:16px;color:#000;"><i>【CFE工具箱】人工邮件购买流程：</i></div>

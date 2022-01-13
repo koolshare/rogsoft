@@ -231,7 +231,7 @@ function ofw_guide() {
 	note += "<br />"
 	note += "<font color='#FF0000'>提醒2：请全程插网线，使用PC + 谷歌浏览器进行操作，刷机前先移除路由器上的USB设备！</font>"
 	note += "<hr>"
-	note += "<h4>1. 下载Merlin to OFW固件：<a style='color:#22ab39;' href='https://firmware.koolshare.cn/Koolshare_RMerl_New_Gen_386/Netgear/RAX80/Merlin%20to%20OFW/RAX80-OFW-V1.0.0.30_1.0.17.w'><u>RAX80-OFW-V1.0.0.30_1.0.17.w</u></a></h4>"
+	note += "<h4>1. 下载Merlin to OFW固件：<a style='color:#22ab39;' href='https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/RAX80/Merlin%20to%20OFW/RAX80-OFW-V1.0.0.30_1.0.17.w'><u>RAX80-OFW-V1.0.0.30_1.0.17.w</u></a></h4>"
 	note += "<h4>2. 核对固件md5校验值：<font color='#1678ff'>420FEB0CF64C5D0C2B232014BF671748</font></h4>"
 	note += "<h4>3. 校验核对无误后，点击此<a style='margin: 8px 2px 0;padding: 5px 5px;border-color: #ee1f60;background-color: #ee1f60;color: #fff;background: #ee1f60;border-radius: 2px;cursor: pointer;' onclick='flash_erase();'>flash_erase</a>按钮，等待页面弹出成功提示!</h4>"
 	note += "<h4>4. 前往固件升级页面：<a style='color:#22ab39;' href='/Advanced_FirmwareUpgrade_Content.asp'>Advanced_FirmwareUpgrade_Content.asp</a>，上传Merlin to OFW固件</h4>"
@@ -297,7 +297,7 @@ function ofw_guide() {
 												</div>
 												<div id="qrcode" style="margin-top:10px;width:580px;height:340px;text-align:center;overflow:hidden" >
 													<canvas width="580px" height="340px" style="display: none;"></canvas>
-													<img style="height:340px" src="https://firmware.koolshare.cn/binary/image_bed/sadog/RAX80_TAG.jpg"/>
+													<img style="height:340px" src="https://fw.koolcenter.com/binary/image_bed/sadog/RAX80_TAG.jpg"/>
 												</div>
 												<div style="margin-top:10px;margin-left:4%;width:94%;text-align:left;">
 													<div id="info0" style="font-size:16px;color:#000;">使用方法</div>
