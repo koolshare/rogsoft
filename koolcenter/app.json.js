@@ -115,20 +115,6 @@
             "version": "2.2"
         }, 
         {
-            "author": "xiaobao", 
-            "build_date": "2021-08-20_22:31:27", 
-            "changelog": "", 
-            "description": "易有云 （EasyExplorer） 跨平台文件同步，支持双向同步！", 
-            "home_url": "Module_easyexplorer.asp", 
-            "link": "", 
-            "md5": "10a64d3e58e1d093773c79e4d9624992", 
-            "name": "easyexplorer", 
-            "tags": "云同步 USB", 
-            "tar_url": "easyexplorer/easyexplorer.tar.gz", 
-            "title": "易有云", 
-            "version": "2.4.1"
-        }, 
-        {
             "author": "sadog", 
             "build_date": "2021-11-23_12:01:41", 
             "changelog": "", 
