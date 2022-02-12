@@ -1,9 +1,9 @@
 [
-{"module": "aria2", "git_source": "https://github.com/koolshare/rogsoft_aria2.git"},
-{"module": "linkease", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
-{"module": "xunyou", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
-{"module": "phddns", "git_source": "https://github.com/OrayDev/phddns_for_koolshare.git"},
-{"module": "filebrowser", "git_source": "https://github.com/flyhigherpi/filebrowser.git"},
-{"module": "signdog", "git_source": "https://github.com/koolshare/signdog_hnd.git"},
-{"module": "routerdog", "git_source": "https://github.com/koolshare/router_dog.git"}
+{"module": "aria2", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_aria2.git"},
+{"module": "linkease", "branch":"master", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
+{"module": "xunyou", "branch":"master", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
+{"module": "phddns", "branch":"master", "git_source": "https://github.com/OrayDev/phddns_for_koolshare.git"},
+{"module": "filebrowser", "branch":"master", "git_source": "https://github.com/flyhigherpi/filebrowser.git"},
+{"module": "signdog", "branch":"master", "git_source": "https://github.com/koolshare/signdog_hnd.git"},
+{"module": "routerdog", "branch":"master", "git_source": "https://github.com/koolshare/router_dog.git"}
 ]

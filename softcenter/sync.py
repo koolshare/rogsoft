@@ -52,17 +52,17 @@ def work_modules():
             for m in modules:
                 if "module" in m:
                     try:
-                        up = sync_module(m["module"], m["git_source"])
+                        up = sync_module(m["module"], m["git_source"], m["branch"])
                         if not updated:
                             updated = up
                     except Exception, e:
                         traceback.print_exc()
     return updated
 
-def sync_module(module, git_path):
+def sync_module(module, git_path, branch):
     module_path = os.path.join(parent_path, module)
     conf_path = os.path.join(module_path, "config.json.js")
-    rconf = get_remote_js(git_path)
+    rconf = get_remote_js(git_path, branch)
     lconf = get_local_js(conf_path)
     update = False
     if not rconf:
@@ -91,15 +91,18 @@ def sync_module(module, git_path):
         os.system("cd %s && chown -R www:www ." % module_path)
     return update
 
-def get_config_js(git_path):
+def get_config_js(git_path, branch):
     #https://github.com/koolshare/merlin_tunnel.git
     #git@github.com:koolshare/merlin_tunnel.git
 
+    if not branch:
+        branch = "master"
+
     if git_path.startswith("https://"):
-        return git_path[0:-4] + "/raw/master/config.json.js"
+        return git_path[0:-4] + "/raw/" + branch + "/config.json.js"
     else:
         index = git_path.find(":")
-        return "https://github.com/" + git_path[index+1:-4] + "/raw/master/config.json.js"
+        return "https://github.com/" + git_path[index+1:-4] + "/raw/"+branch+"/config.json.js"
 
 def get_remote_js(git_path):
     data = http_request(get_config_js(git_path))
