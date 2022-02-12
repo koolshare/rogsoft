@@ -104,8 +104,8 @@ def get_config_js(git_path, branch):
         index = git_path.find(":")
         return "https://github.com/" + git_path[index+1:-4] + "/raw/"+branch+"/config.json.js"
 
-def get_remote_js(git_path):
-    data = http_request(get_config_js(git_path))
+def get_remote_js(git_path, branch):
+    data = http_request(get_config_js(git_path, branch))
     conf = json.loads(data)
     return conf
 
