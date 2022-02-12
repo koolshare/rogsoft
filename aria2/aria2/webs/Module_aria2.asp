@@ -190,10 +190,10 @@
 			var db_aria2_ = {};
 			var ddnsto_ = {};
 			var params_input = ["aria2_cpulimit_value", "aria2_dir", "aria2_max_tries", "aria2_retry_wait", "aria2_referer", "aria2_disk_cache", "aria2_file_allocation", "aria2_rpc_listen_port", "aria2_event_poll", "aria2_rpc_secret", "aria2_max_concurrent_downloads", "aria2_max_connection_per_server", "aria2_min_split_size", "aria2_split", "aria2_max_overall_download_limit", "aria2_max_download_limit", "aria2_max_overall_upload_limit", "aria2_max_upload_limit", "aria2_lowest_speed_limit", "aria2_dht_listen_port", "aria2_bt_max_peers", "aria2_listen_port", "aria2_user_agent", "aria2_peer_id_prefix", "aria2_seed_ratio", "aria2_save_session_interval", "aria2_input_file", "aria2_save_session"]
-			var params_check1 = ["aria2_enable", "aria2_cpulimit_enable", "aria2_ddnsto"];
+			var params_check1 = ["aria2_enable", "aria2_cpulimit_enable"];
 			var params_check2 = ["aria2_disable_ipv6", "aria2_continue", "aria2_enable_mmap", "aria2_enable_rpc", "aria2_rpc_allow_origin_all", "aria2_rpc_listen_all", "aria2_bt_enable_lpd", "aria2_enable_dht", "aria2_bt_require_crypto", "aria2_follow_torrent", "aria2_enable_peer_exchange", "aria2_force_save", "aria2_bt_hash_check_seed", "aria2_bt_seed_unverified", "aria2_bt_save_metadata"];
 			var params_base64 = ["aria2_custom", "aria2_bt_tracker"];
-			var params_all = ["aria2_cpulimit_value", "aria2_dir", "aria2_max_tries", "aria2_retry_wait", "aria2_referer", "aria2_disk_cache", "aria2_file_allocation", "aria2_rpc_listen_port", "aria2_event_poll", "aria2_rpc_secret", "aria2_max_concurrent_downloads", "aria2_max_connection_per_server", "aria2_min_split_size", "aria2_split", "aria2_max_overall_download_limit", "aria2_max_download_limit", "aria2_max_overall_upload_limit", "aria2_max_upload_limit", "aria2_lowest_speed_limit", "aria2_dht_listen_port", "aria2_bt_max_peers", "aria2_listen_port", "aria2_user_agent", "aria2_peer_id_prefix", "aria2_seed_ratio", "aria2_save_session_interval", "aria2_input_file", "aria2_save_session", "aria2_enable", "aria2_cpulimit_enable", "aria2_ddnsto", "aria2_disable_ipv6", "aria2_continue", "aria2_enable_mmap", "aria2_enable_rpc", "aria2_rpc_allow_origin_all", "aria2_rpc_listen_all", "aria2_bt_enable_lpd", "aria2_enable_dht", "aria2_bt_require_crypto", "aria2_follow_torrent", "aria2_enable_peer_exchange", "aria2_force_save", "aria2_bt_hash_check_seed", "aria2_bt_seed_unverified", "aria2_bt_save_metadata", "aria2_custom", "aria2_bt_tracker"];
+			var params_all = ["aria2_cpulimit_value", "aria2_dir", "aria2_max_tries", "aria2_retry_wait", "aria2_referer", "aria2_disk_cache", "aria2_file_allocation", "aria2_rpc_listen_port", "aria2_event_poll", "aria2_rpc_secret", "aria2_max_concurrent_downloads", "aria2_max_connection_per_server", "aria2_min_split_size", "aria2_split", "aria2_max_overall_download_limit", "aria2_max_download_limit", "aria2_max_overall_upload_limit", "aria2_max_upload_limit", "aria2_lowest_speed_limit", "aria2_dht_listen_port", "aria2_bt_max_peers", "aria2_listen_port", "aria2_user_agent", "aria2_peer_id_prefix", "aria2_seed_ratio", "aria2_save_session_interval", "aria2_input_file", "aria2_save_session", "aria2_enable", "aria2_cpulimit_enable", "aria2_disable_ipv6", "aria2_continue", "aria2_enable_mmap", "aria2_enable_rpc", "aria2_rpc_allow_origin_all", "aria2_rpc_listen_all", "aria2_bt_enable_lpd", "aria2_enable_dht", "aria2_bt_require_crypto", "aria2_follow_torrent", "aria2_enable_peer_exchange", "aria2_force_save", "aria2_bt_hash_check_seed", "aria2_bt_seed_unverified", "aria2_bt_save_metadata", "aria2_custom", "aria2_bt_tracker"];
 			function init() {
 				show_menu(menu_hook);
 				get_dbus_data();
@@ -221,45 +221,9 @@
 				});
 			}
 			function check_ddnsto() {
-				if (db_ddnsto_["ddnsto_enable"] == 1) {
-					$("#aria2_ddnsto").attr("disabled",false);
-					E("ddnsto_status").innerHTML = "启用DDNSTO远程穿透连接(自动设置配置Token及控制台)";
-				} else {
-					if (db_aria2_["aria2_ddnsto_token"]) {
-						$("#aria2_ddnsto").attr("disabled", true);
-						E("aria2_ddnsto").checked = true;
-						E("ddnsto_status").innerHTML = "DDNSTO插件已关闭，不能通过远程穿透连接访问控制台！";
-					}else{
-						$("#aria2_ddnsto").attr("disabled", true);
-						E("aria2_ddnsto").checked = false;
-						E("ddnsto_status").innerHTML = "<font color=#ffffff>如需远程穿透连接Aria2，请正确设置DDNSTO插件并启用！</font>";
-					}
-				}
-				if (E("aria2_ddnsto").checked) {
-					//穿透开启，显示穿透token：aria2_ddnsto_token
-					E('aria2_rpc_secret').value = db_aria2_["aria2_ddnsto_token"]||"";
-					E("aria2_rpc_secret").readOnly = true;
-				} else {
-					//穿透未开启，显示普通token：aria2_rpc_secret
-					E('aria2_rpc_secret').value = db_aria2_["aria2_rpc_secret"]||"";
-					E("aria2_rpc_secret").readOnly = false;
-				}
 			}
 
 			function oncheckclick(obj) {
-				if (obj.checked) {
-					if (obj.id == "aria2_ddnsto") {
-						//穿透开启，显示穿透token：aria2_ddnsto_token
-						E("aria2_rpc_secret").readOnly = true;
-						E('aria2_rpc_secret').value = db_aria2_["aria2_ddnsto_token"]||"";
-					}
-				} else {
-					if (obj.id == "aria2_ddnsto") {
-						//穿透未开启，显示普通token：aria2_rpc_secret
-						E("aria2_rpc_secret").readOnly = false;
-						E('aria2_rpc_secret').value = db_aria2_["aria2_rpc_secret"]||"";
-					}
-				}
 			}
 			function randomWord(randomFlag, min, max) {
 				var str = "",
@@ -510,15 +474,6 @@
 				}
 				showLoadingBar();
 				var dbus = {};
-				// 如果ddnsto进程被关闭了，那么关闭穿透开关
-				if (db_ddnsto_["ddnsto_enable"] != 1) {
-					E("aria2_ddnsto").checked = false;
-				}
-				// 如果开启穿透，那么aria2_rpc_secret不要写为穿透用的token，而是保留原有token，然后会进入下一步被保存
-				if (E("aria2_ddnsto").checked) {
-					E('aria2_rpc_secret').value = db_aria2_["aria2_rpc_secret"]||"";
-					//dbus["aria2_rpc_secret"] = db_aria2_["aria2_rpc_secret"]||"";
-				}
 				//input
 				for (var i = 0; i < params_input.length; i++) {
 					if (E(params_input[i]).value) {
@@ -1290,20 +1245,12 @@
 
 			function generate_ariang_link() {
 				var link_ariang = window.btoa(db_aria2_["aria2_ddnsto_token"])
-				if (E("aria2_ddnsto").checked) {
-					E("link4.1").href = "http://aria2.me/aria-ng/#!/settings/rpc/set/wss/www.ddnsto.com/443/jsonrpc/" + link_ariang;
-				} else {
-					E("link4.1").href = "http://aria2.me/aria-ng/#!/settings/rpc/set/http/" + '<% nvram_get("lan_ipaddr"); %>' + "/" + db_aria2_["aria2_rpc_listen_port"] + "/jsonrpc/" + link_ariang;
-				}
+				E("link4.1").href = "http://aria2.koolcenter.com/aria-ng/#!/settings/rpc/set/http/" + '<% nvram_get("lan_ipaddr"); %>' + "/" + db_aria2_["aria2_rpc_listen_port"] + "/jsonrpc/" + link_ariang;
 			}
 			
 			function generate_glutton_link() {
-				if (E("aria2_ddnsto").checked) {
-					var link_glutton = window.btoa("https://www.ddnsto.com:443" + "/jsonrpc||" + db_aria2_["aria2_ddnsto_token"])
-				} else {
-					var link_glutton = window.btoa("http://" + '<% nvram_get("lan_ipaddr"); %>' + ":" + db_aria2_["aria2_rpc_listen_port"] + "/jsonrpc||" + db_aria2_["aria2_rpc_secret"])
-				}
-				E("link4.2").href = "http://aria2.me/glutton/" + "?s=" + link_glutton;
+				var link_glutton = window.btoa("http://" + '<% nvram_get("lan_ipaddr"); %>' + ":" + db_aria2_["aria2_rpc_listen_port"] + "/jsonrpc||" + db_aria2_["aria2_rpc_secret"])
+				E("link4.2").href = "http://aria2.koolcenter.com/glutton/" + "?s=" + link_glutton;
 			}
 			function copyUrl2(){ 
 				var Url2 = E("link4.2").href; 
@@ -1454,18 +1401,11 @@
 													<td><span id="status">获取中...</span>
 													</td>
 												</tr>
-												<tr id="aria2_ddnsto_tr">
-													<th style="width:25%;">远程穿透连接</th>
-													<td>
-														<input type="checkbox" id="aria2_ddnsto" name="aria2_ddnsto" checked="checked" disabled="" onclick="oncheckclick(this);">
-														<span id="ddnsto_status"></span>
-													</td>
-												</tr>
 												<tr id="ariang">
 													<th style="width:25%;">AriaNg控制台</th>
 													<td>
 														<div style="padding-top:5px;">
-															<a id="link4.1" style="font-size: 14px;" href="http://aria2.me/aria-ng/" target="_blank"><i><u>http://aria2.me/aria-ng/</u></i></a>
+															<a id="link4.1" style="font-size: 14px;" href="http://aria2.koolcenter.com/aria-ng/" target="_blank"><i><u>http://aria2.koolcenter.com/aria-ng/</u></i></a>
 															<span><a style="font-size: 12px;margin-left: 20px;" href="http://koolshare.cn/thread-116500-1-1.html" target="_blank"><i><u>戳我了解</u></i></a>
 															</div>
 														</td>
@@ -1474,7 +1414,7 @@
 													<th style="width:25%;">Glutton控制台</th>
 													<td>
 														<div style="padding-top:5px;">
-															<a id="link4.2" style="font-size: 14px;" href="http://aria2.me/glutton/" target="_blank"><i><u>http://aria2.me/glutton/</u></i></a>
+															<a id="link4.2" style="font-size: 14px;" href="http://aria2.koolcenter.com/glutton/" target="_blank"><i><u>http://aria2.koolcenter.com/glutton/</u></i></a>
 															<span><a style="font-size: 12px;margin-left: 20px;" href="https://koolshare.cn/thread-40938-1-1.html" target="_blank"><i><u>戳我了解</u></i></a>
 														</div>
 													</td>
@@ -1483,7 +1423,7 @@
 													<th style="width:25%;">更多控制台</th>
 													<td>
 													<div style="padding-top:5px;">
-														<a style="font-size: 14px;" href="http://aria2.me/" target="_blank"><i><u>http://aria2.me/</u></i></a>
+														<a style="font-size: 14px;" href="http://aria2.koolcenter.com/" target="_blank"><i><u>http://aria2.koolcenter.com/</u></i></a>
 													</div>
 													</td>
 												</tr>
