@@ -1,4 +1,5 @@
 [
+{"module": "aria2", "git_source": "https://github.com/koolshare/rogsoft_aria2.git"},
 {"module": "linkease", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
 {"module": "xunyou", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
 {"module": "phddns", "git_source": "https://github.com/OrayDev/phddns_for_koolshare.git"},
