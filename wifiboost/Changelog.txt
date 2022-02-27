@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.5
+   - add	添加ZenWiFi_Pro_XT12和GT-AX6000机型官改固件下的支持
+
 4.4
    - fix	修复人工邮件购买二维码图片
    - fix	修复激活插件时，有时候无限弹出激活窗口的问题

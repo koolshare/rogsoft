@@ -11,6 +11,7 @@ alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】'
 LOG_FILE=/tmp/upload/usb2jffs_log.txt
 #LOG_FILE=/data/usb2jffs_log_t.txt
 eval $(dbus export usb2jffs_)
+LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
 
 echo_date "USB2JFFS：路由器重启，关闭相关进程..."
 
@@ -49,7 +50,7 @@ _get_model(){
 }
 
 get_jffs_original_mount_device(){
-	local mtd_jffs=$(df -h | /bin/grep -E "/jffs|cifs2" | awk '{print $1}' | /bin/grep "/dev/mtd" | head -n1)
+	local mtd_jffs=$(df -h | /bin/grep -E "/jffs|cifs2" | awk '{print $1}' | /bin/grep -E "/dev/mtd|ubi:jffs" | head -n1)
 	if [ -n "${mtd_jffs}" ];then
 		mtd_disk="${mtd_jffs}"
 		return 0
@@ -67,6 +68,9 @@ get_jffs_original_mount_device(){
 			RT-AC5300|RT-AC88U)
 				mtd_disk="/dev/mtdblock4"
 				return 0
+				;;
+			GT-AX6000|XT12)
+				mtd_disk="ubi:jffs2"
 				;;
 			*)
 				mtd_disk=""
@@ -135,7 +139,11 @@ start(){
 
 	# 恢复jffs分区原始挂载方式
 	echo_date "USB2JFFS：重新挂载${mtd_disk}到/jffs..."
-	mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
+	if [ "${LINUX_VER}" == "419" ];then
+		mount -t ubifs ubi:jffs2 /jffs
+	else
+		mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
+	fi	
 	if [ "$?" == "0" ]; then
 		echo_date "USB2JFFS：重新挂载${mtd_disk}到/jffs成功！"
 
