@@ -1,6 +1,6 @@
 {
-"version":"4.3",
-"md5":"bfc0735aee800f17fdeecb57bd002a41",
+"version":"4.4",
+"md5":"7bbf45fca1f58a63213bb66dcf55f88e",
 "home_url":"Module_rog.asp",
 "title":"ROG工具箱",
 "description":"一些小功能的插件",
@@ -8,5 +8,5 @@
 "author":"sadog",
 "link":"https://koolshare.cn/thread-179110-1-5.html",
 "changelog":"",
-"build_date":"2021-08-20_22:31:28"
+"build_date":"2022-02-27_14:49:19"
 }

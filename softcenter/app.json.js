@@ -30,20 +30,6 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
-            "changelog": "", 
-            "description": "linux下载利器", 
-            "home_url": "Module_aria2.asp", 
-            "link": "", 
-            "md5": "3e60c23fead71b2b0c695f537d79ae6c", 
-            "name": "aria2", 
-            "tags": "下载 USB", 
-            "tar_url": "aria2/aria2.tar.gz", 
-            "title": "aria2", 
-            "version": "2.2"
-        }, 
-        {
-            "author": "sadog", 
             "build_date": "2022-01-10_21:23:15", 
             "changelog": "", 
             "description": "koolcenter/softcenter 一键来回切换！", 
@@ -113,20 +99,6 @@
             "tar_url": "ddnsto/ddnsto.tar.gz", 
             "title": "ddnsto", 
             "version": "2.2"
-        }, 
-        {
-            "author": "xiaobao", 
-            "build_date": "2021-08-20_22:31:27", 
-            "changelog": "", 
-            "description": "易有云 （EasyExplorer） 跨平台文件同步，支持双向同步！", 
-            "home_url": "Module_easyexplorer.asp", 
-            "link": "", 
-            "md5": "10a64d3e58e1d093773c79e4d9624992", 
-            "name": "easyexplorer", 
-            "tags": "云同步 USB", 
-            "tar_url": "easyexplorer/easyexplorer.tar.gz", 
-            "title": "易有云", 
-            "version": "2.4.1"
         }, 
         {
             "author": "sadog", 
@@ -298,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2022-02-27_14:49:19", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "bfc0735aee800f17fdeecb57bd002a41", 
+            "md5": "7bbf45fca1f58a63213bb66dcf55f88e", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "4.3"
+            "version": "4.4"
         }, 
         {
             "author": "囍冯总囍", 
