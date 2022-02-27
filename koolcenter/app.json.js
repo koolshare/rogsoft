@@ -30,31 +30,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
-            "changelog": "", 
-            "description": "linux下载利器", 
-            "home_url": "Module_aria2.asp", 
-            "link": "", 
-            "md5": "3e60c23fead71b2b0c695f537d79ae6c", 
-            "name": "aria2", 
-            "tags": "下载 USB", 
-            "tar_url": "aria2/aria2.tar.gz", 
-            "title": "aria2", 
-            "version": "2.2"
-        }, 
-        {
-            "author": "sadog", 
-            "build_date": "2021-08-20_22:31:27", 
+            "build_date": "2022-01-10_21:23:15", 
             "changelog": "", 
             "description": "koolcenter/softcenter 一键来回切换！", 
             "home_url": "Module_center.asp", 
             "link": "", 
-            "md5": "3284e0493622d2794ce13d4fb0d9df9d", 
+            "md5": "dd8008d269de3dfe6cbc25b218bb33ec", 
             "name": "center", 
             "tags": "辅助 工具", 
             "tar_url": "center/center.tar.gz", 
             "title": "软件中心一键切换", 
-            "version": "1.4"
+            "version": "1.5"
         }, 
         {
             "author": "sadog", 
@@ -116,12 +102,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-11-23_12:01:41", 
+            "build_date": "2022-02-27_19:50:33", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "79c8598ed0f84365994ee53684b4e7a1", 
+            "md5": "91476b1c8dcf83f0e3878c95b5d110e6", 
             "name": "entware", 
             "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
@@ -214,26 +200,26 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2022-01-13_09:31:16", 
             "changelog": "", 
             "description": "帮助RAX80刷回网件原厂固件，修复RAX80网件原厂分区", 
             "home_url": "Module_ngfix.asp", 
             "link": "", 
-            "md5": "c0200e0dc48a2d9563f1e2d5ce7b6a57", 
+            "md5": "0b18ac0f45c1a0ec8f971c4fc6518af8", 
             "name": "ngfix", 
             "tags": "系统 工具", 
             "tar_url": "ngfix/ngfix.tar.gz", 
             "title": "RAX80 Toolbox", 
-            "version": "1.8"
+            "version": "1.9"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:44:28", 
+            "build_date": "2022-02-27_19:55:20", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "ef4c54e24566b81ef62e81a72bf13486", 
+            "md5": "a04d3c578231095cf71b7b38044b382f", 
             "name": "nodejs", 
             "tags": "Entware", 
             "tar_url": "nodejs/nodejs.tar.gz", 
@@ -284,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2022-02-27_14:49:19", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "bfc0735aee800f17fdeecb57bd002a41", 
+            "md5": "7bbf45fca1f58a63213bb66dcf55f88e", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "4.3"
+            "version": "4.4"
         }, 
         {
             "author": "囍冯总囍", 
@@ -410,19 +396,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-12-06_15:53:04", 
+            "build_date": "2022-02-27_20:00:49", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "b5dded67a610f5e0586ca006caa01fd7", 
+            "md5": "14bd1e0a01d63131951fdba338821219", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.4"
+            "version": "4.5"
         }, 
         {
             "author": "sadog", 
@@ -440,7 +426,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "f98033579f27bb9dc750726bec459b6c", 
+    "md5": "aacae4f137c3dee997268a93b97c65c9", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.1.2"
+    "version": "1.9.1.3"
 }

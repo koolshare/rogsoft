@@ -78,7 +78,7 @@ get_ui_type(){
 	fi
 	# ROG UI
 	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
-		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000、GT-AX6000全部版本，骚红皮肤
+		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000全部版本， GT-AX6000 骚红皮肤
 		UI_TYPE="ROG"
 	fi
 	# TUF UI

@@ -46,11 +46,12 @@ get_ui_type(){
 	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
 	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
 	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
+	[ "${MODEL}" == "GT-AX6000" ] && local ROG_GTAX6000=1
 	local KS_TAG=$(nvram get extendno|grep koolshare)
 	local EXT_NU=$(nvram get extendno)
 	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
 	local BUILDNO=$(nvram get buildno)
-	[ -z "${EXT_NU}" ] && EXT_NU="0"
+	[ -z "${EXT_NU}" ] && EXT_NU="0" 
 	# RT-AC86U
 	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
 		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
@@ -67,16 +68,17 @@ get_ui_type(){
 		ROG_GTAX11000=0
 	fi
 	# ROG UI
-	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" ];then
-		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000全部版本，骚红皮肤
+	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
+		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000全部版本， GT-AX6000 骚红皮肤
 		UI_TYPE="ROG"
 	fi
 	# TUF UI
-	if [ "${MODEL%-*}" == "TUF" ];then
+	if [ "${MODEL}" == "TUF-AX3000" ];then
 		# 官改固件，橙色皮肤
 		UI_TYPE="TUF"
 	fi
 }
+
 
 platform_test(){
 	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')

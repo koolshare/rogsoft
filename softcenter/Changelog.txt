@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin softeware center Changelog
 ===========================================
+1.8.3
+   - update	支持GT-AX6000官改固件
+
 1.7.8
    - fix	修复软件中心的一个安全问题
 

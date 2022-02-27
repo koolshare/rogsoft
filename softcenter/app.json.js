@@ -102,12 +102,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-11-23_12:01:41", 
+            "build_date": "2022-02-27_19:50:33", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "79c8598ed0f84365994ee53684b4e7a1", 
+            "md5": "91476b1c8dcf83f0e3878c95b5d110e6", 
             "name": "entware", 
             "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
@@ -214,12 +214,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:44:28", 
+            "build_date": "2022-02-27_19:55:20", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "ef4c54e24566b81ef62e81a72bf13486", 
+            "md5": "a04d3c578231095cf71b7b38044b382f", 
             "name": "nodejs", 
             "tags": "Entware", 
             "tar_url": "nodejs/nodejs.tar.gz", 
@@ -396,19 +396,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-12-06_15:53:04", 
+            "build_date": "2022-02-27_20:00:49", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "b5dded67a610f5e0586ca006caa01fd7", 
+            "md5": "14bd1e0a01d63131951fdba338821219", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.4"
+            "version": "4.5"
         }, 
         {
             "author": "sadog", 
@@ -426,7 +426,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "e2457e07175774fb9db5b707255b7f77", 
+    "md5": "763de7b82720585c85aed8ec4620eab6", 
     "tar_url": "softcenter/softcenter.tar.gz", 
-    "version": "1.8.1"
+    "version": "1.8.3"
 }

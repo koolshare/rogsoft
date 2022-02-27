@@ -55,6 +55,7 @@ get_ui_type(){
 	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
 	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
 	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
+	[ "${MODEL}" == "GT-AX6000" ] && local ROG_GTAX6000=1
 	local KS_TAG=$(nvram get extendno|grep koolshare)
 	local EXT_NU=$(nvram get extendno)
 	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
@@ -66,18 +67,18 @@ get_ui_type(){
 		ROG_RTAC86U=1
 	fi
 	# GT-AC2900
-	if [ "${MODEL}" == "GT-AC2900" ] && [ "{FW_TYPE_CODE}" == "3" -o "{FW_TYPE_CODE}" == "4" ];then
+	if [ "${MODEL}" == "GT-AC2900" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
 		# GT-AC2900从386.1开始已经支持梅林固件，其UI是ASUSWRT
 		ROG_GTAC2900=0
 	fi
 	# GT-AX11000
-	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "{FW_TYPE_CODE}" == "3" -o "{FW_TYPE_CODE}" == "4" ];then
+	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
 		# GT-AX11000从386.2开始已经支持梅林固件，其UI是ASUSWRT
 		ROG_GTAX11000=0
 	fi
 	# ROG UI
-	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" ];then
-		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000全部版本，骚红皮肤
+	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
+		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000全部版本， GT-AX6000 骚红皮肤
 		UI_TYPE="ROG"
 	fi
 	# TUF UI

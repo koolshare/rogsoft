@@ -69,8 +69,8 @@
 	box-shadow: 3px 3px 10px #000;
 	box-shadow: 3px 3px 10px #000;
 	background: #fff;
-	margin-left:120px;
-	width:520px;
+	margin-left:60px;
+	width:640px;
 	height:500px;
 	display: none;
 }
@@ -294,7 +294,7 @@ function try_activate(){
 }
 function register_event(){
 	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12"){
 		// three wifi router
 		if(!current_maxp24_tmp){
 			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
@@ -379,7 +379,7 @@ function register_event(){
 	});
 }
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -581,7 +581,7 @@ function boost_now(action){
 	var dbus_new = {};
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"  || odm == "XT12"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
