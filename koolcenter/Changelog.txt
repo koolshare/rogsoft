@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.1.4
+   - update	修复部分用户升级软件中心提示出现极少错误的问题！
+
 1.9.1.3
    - update	支持GT-AX6000官改固件
 

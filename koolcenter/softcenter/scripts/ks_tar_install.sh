@@ -2,9 +2,9 @@
 #
 ########################################################################
 #
-# Copyright (C) 2010/2021 kooldev
+# Copyright (C) 2011/2022 kooldev
 #
-# 此脚为 hnd/axhnd/axhnd.675x/p1axhnd.675x 平台软件中心插件离线安装脚本。
+# 此脚为 hnd/axhnd/axhnd.675x/p1axhnd.675x/504axhnd.675x平台软件中心插件离线安装脚本。
 # 软件中心地址: https://github.com/koolshare/rogsoft
 #
 ########################################################################
@@ -286,7 +286,8 @@ install_tar(){
 	fi
 
 	# 13. 检查下安装包是否是hnd的
-	if [ -f "${SCRIPT_AB_DIR}/.valid" -a -n "$(grep hnd ${SCRIPT_AB_DIR}/.valid)" ];then
+	local PLATFORM=$(grep -E "hnd" ${SCRIPT_AB_DIR}/.valid)
+	if [ -f "${SCRIPT_AB_DIR}/.valid" -a -n "${PLATFORM}" ];then
 		continue
 	elif [ "${MODULE_NAME}" == "shadowsocks" ];then
 		# hnd的不可描述包，有些版本没有校验字符串，避免安装失败

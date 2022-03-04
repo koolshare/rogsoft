@@ -2,9 +2,9 @@
 #
 ########################################################################
 #
-# Copyright (C) 2010/2021 kooldev
+# Copyright (C) 2011/2022 kooldev
 #
-# 此脚为 hnd/axhnd/axhnd.675x/p1axhnd.675x 平台软件中心插件在线安装脚本。
+# 此脚本为 hnd/axhnd/axhnd.675x/p1axhnd.675x/504axhnd.675x平台软件中心插件在线安装脚本。
 # 软件中心地址: https://github.com/koolshare/rogsoft
 #
 ########################################################################
@@ -22,7 +22,6 @@ LOG_FILE=/tmp/upload/soft_install_log.txt
 LOG_FILE_BACKUP=/tmp/upload/soft_install_log_backup.txt
 URL_SPLIT="/"
 UI_TYPE=ASUSWRT
-softcenter_home_url=$(dbus get softcenter_home_url)
 
 get_model(){
 	local ODMPID=$(nvram get odmpid)
@@ -135,6 +134,24 @@ jffs_space(){
 }
 
 install_ks_module() {
+	# 0. if under koolcenter, dbus value of softcenter_home_url is not defined by default
+	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
+	if [ "${LINUX_VER}" -ge "41" ];then
+		local SC_URL=https://rogsoft.ddnsto.com
+	fi
+	if [ "${LINUX_VER}" -eq "26" ];then
+		local SC_URL=https://armsoft.ddnsto.com
+	fi
+	local SC_URL_NVRAM=$(nvram get sc_url)
+	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
+		nvram set sc_url=${SC_URL}
+		nvram commit
+	fi
+	local softcenter_home_url=$(dbus get softcenter_home_url)
+	if [ -z "${softcenter_home_url}" ];then
+		local softcenter_home_url=${SC_URL}
+	fi
+
 	# 1. before install, detect if some value (passed from web) exist.
 	if [ -z "${softcenter_home_url}" -o -z "${softcenter_installing_md5}" -o -z "${softcenter_installing_version}" -o -z "${softcenter_installing_tar_url}" -o -z "${softcenter_installing_todo}" -o -z "${softcenter_installing_title}" ]; then
 		echo_date "-------------------------------------------------------------------"

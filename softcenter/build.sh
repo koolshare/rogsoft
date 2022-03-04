@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 
-VERSION=1.8.3
+VERSION=1.8.4
 
 echo $VERSION > ./softcenter/.soft_ver
 

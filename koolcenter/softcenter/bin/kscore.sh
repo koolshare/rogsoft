@@ -181,18 +181,16 @@ detect(){
 
 set_url(){
 	# set url
-	local SC_URL=$(nvram get sc_url)
-	if [ -n "${SC_URL}" ];then
-		return 0
-	fi
 	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
 	if [ "${LINUX_VER}" -ge "41" ];then
-		nvram set sc_url=https://rogsoft.ddnsto.com
-		nvram commit
+		local SC_URL=https://rogsoft.ddnsto.com
 	fi
-
 	if [ "${LINUX_VER}" -eq "26" ];then
-		nvram set sc_url=https://armsoft.ddnsto.com
+		local SC_URL=https://armsoft.ddnsto.com
+	fi
+	local SC_URL_NVRAM=$(nvram get sc_url)
+	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
+		nvram set sc_url=${SC_URL}
 		nvram commit
 	fi
 }
