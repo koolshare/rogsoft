@@ -252,19 +252,21 @@ center_install() {
 	cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
 	echo_date "文件复制结束，开始创建相关的软连接..."
+	# ssh PATH environment
+	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
+	rm -rf /jffs/etc/profile >/dev/null 2>&1
+	source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
+	source_path=$(dirname /jffs/etc/profile)
+	if [ -n "${source_file}" -a -n "${source_path}" ];then
+		rm -rf ${source_file} >/dev/null 2>&1
+		mkdir -p ${source_path}
+		ln -sf /${KSHOME}/.koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
+	fi
 	# make some link
 	[ ! -L "/${KSHOME}/.koolshare/bin/base64_decode" ] && ln -sf /${KSHOME}/.koolshare/bin/base64_encode /${KSHOME}/.koolshare/bin/base64_decode
 	[ ! -L "/${KSHOME}/.koolshare/scripts/ks_app_remove.sh" ] && ln -sf /${KSHOME}/.koolshare/scripts/ks_app_install.sh /${KSHOME}/.koolshare/scripts/ks_app_remove.sh
 	[ ! -L "/${KSHOME}/.asusrouter" ] && ln -sf /${KSHOME}/.koolshare/bin/kscore.sh /${KSHOME}/.asusrouter
 	[ -L "/${KSHOME}/.koolshare/bin/base64" ] && rm -rf /${KSHOME}/.koolshare/bin/base64
-	if [ -n "$(nvram get extendno | grep koolshare)" ];then
-		# for offcial mod, RT-AC86U, GT-AC5300, TUF-AX3000, RT-AX86U, etc
-		[ ! -L "/${KSHOME}/etc/profile" ] && ln -sf /${KSHOME}/.koolshare/scripts/base.sh /${KSHOME}/etc/profile
-	else
-		# for Merlin mod, RT-AX88U, RT-AC86U, etc
-		[ ! -L "/${KSHOME}/configs/profile.add" ] && ln -sf /${KSHOME}/.koolshare/scripts/base.sh /${KSHOME}/configs/profile.add
-	fi
-	echo_date "软连接创建完成！"
 
 	#============================================
 	# check start up scripts 

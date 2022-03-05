@@ -161,6 +161,17 @@ detect(){
 	chmod 755 /koolshare/perp/.control/*
 	chmod 755 /koolshare/perp/httpdb/*
 	chmod 755 /koolshare/scripts/*
+
+	# ssh PATH environment
+	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
+	rm -rf /jffs/etc/profile >/dev/null 2>&1
+	source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
+	source_path=$(dirname /jffs/etc/profile)
+	if [ -n "${source_file}" -a -n "${source_path}" ];then
+		rm -rf ${source_file} >/dev/null 2>&1
+		mkdir -p ${source_path}
+		ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
+	fi
 	
 	# make some link
 	if [ ! -L "/koolshare/bin/base64_decode" -a -f "/koolshare/bin/base64_encode" ];then
@@ -168,13 +179,6 @@ detect(){
 	fi
 	if [ ! -L "/koolshare/scripts/ks_app_remove.sh" ];then
 		ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
-	fi
-	if [ -n "$(nvram get extendno | grep koolshare)" ];then
-		# for offcial mod, RT-AC86U, GT-AC5300, TUF-AX3000, RT-AX86U, etc
-		[ ! -L "/jffs/etc/profile" ] && ln -sf /koolshare/scripts/base.sh /jffs/etc/profile
-	else
-		# for Merlin mod, RT-AX88U, RT-AC86U, etc
-		[ ! -L "/jffs/configs/profile.add" ] && ln -sf /koolshare/scripts/base.sh /jffs/configs/profile.add
 	fi
 	sync
 }

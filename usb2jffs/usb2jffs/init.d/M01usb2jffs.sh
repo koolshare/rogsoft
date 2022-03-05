@@ -200,10 +200,78 @@ JFFS2USB(){
 	echo_date "USB2JFFS：挂载USB磁盘目录：${MTPATH}/.koolshare_jffs → /jffs"
 	mount -o rbind ${MTPATH}/.koolshare_jffs /jffs
 	if [ "$?" == "0" ]; then
-		echo_date "USB2JFFS：挂载成功！继续！"
+		# 如果用户使用的软件中心版本为1.0，但是用户刚刷了固件，固件内置的是1.1
+		# 如果用户没使用usb2jffs插件，那么固件的jffsinit.sh会为用户更新jffs内的软件中心，但是无法更新USB内的软件中心
+		# 所以需要usb2jffs插件在启动挂载的时候，检测下rom内是否有更加新的软件中心，如果有则更新
+		# 此时更新的话要避免将softcenter更新成koolcenter，导致出现双koolcenter的情况
+		# --------------------------------------------------------
+		CENTER_TYPE=$(cat /jffs/.koolshare/webs/Module_Softcenter.asp 2>/dev/null| grep -Eo "/softcenter/app.json.js")
+		if [ -f "/koolshare/.soft_ver" ];then
+			if [ -n "${CENTER_TYPE}" ];then
+				# softceter in use
+				CUR_VERSION=$(cat /koolshare/.soft_ver)
+				ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver_old)
+			else
+				# koolcenter in use
+				CUR_VERSION=$(cat /koolshare/.soft_ver)
+				ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver)
+			fi
+		else
+			CUR_VERSION="0"
+			ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver)
+		fi
+		COMP=$(/rom/etc/koolshare/bin/versioncmp $CUR_VERSION $ROM_VERSION)
+		if [ ! -d "/jffs/.koolshare" -o "$COMP" == "1" ]; then
+			echo_date "更新软件中心！"
+			# remove before install
+			rm -rf /koolshare/res/soft-v19 >/dev/null 2>&1
+			
+			# start to install
+			mkdir -p /jffs/.koolshare
+			cp -rf /rom/etc/koolshare/* /jffs/.koolshare/
+			cp -rf /rom/etc/koolshare/.soft_ver* /jffs/.koolshare/
+		
+			# switch to softceter
+			if [ -n "${CENTER_TYPE}" ];then
+				sync
+				mv /koolshare/.soft_ver /koolshare/.soft_ver_new
+				sync
+				mv /koolshare/.soft_ver_old /koolshare/.soft_ver
+		
+				mv /koolshare/webs/Module_Softcenter.asp /koolshare/webs/Module_Softcenter_new.asp
+				sync
+				mv /koolshare/webs/Module_Softcenter_old.asp /koolshare/webs/Module_Softcenter.asp
+			fi
+			
+			mkdir -p /jffs/.koolshare/configs/
+			chmod 755 /koolshare/bin/*
+			chmod 755 /koolshare/init.d/*
+			chmod 755 /koolshare/perp/*
+			chmod 755 /koolshare/perp/.boot/*
+			chmod 755 /koolshare/perp/.control/*
+			chmod 755 /koolshare/perp/httpdb/*
+			chmod 755 /koolshare/scripts/*
+		
+			# ssh PATH environment
+			rm -rf /jffs/configs/profile.add >/dev/null 2>&1
+			rm -rf /jffs/etc/profile >/dev/null 2>&1
+			source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
+			source_path=$(dirname /jffs/etc/profile)
+			if [ -n "${source_file}" -a -n "${source_path}" ];then
+				rm -rf ${source_file} >/dev/null 2>&1
+				mkdir -p ${source_path}
+				ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
+			fi
+			
+			# make some link
+			[ ! -L "/koolshare/bin/base64_decode" ] && ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
+			[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
+			[ ! -L "/jffs/.asusrouter" ] && ln -sf /koolshare/bin/kscore.sh /jffs/.asusrouter
+		fi
+	
+		echo_date "USB2JFFS：挂载成功！继续！" 
 		echo_date "USB2JFFS：重启软件中心相关进程！"
 		start_software_center
-		
 		echo_date "USB2JFFS：启动完毕，一点点扫尾工作..."
 
 		# 在系统nvram中写入一个值，如果检测不到该值，则说明用户重置了路由器，如果此时又安装了本插件再次手动挂载

@@ -217,6 +217,71 @@ start_usb2jffs(){
 	echo_date "将${KSPATH}/.koolshare_jffs挂载到JFFS分区..."
 	mount -o rbind ${KSPATH}/.koolshare_jffs /jffs
 	if [ "$?" == "0" ]; then
+		# use newer one
+		CENTER_TYPE=$(cat /jffs/.koolshare/webs/Module_Softcenter.asp 2>/dev/null| grep -Eo "/softcenter/app.json.js")
+		if [ -f "/koolshare/.soft_ver" ];then
+			if [ -n "${CENTER_TYPE}" ];then
+				# softceter in use
+				CUR_VERSION=$(cat /koolshare/.soft_ver)
+				ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver_old)
+			else
+				# koolcenter in use
+				CUR_VERSION=$(cat /koolshare/.soft_ver)
+				ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver)
+			fi
+		else
+			CUR_VERSION="0"
+			ROM_VERSION=$(cat /rom/etc/koolshare/.soft_ver)
+		fi
+		COMP=$(/rom/etc/koolshare/bin/versioncmp $CUR_VERSION $ROM_VERSION)
+		if [ ! -d "/jffs/.koolshare" -o "$COMP" == "1" ]; then
+			echo_date "更新软件中心！"
+			# remove before install
+			rm -rf /koolshare/res/soft-v19 >/dev/null 2>&1
+			
+			# start to install
+			mkdir -p /jffs/.koolshare
+			cp -rf /rom/etc/koolshare/* /jffs/.koolshare/
+			cp -rf /rom/etc/koolshare/.soft_ver* /jffs/.koolshare/
+		
+			# switch to softceter
+			if [ -n "${CENTER_TYPE}" ];then
+				sync
+				mv /koolshare/.soft_ver /koolshare/.soft_ver_new
+				sync
+				mv /koolshare/.soft_ver_old /koolshare/.soft_ver
+		
+				mv /koolshare/webs/Module_Softcenter.asp /koolshare/webs/Module_Softcenter_new.asp
+				sync
+				mv /koolshare/webs/Module_Softcenter_old.asp /koolshare/webs/Module_Softcenter.asp
+			fi
+			
+			mkdir -p /jffs/.koolshare/configs/
+			chmod 755 /koolshare/bin/*
+			chmod 755 /koolshare/init.d/*
+			chmod 755 /koolshare/perp/*
+			chmod 755 /koolshare/perp/.boot/*
+			chmod 755 /koolshare/perp/.control/*
+			chmod 755 /koolshare/perp/httpdb/*
+			chmod 755 /koolshare/scripts/*
+		
+			# ssh PATH environment
+			rm -rf /jffs/configs/profile.add >/dev/null 2>&1
+			rm -rf /jffs/etc/profile >/dev/null 2>&1
+			source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
+			source_path=$(dirname /jffs/etc/profile)
+			if [ -n "${source_file}" -a -n "${source_path}" ];then
+				rm -rf ${source_file} >/dev/null 2>&1
+				mkdir -p ${source_path}
+				ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
+			fi
+			
+			# make some link
+			[ ! -L "/koolshare/bin/base64_decode" ] && ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
+			[ ! -L "/koolshare/scripts/ks_app_remove.sh" ] && ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
+			[ ! -L "/jffs/.asusrouter" ] && ln -sf /koolshare/bin/kscore.sh /jffs/.asusrouter
+		fi
+	
 		echo_date "USB型JFFS分区挂载成功！"
 		echo_date "重启软件中心相关进程..."
 		start_software_center
