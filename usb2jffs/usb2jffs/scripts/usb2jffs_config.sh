@@ -404,6 +404,9 @@ stop_usb2jffs(){
 			echo_date "重启软件中心相关进程..."
 			start_software_center
 
+			# 卸载成功后，同步写入一次软件中心版本号
+			dbus set softcenter_version=$(cat /koolshare/.soft_ver)
+
 			# 删除usb2jffs_flag nvram值
 			nvram unset usb2jffs_flag
 			nvram commit
