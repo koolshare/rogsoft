@@ -13,7 +13,7 @@ cpu_temperature="CPU：$(awk 'BEGIN{printf "%.1f\n",('$cpu_temperature_origin'/'
 
 #网卡温度
 case "$model" in
-GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|GT-AXE11000)
+GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|ET12|ET8|GT-AXE11000)
 	interface_2g=$(nvram get wl0_ifname)
 	interface_5g1=$(nvram get wl1_ifname)
 	interface_5g2=$(nvram get wl2_ifname)
@@ -26,7 +26,11 @@ GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|GT-AXE11000)
 	[ -n "${interface_2g_temperature}" ] && interface_2g_temperature_c="$(expr ${interface_2g_temperature} / 2 + 20)°C" || interface_2g_temperature_c="offline"
 	[ -n "${interface_5g1_temperature}" ] && interface_5g1_temperature_c="$(expr ${interface_5g1_temperature} / 2 + 20)°C" || interface_5g1_temperature_c="offline"
 	[ -n "${interface_5g2_temperature}" ] && interface_5g2_temperature_c="$(expr ${interface_5g2_temperature} / 2 + 20)°C" || interface_5g2_temperature_c="offline"
-	wl_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-1：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-2：${interface_5g2_temperature_c}"
+	if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
+		wl_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 6G：${interface_5g2_temperature_c}"
+	else
+		wl_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-1：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-2：${interface_5g2_temperature_c}"
+	fi
 	if [ -n "${interface_2g_power}" -o -n "${interface_5g1_power}" -o -n "${interface_5g2_power}" ];then
 		[ -n "${interface_2g_power}" ] && interface_2g_power_d="${interface_2g_power} dBm" || interface_2g_power_d="offline"
 		[ -n "${interface_2g_power}" ] && interface_2g_power_p="$(awk -v x=${interface_2g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_2g_power_p="offline"
@@ -36,7 +40,11 @@ GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|GT-AXE11000)
 		
 		[ -n "${interface_5g2_power}" ] && interface_5g2_power_d="${interface_5g2_power} dBm" || interface_5g2_power_d="offline"
 		[ -n "${interface_5g2_power}" ] && interface_5g2_power_p="$(awk -v x=${interface_5g2_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g2_power_p="offline"
-		wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G-1：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+		if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
+			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G-1：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+		else
+			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 6G：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+		fi
 	else
 		wl_txpwr=""
 	fi
