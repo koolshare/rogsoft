@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="rog"
-VERSION="4.4"
+VERSION="4.5"
 TITLE="ROG工具箱"
 DESCRIPTION="一些小功能的插件"
 HOME_URL="Module_rog.asp"
