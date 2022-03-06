@@ -411,6 +411,22 @@ exit_install(){
 	esac
 }
 
+set_url(){
+	# set url, do it before platform_test
+	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
+	if [ "${LINUX_VER}" -ge "41" ];then
+		local SC_URL=https://rogsoft.ddnsto.com
+	fi
+	if [ "${LINUX_VER}" -eq "26" ];then
+		local SC_URL=https://armsoft.ddnsto.com
+	fi
+	local SC_URL_NVRAM=$(nvram get sc_url)
+	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
+		nvram set sc_url=${SC_URL}
+		nvram commit
+	fi
+}
+
 platform_test(){
 	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
 	if [ -d "/koolshare" -a -f "/usr/bin/skipd" -a "${LINUX_VER}" -ge "41" ];then
@@ -442,6 +458,7 @@ install_now(){
 install(){
 	get_model
 	get_fw_type
+	set_url
 	platform_test
 	install_now
 }
