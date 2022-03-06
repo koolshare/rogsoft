@@ -41,9 +41,9 @@ GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|ET12|ET8|GT-AXE11000)
 		[ -n "${interface_5g2_power}" ] && interface_5g2_power_d="${interface_5g2_power} dBm" || interface_5g2_power_d="offline"
 		[ -n "${interface_5g2_power}" ] && interface_5g2_power_p="$(awk -v x=${interface_5g2_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g2_power_p="offline"
 		if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
-			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G-1：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
-		else
 			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 6G：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+		else
+			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G-1：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
 		fi
 	else
 		wl_txpwr=""
