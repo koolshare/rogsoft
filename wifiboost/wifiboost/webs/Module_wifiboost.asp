@@ -294,7 +294,7 @@ function try_activate(){
 }
 function register_event(){
 	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"){
 		// three wifi router
 		if(!current_maxp24_tmp){
 			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
@@ -379,7 +379,7 @@ function register_event(){
 	});
 }
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -529,6 +529,9 @@ function show_err_code() {
 		case "8":
 			err_mesg = '<br/><span style="color: #CC3300">错误代码8：无法购买！因为检测到插件安装有问题，请尝试卸载并重装插件后再试！</span><br/><br>';
 		break;
+		case "9":
+			err_mesg = '<br/><span style="color: #CC3300">错误代码9：' + MODEL + '当前暂时不支持wifi boost插件！</span><br/><br>';
+		break;
 	}
 	require(['/res/layer/layer.js'], function(layer) {
 		layer.alert('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/>' + err_mesg + '出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/>点击确定将关闭此窗口，如果错误未解决，此窗口下次还会和你相见！', {
@@ -581,7 +584,7 @@ function boost_now(action){
 	var dbus_new = {};
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"  || odm == "XT12"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"  || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
