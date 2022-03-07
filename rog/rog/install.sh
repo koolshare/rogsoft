@@ -87,7 +87,7 @@ get_ui_type(){
 		UI_TYPE="ROG"
 	fi
 	# TUF UI
-	if [ "${MODEL}" == "TUF-AX3000" ];then
+	if [ "${MODEL%-*}" == "TUF" ];then
 		# 官改固件，橙色皮肤
 		UI_TYPE="TUF"
 	fi
