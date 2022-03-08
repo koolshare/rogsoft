@@ -225,11 +225,11 @@ center_install() {
 	# ----ui------
 	get_ui_type
 	if [ -z "${CENTER_TYPE_1}" ];then
-		# wirte skin code for softcenter
+		# wirte skin code for koolcenter
 		echo_date "为koolcenter软件中心安装${UI_TYPE}风格的皮肤..."
 		nvram set sc_skin="${UI_TYPE}"
 	else
-		# compatiable wit softcenter
+		# compatiable with softcenter
 		echo_date "获取当前固件UI类型，UI_TYPE: ${UI_TYPE}"
 		if [ "${UI_TYPE}" == "ROG" ]; then
 			echo_date "为软件中心安装ROG风格的皮肤..."

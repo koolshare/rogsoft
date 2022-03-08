@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.6
+   - fix	修复ZenWiFi_ET8安装后出现错误9的问题
+   
 4.5
    - add	添加ZenWiFi_Pro_XT12和GT-AX6000机型官改固件下的支持
 
