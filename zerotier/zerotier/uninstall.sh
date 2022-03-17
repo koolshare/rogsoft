@@ -15,7 +15,7 @@ rm -rf /koolshare/share/misc/magic >/dev/null 2>&1
 find /koolshare/init.d -name "*zerotier*" | xargs rm -rf
 
 if [ -d "/koolshare/share" ];then
-	local FLAG_1=$(ls -aelR /koolshare/share | sed '/:$/d' | sed '/^$/d' | sed '/^d/d' 2>/dev/null)
+	FLAG_1=$(ls -aelR /koolshare/share | sed '/:$/d' | sed '/^$/d' | sed '/^d/d' 2>/dev/null)
 	if [ -z "$FLAG_1" ];then
 		rm -rf /koolshare/share
 	fi

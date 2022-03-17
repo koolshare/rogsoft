@@ -11,7 +11,7 @@ zerotier libm-2.27.so
 zerotier libmagic.so.1
 zerotier libmagic.so.1.0.0
 zerotier libminiupnpc.so.17
-zerotier libminiupnpc.so.2.2.1
+zerotier libminiupnpc.so.2.2.2
 zerotier libm.so.6
 zerotier libnatpmp.so.1
 zerotier libnatpmp.so.20150609
