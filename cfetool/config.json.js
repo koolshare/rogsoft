@@ -1,6 +1,6 @@
 {
-"version":"3.4",
-"md5":"19e64731672ee8fe1b772f349fbcb7fb",
+"version":"3.5",
+"md5":"4186e30088deb1fcc0474af3c3e2251c",
 "home_url":"Module_cfetool.asp",
 "title":"CFE工具箱",
 "description":"CFE工具箱，查看CFE信息，改机器为国区",
@@ -8,7 +8,7 @@
 "tags":"系统 工具",
 "author":"sadog",
 "link":"",
-"build_date":"2022-03-19_22:23:25",
+"build_date":"2022-03-28_17:36:37",
 "server":"42.192.18.234",
 "port":"8083"
 }
