@@ -16,17 +16,17 @@
         }, 
         {
             "author": "kyrios, sadog", 
-            "build_date": "2021-08-20_22:31:29", 
+            "build_date": "2022-03-29_10:45:17", 
             "changelog": "", 
             "description": "aliddns", 
             "home_url": "Module_aliddns.asp", 
             "link": "", 
-            "md5": "d890bac85643e4ae9dce6e830ccb55e4", 
+            "md5": "20dec7108c4a49d4c3bb4e2e4b1af4e1", 
             "name": "aliddns", 
             "tags": "DDNS", 
             "tar_url": "aliddns/aliddns.tar.gz", 
             "title": "阿里DDNS", 
-            "version": "2.1"
+            "version": "2.2"
         }, 
         {
             "author": "sadog", 

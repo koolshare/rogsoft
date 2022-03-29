@@ -48,6 +48,62 @@ __resolve_ip() {
 }
 
 start_update() {
+	timestamp=$(date -u "+%Y-%m-%dT%H%%3A%M%%3A%SZ")
+	urlencode() {
+		# urlencode <string>
+		out=""
+		while read -n1 c
+		do
+			case $c in
+				[a-zA-Z0-9._-]) out="$out$c" ;;
+				*) out="$out$(printf '%%%02X' "'$c")" ;;
+			esac
+		done
+		echo -n $out
+	}
+	
+	enc() {
+		echo -n "$1" | urlencode
+	}
+	#add support */%2A and @/%40 record
+	case "$aliddns_name" in
+		\*)
+			aliddns_name1=%2A
+		;;
+		\@)
+			aliddns_name1=%40
+		;;
+		*)
+			aliddns_name1="$aliddns_name"
+		;;
+	esac
+	
+	send_request() {
+		local args="AccessKeyId=$aliddns_ak&Action=$1&Format=json&$2&Version=2015-01-09"
+		local hash=$(echo -n "GET&%2F&$(enc "$args")" | openssl dgst -sha1 -hmac "$aliddns_sk&" -binary | openssl base64)
+		curl -s "http://alidns.aliyuncs.com/?$args&Signature=$(enc "$hash")"
+	}
+	
+	get_recordid() {
+		grep -Eo '"RecordId":"[0-9]+"' | cut -d':' -f2 | tr -d '"'
+	}
+	
+	query_recordid() {
+		send_request "DescribeSubDomainRecords" "SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&SubDomain=$aliddns_name1.$aliddns_domain&Timestamp=$timestamp&Type=A"
+	}
+	
+	update_record() {
+		send_request "UpdateDomainRecord" "RR=$aliddns_name1&RecordId=$1&SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&TTL=$aliddns_ttl&Timestamp=$timestamp&Type=A&Value=$ip"
+	}
+	
+	add_record() {
+		send_request "AddDomainRecord&DomainName=$aliddns_domain" "RR=$aliddns_name1&SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&TTL=$aliddns_ttl&Timestamp=$timestamp&Type=A&Value=$ip"
+	}
+
+	del_record(){
+		send_request "DeleteDomainRecord" "RecordId=$1&SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&Timestamp=$timestamp"
+	}
+	
 	#get resovled ip
 	case "${aliddns_name}" in
 		\*)
@@ -100,22 +156,32 @@ start_update() {
 	esac
 	ip=$(__valid_ip "$ip")
 
+	# get record id everytime
+	local record_id=$(query_recordid | get_recordid)
+
 	# compare ip
-	if [ -n "$ip" -a -n "$current_ip" ]; then
-		echo_date "[aliddns_update.sh]：公网IP：$ip, 解析IP：$current_ip"
+	if [ -n "$ip" ]; then
+		echo_date "[aliddns_update.sh]：公网IP：$ip"
 		# no ip change
-		if [ "$ip" == "$current_ip" ]; then
+		if [ -n "$record_id" -a -n "$current_ip" -a  "$ip" == "$current_ip" ];then
 			dbus set aliddns_last_act="$now: skipped($ip)"
+			echo_date "[aliddns_update.sh]：解析IP：$current_ip"
 			echo_date "[aliddns_update.sh]：IP地址无变化，不更新！"
 			exit 0
+		else
+			if [ -n "$record_id" -a  "$ip" == "$current_ip" ];then
+				echo_date "[aliddns_update.sh]：解析IP：$current_ip"
+				echo_date "[aliddns_update.sh]：IP地址变化，开始更新！"
+			fi
 		fi
-	elif [ -z "$ip" -a -n "$current_ip" ]; then
+	elif [ -z "$ip" ]; then
 		dbus set aliddns_last_act="$now: 失败，原因：无法获取外网IP地址！"
 		echo_date "[aliddns_update.sh]：更新失败，原因：获取外网IP地址失败！"		
 		exit 0
-	elif [ -n "$ip" -a -z "$current_ip" ]; then
+	elif [ -n "$ip" -a -n "$record_id" -a -z "$current_ip" ]; then
 		dbus set aliddns_last_act="$now: 失败，原因：解析域名失败！"
-		echo_date "[aliddns_update.sh]：更新失败，原因：解析域名失败！"		
+		echo_date "[aliddns_update.sh]：更新失败，原因：解析域名失败！"	
+		echo_date $ip","$current_ip
 		exit 0
 	else
 		dbus set aliddns_last_act="$now: 失败，原因：解析域名 + 外网IP失败！"
@@ -123,69 +189,9 @@ start_update() {
 		exit 0
 	fi
 	
-	timestamp=$(date -u "+%Y-%m-%dT%H%%3A%M%%3A%SZ")
-	urlencode() {
-		# urlencode <string>
-		out=""
-		while read -n1 c
-		do
-			case $c in
-				[a-zA-Z0-9._-]) out="$out$c" ;;
-				*) out="$out$(printf '%%%02X' "'$c")" ;;
-			esac
-		done
-		echo -n $out
-	}
-	
-	enc() {
-		echo -n "$1" | urlencode
-	}
-	
-	send_request() {
-		local args="AccessKeyId=$aliddns_ak&Action=$1&Format=json&$2&Version=2015-01-09"
-		local hash=$(echo -n "GET&%2F&$(enc "$args")" | openssl dgst -sha1 -hmac "$aliddns_sk&" -binary | openssl base64)
-		curl -s "http://alidns.aliyuncs.com/?$args&Signature=$(enc "$hash")"
-	}
-	
-	get_recordid() {
-		grep -Eo '"RecordId":"[0-9]+"' | cut -d':' -f2 | tr -d '"'
-	}
-	
-	query_recordid() {
-		send_request "DescribeSubDomainRecords" "SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&SubDomain=$aliddns_name1.$aliddns_domain&Timestamp=$timestamp&Type=A"
-	}
-	
-	update_record() {
-		send_request "UpdateDomainRecord" "RR=$aliddns_name1&RecordId=$1&SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&TTL=$aliddns_ttl&Timestamp=$timestamp&Type=A&Value=$ip"
-	}
-	
-	add_record() {
-		send_request "AddDomainRecord&DomainName=$aliddns_domain" "RR=$aliddns_name1&SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&TTL=$aliddns_ttl&Timestamp=$timestamp&Type=A&Value=$ip"
-	}
-
-	del_record(){
-		send_request "DeleteDomainRecord" "RecordId=$1&SignatureMethod=HMAC-SHA1&SignatureNonce=$timestamp&SignatureVersion=1.0&Timestamp=$timestamp"
-	}
-	
-	#add support */%2A and @/%40 record
-	case "$aliddns_name" in
-		\*)
-			aliddns_name1=%2A
-		;;
-		\@)
-			aliddns_name1=%40
-		;;
-		*)
-			aliddns_name1="$aliddns_name"
-		;;
-	esac
-
-	# get record id everytime
-	local record_id=$(query_recordid | get_recordid)
-	
 	if [ -z "$record_id" ];then
 		record_id=$(add_record | get_recordid)
-		echo_date "[aliddns_update.sh]：添加记录 $record_id"
+		echo_date "[aliddns_update.sh]：添加记录 $aliddns_name1.$aliddns_domain"
 	else
 		update_record "$record_id" >/dev/null 2>&1
 		echo_date "[aliddns_update.sh]：更新记录 $record_id"
@@ -200,7 +206,7 @@ start_update() {
 		# 检测record_id是否有变化，如果变了，那可能用户更改了二级域名，需要删除原来的record
 		if [ -n "$aliddns_record_id" -a "$record_id" != "$aliddns_record_id" ];then
 			echo_date "[aliddns_update.sh]：检测到你更改了记录，删除原来的记录：$aliddns_record_id"
-			del_record $aliddns_record_id
+			del_record $aliddns_record_id  >/dev/null 2>&1
 		fi
 		# 将此次获得的record_id记录下，以便下次进行上面的判断
 		dbus set aliddns_record_id="$record_id"

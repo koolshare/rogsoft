@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="aliddns"
-VERSION="2.1"
+VERSION="2.2"
 TITLE="阿里DDNS"
 DESCRIPTION="aliddns"
 HOME_URL="Module_aliddns.asp"
