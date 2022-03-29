@@ -196,15 +196,15 @@ function cfeit(action){
 			if(ct_key.length == "44" && ct_key.myReplace("-", "").length == "39"){
 
 				msg = '';
-				msg += '<span style="font-size: 18px;">你正在使用提货码进行激活</span>';
+				msg += '<span style="font-size: 18px;">你正在使用兑换码进行激活</span>';
 				msg += '<br/>';
 				msg += '<br/>';
-				msg += '提货码：<span style="color: #CC3300">' + ct_key + '</span>';
+				msg += '兑换码：<span style="color: #CC3300">' + ct_key + '</span>';
 				msg += '<br/>';
 				msg += '<br/>';
-				msg += '提示：一个提货码只能用于一台路由器的【CFE工具箱】激活；';
+				msg += '提示：一个兑换码只能用于一台路由器的【CFE工具箱】激活；';
 				msg += '<br/>';
-				msg += '点击立即激活，你将会获得【CFE工具箱】激活码，同时提货码将会失效。';
+				msg += '点击立即激活，你将会获得【CFE工具箱】激活码，同时兑换码将会失效。';
 				
 				require(['/res/layer/layer.js'], function(layer) {
 					layer.confirm(msg, {
@@ -221,7 +221,7 @@ function cfeit(action){
 				return true;
 			}else{
 				E("cfetool_key").value = "";
-				alert("请输入正确格式的cfetool提货码！");
+				alert("请输入正确格式的cfetool兑换码！");
 				return false;
 			}
 		}
