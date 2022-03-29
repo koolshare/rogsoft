@@ -1,5 +1,8 @@
 Koolshare hnd/axhnd router software center pushplus Changelog
 ===========================================
+0.5
+   - use new website(http://www.pushplus.plus),please use new token
+
 0.4
    - fix can't get online icon
 

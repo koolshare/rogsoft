@@ -423,7 +423,7 @@ for nu in ${token_nu}; do
     pushplus_config_topic=$(dbus get pushplus_config_topic_${nu})
     # pushplus_config_channel=`dbus get pushplus_config_channel_${nu}`
     pushplus_config_channel="wechat"
-    url="https://pushplus.hxtrip.com/send/${pushplus_config_token}"
+    url="https://www.pushplus.plus/send/${pushplus_config_token}"
     reqstr="curl -H \"content-type:application/json\" -X POST -d '{\"template\":\"route\",\"topic\":\""${pushplus_config_topic}"\",\"channel\":\""${pushplus_config_channel}"\",\"title\":\""${pushplus_send_title}"\",\"content\":"${pushplus_send_content}"}' ${url}"
     result=$(eval ${reqstr})
     if [[ -n "$(echo $result | grep "success")" ]]; then

@@ -131,8 +131,8 @@ install_ui(){
 
 install_now(){
 	# default value
-	local TITLE="PushPlus全能推送"
-	local DESCR="从路由器推送状态及通知到PushPlus的工具。"
+	local TITLE="pushplus全能推送"
+	local DESCR="从路由器推送状态及通知到pushplus的工具。"
 	local PLVER=$(cat ${DIR}/version)
 
 	# stop first

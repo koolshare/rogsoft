@@ -571,9 +571,9 @@ function version_show() {
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                     <div class="formfontdesc" id="cmdDesc">
-                                        「<a href="https://pushplus.hxtrip.com/" target=_blank><i>pushplus</i></a>」，中文名「推送加」，起初是为了帮助程序员处理系统监控告警而开发的免费服务。随着功能不断的完善，我们针对性的推出了路由器插件可以让您第一时间在手机上接收路由器的消息。<br><br>
+                                        「<a href="https://www.pushplus.plus/" target=_blank><i>pushplus</i></a>」，中文名「推送加」，起初是为了帮助程序员处理系统监控告警而开发的免费服务。随着功能不断的完善，我们针对性的推出了路由器插件可以让您第一时间在手机上接收路由器的消息。<br><br>
                                         只需两步，轻松上手：<br>
-                                        <i>1. 获取Token：</i>打开<a href="https://pushplus.hxtrip.com/login?redirectUrl=/message" target="_blank"><i>pushplus官网</i></a>,微信扫码登录成功后在页面上获取您的Token<br>
+                                        <i>1. 获取Token：</i>打开<a href="https://www.pushplus.plus/push1.html" target="_blank"><i>pushplus官网</i></a>,微信扫码登录成功后在页面上获取您的Token<br>
                                         <i>2. 填写Token：</i>在插件页面中填入自己的Token点击提交，即可收到路由器发送的消息。<br><br>
                                         想要多个人接收怎么办？pushplus支持群发功能，到官网上创建自己的群组后，在插件页面上填入自己的群组编码，消息就会群发给群组内的成员了。<br>
                                     </div>
@@ -606,7 +606,7 @@ function version_show() {
 
                                     <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top:8px;">
                                         <tr>
-                                            <th>Token(必填)</th>
+                                            <th>token(必填)</th>
                                             <th>群组编码(可选)</th>
                                             <th>渠道</th>
                                             <th>修改</th>
@@ -646,7 +646,7 @@ function version_show() {
                                             <th style="width:20%;">版本信息</th>
                                             <td>
                                                 <div id="pushplus_version_show" style="padding-top:5px;margin-left:0px;margin-top:0px;float: left;"></div>
-                                                <span style="padding-top:5px;margin-right: 15px;margin-left:0px;margin-top:0px;float: right;"><a href="https://pushplus.hxtrip.com/about" target="_blank">[ 联系我们 ]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/koolshare/rogsoft/master/pushplus/Changelog.txt" target="_blank"><em><u>[ 更新日志 ]</u></em></a></span>
+                                                <span style="padding-top:5px;margin-right: 15px;margin-left:0px;margin-top:0px;float: right;"><a href="https://www.pushplus.plus/doc/introduce/contact.html" target="_blank">[ 联系我们 ]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://raw.githubusercontent.com/koolshare/rogsoft/master/pushplus/Changelog.txt" target="_blank"><em><u>[ 更新日志 ]</u></em></a></span>
                                             </td>                                                                                    
                                         </tr>
                                         <tr>
