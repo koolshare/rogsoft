@@ -604,15 +604,15 @@ function boost_now(action){
 		if(wb_key.length == "46" && wb_key.myReplace("-", "").length == "41"){
 
 			msg = '';
-			msg += '<span style="font-size: 18px;">你正在使用提货码进行激活</span>';
+			msg += '<span style="font-size: 18px;">你正在使用兑换码进行激活</span>';
 			msg += '<br/>';
 			msg += '<br/>';
-			msg += '提货码：<span style="color: #CC3300">' + wb_key + '</span>';
+			msg += '兑换码：<span style="color: #CC3300">' + wb_key + '</span>';
 			msg += '<br/>';
 			msg += '<br/>';
-			msg += '提示：一个提货码只能用于一台路由器的wifi boost激活；';
+			msg += '提示：一个兑换码只能用于一台路由器的wifi boost激活；';
 			msg += '<br/>';
-			msg += '点击立即激活，你将会获得wifi boost激活码，同时提货码将会失效。';
+			msg += '点击立即激活，你将会获得wifi boost激活码，同时兑换码将会失效。';
 			
 			require(['/res/layer/layer.js'], function(layer) {
 				layer.confirm(msg, {
@@ -629,7 +629,7 @@ function boost_now(action){
 			return true;
 		}else{
 			E("wifiboost_key").value = "";
-			alert("请输入正确格式的提货码！");
+			alert("请输入正确格式的兑换码！");
 			return false;
 		}
 	}
@@ -832,7 +832,7 @@ function open_buy() {
 	note += "<li>扫码支付后，会立即跳转到激活码发放页面，根据页面提示即可激活插件；</li>";
 	note += "<li>如遇到无法支付、无法获得激活码等问题，可以联系下方客服邮箱解决。</li></h5>";
 	note += "<h4 style='text-align:right'>客服邮箱：<a style='color:#22ab39;' href='mailto:mjy211@gmail.com?subject=wifi boost咨询&body=这是邮件的内容'>mjy211@gmail.com</a></h4>";
-	//note += "<h5>如果你已经有<font color='#FF6600'>wifiboost-xxx-xxx-xxx-xxx-xxx</font>形式的提货码，请跳过支付流程，直接在激活码栏内输入提货码即可获得激活码。</h5>";
+	//note += "<h5>如果你已经有<font color='#FF6600'>wifiboost-xxx-xxx-xxx-xxx-xxx</font>形式的兑换码，请跳过支付流程，直接在激活码栏内输入兑换码即可获得激活码。</h5>";
 	require(['/res/layer/layer.js'], function(layer) {
 		layer.open({
 			type: 0,
@@ -1036,7 +1036,7 @@ function verifyFields(r) {
 											<tr>
 												<th>wifi boost 激活码</th>
 												<td>
-													<input type="password" maxlength="100" id="wifiboost_key" class="input_ss_table" title="此处输入wifi boost激活码或者提货码！" style="width:340px;font-size: 95%;" readonly onblur="switchType(this, false);" onfocus="switchType(this, true);this.removeAttribute('readonly');" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" >
+													<input type="password" maxlength="100" id="wifiboost_key" class="input_ss_table" title="此处输入wifi boost激活码或者兑换码！" style="width:340px;font-size: 95%;" readonly onblur="switchType(this, false);" onfocus="switchType(this, true);this.removeAttribute('readonly');" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" >
 													<button id="wifiboost_active_btn" onclick="boost_now(3);" class="wifiboost_btn" style="width:50px;cursor:pointer;vertical-align: middle;">激活</button>
 													<button id="wifiboost_buy_btn" onclick="open_buy();" class="wifiboost_btn" style="width:80px;cursor:pointer;vertical-align: middle;">购买激活码</button>
 													<button id="wifiboost_authorized_btn" onclick="open_info();" class="wifiboost_btn" style="width:80px;cursor:pointer;vertical-align: middle;">已激活</button>
