@@ -228,17 +228,17 @@
         }, 
         {
             "author": "囍冯总囍", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2022-03-03_14:10:21", 
             "changelog": "", 
             "description": "通过pushplus将路由器状态推送到微信上", 
             "home_url": "Module_pushplus.asp", 
             "link": "", 
-            "md5": "b7555108eb5881fb2e8d7f8d0026698f", 
+            "md5": "21bfc84132a7e45719bdf974a28dfd31", 
             "name": "pushplus", 
             "tags": "推送", 
             "tar_url": "pushplus/pushplus.tar.gz", 
             "title": "pushplus全能推送", 
-            "version": "0.4"
+            "version": "0.5"
         }, 
         {
             "author": "Carseason", 
@@ -396,12 +396,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-10_23:32:30", 
+            "build_date": "2022-03-29_14:22:32", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "1aa8c924ed8412828f2bbe8996c7615f", 
+            "md5": "6bcb9685cafabd490a49c975f983a12c", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
