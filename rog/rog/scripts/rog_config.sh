@@ -11,7 +11,7 @@ switch_ui(){
 	WGET="wget -4 --no-check-certificate --quiet --timeout=15"
 	softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
 	app_file=/tmp/.app.json.js
-	ROGUI="softcenter|aliddns|acme|aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|koolproxy|mdial|qiaodao|rog|serverchan|usb2jffs|routerhook"
+	ROGUI="softcenter|aliddns|acme|aria2|cfddns|ddnsto|easyexplorer|fastd1ck|frpc|koolproxy|mdial|qiaodao|rog|serverchan|usb2jffs|routerhook|zerotier|entware|nodejs|sftpserver"
 	BASE_FOLDER=/tmp/ks_ui
 	rm -rf ${BASE_FOLDER}
 	rm -rf ${serverchan_info_text} ${app_file}

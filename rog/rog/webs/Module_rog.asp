@@ -127,6 +127,18 @@ function show_ui_switch(){
 			$("#FAN_SETTING").hide();
 			$("#msg2").hide();
 		}
+	}else if(productid == "GT-AC2900"){
+		$("#UI_SWITCH").show();
+		$("#FAN_SETTING").hide();
+		$("#msg2").hide();
+		get_dbus_data();
+	}
+	}else if(productid == "GT-AX11000"){
+		$("#UI_SWITCH").show();
+		$("#FAN_SETTING").hide();
+		$("#msg2").hide();
+		get_dbus_data();
+	}
 	}else if(productid == "RAX80"){
 		$("#UI_SWITCH").hide();
 		$("#FAN_SETTING").show();

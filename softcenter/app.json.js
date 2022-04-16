@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-07_13:34:08", 
+            "build_date": "2022-04-16_21:04:20", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "204b49facd02a53f3143a120e9a6834c", 
+            "md5": "5459a1d68ad6d86733e1d7dd469e2daf", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "4.8"
+            "version": "4.9"
         }, 
         {
             "author": "囍冯总囍", 
