@@ -7,6 +7,56 @@ LOG_FILE=/tmp/upload/rog_log.txt
 # 具有ROG的插件： acme aria2 cfddns ddnsto easyexplorer fastd1ck frpc koolproxy mdial qiaodao rog serverchan softcenter shadowsocks
 # 无ROG的插件： ddnspod kms shellinabox ssid ssserver swap
 
+get_ui_type(){
+	# default value
+	[ "${MODEL}" == "RT-AC86U" ] && local ROG_RTAC86U=0
+	[ "${MODEL}" == "GT-AC2900" ] && local ROG_GTAC2900=1
+	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
+	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
+	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
+	[ "${MODEL}" == "GT-AX6000" ] && local ROG_GTAX6000=1
+	local KS_TAG=$(nvram get extendno|grep koolshare)
+	local EXT_NU=$(nvram get extendno)
+	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
+	local BUILDNO=$(nvram get buildno)
+	[ -z "${EXT_NU}" ] && EXT_NU="0" 
+	# RT-AC86U
+	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
+		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
+		ROG_RTAC86U=1
+	fi
+	# GT-AC2900
+	if [ "${MODEL}" == "GT-AC2900" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
+		# GT-AC2900从386.1开始已经支持梅林固件，其UI是ASUSWRT
+		ROG_GTAC2900=0
+	fi
+	# GT-AX11000
+	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
+		# GT-AX11000从386.2开始已经支持梅林固件，其UI是ASUSWRT
+		ROG_GTAX11000=0
+	fi
+	# GT-AXE11000
+	if [ "${MODEL}" == "GT-AXE11000" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
+		# GT-AXE11000从386.5开始已经支持梅林固件，其UI是ASUSWRT
+		ROG_GTAXE11000=0
+	fi
+	# GT-AX6000
+	if [ "${MODEL}" == "GT-AX6000" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
+		# GT-AXE11000从386.5开始已经支持梅林固件，其UI是ASUSWRT
+		ROG_GTAX6000=0
+	fi
+	# ROG UI
+	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
+		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000官改版本， GT-AX6000官改版本：骚红皮肤
+		UI_TYPE="ROG"
+	fi
+	# TUF UI
+	if [ "${MODEL%-*}" == "TUF" ];then
+		# 官改固件，橙色皮肤
+		UI_TYPE="TUF"
+	fi
+}
+
 switch_ui(){
 	WGET="wget -4 --no-check-certificate --quiet --timeout=15"
 	softcenter_app_url="https://rogsoft.ddnsto.com/softcenter/app.json.js"
@@ -68,6 +118,11 @@ switch_ui(){
 	
 	[ "$rog_ui_flag" == "1" ] && download_ext_ui ${type}
 	apply_ui
+
+	# for koolcenter
+	get_ui_type
+	nvram set sc_skin=${UI_TYPE}
+	
 	echo_date "Rog风格皮肤切换完毕，请使用ctrl + F5强制刷新网页！"
 }
 
@@ -197,7 +252,7 @@ case $2 in
 	rm -rf $LOG_FILE
 	touch $LOG_FILE
 	http_response "$1"
-	switch_ui $3 | tee -a $LOG_FILE
+	switch_ui $3 | tee -a $LOG_FILE	
 	echo XU6J03M6 | tee -a $LOG_FILE
 	;;
 3)

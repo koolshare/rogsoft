@@ -127,12 +127,7 @@ function show_ui_switch(){
 			$("#FAN_SETTING").hide();
 			$("#msg2").hide();
 		}
-	}else if(productid == "GT-AC2900"){
-		$("#UI_SWITCH").show();
-		$("#FAN_SETTING").hide();
-		$("#msg2").hide();
-		get_dbus_data();
-	}else if(productid == "GT-AX11000"){
+	}else if(productid == "GT-AX11000" || productid == "GT-AX6000" || productid == "GT-AC2900"){
 		$("#UI_SWITCH").show();
 		$("#FAN_SETTING").hide();
 		$("#msg2").hide();
