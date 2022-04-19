@@ -23,20 +23,54 @@
 <script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
-.rog_btn {
+#app[skin=ASUSWRT] .rog_btn {
 	border: 1px solid #222;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
 	border-radius: 5px 5px 5px 5px;
 	width:14%;
 }
-.rog_btn:hover {
+#app[skin=ASUSWRT] .rog_btn:hover {
 	border: 1px solid #222;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=ROG] .rog_btn {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=ROG] .rog_btn:hover {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=TUF] .rog_btn {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #92650F  0%, #74500b 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=TUF] .rog_btn:hover {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #c58813  0%, #92650F 100%);
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -87,6 +121,7 @@ var params_inp = ['rog_fan_level'];
 
 function init() {
 	show_menu(menu_hook);
+	set_skin();
 	var current_url = window.location.href;
 	var net_address = current_url.split("/Module")[0];
 	var port = net_address.split(":")[2];
@@ -104,6 +139,13 @@ function init() {
 	showbootTime();
 	showclock();
 	show_ui_switch();
+}
+
+function set_skin(){
+	var SKN = '<% nvram_get("buildno"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
 }
 
 function show_ui_switch(){
@@ -437,7 +479,11 @@ function get_log(action){
 			setTimeout("get_log(" + action + ");", 200);
 			retArea.value = response.replace("XU6J03M6", " ");
 			retArea.scrollTop = retArea.scrollHeight;
-		}
+		},error: function(XmlHttpRequest, textStatus, errorThrown){
+			console.log(XmlHttpRequest.responseText);
+			E("log_content3").value = "没有日志，请关闭窗口！"
+			E("ok_button").style.display = "";
+		},
 	});
 }
 
@@ -487,6 +533,7 @@ function menu_hook(title, tab) {
 					<table width="98%" border="0" align="left" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="left" valign="top">
+								<div id="app" skin=>
 								<table width="760px" border="0" cellpadding="5" cellspacing="0" bordercolor="#6b8fa3" class="FormTitle" id="FormTitle">
 									<tr>
 										<td bgcolor="#4D595D" colspan="3" valign="top">
@@ -615,6 +662,7 @@ function menu_hook(title, tab) {
 										</td>
 									</tr>
 								</table>
+								</div>
 							</td>
 						</tr>
 					</table>
