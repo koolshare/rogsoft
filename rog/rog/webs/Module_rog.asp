@@ -118,7 +118,6 @@ for (i = 0; i < array_size; i++) {
 }
 var params_chk = ['rog_ui_flag'];
 var params_inp = ['rog_fan_level'];
-
 function init() {
 	show_menu(menu_hook);
 	set_skin();
@@ -128,7 +127,6 @@ function init() {
 	//console.log(port);
 	if(port && port != "80" && asus == "1"){
 		$("#rog_main").hide();
-		$("#msg2").hide();
 		$(".SimpleNote").hide();
 		$('#warn_msg_1').html('<h1><font color="#FF6600">哦豁！</font></h1><h2>目前<font color="#3399FF">华硕官方固件 / 梅林原版固件</font>安装的插件在https下暂时不可用~<h2>建议先使用http访问路由器后台，以便使用插件。</h2><h2>你也可以关注 <a href="https://koolshare.cn"><font color="#00CC66">https://koolshare.cn</font></a> 论坛，看下插件是否更新了https下能使用的版本！</h2>');
 		$("#warn_msg_1").show();
@@ -138,54 +136,22 @@ function init() {
 	get_temperature();
 	showbootTime();
 	showclock();
-	show_ui_switch();
+	fan_ctrl();
 }
-
 function set_skin(){
-	var SKN = '<% nvram_get("buildno"); %>';
+	var SKN = '<% nvram_get("sc_skin"); %>';
 	if(SKN){
 		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
 	}
 }
-
-function show_ui_switch(){
-	var BLD = '<% nvram_get("buildno"); %>';
-	var EXT = '<% nvram_get("extendno"); %>';
-	if(productid == "RT-AC86U"){
-		if (EXT.indexOf('koolshare') != -1){
-			EXT_1 = EXT.match(/(\S*)_/)[1];
-			if(EXT_1 < "81918" && BLD != "386"){
-				$("#UI_SWITCH").show();
-				$("#FAN_SETTING").hide();
-				$("#msg2").show();
-				get_dbus_data();
-			}else{
-				$("#UI_SWITCH").hide();
-				$("#FAN_SETTING").hide();
-				$("#msg2").hide();
-			}
-		}else{
-			$("#UI_SWITCH").hide();
-			$("#FAN_SETTING").hide();
-			$("#msg2").hide();
-		}
-	}else if(productid == "GT-AX11000" || productid == "GT-AX6000" || productid == "GT-AC2900"){
-		$("#UI_SWITCH").show();
-		$("#FAN_SETTING").hide();
-		$("#msg2").hide();
-		get_dbus_data();
-	}else if(productid == "RAX80"){
-		$("#UI_SWITCH").hide();
+function fan_ctrl(){
+	if(productid == "RAX80"){
 		$("#FAN_SETTING").show();
-		$("#msg2").hide();
 		get_dbus_data();
 	}else{
-		$("#UI_SWITCH").hide();
 		$("#FAN_SETTING").hide();
-		$("#msg2").hide();
 	}
 }
-
 function get_dbus_data(){
 	$.ajax({
 		type: "GET",
@@ -198,7 +164,6 @@ function get_dbus_data(){
 		}
 	});
 }
-
 function conf2obj(){
 	for (var i = 0; i < params_chk.length; i++) {
 		if(dbus[params_chk[i]]){
@@ -211,7 +176,6 @@ function conf2obj(){
 		}
 	}
 }
-
 function get_temperature(){
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "rog_status.sh", "params":[2], "fields": ""};
@@ -239,7 +203,6 @@ function get_temperature(){
 		}
 	});
 }
-
 function render_RAM(total, free, used) {
 	var used_percentage = total_MB = free_MB = used_MB = 0;
 	total_MB = Math.round(total / 1024);
@@ -274,7 +237,6 @@ function render_CPU(cpu_info_new) {
 		cpu_info_old[i].usage = cpu_info_new["cpu" + i].usage;
 	}
 }
-
 function detect_CPU_RAM() {
 	if (parent.isIE8) {
 		require(['/require/modules/makeRequest.js'], function(makeRequest) {
@@ -297,7 +259,6 @@ function detect_CPU_RAM() {
 		});
 	}
 }
-
 function flush_ram(){
 	E("ram_flush").disabled=true;
 	var id = parseInt(Math.random() * 100000000);
@@ -313,7 +274,6 @@ function flush_ram(){
 		}
 	});
 }
-
 function showbootTime() {
 	Days = Math.floor(boottime / (60 * 60 * 24));
 	Hours = Math.floor((boottime / 3600) % 24);
@@ -326,15 +286,12 @@ function showbootTime() {
 	boottime += 1;
 	setTimeout("showbootTime()", 1000);
 }
-
 function fix_nu(num, length) {
 	return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
 }
-
 Date.prototype.toLocaleString = function() {
 	return this.getFullYear() + "年 " + fix_nu((this.getMonth() + 1), 2) + "月" + fix_nu(this.getDate(), 2) + "日 " + fix_nu(this.getHours(), 2) + ":" + fix_nu(this.getMinutes(), 2) + ":" + fix_nu(this.getSeconds(), 2);
 };
-
 function showclock() {
     var time = new Date(systime_millsec);//获取当前时间
     E("rog_time").innerHTML = time.toLocaleString();
@@ -342,106 +299,6 @@ function showclock() {
         time = new Date(time.valueOf() + 1000);
         E("rog_time").innerHTML = time.toLocaleString();
     }, 1000);
-}
-
-function showROGLoadingBar(action){
-	if(window.scrollTo)
-		window.scrollTo(0,0);
-
-	disableCheckChangedStatus();
-	
-	htmlbodyforIE = document.getElementsByTagName("html");  //this both for IE&FF, use "html" but not "body" because <!DOCTYPE html PUBLIC.......>
-	htmlbodyforIE[0].style.overflow = "hidden";	  //hidden the Y-scrollbar for preventing from user scroll it.
-	
-	winW_H();
-
-	var blockmarginTop;
-	var blockmarginLeft;
-	if (window.innerWidth)
-		winWidth = window.innerWidth;
-	else if ((document.body) && (document.body.clientWidth))
-		winWidth = document.body.clientWidth;
-	
-	if (window.innerHeight)
-		winHeight = window.innerHeight;
-	else if ((document.body) && (document.body.clientHeight))
-		winHeight = document.body.clientHeight;
-
-	if (document.documentElement  && document.documentElement.clientHeight && document.documentElement.clientWidth){
-		winHeight = document.documentElement.clientHeight;
-		winWidth = document.documentElement.clientWidth;
-	}
-
-	if(winWidth >1050){
-	
-		winPadding = (winWidth-1050)/2;	
-		winWidth = 1105;
-		blockmarginLeft= (winWidth*0.3)+winPadding-150;
-	}
-	else if(winWidth <=1050){
-		blockmarginLeft= (winWidth)*0.3+document.body.scrollLeft-160;
-
-	}
-	
-	if(winHeight >660)
-		winHeight = 660;
-	
-	blockmarginTop= winHeight*0.3-140		
-	E("loadingBarBlock").style.marginTop = blockmarginTop+"px";
-	E("loadingBarBlock").style.marginLeft = blockmarginLeft+"px";
-	E("loadingBarBlock").style.width = 770+"px";
-	E("LoadingBar").style.width = winW+"px";
-	E("LoadingBar").style.height = winH+"px";
-	LoadingROGProgress(action);
-}
-
-function LoadingROGProgress(action){
-	E("LoadingBar").style.visibility = "visible";
-	$("#loading_block2").html("<font color='#ffcc00'>----------------------------------------------------------------------------------------------------------------------------------");
-	if (action == "2"){
-		E("loading_block3").innerHTML = "ROG插件日志";
-	}else{
-		E("loading_block3").innerHTML = "切皮肤中 ...";
-	}
-}
-
-function hideROGLoadingBar(){
-	x = -1;
-	E("LoadingBar").style.visibility = "hidden";
-	if (refresh_flag == "1"){
-		refreshpage();
-	}
-}
-
-var x = 6;
-function count_down_close() {
-	if (x == "0") {
-		hideROGLoadingBar();
-	}
-	if (x < 0) {
-		E("ok_button1").value = "手动关闭"
-		return false;
-	}
-	E("ok_button1").value = "自动关闭（" + x + "）"
-		--x;
-	setTimeout("count_down_close();", 1000);
-}
-
-function switch_ui(action){
-	var dbus = {};
-	dbus["rog_ui_flag"] = E("rog_ui_flag").checked ? '1' : '0';
-	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "rog_config.sh", "params":["2", action], "fields": dbus};
-	$.ajax({
-		type: "POST",
-		cache:false,
-		url: "/_api/",
-		data: JSON.stringify(postData),
-		dataType: "json",
-		success: function(response) {
-			get_log(1);
-		}
-	});
 }
 
 function apply_fan(action){
@@ -457,43 +314,6 @@ function apply_fan(action){
 		dataType: "json"
 	});
 }
-
-function get_log(action){
-	showROGLoadingBar(action);
-	$.ajax({
-		url: '/_temp/rog_log.txt',
-		type: 'GET',
-		cache:false,
-		dataType: 'text',
-		success: function(response) {
-			var retArea = E("log_content3");
-			if (response.search("XU6J03M6") != -1) {
-				retArea.value = response.replace("XU6J03M6", " ");
-				E("ok_button").style.display = "";
-				retArea.scrollTop = retArea.scrollHeight;
-				if (action == "1"){
-					count_down_close();
-				}
-				return true;
-			}
-			setTimeout("get_log(" + action + ");", 200);
-			retArea.value = response.replace("XU6J03M6", " ");
-			retArea.scrollTop = retArea.scrollHeight;
-		},error: function(XmlHttpRequest, textStatus, errorThrown){
-			console.log(XmlHttpRequest.responseText);
-			E("log_content3").value = "没有日志，请关闭窗口！"
-			E("ok_button").style.display = "";
-		},
-	});
-}
-
-function show_log() {
-	x = -1;
-	refresh_flag=2;
-	E("ok_button1").value = "关闭日志";
-	get_log(2);
-}
-
 function menu_hook(title, tab) {
 	tabtitle[tabtitle.length - 1] = new Array("", "ROG tools");
 	tablink[tablink.length - 1] = new Array("", "Module_rog.asp");
@@ -501,7 +321,7 @@ function menu_hook(title, tab) {
 
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin="ASUSWRT" onload="init();">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<div id="LoadingBar" class="popup_bar_bg">
@@ -533,7 +353,6 @@ function menu_hook(title, tab) {
 					<table width="98%" border="0" align="left" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="left" valign="top">
-								<div id="app" skin=>
 								<table width="760px" border="0" cellpadding="5" cellspacing="0" bordercolor="#6b8fa3" class="FormTitle" id="FormTitle">
 									<tr>
 										<td bgcolor="#4D595D" colspan="3" valign="top">
@@ -615,18 +434,8 @@ function menu_hook(title, tab) {
 															</table>
 														</div>
 														<div style="margin-top: -29px;margin-left: 280px;">
-														<!--<a style="cursor:pointer;" id="ram_flush" class="rog_btn" onclick="flush_ram()" disabled=false >一键释放内存</a>-->
 														<button id="ram_flush" onclick="flush_ram();" class="rog_btn" style="width:110px;cursor:pointer;">一键释放内存</button>
 														</div>
-													</td>
-												</tr>
-												<tr id="UI_SWITCH" style="display:none;">
-													<th>切换皮肤</th>
-													<td>
-														<input type="checkbox" id="rog_ui_flag" name="rog_ui_flag" >包括下架插件
-														<a style="cursor:pointer;margin-left: 10px;" class="rog_btn" onclick="switch_ui(1)" >Rog风格</a>
-														<a style="cursor:pointer;" class="rog_btn" onclick="switch_ui(2)" >Asuswrt风格</a>
-														<a style="cursor:pointer;" class="rog_btn" onclick="show_log()" >查看日志</a>
 													</td>
 												</tr>
 												<tr id="FAN_SETTING" style="display:none;">
@@ -644,25 +453,16 @@ function menu_hook(title, tab) {
 														<a style="cursor:pointer;margin-left: 10px;" class="rog_btn" onclick="apply_fan()" >应用风扇档位</a>
 													</td>
 												</tr>
-												<!--<tr>
-													<th>性能测试</th>
-													<td><span id="rog_benchmark">上次得分：9170.86</span><a style="margin-left: 20px;" style="cursor:pointer;" class="rog_btn" onclick="open_user_rule()" >开始测试</a></td>
-												</tr>-->
 											</table>
 											<div id="warning" style="font-size:14px;margin:20px auto;"></div>
-											<!--<div class="apply_gen">
-												<input class="button_gen" id="cmdBtn" onClick="save();" type="button" value="提交" />
-											</div>-->
 											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<li id="msg1">本插件支持温度显示等一些简单功能，用以弥补官改固件没有温度显示的遗憾。</li>
-												<li id="msg2" style="display:none;">RT-AC86U固件支持【软件中心】和【插件】在Rog风格和Asuswrt风格皮肤之间的切换。</li>
 											</div>
 										</td>
 									</tr>
 								</table>
-								</div>
 							</td>
 						</tr>
 					</table>

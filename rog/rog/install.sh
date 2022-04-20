@@ -2,7 +2,6 @@
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 MODEL=
-UI_TYPE=ASUSWRT
 FW_TYPE_CODE=
 FW_TYPE_NAME=
 DIR=$(cd $(dirname $0); pwd)
@@ -48,15 +47,22 @@ platform_test(){
 	fi
 }
 
-get_ui_type(){
-	UI_TYPE=ASUSWRT
-	ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
-	TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
+set_skin(){
+	local UI_TYPE=ASUSWRT
+	local SC_SKIN=$(nvram get sc_skin)
+	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
+	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
 	if [ -n "${ROG_FLAG}" ];then
 		UI_TYPE="ROG"
 	fi
 	if [ -n "${TUF_FLAG}" ];then
 		UI_TYPE="TUF"
+	fi
+	
+	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
+		echo_date "安装${UI_TYPE}皮肤！"
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
 	fi
 }
 
@@ -76,13 +82,6 @@ exit_install(){
 			exit 0
 			;;
 	esac
-}
-
-install_ui(){
-	get_ui_type
-	echo_date "安装${UI_TYPE}皮肤！"
-	nvram set sc_skin="${UI_TYPE}"
-	nvram commit
 }
 
 install_now(){
@@ -117,7 +116,7 @@ install_now(){
 	chmod 755 /koolshare/init.d/V50rog.sh >/dev/null 2>&1
 
 	# intall different UI
-	install_ui
+	set_skin
 
 	# dbus value
 	echo_date "设置插件默认参数..."
