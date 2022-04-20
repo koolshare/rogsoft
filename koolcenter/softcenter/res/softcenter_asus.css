@@ -38,7 +38,6 @@
 .SimpleNote {
 	padding:5px 10px;
 }
-
 .IE8HACK{
 	display: none \9;
 }
@@ -261,7 +260,6 @@
 #app[skin=ROG] #IconContainer {
 	border: 1px solid #680516;
 }
-
 #app[skin=ROG] .ks_btn {
 	border: 1px solid #222;
 	font-size:10pt;
@@ -306,7 +304,6 @@
 	background:#475A5F;
 	background:transparent;
 }
-
 #app[skin=ROG] [bgcolor="#4D595D"]{
 	background: rgba(0, 0, 0, 0.3);
 }
@@ -392,7 +389,6 @@
 #app[skin=TUF] #IconContainer {
 	border: 1px solid #D0982C;
 }
-
 #app[skin=TUF] .ks_btn {
 	border: 1px solid #222;
 	font-size:10pt;
@@ -437,7 +433,6 @@
 	background:#475A5F;
 	background:transparent;
 }
-
 #app[skin=TUF] [bgcolor="#4D595D"]{
 	background: rgba(0, 0, 0, 0.3);
 }
