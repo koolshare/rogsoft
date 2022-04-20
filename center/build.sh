@@ -27,6 +27,8 @@ cp $DIR/../softcenter/softcenter/webs/Module_Softcenter.asp $DIR/center/webs/Mod
 cp $DIR/../softcenter/softcenter/webs/Module_Softsetting.asp $DIR/center/webs/Module_Softsetting.asp
 cp $DIR/../softcenter/softcenter/.soft_ver $DIR/center/.soft_ver_old
 
+cp $DIR/../softcenter/softcenter/res/softcenter_*.css $DIR/center/res/
+
 # now include build_base.sh
 . $DIR/../softcenter/build_base.sh
 

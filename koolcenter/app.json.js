@@ -30,12 +30,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-20_17:20:43", 
+            "build_date": "2022-04-20_23:01:02", 
             "changelog": "", 
             "description": "koolcenter/softcenter 一键来回切换！", 
             "home_url": "Module_center.asp", 
             "link": "", 
-            "md5": "0fac5f0dba0836e7318ef343115fec1c", 
+            "md5": "a76faff076cf346d32c3d7a09ac079ce", 
             "name": "center", 
             "tags": "辅助 工具", 
             "tar_url": "center/center.tar.gz", 
@@ -382,17 +382,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-05_23:03:38", 
+            "build_date": "2022-04-20_22:16:19", 
             "changelog": "", 
             "description": "使用U盘轻松挂载jffs", 
             "home_url": "Module_usb2jffs.asp", 
             "link": "", 
-            "md5": "4e2e417d5222112c258bea96163d625f", 
+            "md5": "1c88e73a224c4ad0ca73273e32c2885a", 
             "name": "usb2jffs", 
             "tags": "USB", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
             "title": "USB2JFFS", 
-            "version": "2.0.0"
+            "version": "2.1.1"
         }, 
         {
             "author": "sadog", 
@@ -426,7 +426,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "5e8d14e8f23436910e14c3d7ed25ea97", 
+    "md5": "ec017ea99273128d4c40e716c882e080", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
     "version": "1.9.1.7"
 }

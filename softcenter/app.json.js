@@ -30,12 +30,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-20_17:20:43", 
+            "build_date": "2022-04-20_23:01:02", 
             "changelog": "", 
             "description": "koolcenter/softcenter 一键来回切换！", 
             "home_url": "Module_center.asp", 
             "link": "", 
-            "md5": "0fac5f0dba0836e7318ef343115fec1c", 
+            "md5": "a76faff076cf346d32c3d7a09ac079ce", 
             "name": "center", 
             "tags": "辅助 工具", 
             "tar_url": "center/center.tar.gz", 
@@ -426,7 +426,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "6821d618b7e5cf74809de541ef17cc6b", 
+    "md5": "cb04f26af5f692814e64360ffe546c55", 
     "tar_url": "softcenter/softcenter.tar.gz", 
-    "version": "1.8.6"
+    "version": "1.8.7"
 }

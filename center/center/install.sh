@@ -39,48 +39,41 @@ get_fw_type() {
 	fi
 }
 
-get_ui_type(){
-	# default value
-	[ "${MODEL}" == "RT-AC86U" ] && local ROG_RTAC86U=0
-	[ "${MODEL}" == "GT-AC2900" ] && local ROG_GTAC2900=1
-	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
-	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
-	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
-	[ "${MODEL}" == "GT-AX6000" ] && local ROG_GTAX6000=1
-	local KS_TAG=$(nvram get extendno|grep koolshare)
-	local EXT_NU=$(nvram get extendno)
-	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
-	local BUILDNO=$(nvram get buildno)
-	[ -z "${EXT_NU}" ] && EXT_NU="0" 
-	# RT-AC86U
-	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
-		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
-		ROG_RTAC86U=1
-	fi
-	# GT-AC2900
-	if [ "${MODEL}" == "GT-AC2900" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AC2900从386.1开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAC2900=0
-	fi
-	# GT-AX11000
-	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AX11000从386.2开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAX11000=0
-	fi
-	# GT-AXE11000
-	if [ "${MODEL}" == "GT-AXE11000" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AXE11000从386.5开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAXE11000=0
-	fi
-	# ROG UI
-	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
-		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000官改版本， GT-AX6000 骚红皮肤
+set_skin(){
+	# new nethod: use nvram value to set skin
+	local UI_TYPE=ASUSWRT
+	local SC_SKIN=$(nvram get sc_skin)
+	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
+	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
+	if [ -n "${ROG_FLAG}" ];then
 		UI_TYPE="ROG"
 	fi
-	# TUF UI
-	if [ "${MODEL}" == "TUF-AX3000" ];then
-		# 官改固件，橙色皮肤
+	if [ -n "${TUF_FLAG}" ];then
 		UI_TYPE="TUF"
+	fi
+	
+	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
+	fi
+
+	# compatibile
+	if [ -f "/koolshare/res/softcenter_asus.css" -a -f "/koolshare/res/softcenter_rog.css" -a -f "/koolshare/res/softcenter_tuf.css" ]
+		local MD5_CSS=$(md5sum /koolshare/res/softcenter.css|awk '{print $1}')
+		local MD5_WRT=$(md5sum /koolshare/res/softcenter_asus.css|awk '{print $1}')
+		local MD5_ROG=$(md5sum /koolshare/res/softcenter_rog.css|awk '{print $1}')
+		local MD5_TUF=$(md5sum /koolshare/res/softcenter_tuf.css|awk '{print $1}')
+		if [ "${UI_TYPE}" == "ASUSWRT" -a "${MD5_CSS}" != "${MD5_WRT}" ];then
+			cp -rf /koolshare/res/softcenter_asus.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "ROG" -a "${MD5_CSS}" != "${MD5_ROG}" ];then
+			cp -rf /koolshare/res/softcenter_rog.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "TUF" -a "${MD5_CSS}" != "${MD5_TUF}" ];then
+			cp -rf /koolshare/res/softcenter_tuf.css /koolshare/res/softcenter.css
+		fi
 	fi
 }
 
@@ -161,6 +154,7 @@ install_now(){
 		# koolcenter is use, install softcenter
 		cp -rf /tmp/${module}/webs/Module_Softcenter_old.asp /koolshare/webs/
 		cp -rf /tmp/${module}/webs/Module_Softsetting.asp /koolshare/webs/
+		cp -rf /tmp/${module}/res/softcenter_*.css /koolshare/res/
 		cp -rf /tmp/${module}/.soft_ver_old /koolshare/
 	else
 		# softcenter is use, install koolcenter
@@ -174,6 +168,9 @@ install_now(){
 	
 	# Permissions
 	chmod 755 /koolshare/scripts/*.sh >/dev/null 2>&1
+
+	# skin
+	set_skin
 
 	# dbus value
 	echo_date "设置插件默认参数..."

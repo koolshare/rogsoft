@@ -48,7 +48,8 @@ get_fw_type() {
 }	
 
 set_skin(){
-	UI_TYPE=ASUSWRT
+	# new nethod: use nvram value to set skin
+	local UI_TYPE=ASUSWRT
 	local SC_SKIN=$(nvram get sc_skin)
 	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
 	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
@@ -62,6 +63,25 @@ set_skin(){
 	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
 		nvram set sc_skin="${UI_TYPE}"
 		nvram commit
+	fi
+
+	# compatibile
+	if [ -f "/koolshare/res/softcenter_asus.css" -a -f "/koolshare/res/softcenter_rog.css" -a -f "/koolshare/res/softcenter_tuf.css" ]
+		local MD5_CSS=$(md5sum /koolshare/res/softcenter.css|awk '{print $1}')
+		local MD5_WRT=$(md5sum /koolshare/res/softcenter_asus.css|awk '{print $1}')
+		local MD5_ROG=$(md5sum /koolshare/res/softcenter_rog.css|awk '{print $1}')
+		local MD5_TUF=$(md5sum /koolshare/res/softcenter_tuf.css|awk '{print $1}')
+		if [ "${UI_TYPE}" == "ASUSWRT" -a "${MD5_CSS}" != "${MD5_WRT}" ];then
+			cp -rf /koolshare/res/softcenter_asus.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "ROG" -a "${MD5_CSS}" != "${MD5_ROG}" ];then
+			cp -rf /koolshare/res/softcenter_rog.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "TUF" -a "${MD5_CSS}" != "${MD5_TUF}" ];then
+			cp -rf /koolshare/res/softcenter_tuf.css /koolshare/res/softcenter.css
+		fi
 	fi
 }
 
