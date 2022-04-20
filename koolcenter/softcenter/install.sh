@@ -66,7 +66,7 @@ set_skin(){
 	fi
 
 	# compatibile
-	if [ -f "/koolshare/res/softcenter_asus.css" -a -f "/koolshare/res/softcenter_rog.css" -a -f "/koolshare/res/softcenter_tuf.css" ]
+	if [ -f "/koolshare/res/softcenter_asus.css" -a -f "/koolshare/res/softcenter_rog.css" -a -f "/koolshare/res/softcenter_tuf.css" ];then
 		local MD5_CSS=$(md5sum /koolshare/res/softcenter.css|awk '{print $1}')
 		local MD5_WRT=$(md5sum /koolshare/res/softcenter_asus.css|awk '{print $1}')
 		local MD5_ROG=$(md5sum /koolshare/res/softcenter_rog.css|awk '{print $1}')
