@@ -16,17 +16,17 @@
         }, 
         {
             "author": "kyrios, sadog", 
-            "build_date": "2021-08-20_22:31:29", 
+            "build_date": "2022-03-29_10:45:17", 
             "changelog": "", 
             "description": "aliddns", 
             "home_url": "Module_aliddns.asp", 
             "link": "", 
-            "md5": "d890bac85643e4ae9dce6e830ccb55e4", 
+            "md5": "20dec7108c4a49d4c3bb4e2e4b1af4e1", 
             "name": "aliddns", 
             "tags": "DDNS", 
             "tar_url": "aliddns/aliddns.tar.gz", 
             "title": "阿里DDNS", 
-            "version": "2.1"
+            "version": "2.2"
         }, 
         {
             "author": "sadog", 
@@ -58,19 +58,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-12-09_20:51:50", 
+            "build_date": "2022-03-28_17:36:37", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "17c59b16c47b6d168c14d201d4819a35", 
+            "md5": "4186e30088deb1fcc0474af3c3e2251c", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.3"
+            "version": "3.5"
         }, 
         {
             "author": "freexiaoyao", 
@@ -228,17 +228,17 @@
         }, 
         {
             "author": "囍冯总囍", 
-            "build_date": "2021-08-20_22:31:28", 
+            "build_date": "2022-03-03_14:10:21", 
             "changelog": "", 
             "description": "通过pushplus将路由器状态推送到微信上", 
             "home_url": "Module_pushplus.asp", 
             "link": "", 
-            "md5": "b7555108eb5881fb2e8d7f8d0026698f", 
+            "md5": "21bfc84132a7e45719bdf974a28dfd31", 
             "name": "pushplus", 
             "tags": "推送", 
             "tar_url": "pushplus/pushplus.tar.gz", 
             "title": "pushplus全能推送", 
-            "version": "0.4"
+            "version": "0.5"
         }, 
         {
             "author": "Carseason", 
@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-02-27_14:49:19", 
+            "build_date": "2022-04-19_09:41:11", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "7bbf45fca1f58a63213bb66dcf55f88e", 
+            "md5": "95b734df4782a85bdea4402ef62f0dc9", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "4.4"
+            "version": "5.1"
         }, 
         {
             "author": "囍冯总囍", 
@@ -396,37 +396,37 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-02-27_20:00:49", 
+            "build_date": "2022-03-29_14:22:32", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "14bd1e0a01d63131951fdba338821219", 
+            "md5": "6bcb9685cafabd490a49c975f983a12c", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.5"
+            "version": "4.6"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:31:29", 
+            "build_date": "2022-03-17_21:41:35", 
             "changelog": "", 
             "description": "ZeroTier 内网穿透", 
             "home_url": "Module_zerotier.asp", 
             "link": "", 
-            "md5": "6083f44d6a2bb249ab516f770074fe9c", 
+            "md5": "f6dabd89c3ff3fb4a59c96e4ad25e158", 
             "name": "zerotier", 
             "tags": "穿透 VPN", 
             "tar_url": "zerotier/zerotier.tar.gz", 
             "title": "ZeroTier", 
-            "version": "1.3.8"
+            "version": "1.3.9"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "93cba83795ed09ea25781d69f92a0b50", 
+    "md5": "29b2933e4e52c232d7354ccfec66425e", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.1.4"
+    "version": "1.9.1.6"
 }

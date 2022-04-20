@@ -553,6 +553,7 @@ function init(cb) {
 $(function() {
 	//梅林要求用这个函数来显示左测菜单
 	show_menu(menu_hook);
+	set_skin();
 	//pop_111();
 	$.ajax({
 		type: "GET",
@@ -644,6 +645,12 @@ $(function() {
 		}
 	});
 });
+function set_skin(){
+	var SKN = '<% nvram_get("sc_skin"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
+}
 function menu_hook() {
 	tabtitle[tabtitle.length - 1] = new Array("", "软件中心", "离线安装");
 	tablink[tablink.length - 1] = new Array("", "Module_Softcenter.asp", "Module_Softsetting.asp");
@@ -838,7 +845,7 @@ function ks_online() {
 }
 </script>
 </head>
-<body>
+<body id="app" skin="ASUSWRT">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<div id="softcenter_shade_pannel" class="popup_bar_bg_ks">

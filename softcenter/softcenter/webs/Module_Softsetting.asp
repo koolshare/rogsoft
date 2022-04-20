@@ -32,9 +32,16 @@ String.prototype.myReplace = function(f, e){
 	var reg = new RegExp(f, "g"); 
 	return this.replace(reg, e); 
 }
-function init(menu_hook) {
-	show_menu();
+function init() {
+	show_menu(menu_hook);
+	set_skin();
 	get_log();
+}
+function set_skin(){
+	var SKN = '<% nvram_get("sc_skin"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
 }
 function menu_hook() {
 	tabtitle[tabtitle.length - 1] = new Array("", "软件中心", "离线安装");
@@ -132,7 +139,7 @@ function get_log(s) {
 }
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin="ASUSWRT" onload="init();">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<table class="content" align="center" cellpadding="0" cellspacing="0">

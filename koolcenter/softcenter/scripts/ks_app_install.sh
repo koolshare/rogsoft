@@ -21,89 +21,22 @@ eval $(dbus export softcenter_installing_)
 LOG_FILE=/tmp/upload/soft_install_log.txt
 LOG_FILE_BACKUP=/tmp/upload/soft_install_log_backup.txt
 URL_SPLIT="/"
-UI_TYPE=ASUSWRT
 
-get_model(){
-	local ODMPID=$(nvram get odmpid)
-	local PRODUCTID=$(nvram get productid)
-	if [ -n "${ODMPID}" ];then
-		MODEL="${ODMPID}"
-	else
-		MODEL="${PRODUCTID}"
-	fi
-	echo_date "当前机型：$MODEL"
-}
-
-get_fw_type() {
-	local KS_TAG=$(nvram get extendno|grep koolshare)
-	if [ -d "/koolshare" ];then
-		if [ -n "${KS_TAG}" ];then
-			FW_TYPE_CODE="2"
-			FW_TYPE_NAME="koolshare官改固件"
-		else
-			FW_TYPE_CODE="4"
-			FW_TYPE_NAME="koolshare梅林改版固件"
-		fi
-	else
-		if [ "$(uname -o|grep Merlin)" ];then
-			FW_TYPE_CODE="3"
-			FW_TYPE_NAME="梅林原版固件"
-		else
-			FW_TYPE_CODE="1"
-			FW_TYPE_NAME="华硕官方固件"
-		fi
-	fi
-	echo_date "当前固件：$FW_TYPE_NAME"
-}	
-
-get_ui_type(){
-	# 获取机型
-	get_model
-
-	# 获取固件类型
-	get_fw_type
-
-	# 参数获取
-	[ "${MODEL}" == "RT-AC86U" ] && local ROG_RTAC86U=0
-	[ "${MODEL}" == "GT-AC2900" ] && local ROG_GTAC2900=1
-	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
-	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
-	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
-	[ "${MODEL}" == "GT-AX6000" ] && local ROG_GTAX6000=1
-	local KS_TAG=$(nvram get extendno|grep koolshare)
-	local EXT_NU=$(nvram get extendno)
-	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
-	local BUILDNO=$(nvram get buildno)
-	[ -z "${EXT_NU}" ] && EXT_NU="0"
-	# RT-AC86U
-	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
-		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
-		ROG_RTAC86U=1
-	fi
-	# GT-AC2900
-	if [ "${MODEL}" == "GT-AC2900" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AC2900从386.1开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAC2900=0
-	fi
-	# GT-AX11000
-	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AX11000从386.2开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAX11000=0
-	fi
-	# GT-AXE11000
-	if [ "${MODEL}" == "GT-AXE11000" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AXE11000从386.5开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAXE11000=0
-	fi
-	# ROG UI
-	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
-		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000官改版本， GT-AX6000 骚红皮肤
+set_skin(){
+	UI_TYPE=ASUSWRT
+	local SC_SKIN=$(nvram get sc_skin)
+	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
+	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
+	if [ -n "${ROG_FLAG}" ];then
 		UI_TYPE="ROG"
 	fi
-	# TUF UI
-	if [ "${MODEL%-*}" == "TUF" ];then
-		# 官改固件，橙色皮肤
+	if [ -n "${TUF_FLAG}" ];then
 		UI_TYPE="TUF"
+	fi
+	
+	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
 	fi
 }
 
@@ -358,13 +291,13 @@ install_ks_module() {
 	
 	# 软件中心提供的插件已经明确区分了平台，但是某些以module形式存在的插件还没有加校验
 	# 所以目前校验暂时在离线安装里做，避免用户装错插件，在线安装这里暂时不做校验
-	# 12. 检查.valid
+	# 12. 检查.valid，在线安装就不做检查了
 	# if [ ! -f "/tmp/${softcenter_installing_todo}/.valid" ];then
 	# 	echo_date "软件中心：插件包内未找到 .valid 校验文件！退出本次安装！"
 	# 	quit_ks_install
 	# fi
 
-	# 13. 检查.valid 字符串
+	# 13. 检查.valid 字符串，在线安装就不做检查了
 	# if [ -z "$(grep -w hnd /tmp/${softcenter_installing_todo}/.valid)" ];then
 	# 	echo_date "软件中心：该插件包不能在本平台安装！"
 	# 	quit_ks_install
@@ -376,27 +309,18 @@ install_ks_module() {
 		cp -rf /tmp/${softcenter_installing_todo}/uninstall.sh /koolshare/scripts/uninstall_${softcenter_installing_todo}.sh
 	fi
 
-	get_ui_type
+	# 15. set skin nvram value
+	set_skin
 
-	# 15. 皮肤预处理-1，目前softwarece center采用ROG文件夹方式存放皮肤
-	if [ -d /tmp/${softcenter_installing_todo}/ROG -a "${UI_TYPE}" == "ROG" ]; then
-		cp -rf /tmp/${softcenter_installing_todo}/ROG/* /tmp/${softcenter_installing_todo}/
-	fi
-	if [ -d /tmp/${softcenter_installing_todo}/ROG -a "${UI_TYPE}" == "TUF" ]; then
-		find /tmp/${softcenter_installing_todo}/ROG/ -name "*.asp" | xargs sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g'
-		find /tmp/${softcenter_installing_todo}/ROG/ -name "*.css" | xargs sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g'
-		cp -rf /tmp/${softcenter_installing_todo}/ROG/* /tmp/${softcenter_installing_todo}/
-	fi
-
-	# 16. 皮肤预处理-2，一般来说插件的install.sh里会处理，但是避免一些插件没有处理，所以安装前先处理一次
+	# 16. 一些插件并未使用nvram值sc_skin来控制插件皮肤，还是使用的老的方式，做下兼容
 	if [ "${UI_TYPE}" == "ROG" ];then
 		echo_date "为插件【${softcenter_installing_name}】安装ROG风格皮肤..."
 		sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
 	else
 		if [ "${UI_TYPE}" == "TUF" ];then
 			echo_date "为插件【${softcenter_installing_name}】安装TUF风格皮肤..."
-			sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
 			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+			sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
 		else
 			echo_date "为插件【${softcenter_installing_name}】安装ASUSWRT风格皮肤..."
 			sed -i '/rogcss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1

@@ -30,17 +30,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-01-10_21:23:15", 
+            "build_date": "2022-04-20_17:20:43", 
             "changelog": "", 
             "description": "koolcenter/softcenter 一键来回切换！", 
             "home_url": "Module_center.asp", 
             "link": "", 
-            "md5": "dd8008d269de3dfe6cbc25b218bb33ec", 
+            "md5": "0fac5f0dba0836e7318ef343115fec1c", 
             "name": "center", 
             "tags": "辅助 工具", 
             "tar_url": "center/center.tar.gz", 
             "title": "软件中心一键切换", 
-            "version": "1.5"
+            "version": "1.6"
         }, 
         {
             "author": "sadog", 
@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-18_21:40:51", 
+            "build_date": "2022-04-19_09:41:11", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "7932a0ada1311561c66d48b4658fd9dd", 
+            "md5": "95b734df4782a85bdea4402ef62f0dc9", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "5.0"
+            "version": "5.1"
         }, 
         {
             "author": "囍冯总囍", 
@@ -426,7 +426,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "ff6ec46b5b7dd5e6ecceb92a79cc1aad", 
+    "md5": "6821d618b7e5cf74809de541ef17cc6b", 
     "tar_url": "softcenter/softcenter.tar.gz", 
-    "version": "1.8.4"
+    "version": "1.8.6"
 }

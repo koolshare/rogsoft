@@ -2,81 +2,45 @@
 
 source /koolshare/scripts/base.sh
 
-get_model(){
-	local ODMPID=$(nvram get odmpid)
-	local PRODUCTID=$(nvram get productid)
-	if [ -n "${ODMPID}" ];then
-		MODEL="${ODMPID}"
-	else
-		MODEL="${PRODUCTID}"
+detect(){
+	if [ ! -d "/jffs/.koolshare" ];then
+		/usr/bin/jffsinit.sh
 	fi
+
+	chmod 755 /koolshare/bin/*
+	chmod 755 /koolshare/init.d/*
+	chmod 755 /koolshare/perp/*
+	chmod 755 /koolshare/perp/.boot/*
+	chmod 755 /koolshare/perp/.control/*
+	chmod 755 /koolshare/perp/httpdb/*
+	chmod 755 /koolshare/scripts/*
+
+	# ssh PATH environment
+	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
+	rm -rf /jffs/etc/profile >/dev/null 2>&1
+	source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
+	source_path=$(dirname $source_file)
+	if [ -n "${source_file}" -a -n "${source_path}" ];then
+		rm -rf ${source_file} >/dev/null 2>&1
+		mkdir -p ${source_path}
+		ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
+	fi
+	
+	# make some link
+	if [ ! -L "/koolshare/bin/base64_decode" -a -f "/koolshare/bin/base64_encode" ];then
+		ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
+	fi
+	if [ ! -L "/koolshare/scripts/ks_app_remove.sh" ];then
+		ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
+	fi
+	sync
 }
 
-get_fw_type() {
-	local KS_TAG=$(nvram get extendno|grep koolshare)
-	if [ -d "/koolshare" ];then
-		if [ -n "${KS_TAG}" ];then
-			FW_TYPE_CODE="2"
-			FW_TYPE_NAME="koolshare官改固件"
-		else
-			FW_TYPE_CODE="4"
-			FW_TYPE_NAME="koolshare梅林改版固件"
-		fi
-	else
-		if [ "$(uname -o|grep Merlin)" ];then
-			FW_TYPE_CODE="3"
-			FW_TYPE_NAME="梅林原版固件"
-		else
-			FW_TYPE_CODE="1"
-			FW_TYPE_NAME="华硕官方固件"
-		fi
+start_software_center(){
+	if [ -z "$(pidof skipd)" ];then
+		service start_skipd >/dev/null 2>&1
 	fi
-}
-
-get_ui_type(){
-	# default value
-	UI_TYPE=ASUSWRT
-	[ "${MODEL}" == "RT-AC86U" ] && local ROG_RTAC86U=0
-	[ "${MODEL}" == "GT-AC2900" ] && local ROG_GTAC2900=1
-	[ "${MODEL}" == "GT-AC5300" ] && local ROG_GTAC5300=1
-	[ "${MODEL}" == "GT-AX11000" ] && local ROG_GTAX11000=1
-	[ "${MODEL}" == "GT-AXE11000" ] && local ROG_GTAXE11000=1
-	[ "${MODEL}" == "GT-AX6000" ] && local ROG_GTAX6000=1
-	local KS_TAG=$(nvram get extendno|grep koolshare)
-	local EXT_NU=$(nvram get extendno)
-	local EXT_NU=$(echo ${EXT_NU%_*} | grep -Eo "^[0-9]{1,10}$")
-	local BUILDNO=$(nvram get buildno)
-	[ -z "${EXT_NU}" ] && EXT_NU="0"
-	# RT-AC86U
-	if [ -n "${KS_TAG}" -a "${MODEL}" == "RT-AC86U" -a "${EXT_NU}" -lt "81918" -a "${BUILDNO}" != "386" ];then
-		# RT-AC86U的官改固件，在384_81918之前的固件都是ROG皮肤，384_81918及其以后的固件（包括386）为ASUSWRT皮肤
-		ROG_RTAC86U=1
-	fi
-	# GT-AC2900
-	if [ "${MODEL}" == "GT-AC2900" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AC2900从386.1开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAC2900=0
-	fi
-	# GT-AX11000
-	if [ "${MODEL}" == "GT-AX11000" -o "${MODEL}" == "GT-AX11000_BO4" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AX11000从386.2开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAX11000=0
-	fi
-	# GT-AXE11000
-	if [ "${MODEL}" == "GT-AXE11000" ] && [ "${FW_TYPE_CODE}" == "3" -o "${FW_TYPE_CODE}" == "4" ];then
-		# GT-AXE11000从386.5开始已经支持梅林固件，其UI是ASUSWRT
-		ROG_GTAXE11000=0
-	fi
-	# ROG UI
-	if [ "${ROG_GTAC5300}" == "1" -o "${ROG_RTAC86U}" == "1" -o "${ROG_GTAC2900}" == "1" -o "${ROG_GTAX11000}" == "1" -o "${ROG_GTAXE11000}" == "1" -o "${ROG_GTAX6000}" == "1" ];then
-		# GT-AC5300、RT-AC86U部分版本、GT-AC2900部分版本、GT-AX11000部分版本、GT-AXE11000官改版本， GT-AX6000 骚红皮肤
-		UI_TYPE="ROG"
-	fi
-	# TUF UI
-	if [ "${MODEL%-*}" == "TUF" ];then
-		# 官改固件，橙色皮肤
-		UI_TYPE="TUF"
-	fi
+	/koolshare/perp/perp.sh start >/dev/null 2>&1
 }
 
 check_start(){
@@ -146,6 +110,9 @@ check_start(){
 		[ "$STARTCOMAND6" -gt "1" ] && sed -i '/ks-unmount.sh/d' /jffs/scripts/unmount && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
 		[ "$STARTCOMAND6" == "0" ] && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
 	fi
+
+	chmod +x /jffs/scripts/*
+	sync
 }
 
 set_premissions(){
@@ -154,38 +121,10 @@ set_premissions(){
 	chmod 755 /koolshare/scripts/* >/dev/null 2>&1
 }
 
-detect(){
-	if [ ! -d "/jffs/.koolshare" ];then
-		/usr/bin/jffsinit.sh
-	fi
-
-	chmod 755 /koolshare/bin/*
-	chmod 755 /koolshare/init.d/*
-	chmod 755 /koolshare/perp/*
-	chmod 755 /koolshare/perp/.boot/*
-	chmod 755 /koolshare/perp/.control/*
-	chmod 755 /koolshare/perp/httpdb/*
-	chmod 755 /koolshare/scripts/*
-
-	# ssh PATH environment
-	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
-	rm -rf /jffs/etc/profile >/dev/null 2>&1
-	source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
-	source_path=$(dirname /jffs/etc/profile)
-	if [ -n "${source_file}" -a -n "${source_path}" ];then
-		rm -rf ${source_file} >/dev/null 2>&1
-		mkdir -p ${source_path}
-		ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
-	fi
-	
-	# make some link
-	if [ ! -L "/koolshare/bin/base64_decode" -a -f "/koolshare/bin/base64_encode" ];then
-		ln -sf /koolshare/bin/base64_encode /koolshare/bin/base64_decode
-	fi
-	if [ ! -L "/koolshare/scripts/ks_app_remove.sh" ];then
-		ln -sf /koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_remove.sh
-	fi
-	sync
+set_value(){
+	nvram set jffs2_scripts=1
+	nvram unset rc_service
+	nvram commit
 }
 
 set_url(){
@@ -205,26 +144,21 @@ set_url(){
 }
 
 set_skin(){
-	get_model
-	get_fw_type
-	get_ui_type
-	nvram set sc_skin=${UI_TYPE}
-	nvram commit
-}
-
-stop_software_center(){
-	killall skipd >/dev/null 2>&1
-	killall perpboot >/dev/null 2>&1
-	killall tinylog >/dev/null 2>&1
-	killall perpd >/dev/null 2>&1
-	killall httpdb >/dev/null 2>&1
-	[ -n "$(pidof httpdb)" ] && kill -9 $(pidof httpdb) >/dev/null 2>&1
-}
-
-start_software_center(){
-	stop_software_center
-	service start_skipd >/dev/null 2>&1
-	/koolshare/perp/perp.sh start >/dev/null 2>&1
+	local UI_TYPE=ASUSWRT
+	local SC_SKIN=$(nvram get sc_skin)
+	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
+	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
+	if [ -n "${ROG_FLAG}" ];then
+		UI_TYPE="ROG"
+	fi
+	if [ -n "${TUF_FLAG}" ];then
+		UI_TYPE="TUF"
+	fi
+	
+	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
+	fi
 }
 
 init_core(){
@@ -244,12 +178,12 @@ init_core(){
 	set_premissions
 
 	# set some default value
-	nvram set jffs2_scripts=1
-	nvram unset rc_service
-	nvram commit
+	set_value
 
-	# set koolcenter
+	# set koolcenter url
 	set_url
+
+	# set UI
 	set_skin
 }
 

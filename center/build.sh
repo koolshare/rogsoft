@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="center"
-VERSION="1.5"
+VERSION="1.6"
 TITLE="软件中心一键切换"
 DESCRIPTION="koolcenter/softcenter 一键来回切换！"
 HOME_URL="Module_center.asp"
