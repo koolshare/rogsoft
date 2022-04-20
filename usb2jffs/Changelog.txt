@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin USB2JFFS Changelog for HND/AXHND platform
 ===========================================
+2.1.0
+   - fix	修复挂载后kscore不运行，导致的环境变量等问题
+
 1.9.6 - 1.9.8
    - fix	修复某些只安装再USBJFFS中的插件无法开机启动
 

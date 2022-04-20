@@ -271,7 +271,10 @@ JFFS2USB(){
 	
 		echo_date "USB2JFFS：挂载成功！继续！" 
 		echo_date "USB2JFFS：重启软件中心相关进程！"
-		start_software_center
+		if [ -z "$(pidof skipd)" ];then
+			service start_skipd >/dev/null 2>&1
+		fi
+		sh /jffs/.koolshare/bin/kscore.sh
 		echo_date "USB2JFFS：启动完毕，一点点扫尾工作..."
 
 		# 在系统nvram中写入一个值，如果检测不到该值，则说明用户重置了路由器，如果此时又安装了本插件再次手动挂载
@@ -298,7 +301,7 @@ JFFS2USB(){
 		
 		# 设定定时同步
 		set_sync_job
-		
+
 		# 1. [service-start]
 		# 因为service-start启动太早，所以要在这里再启动一次
 		start-stop-daemon -S -q -b -x /jffs/.koolshare/bin/ks-services-start.sh

@@ -23,89 +23,177 @@
 <script type="text/javascript" language="JavaScript" src="/client_function.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
-	.show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5 {
-		font-size:10pt;
-		color: #fff;
-		padding: 10px 3.75px;
-		border-radius: 5px 5px 0px 0px;
-		width:8.42%;
-		border-left: 1px solid #67767d;
-		border-top: 1px solid #67767d;
-		border-right: 1px solid #67767d;
-		border-bottom: none;
-		background: #67767d;
-		border: 1px solid #91071f; /* W3C rogcss */
-		background: none; /* W3C rogcss */
-	}
-	.show-btn1:hover, .show-btn2:hover, .show-btn3:hover, .show-btn4:hover, .show-btn5:hover, .active {
-		border: 1px solid #2f3a3e;
-		background: #2f3a3e;
-		border: 1px solid #91071f; /* W3C rogcss */
-		background: #91071f; /* W3C rogcss */
-	}
-	#log_content{
-		outline: 1px solid #222;
-		width:748px;
-	}
-	#log_content_text{
-		width:97%;
-		padding-left:4px;
-		padding-right:37px;
-		font-family:'Lucida Console';
-		font-size:11px;
-		line-height:1.5;
-		color:#FFFFFF;
-		outline:none;
-		overflow-x:hidden;
-		border:0px solid #222;
-		background:#475A5F;
-		background:transparent; /* W3C rogcss */
-	}
-	.ks_btn {
-		border: 1px solid #222;
-		font-size:10pt;
-		color: #fff;
-		padding: 5px 5px 5px 5px;
-		border-radius: 5px 5px 5px 5px;
-		width:14%;
-		vertical-align: middle;
-		background: linear-gradient(to bottom, #003333  0%, #000000 100%);
-		background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
-	}
-	.ks_btn:hover {
-		border: 1px solid #222;
-		font-size:10pt;
-		color: #fff;
-		padding: 5px 5px 5px 5px;
-		border-radius: 5px 5px 5px 5px;
-		width:14%;
-		vertical-align: middle;
-		background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
-		background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
-	}
-	#usb2jffs_disks_status, #usb2jffs_mount_status, #tablet_1, #tablet_2, #tablet_3, #tablet_4, #tablet_5 { border:1px solid #91071f; } /* W3C rogcss */
-	.input_option{
-		vertical-align:middle;
-		font-size:12px;
-	}
-	input[type=button]:focus {
-		outline: none;
-	}
-	.content_status {
-		position: absolute;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius:10px;
-		z-index: 10;
-		/*background-color:#2B373B;*/
-		margin-left: -215px;
-		top: 140px;
-		width:980px;
-		return height:auto;
-		box-shadow: 3px 3px 10px #000;
-		background: rgba(0,0,0,0.85);
-		display:none;
-	}
+#app[skin=ASUSWRT] .show-btn1, #app[skin=ASUSWRT] .show-btn2, #app[skin=ASUSWRT] .show-btn3, #app[skin=ASUSWRT] .show-btn4, #app[skin=ASUSWRT] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border-left: 1px solid #67767d;
+	border-top: 1px solid #67767d;
+	border-right: 1px solid #67767d;
+	border-bottom: none;
+	background: #67767d;
+}
+#app[skin=ASUSWRT] .show-btn1:hover, #app[skin=ASUSWRT] .show-btn2:hover, #app[skin=ASUSWRT] .show-btn3:hover, #app[skin=ASUSWRT] .show-btn4:hover, #app[skin=ASUSWRT] .show-btn5:hover, #app[skin=ASUSWRT] .active {
+	border: 1px solid #2f3a3e;
+	background: #2f3a3e;
+}
+#app[skin=ROG] .show-btn1, #app[skin=ROG] .show-btn2, #app[skin=ROG] .show-btn3, #app[skin=ROG] .show-btn4, #app[skin=ROG] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border: 1px solid #91071f;
+	background: none;
+}
+#app[skin=ROG] .show-btn1:hover, #app[skin=ROG] .show-btn2:hover, #app[skin=ROG] .show-btn3:hover, #app[skin=ROG] .show-btn4:hover, #app[skin=ROG] .show-btn5:hover, #app[skin=ROG] .active {
+	border: 1px solid #91071f;
+	background: #91071f;
+}
+#app[skin=TUF] .show-btn1, #app[skin=TUF] .show-btn2, #app[skin=TUF] .show-btn3, #app[skin=TUF] .show-btn4, #app[skin=TUF] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border: 1px solid #92650F;
+	background: none;
+}
+#app[skin=TUF] .show-btn1:hover, #app[skin=TUF] .show-btn2:hover, #app[skin=TUF] .show-btn3:hover, #app[skin=TUF] .show-btn4:hover, #app[skin=TUF] .show-btn5:hover, #app[skin=TUF] .active {
+	border: 1px solid #92650F;
+	background: #92650F;
+}
+#log_content{
+	outline: 1px solid #222;
+	width:748px;
+}
+#app[skin=ASUSWRT] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+}
+#app[skin=ROG] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+#app[skin=TUF] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+#app[skin=ASUSWRT] .ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
+}
+#app[skin=ASUSWRT] .ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
+}
+#app[skin=ROG] .ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%);
+}
+#app[skin=ROG] .ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);
+}
+#app[skin=TUF] .ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #92650F  0%, #74500b 100%);
+}
+#app[skin=TUF] .ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #c58813  0%, #92650F 100%);
+}
+#app[skin=ROG] #usb2jffs_disks_status, #app[skin=ROG] #usb2jffs_mount_status, #app[skin=ROG] #tablet_1, #app[skin=ROG] #tablet_2, #app[skin=ROG] #tablet_3, #app[skin=ROG] #tablet_4, #app[skin=ROG] #tablet_5 { border:1px solid #91071f; }
+#app[skin=TUF] #usb2jffs_disks_status, #app[skin=TUF] #usb2jffs_mount_status, #app[skin=TUF] #tablet_1, #app[skin=TUF] #tablet_2, #app[skin=TUF] #tablet_3, #app[skin=TUF] #tablet_4, #app[skin=TUF] #tablet_5 { border:1px solid #92650F; }
+.input_option{
+	vertical-align:middle;
+	font-size:12px;
+}
+input[type=button]:focus {
+	outline: none;
+}
+.content_status {
+	position: absolute;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius:10px;
+	z-index: 10;
+	/*background-color:#2B373B;*/
+	margin-left: -215px;
+	top: 140px;
+	width:980px;
+	return height:auto;
+	box-shadow: 3px 3px 10px #000;
+	background: rgba(0,0,0,0.85);
+	display:none;
+}
 </style>
 <script>
 var dbus = {};
@@ -117,12 +205,17 @@ var params_chk = ['usb2jffs_rsync'];
 var usbDevicesList;
 var mounted;
 var softver;
-
 function init() {
 	show_menu(menu_hook);
+	set_skin();
 	get_dbus_data();
 }
-
+function set_skin(){
+	var SKN = '<% nvram_get("sc_skin"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
+}
 function get_disks(){
 	require(['/require/modules/diskList.js'], function(diskList) {
 		usbDevicesList = diskList.list();
@@ -193,7 +286,6 @@ function conf2obj() {
 	if(dbus["usb2jffs_version"])
 		E("usb2jffs_version").innerHTML = "&nbsp;-&nbsp;" + dbus["usb2jffs_version"];
 }
-
 function get_dbus_data() {
 	$.ajax({
 		type: "GET",
@@ -215,7 +307,6 @@ function get_dbus_data() {
 		}
 	});
 }
-
 function check_status() {
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "usb2jffs_mount_status.sh", "params":[1], "fields": dbus};
@@ -279,7 +370,6 @@ function get_backup_status() {
 		}
 	});
 }
-
 function select_tablet(w){
 	for (var i = 1; i <= 5; i++) {
 		//将所有标签页移除选中，隐藏所有tablet，隐藏所有button
@@ -314,7 +404,6 @@ function select_tablet(w){
 		}
 	}
 }
-
 function toggle_func(){
 	$('.show-btn1').addClass('active');
 	$(".show-btn1").click(
@@ -341,7 +430,6 @@ function toggle_func(){
 		});
 	//$('#show_btn1').trigger('click');
 }
-
 function update_visibility() {
 	var Ti = E("usb2jffs_sync").value;
 	var In = E("usb2jffs_inter_pre").value;
@@ -350,7 +438,6 @@ function update_visibility() {
 	if (Ti != "0") $(".re" + Ti).show();
 	if (Ti == "4") $(".re4_" + In).show();
 }
-
 function save(flag) {
 	var dbus_new = {};
 	if(flag == 1){
@@ -440,7 +527,6 @@ function save(flag) {
 		}
 	});
 }
-
 function upload_backup() {
 	// .koolshare_jffs_20210221_092734.tar
 	var file_name = $("#file").val();
@@ -490,7 +576,6 @@ function upload_backup() {
 		}
 	});
 }
-
 function restore_backup(Info) {
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "usb2jffs_config.sh", "params": [12], "fields": Info };
@@ -507,7 +592,6 @@ function restore_backup(Info) {
 		}
 	});
 }
-
 function get_log(flag){
 	$.ajax({
 		url: '/_temp/usb2jffs_log.txt',
@@ -551,24 +635,20 @@ function get_log(flag){
 		}
 	});
 }
-
 (function($) {
 	$.fn.forms = function(data, settings) {
 		$(this).append(createFormFields(data, settings));
 	}
 })(jQuery);
-
 function escapeHTML(s) {
 	function esc(c) {
 		return '&#' + c.charCodeAt(0) + ';';
 	}
 	return s.replace(/[&"'<>\r\n]/g, esc);
 }
-
 function UT(v) {
 	return (typeof(v) == 'undefined') ? '' : '' + v;
 }
-
 function createFormFields(data, settings) {
 	var id, id1, common, output, form = '', multiornot;
 	var s = $.extend({
@@ -678,12 +758,10 @@ function createFormFields(data, settings) {
 	});
 	return form;
 }
-
 function menu_hook() {
 	tabtitle[tabtitle.length - 1] = new Array("", "usb2jffs");
 	tablink[tablink.length - 1] = new Array("", "Module_usb2jffs.asp");
 }
-
 function reload_Soft_Center(){
 	location.href = "/Module_Softcenter.asp";
 }
@@ -692,7 +770,7 @@ function help(){
 }
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin="ASUSWRT" onload="init();">
 <div id="TopBanner"></div>
 <div id="Loading" class="popup_bg"></div>
 <iframe name="hidden_frame" id="hidden_frame" src="" width="0" height="0" frameborder="0"></iframe>

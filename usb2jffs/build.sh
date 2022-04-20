@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="usb2jffs"
-VERSION="2.0.0"
+VERSION="2.1.0"
 TITLE="USB2JFFS"
 DESCRIPTION="使用U盘轻松挂载jffs"
 HOME_URL="Module_usb2jffs.asp"
