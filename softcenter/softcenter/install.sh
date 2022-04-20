@@ -125,7 +125,7 @@ get_usb2jffs_status(){
 		return 1
 	fi
 
-	local CIFS_STATUS=$(df -h|grep "/cifs2"|awk '{print $1}'|grep "/dev/mtdblock")
+	local CIFS_STATUS=$(df -h|grep "/cifs2"|awk '{print $1}'|grep "/dev/mtdblock|ubi:jffs")
 	if [ -z "${CIFS_STATUS}" ];then
 		return 1
 	fi
