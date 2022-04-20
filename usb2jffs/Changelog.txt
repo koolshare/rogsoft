@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin USB2JFFS Changelog for HND/AXHND platform
 ===========================================
+2.1.1
+   - fix	修复jffs分区是UBIFS格式机型的安装问题
+
 2.1.0
    - fix	修复挂载后kscore不运行，导致的环境变量等问题
 

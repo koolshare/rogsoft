@@ -382,17 +382,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-20_22:08:36", 
+            "build_date": "2022-04-20_22:16:19", 
             "changelog": "", 
             "description": "使用U盘轻松挂载jffs", 
             "home_url": "Module_usb2jffs.asp", 
             "link": "", 
-            "md5": "15c98ad42eaf763983eb31dc416f1fe0", 
+            "md5": "1c88e73a224c4ad0ca73273e32c2885a", 
             "name": "usb2jffs", 
             "tags": "USB", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
             "title": "USB2JFFS", 
-            "version": "2.1.0"
+            "version": "2.1.1"
         }, 
         {
             "author": "sadog", 
