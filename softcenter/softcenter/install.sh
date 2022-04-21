@@ -158,21 +158,6 @@ center_install() {
 		echo_date "准备安装软件中心：softcenter ..."
 	fi
 
-	# if [ -z "${CENTER_TYPE_1}" ];then
-	# 	# 安装koolcenter的话，检查softcenter版本号是否符合
-	# 	local NEED_VERSION="1.7.6"
-	# 	if [ -f "/koolshare/.soft_ver" ];then
-	# 		local CUR_VERSION=$(cat /koolshare/.soft_ver)
-	# 	else
-	# 		local CUR_VERSION="0"
-	# 	fi
-	# 	local COMP=$(/rom/etc/koolshare/bin/versioncmp ${CUR_VERSION} ${NEED_VERSION})
-	# 	if [ "${COMP}" == "1" ]; then
-	# 		echo_date "softcenter软件中心版本：${CUR_VERSION} 过低，不支持koolcenter升级，请将软件中心更新到最新后重试！" 
-	# 		exit 1
-	# 	fi
-	# fi	
-	
 	# make some folders
 	echo_date "创建软件中心相关的文件夹..."
 	mkdir -p /${KSHOME}/configs/dnsmasq.d
@@ -244,17 +229,6 @@ center_install() {
 	cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
 	echo_date "文件复制结束，开始创建相关的软连接..."
-
-	# ssh PATH environment
-	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
-	rm -rf /jffs/etc/profile >/dev/null 2>&1
-	source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
-	source_path=$(dirname $source_file)
-	if [ -n "${source_file}" -a -n "${source_path}" ];then
-		rm -rf ${source_file} >/dev/null 2>&1
-		mkdir -p ${source_path}
-		ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
-	fi
 	
 	# ssh PATH environment
 	rm -rf /jffs/configs/profile.add >/dev/null 2>&1

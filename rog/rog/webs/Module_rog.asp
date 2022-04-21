@@ -116,7 +116,6 @@ var ram_usage_array = new Array(array_size);
 for (i = 0; i < array_size; i++) {
 	ram_usage_array[i] = 101;
 }
-var params_chk = ['rog_ui_flag'];
 var params_inp = ['rog_fan_level'];
 function init() {
 	show_menu(menu_hook);
@@ -165,11 +164,6 @@ function get_dbus_data(){
 	});
 }
 function conf2obj(){
-	for (var i = 0; i < params_chk.length; i++) {
-		if(dbus[params_chk[i]]){
-			E(params_chk[i]).checked = dbus[params_chk[i]] == "1";
-		}
-	}
 	for (var i = 0; i < params_inp.length; i++) {
 		if (dbus[params_inp[i]]) {
 			$("#" + params_inp[i]).val(dbus[params_inp[i]]);
@@ -305,7 +299,7 @@ function apply_fan(action){
 	var dbus = {};
 	dbus["rog_fan_level"] = E("rog_fan_level").value;
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "rog_config.sh", "params":["3"], "fields": dbus};
+	var postData = {"id": id, "method": "rog_config.sh", "params":["2"], "fields": dbus};
 	$.ajax({
 		type: "POST",
 		cache:false,
