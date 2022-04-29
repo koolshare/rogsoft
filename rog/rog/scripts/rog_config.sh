@@ -1,5 +1,6 @@
 #!/bin/sh
 source /koolshare/scripts/base.sh
+eval $(dbus export rog)
 
 fan_control(){
 	local RFL=$rog_fan_level
