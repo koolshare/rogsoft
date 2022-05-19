@@ -22,23 +22,59 @@
 <script type="text/javascript" src="/popup.js"></script>
 <script src="/calendar/jquery-ui.js"></script> 
 <style>
-.wifiboost_btn {
-	border: none;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
+#app[skin=ASUSWRT] .wifiboost_btn {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
 	border-radius: 5px 5px 5px 5px;
-	width:165px;
-	margin:  5px 5px 5px 5px;
-	cursor:pointer;
-	vertical-align: middle;
+	width:14%;
 }
-.wifiboost_btn:hover {
-	border: none;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
+#app[skin=ASUSWRT] .wifiboost_btn:hover {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=ROG] .wifiboost_btn {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #91071f  0%, #700618 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=ROG] .wifiboost_btn:hover {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=TUF] .wifiboost_btn {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #92650F  0%, #74500b 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+#app[skin=TUF] .wifiboost_btn:hover {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #c58813  0%, #92650F 100%);
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
 }
 .loading_bar {
 	width:250px;
@@ -63,10 +99,8 @@
 	-moz-border-radius: 5px;
 	border-radius:10px;
 	z-index: 10;
-	/*background-color:#2B373B;*/
 	top: 140px;
 	return height:auto;
-	box-shadow: 3px 3px 10px #000;
 	box-shadow: 3px 3px 10px #000;
 	background: #fff;
 	margin-left:60px;
@@ -87,7 +121,6 @@ a:focus {
 	color: #ff002f;
 	font-style: normal;
 }
-#wifiboost_main { border:1px solid #91071f; } /* W3C rogcss */
 .SimpleNote { padding:5px 10px;}
 .ui-slider {
 	position: relative;
@@ -105,22 +138,23 @@ a:focus {
 	height: 6px;
 }
 
-.ui-widget-content {
-	/*border: 2px solid #000;*/
+#app[skin=ASUSWRT] .ui-widget-content {
 	background-color:#000;
-	background-color:#700618; /* W3C rogcss */
+}
+#app[skin=ROG] .ui-widget-content {
+	background-color:#000;
+}
+#app[skin=TUF] .ui-widget-content {
+	background-color:#fff;
 }
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
 	border: 1px solid ;
 	background: #e6e6e6;
-	background: #cf0a2c; /* W3C rogcss */
 	margin-top:-4px;
 	margin-left:-6px;
 }
-
-/* Corner radius */
 .ui-corner-all,
 .ui-corner-top,
 .ui-corner-left,
@@ -145,22 +179,39 @@ a:focus {
 .ui-corner-br {
 	border-bottom-right-radius: 4px;
 }
-
 .ui-slider-horizontal .ui-slider-range {
 	top: 0;
 	height: 100%;
 }
-
-#slider .ui-slider-range {
+#app[skin=ASUSWRT] #slider .ui-slider-range {
 	background: #93E7FF; 
 	border-top-left-radius: 3px;
 	border-top-right-radius: 1px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 1px;
 }
-#slider .ui-slider-handle {
+#app[skin=ASUSWRT] #slider .ui-slider-handle {
 	border-color: #93E7FF;
-	border-color: #cf0a2c; /* W3C rogcss */
+}
+#app[skin=ROG] #slider .ui-slider-range {
+	background: #93E7FF; 
+	border-top-left-radius: 3px;
+	border-top-right-radius: 1px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 1px;
+}
+#app[skin=ROG] #slider .ui-slider-handle {
+	border-color: #93E7FF;
+}
+#app[skin=TUF] #slider .ui-slider-range {
+	background: #d0982c; 
+	border-top-left-radius: 3px;
+	border-top-right-radius: 1px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 1px;
+}
+#app[skin=TUF] #slider .ui-slider-handle {
+	border-color: #d0982c;
 }
 .parental_th{
 	color:white;
@@ -305,7 +356,7 @@ function register_event(){
 			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 			var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		}
-	}else if(odm == "RT-AX55" || odm == "RT-AX56U"){
+	}else if(odm == "RT-AX55" || odm == "RT-AX56U" || odm == "TUF-AX3000_V2"){
 		// wuo wifi router new format
 		var current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
 		var current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
@@ -902,7 +953,7 @@ function verifyFields(r) {
 }
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin='<% nvram_get("sc_skin"); %>' onload="init();">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<div id="LoadingBar" class="popup_bar_bg_ks" style="z-index: 200;" >
