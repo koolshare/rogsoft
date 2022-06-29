@@ -78,9 +78,59 @@ function init() {
 	show_menu(menu_hook);
 	get_dbus_data();
 	get_run_status();
+	get_disks();
 }
 
 var db_ddnsto = {};
+function get_disks(){
+	require(['/require/modules/diskList.js'], function(diskList) {
+		usbDevicesList = diskList.list();
+		//console.log(usbDevicesList)
+		var html = '';
+		html += '<thead>'
+		html += '<tr>'
+		html += '<td colspan="8">磁盘列表</td>'
+		html += '</tr>'
+		html += '</thead>'	
+		html += '<tr>'
+		html += '<th style="width:auto">端口</th>'
+		html += '<th style="width:auto">名称</th>'
+		html += '<th style="width:auto">大小</th>'
+		html += '<th style="width:auto">已用</th>'
+		html += '<th style="width:auto">权限</th>'
+		html += '<th style="width:auto">格式</th>'
+		html += '<th style="width:auto">挂载点</th>'
+		html += '<th style="width:auto">路径</th>'
+		html += '</tr>'
+		for (var i = 0; i < usbDevicesList.length; ++i){
+			for (var j = 0; j < usbDevicesList[i].partition.length; ++j){
+				//append options
+				$("#ddnsto_feat_disk_path_selected").append("<option value='"  + "/mnt/" + usbDevicesList[i].partition[j].mountPoint + "'>" + "/mnt/" + usbDevicesList[i].partition[j].partName + "</option>");
+				//check for swap exist
+				disk_format = usbDevicesList[i].partition[j].format
+				if(disk_format.indexOf("ext") != -1){
+					dbus["swap_check_partName_" + (parseInt(i)) + "_" + (parseInt(j))] = '/mnt/' + usbDevicesList[i].partition[j].partName || "";
+				}
+				//write table
+				var totalsize = ((usbDevicesList[i].partition[j].size)/1000000).toFixed(2);
+				var usedsize = ((usbDevicesList[i].partition[j].used)/1000000).toFixed(2);
+				var usedpercent = (usedsize/totalsize*100).toFixed(2) + " %";
+				var used = usedsize + " GB" + " (" + usedpercent + ")"
+				html += '<tr>'
+				html += '<td>' + usbDevicesList[i].usbPath + '</td>'
+				html += '<td>' + usbDevicesList[i].deviceName + '</td>'
+				html += '<td>' + totalsize + " GB" + '</td>'
+				html += '<td>' + used + '</td>'
+				html += '<td>' + usbDevicesList[i].partition[j].status + '</td>'
+				html += '<td>' + disk_format + '</td>'
+				html += '<td>' + usbDevicesList[i].partition[j].mountPoint + '</td>'
+				html += '<td>' + '/tmp/mnt/' + usbDevicesList[i].partition[j].partName + '</td>'
+				html += '</tr>'
+			}
+		}
+		$('#disk_table').html(html);
+	});
+}
 
 function get_dbus_data() {
 	$.ajax({
@@ -107,11 +157,30 @@ function get_run_status() {
 		data: JSON.stringify(postData),
 		dataType: "json",
 		success: function(response) {
-			console.log(response)
-			E("status").innerHTML = response.result;
+			var result = JSON.parse(response.result) //对字符串进行JSON解析
+			if (result){
+				console.log(result)
+				E("status").innerHTML = result.status == 1 ? "已运行" + " PID:" + result.pid : "未运行";
+				E("ddnsto_router_id").innerHTML = result.router_id;
+				var feat = result.feat //获取feat值
+				if (feat){
+					if (feat.status == 1){
+						E("ddnsto_feat_status").innerHTML = "已运行" 
+						var el = E("ddnsto_feat_path")
+						var hostname = "http://" + location.hostname + ":" + feat.port + feat.disk_path
+						el.textContent = hostname ;
+						el.href= hostname
+					}else{
+						E("ddnsto_feat_status").innerHTML = "未运行" 
+						E("ddnsto_feat_path").textContent = feat.disk_path ;
+					}
+				}
+				var feat_username = feat.username
+				var feat_disk_path = feat.disk_path
+			}
 			setTimeout("get_run_status();", 10000);
 		},
-		error: function() {
+		error: function(response) {
 			setTimeout("get_run_status();", 5000);
 		}
 	});
@@ -120,6 +189,11 @@ function get_run_status() {
 function conf_to_obj() {
 	E("ddnsto_enable").checked = db_ddnsto["ddnsto_enable"] == "1";
 	E("ddnsto_token").value = db_ddnsto["ddnsto_token"] || "";
+	E("ddnsto_feat_enabled").checked = db_ddnsto["ddnsto_feat_enabled"] == "1";
+	E("ddnsto_feat_port").value = db_ddnsto["ddnsto_feat_port"] || 3303;
+	E("ddnsto_feat_username").value = db_ddnsto["ddnsto_feat_username"] || "";
+	E("ddnsto_feat_password").value = db_ddnsto["ddnsto_feat_password"] || "";
+	E("ddnsto_feat_disk_path_selected").value = db_ddnsto["ddnsto_feat_disk_path_selected"] || "";
 }
 
 function onSubmitCtrl() {
@@ -127,6 +201,11 @@ function onSubmitCtrl() {
 	// collect basic data
 	db_ddnsto["ddnsto_token"] = E("ddnsto_token").value
 	db_ddnsto["ddnsto_enable"] = E("ddnsto_enable").checked ? "1" : "0";
+	db_ddnsto["ddnsto_feat_enabled"] = E("ddnsto_feat_enabled").checked ? "1" : "0";
+	db_ddnsto["ddnsto_feat_port"] = E("ddnsto_feat_port").value;
+	db_ddnsto["ddnsto_feat_username"] = E("ddnsto_feat_username").value;
+	db_ddnsto["ddnsto_feat_password"] = E("ddnsto_feat_password").value;
+	db_ddnsto["ddnsto_feat_disk_path_selected"] = E("ddnsto_feat_disk_path_selected").value;
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "ddnsto_config.sh", "params":[], "fields": db_ddnsto};
     $("#loading_block3").html("<b>正在提交数据！</b>等待后台运行完毕，请不要刷新本页面！")
@@ -273,12 +352,11 @@ function reload_Soft_Center() {
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
 											<li>ddnsto远程控制是koolshare小宝开发的，支持http2的远程穿透控制软件。</li>
-											<li><i>注意：</i>因验证方式改变，原有Token弃用，插件1.6及其以上版本需要重新登录控制台获取Token并重新设置。</li>
 										</div>
 										<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 											<thead>
 												<tr>
-													<td colspan="2">ddnsto - 高级设置</td>
+													<td colspan="2">ddnsto - 基础设置</td>
 												</tr>
 											</thead>
 											<tr id="switch_tr">
@@ -305,18 +383,85 @@ function reload_Soft_Center() {
 												<td><span id="status">获取中...</span>
 												</td>
 											</tr>
+											<tr >
+												<th>设备ID</th>
+												<td><span id="ddnsto_router_id">获取中...</span>
+												</td>
+											</tr>
 											<tr>
-												<th>ddnsto Token</th>
+												<th>令牌</th>
 												<td>
 													<input style="width:300px;" type="password" class="input_ss_table" id="ddnsto_token" name="ddnsto_token" maxlength="100" value="" autocomplete="new-password" autocorrect="off" autocapitalize="off" onBlur="switchType(this, false);" onFocus="switchType(this, true);">
 												</td>
 											</tr>
 											<tr id="rule_update_switch">
 												<th>管理/帮助</th>
-												<td> <a type="button" class="rog_btn" style="cursor:pointer" href="https://www.ddnsto.com" target="_blank">https://www.ddnsto.com</a>
- <a type="button" class="rog_btn" style="cursor:pointer" onclick="openShutManager(this,'NoteBox',false,'关闭使用说明','ddnsto使用说明') "
-													href="javascript:void(0);">ddnsto使用说明</a>
+												<td> <a type="button" class="rog_btn" style="cursor:pointer" href="https://www.ddnsto.com/app/#/devices" target="_blank">点击前往DDNSTO控制台</a>
+<a type="button" class="rog_btn" style="cursor:pointer" href="https://doc.linkease.com/zh/guide/ddnsto/" target="_blank">如何获取令牌?</a>
+ <!-- <a type="button" class="rog_btn" style="cursor:pointer" onclick="openShutManager(this,'NoteBox',false,'关闭使用说明','如何获取令牌') "
+													href="javascript:void(0);">如何获取令牌</a> -->
 												</td>
+											</tr>
+											<thead>
+												<tr>
+													<td colspan="2">ddnsto - 拓展功能</td>
+												</tr>
+											</thead>
+											<tr id="switch_tr1">
+												<th>
+													<label>启用</label>
+												</th>
+												<td colspan="2">
+													<div claddnsto="switch_field" style="display:table-cell;float: left;">
+														<label for="ddnsto_feat_enabled">
+															<input id="ddnsto_feat_enabled" class="switch" type="checkbox" style="display: none;">
+															<div class="switch_container">
+																<div class="switch_bar"></div>
+																<div class="switch_circle transition_style">
+																	<div></div>
+																</div>
+															</div>
+														</label>
+													</div>
+													<div id="ddnsto_version_show" style="padding-top:5px;margin-left:30px;margin-top:0px;float: left;">启用后可支持控制台的“文件管理”及“远程开机”功能</div>
+												</td>
+											</tr>
+											<tr >
+												<th>Webdav服务</th>
+												<td><span id="ddnsto_feat_status">获取中...</span>
+												</td>
+											</tr>
+											<tr >
+												<th>Webdav地址</th>
+												<td>
+													<a  type="button" class="rog_btn" id="ddnsto_feat_path" target="_blank" rel="noopener noreferrer">获取中...</a>
+												</td>
+											</tr>
+											<tr>
+												<th>端口<span style="color: red;"> * </span></th>
+												<td>
+													<input style="width:300px;" type="number" class="input_ss_table" id="ddnsto_feat_port" name="ddnsto_feat_port" maxlength="100" value=""  autocorrect="off" autocapitalize="off">
+												</td>
+											</tr>
+											<tr>
+												<th>授权用户名<span style="color: red;"> * </span></th>
+												<td>
+													<input style="width:300px;" type="text" class="input_ss_table" id="ddnsto_feat_username" name="ddnsto_feat_username" maxlength="100" value=""  autocorrect="off" autocapitalize="off">
+												</td>
+											</tr>
+											<tr>
+												<th>授权用户密码<span style="color: red;"> * </span></th>
+												<td>
+													<input style="width:300px;" type="password" class="input_ss_table" id="ddnsto_feat_password" name="ddnsto_feat_password" maxlength="100" value="" autocomplete="new-password" autocorrect="off" autocapitalize="off" onBlur="switchType(this, false);" onFocus="switchType(this, true);">
+												</td>
+											</tr>
+											<tr id="swap_select">
+												<th>
+													<label>共享磁盘<span style="color: red;"> * </span></label>
+												</th>
+												<td>
+ 													<select name="ddnsto_feat_disk_path_selected" id="ddnsto_feat_disk_path_selected"  class="input_option" ></select>
+												</td>										
 											</tr>
 										</table>
 										<div id="warning" style="font-size:14px;margin:20px auto;"></div>
