@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="ddnsto"
-VERSION="3.0.0"
+VERSION="3.0.1"
 TITLE="ddnsto"
 DESCRIPTION="ddnsto内网穿透"
 HOME_URL="Module_ddnsto.asp"
