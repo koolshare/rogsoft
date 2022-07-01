@@ -2,9 +2,10 @@
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 eval $(dbus export ddnsto)
-#-a -n "${ddnsto_feat_port}" -a -n "${ddnsto_feat_username}" -a -n "${ddnsto_feat_password}" -a -n "${ddnsto_feat_disk_path_selected}"
+
+disk_path=${ddnsto_feat_disk_path_selected}
 if [ -z "${ddnsto_feat_disk_path_selected}" ];then
-disk_path="/tmp"
+    disk_path="/"
 fi
 
 case $ACTION in
