@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
 ===========================================
+3.6
+   - update	新增RT-AX86S机型支持
+
 3.4
    - update	新增GT-AC2900_SH的支持
 
