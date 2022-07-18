@@ -105,7 +105,7 @@ function get_disks(){
 		for (var i = 0; i < usbDevicesList.length; ++i){
 			for (var j = 0; j < usbDevicesList[i].partition.length; ++j){
 				//append options
-				$("#ddnsto_feat_disk_path_selected").append("<option value='"  + "/mnt/" + usbDevicesList[i].partition[j].mountPoint + "'>" + "/mnt/" + usbDevicesList[i].partition[j].partName + "</option>");
+				$("#ddnsto_feat_disk_path_selected").append("<option value='"  + "/mnt/" + usbDevicesList[i].partition[j].partName + "'>" + usbDevicesList[i].partition[j].partName + "</option>");
 				//check for swap exist
 				disk_format = usbDevicesList[i].partition[j].format
 				if(disk_format.indexOf("ext") != -1){
