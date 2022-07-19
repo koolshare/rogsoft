@@ -88,17 +88,17 @@
         }, 
         {
             "author": "xiaobao", 
-            "build_date": "2022-07-18_16:37:14", 
+            "build_date": "2022-07-19_15:44:42", 
             "changelog": "", 
             "description": "ddnsto内网穿透", 
             "home_url": "Module_ddnsto.asp", 
             "link": "https://www.ddnsto.com", 
-            "md5": "d83dc7b6fb1d02e8b58bc5a0b015b54e", 
+            "md5": "3c3bd23d7ed6e68b9fadb437baf6398f", 
             "name": "ddnsto", 
             "tags": "穿透 DDNS", 
             "tar_url": "ddnsto/ddnsto.tar.gz", 
             "title": "ddnsto", 
-            "version": "3.0.2"
+            "version": "3.0.3"
         }, 
         {
             "author": "sadog", 
