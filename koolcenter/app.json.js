@@ -58,19 +58,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-28_17:36:37", 
+            "build_date": "2022-09-01_10:47:54", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "4186e30088deb1fcc0474af3c3e2251c", 
+            "md5": "8049d81970e17d399387e21061c73444", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.5"
+            "version": "3.7"
         }, 
         {
             "author": "freexiaoyao", 
@@ -88,17 +88,17 @@
         }, 
         {
             "author": "xiaobao", 
-            "build_date": "2021-08-20_22:31:30", 
+            "build_date": "2022-07-19_15:44:42", 
             "changelog": "", 
             "description": "ddnsto内网穿透", 
             "home_url": "Module_ddnsto.asp", 
             "link": "https://www.ddnsto.com", 
-            "md5": "857f76609d1e353998e0ca5a2ff7b655", 
+            "md5": "3c3bd23d7ed6e68b9fadb437baf6398f", 
             "name": "ddnsto", 
             "tags": "穿透 DDNS", 
             "tar_url": "ddnsto/ddnsto.tar.gz", 
             "title": "ddnsto", 
-            "version": "2.2"
+            "version": "3.0.3"
         }, 
         {
             "author": "sadog", 
@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-19_09:41:11", 
+            "build_date": "2022-04-29_09:00:32", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "95b734df4782a85bdea4402ef62f0dc9", 
+            "md5": "552d49b6c4311fb22b5a8c98b23585c8", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "5.1"
+            "version": "5.4"
         }, 
         {
             "author": "囍冯总囍", 
@@ -396,19 +396,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-29_14:22:32", 
+            "build_date": "2022-05-19_22:43:32", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "6bcb9685cafabd490a49c975f983a12c", 
+            "md5": "21f0d66d7cf3850b6dcf0af9f6386cbb", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.6"
+            "version": "4.7"
         }, 
         {
             "author": "sadog", 
@@ -426,7 +426,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "e62edfc1cdb7d5f15545d7ad9083c3d5", 
+    "md5": "55b85c474ded0d3181712cbf110c90d3", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
     "version": "1.9.1.8"
 }

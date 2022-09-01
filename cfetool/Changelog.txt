@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
-===========================================
+===========================================\
+3.7
+   - update	新增GT-AX6000和ZenWiFi_Pro_XT12机型支持
+
 3.6
    - update	新增RT-AX86S机型支持
 
