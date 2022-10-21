@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:v>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta HTTP-EQUIV="Pragma" CONTENT="no-cache"/>
-<meta HTTP-EQUIV="Expires" CONTENT="-1"/>
-<link rel="shortcut icon" href="images/favicon.png"/>
-<link rel="icon" href="images/favicon.png"/>
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="-1">
+<link rel="shortcut icon" href="images/favicon.png">
+<link rel="icon" href="images/favicon.png">
 <title>软件中心 - wifi boost</title>
 <link rel="stylesheet" type="text/css" href="index_style.css"/> 
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
@@ -16,11 +17,11 @@
 <script type="text/javascript" src="/res/Browser.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script type="text/javascript" src="/state.js"></script>
-<script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
-<script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/client_function.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
-<script src="/calendar/jquery-ui.js"></script> 
+<script type="text/javascript" src="/res/jquery-ui.js"></script> 
 <style>
 #app[skin=ASUSWRT] .wifiboost_btn {
 	border: 1px solid #222;
@@ -104,7 +105,7 @@
 	box-shadow: 3px 3px 10px #000;
 	background: #fff;
 	margin-left:60px;
-	width:640px;
+	width:520px;
 	height:500px;
 	display: none;
 }
@@ -356,8 +357,12 @@ function register_event(){
 			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 			var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		}
+	}else if(odm == "GT-AX11000_PRO"){
+		var current_maxp24 = '<% nvram_get("3:maxp2ga0"); %>';
+		var current_maxp52 = '<% nvram_get("4:maxp5gb0a0"); %>';
+		var current_maxp58 = '<% nvram_get("1:maxp5gb0a0"); %>';
 	}else if(odm == "RT-AX55" || odm == "RT-AX56U" || odm == "TUF-AX3000_V2"){
-		// wuo wifi router new format
+		// two wifi router new format
 		var current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
 		var current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
 	}else{
@@ -430,7 +435,7 @@ function register_event(){
 	});
 }
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT-AX11000_PRO"){
 		E("wifiboost_boost_58").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -872,6 +877,7 @@ function close_mail_buy(){
 	$("#qrcode_show").fadeOut(300);
 	open_buy();
 }
+
 function open_buy() {
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];

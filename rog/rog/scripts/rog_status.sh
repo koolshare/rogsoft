@@ -13,10 +13,11 @@ cpu_temperature="CPU：$(awk 'BEGIN{printf "%.1f\n",('$cpu_temperature_origin'/'
 
 #网卡温度
 case "$model" in
-GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|ET12|ET8|GT-AXE11000)
+GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|ET12|ET8|GT-AXE11000|GT-AX11000_PRO)
 	interface_2g=$(nvram get wl0_ifname)
 	interface_5g1=$(nvram get wl1_ifname)
 	interface_5g2=$(nvram get wl2_ifname)
+
 	interface_2g_temperature=$(wl -i ${interface_2g} phy_tempsense | awk '{print $1}') 2>/dev/null
 	interface_5g1_temperature=$(wl -i ${interface_5g1} phy_tempsense | awk '{print $1}') 2>/dev/null
 	interface_5g2_temperature=$(wl -i ${interface_5g2} phy_tempsense | awk '{print $1}') 2>/dev/null

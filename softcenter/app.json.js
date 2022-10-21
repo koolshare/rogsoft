@@ -270,12 +270,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-29_09:00:32", 
+            "build_date": "2022-10-21_20:53:34", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "552d49b6c4311fb22b5a8c98b23585c8", 
+            "md5": "d43113819312ef53a7d6521a155f4699", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
@@ -396,19 +396,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-05-19_22:43:32", 
+            "build_date": "2022-10-21_20:53:25", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "21f0d66d7cf3850b6dcf0af9f6386cbb", 
+            "md5": "54944932f9de31aecc60bebb4ad1726b", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.7"
+            "version": "4.8"
         }, 
         {
             "author": "sadog", 

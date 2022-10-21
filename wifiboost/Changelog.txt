@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.8
+   - add	添加RT-AX86U_PRO和GT-AX11000_PRO的支持
+
 4.7
    - add	添加TUF-AX3000_V2官改固件的支持
    
