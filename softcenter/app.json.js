@@ -412,17 +412,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-17_21:41:35", 
+            "build_date": "2022-11-02_13:54:31", 
             "changelog": "", 
             "description": "ZeroTier 内网穿透", 
             "home_url": "Module_zerotier.asp", 
             "link": "", 
-            "md5": "f6dabd89c3ff3fb4a59c96e4ad25e158", 
+            "md5": "cf5c2e40189ad6048c93d2a4d15018d5", 
             "name": "zerotier", 
             "tags": "穿透 VPN", 
             "tar_url": "zerotier/zerotier.tar.gz", 
             "title": "ZeroTier", 
-            "version": "1.3.9"
+            "version": "1.4.0"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
