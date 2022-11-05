@@ -382,6 +382,20 @@
         }, 
         {
             "author": "sadog", 
+            "build_date": "2022-11-05_23:52:15", 
+            "changelog": "", 
+            "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
+            "home_url": "Module_tailscale.asp", 
+            "link": "", 
+            "md5": "e7b53746e3d470e3665d1b698610d454", 
+            "name": "tailscale", 
+            "tags": "穿透 VPN", 
+            "tar_url": "tailscale/tailscale.tar.gz", 
+            "title": "Tailscale", 
+            "version": "1.0"
+        }, 
+        {
+            "author": "sadog", 
             "build_date": "2022-04-20_22:16:19", 
             "changelog": "", 
             "description": "使用U盘轻松挂载jffs", 
