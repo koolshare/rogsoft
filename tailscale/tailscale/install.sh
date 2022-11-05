@@ -102,7 +102,7 @@ install_now(){
 	local PLVER=$(cat ${DIR}/version)
 
 	# stop before install
-	if [ "$(dbus get tailscale_enable)" == "1" -a -f "/koolshare/scripts/tailscale_config"];then
+	if [ "$(dbus get tailscale_enable)" == "1" -a -f "/koolshare/scripts/tailscale_config" ];then
 		echo_date "安装前先关闭插件..."
 		/koolshare/scripts/tailscale_config stop
 	fi
@@ -143,7 +143,7 @@ install_now(){
 	dbus set softcenter_module_${module}_description="${DESCR}"
 
 	# start before install
-	if [ "$(dbus get tailscale_enable)" == "1" -a -f "/koolshare/scripts/tailscale_config"];then
+	if [ "$(dbus get tailscale_enable)" == "1" -a -f "/koolshare/scripts/tailscale_config" ];then
 		echo_date "重新开启插件..."
 		/koolshare/scripts/tailscale_config start >/dev/null 2>&1
 	fi
