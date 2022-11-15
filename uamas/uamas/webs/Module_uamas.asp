@@ -261,7 +261,7 @@ function open_info(){
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div id="head_note">
-												<span>&nbsp;&nbsp;本插件可以解锁网件梅林固件的AiMesh功能，插件需要激活使用！一旦解锁AiMesh，效果是永久的！（目前仅适用于网件RAX80）</span>
+												<span>&nbsp;&nbsp;本插件可以解锁网件梅林固件的AiMesh功能，插件需要激活使用！一旦解锁AiMesh，效果是永久的！</span>
 												<lable id="uamas_o_version"></lable>
 											</div>
 											<div id="log_content" class="soft_setting_log">

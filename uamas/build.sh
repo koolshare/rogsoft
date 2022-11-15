@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="uamas"
-VERSION="1.0"
+VERSION="1.1"
 TITLE="Unlock AiMesh"
 DESCRIPTION="网件梅林固件解锁AiMesh"
 HOME_URL="Module_uamas.asp"

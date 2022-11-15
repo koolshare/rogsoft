@@ -1,9 +1,9 @@
 {
-"version":"1.0",
-"md5":"3aec1466e3ee88050d00465158d94d50",
+"version":"1.1",
+"md5":"d953193b5a86d39b902d5f862225ba9c",
 "home_url":"Module_uamas.asp",
 "title":"Unlock AiMesh",
 "description":"网件梅林固件解锁AiMesh",
 "changelog":"",
-"build_date":"2022-03-11_00:05:41",
+"build_date":"2022-11-15_11:25:04",
 }
