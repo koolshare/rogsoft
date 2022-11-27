@@ -219,6 +219,10 @@ install_ks_module() {
 	fi
 
 	# 11. 检查jffs空间
+	
+	# 检查前尝试删掉 uu.tar.gz uu.tar.gz.md5，这并无其它影响，因为uu还会下载下来的，但是对小jffs分区如RT-AX56U_V2、RT-AX57比较友好
+	find /jffs/ -name "uu.tar.gz*" -type f | xargs rm -rf
+	
 	local JFFS_AVAIL1=$(jffs_space)
 	local JFFS_AVAIL2=$((${JFFS_AVAIL1} - 2048))
 	local JFFS_NEEDED=$(du -s /tmp/${softcenter_installing_todo} | awk '{print $1}')
