@@ -33,8 +33,10 @@ function init() {
 	get_dbus_data();
 	buildswitch();
 	update_visibility();
-	get_status();
-	setInterval("get_status();", 5000);
+	get_status_v4();
+	get_status_v6();
+	setInterval("get_status_v4();", 5000);
+	setInterval("get_status_v6();", 5000);
 }
 
 function get_dbus_data() {
@@ -93,15 +95,27 @@ function push_data(obj, arg) {
 	});
 }
 
-function get_status(){
+function get_status_v4(){
 	$.ajax({
 		type: "GET",
-		url: "/_api/ddnspod_run_status",
+		url: "/_api/ddnspod_run_status_v4",
 		dataType: "json",
 		async: false,
 		success: function(data) {
 			ddstatus = data.result[0];
-			$("#ddnspod_run_state").html(ddstatus["ddnspod_run_status"]);
+			$("#ddnspod_run_state_v4").html(ddstatus["ddnspod_run_status_v4"]);
+		}
+	});
+}
+function get_status_v6(){
+	$.ajax({
+		type: "GET",
+		url: "/_api/ddnspod_run_status_v6",
+		dataType: "json",
+		async: false,
+		success: function(data) {
+			ddstatus = data.result[0];
+			$("#ddnspod_run_state_v6").html(ddstatus["ddnspod_run_status_v6"]);
 		}
 	});
 }
@@ -207,7 +221,9 @@ function menu_hook(title, tab) {
 												<tr id="status_tr">
 													<th width="35%">状态</th>
 													<td>
-														<a>	<span id="ddnspod_run_state"></span>
+														<a>	<span id="ddnspod_run_state_v4"></span>
+														</a><br>
+														<a>	<span id="ddnspod_run_state_v6"></span>
 														</a>
 													</td>
 												</tr>												
