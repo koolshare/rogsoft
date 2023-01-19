@@ -25,8 +25,8 @@
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script type="text/javascript">
 var db_ddnspod_ = {};
-var params_input = ["ddnspod_config_id", "ddnspod_config_token", "ddnspod_config_domain", "ddnspod_refresh_time"];
-var params_check = ["ddnspod_enable"];
+var params_input = ["ddnspod_config_id", "ddnspod_config_token", "ddnspod_config_domain",  "ddnspod_refresh_time"];
+var params_check = ["ddnspod_enable", "ddnspod_config_ipv4_enable", "ddnspod_config_ipv6_enable"];
 
 function init() {
 	show_menu(menu_hook);
@@ -107,6 +107,7 @@ function get_status_v4(){
 		}
 	});
 }
+
 function get_status_v6(){
 	$.ajax({
 		type: "GET",
@@ -192,7 +193,8 @@ function menu_hook(title, tab) {
 											<div class="formfontdesc" style="padding-top:5px;margin-top:0px;float: left;" id="cmdDesc">
 												<div>使用dnspod实现的ddns服务</div>
 												<ul style="padding-top:5px;margin-top:10px;float: left;">
-													<li>使用前需要将域名添加到dnspod中，并添加一条A记录，使用之后将自动更新ip</li>
+													<li>打开ipv4开关将开启A记录的更新，打开ipv6开关将开启AAAA记录的更新，点击提交后将自动更新ip</li>
+													<li>使用前需要将域名添加到dnspod中，并根据ipv4和ipv6开关情况分别添加一条A记录或AAAA记录</li>
 													<li>点 <a href="https://support.dnspod.cn/Kb/showarticle/tsid/227"><i><u>这里</u></i></a> 查看官方说明以及如何获取dnspod Token</li>
 												</ul>
 											</div>
@@ -202,6 +204,7 @@ function menu_hook(title, tab) {
 														<td colspan="2">开关设置</td>
 													</tr>
 												</thead>
+											<tbody>
 												<tr>
 													<th>开启DDnspod</th>
 													<td colspan="2">
@@ -218,15 +221,21 @@ function menu_hook(title, tab) {
 														</div>
 													</td>
 												</tr>
-												<tr id="status_tr">
-													<th width="35%">状态</th>
+											</tbody>
+											<tbody id="status_tr">
+												<tr>
+													<th width="35%">ipv4状态</th>
 													<td>
-														<a>	<span id="ddnspod_run_state_v4"></span>
-														</a><br>
-														<a>	<span id="ddnspod_run_state_v6"></span>
-														</a>
+														<a><span id="ddnspod_run_state_v4"></span></a>
 													</td>
-												</tr>												
+												</tr>
+												<tr>
+													<th width="35%">ipv6状态</th>
+													<td>
+														<a><span id="ddnspod_run_state_v6"></span></a>
+													</td>
+												</tr>
+											</tbody>							
 											</table>
 											<table style="margin:10px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" id="ddnspod_detail_table">
 
@@ -252,6 +261,33 @@ function menu_hook(title, tab) {
 													<td>
 														<input type="text" class="input_ss_table" size="30" style="width:180px;" id="ddnspod_config_domain" name="ddnspod_config_domain" maxlength="40" placeholder="填写完整域名" value="">
 													</td>
+												</tr>
+												<tr>
+													<th width="35%">开启ipv4</th>
+													<td>
+														<label for="ddnspod_config_ipv4_enable">
+															<input id="ddnspod_config_ipv4_enable" class="switch" type="checkbox" style="display: none;">
+															<div class="switch_container">
+																<div class="switch_bar"></div>
+																<div class="switch_circle transition_style">
+																	<div></div>
+																</div>
+															</div>
+														</label>
+													</td>
+												</tr>
+												<tr>
+													<th width="35%">开启ipv6</th>
+													<td>
+														<label for="ddnspod_config_ipv6_enable">
+															<input id="ddnspod_config_ipv6_enable" class="switch" type="checkbox" style="display: none;">
+															<div class="switch_container">
+																<div class="switch_bar"></div>
+																<div class="switch_circle transition_style">
+																	<div></div>
+																</div>
+															</div>
+														</label>													</td>
 												</tr>
 												<tr>
 													<th width="35%">刷新时间</th>

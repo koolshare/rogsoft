@@ -3,22 +3,26 @@ source /koolshare/scripts/base.sh
 eval `dbus export ddnspod`
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 # ====================================函数定义====================================
-# 获得外网地址
+# 获得ipv4外网地址
 arIpv4Adress() {
     local interv4=$(curl -s v4.ipip.net)
     #local inter=$(nvram get wan0_realip_ip)
     echo $interv4
 }
+# 获得ipv6外网地址
 arIpv6Adress() {
     local interv6=$(curl -s v6.ipip.net)
     echo $interv6
 }
-# 查询域名地址
+
+# 查询ipv4域名地址
 # 参数: 待查询域名
 arIpv4Nslookup() {
     local inter="http://119.29.29.29/d?dn="
     wget --quiet --output-document=- "$inter$1"
 }
+# 查询ipv6域名地址
+# 参数: 待查询域名
 arIpv6Nslookup() {
     local inter="http://119.29.29.29/d?type=aaaa&dn="
     wget --quiet --output-document=- "$inter$1"
@@ -28,12 +32,12 @@ arIpv6Nslookup() {
 # 参数: 接口类型 待提交数据
 arApiPost() {
     local agent="AnripDdns/5.07(mail@anrip.com)"
-    local inter="https://api.dnspod.com/${1:?'Info.Version'}"
+    local inter="https://dnsapi.cn/${1:?'Info.Version'}"
     local param="login_token=$ddnspod_config_id,$ddnspod_config_token&format=json&${2}"
-    wget --quiet --no-check-certificate --output-document=- --user-agent=$agent --post-data "$param" "$inter"
+    curl -ks -A $agent -d "$param" "$inter"
 }
 
-# 更新记录信息
+# 更新a记录信息
 # 参数: 主域名 子域名
 arIpv4DdnsUpdate() {
     local domainID recordID recordRS recordCD myIPV4 errMsg
@@ -46,7 +50,8 @@ arIpv4DdnsUpdate() {
     recordID=$(echo $recordID | sed 's/.*{"id":"\([0-9]*\)".*"type":"A".*/\1/')
     # 更新记录IP
     myIPV4=$($(arIpv4Adress))
-    recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV4}&record_line=default")
+	# recored_line的参数为"默认"的utf8编码
+    recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV4}&record_line=%E9%BB%98%E8%AE%A4")
     recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
     # 输出记录IP
     if [ "$recordCD" == "1" ]; then
@@ -61,7 +66,7 @@ arIpv4DdnsUpdate() {
     fi
 }
 
-# 更新ipv6记录信息
+# 更新aaaa记录信息
 # 参数: 主域名 子域名
 arIpv6DdnsUpdate() {
     local domainID recordID recordRS recordCD myIPV6 errMsg
@@ -74,7 +79,8 @@ arIpv6DdnsUpdate() {
     recordID=$(echo $recordID | sed 's/.*{"id":"\([0-9]*\)".*"type":"AAAA".*/\1/')
     # 更新记录IP
     myIPV6=$(echo $(arIpv6Adress))
-    recordRS=$(arApiPost "Record.Modify" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV6}&record_type=AAAA&ttl=120&record_line=default")
+	# recored_line的参数为"默认"的utf8编码
+    recordRS=$(arApiPost "Record.Modify" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV6}&record_type=AAAA&record_line=%E9%BB%98%E8%AE%A4")
     recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
     # 输出记录IP
     if [ "$recordCD" == "1" ]; then
@@ -90,6 +96,8 @@ arIpv6DdnsUpdate() {
 
 }
 
+# 检查a记录信息
+# 参数: 主域名 子域名
 arIpv4DdnsCheck() {
 	local postRS
 	hostIPV4=$(arIpv4Adress)
@@ -111,6 +119,8 @@ arIpv4DdnsCheck() {
 	return 0
 }
 
+# 检查aaaa记录信息
+# 参数: 主域名 子域名
 arIpv6DdnsCheck() {
 	local postRS
 	hostIPV6=$(arIpv6Adress)
@@ -131,6 +141,24 @@ arIpv6DdnsCheck() {
 	return 0
 }
 
+# 检查是否需要更新记录
+# 参数: 主域名 子域名
+arDdnsCheck(){
+	if [ "$ddnspod_config_ipv4_enable" == "1" ]; then
+		arIpv4DdnsCheck $1 $2
+	else
+		dbus set ddnspod_run_status_v4="未启用ipv4更新"
+
+	fi
+
+	if [ "$ddnspod_config_ipv6_enable" == "1" ]; then
+		arIpv6DdnsCheck $1 $2
+	else
+		dbus set ddnspod_run_status_v6="未启用ipv6更新"
+	fi
+}
+
+# 解析域名成主域名和子域名
 parseDomain() {
 	mainDomain=`echo ${ddnspod_config_domain} | awk -F. '{print $(NF-1)"."$NF}'`
 	local tmp=${ddnspod_config_domain%$mainDomain}
@@ -154,8 +182,7 @@ start)
 		logger "[软件中心]: 启动ddnspod！"
 		add_ddnspod_cru
 		parseDomain
-		arIpv4DdnsCheck $mainDomain $subDomain
-		arIpv6DdnsCheck $mainDomain $subDomain
+		arDdnsCheck $mainDomain $subDomain
 	else
 		logger "[软件中心]: ddnspod未设置开机启动，跳过！"
 	fi
@@ -167,8 +194,7 @@ stop | kill )
 update)
 	#此处为定时脚本设计
 	parseDomain
-	arIpv4DdnsCheck $mainDomain $subDomain
-	arIpv6DdnsCheck $mainDomain $subDomain
+	arDdnsCheck $mainDomain $subDomain
 	;;
 esac
 # ====================================submit by web====================================
@@ -179,8 +205,7 @@ case $2 in
 		[ ! -L "/koolshare/init.d/S99ddnspod.sh" ] && ln -sf /koolshare/scripts/ddnspod_config.sh /koolshare/init.d/S99ddnspod.sh
 		parseDomain
 		add_ddnspod_cru
-		arIpv4DdnsCheck $mainDomain $subDomain
-		arIpv6DdnsCheck $mainDomain $subDomain
+		arDdnsCheck $mainDomain $subDomain
 		http_response "$1"
 	else
 		stop_ddnspod
