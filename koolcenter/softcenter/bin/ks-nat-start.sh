@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source /koolshare/scripts/base.sh
+
 # called by script /jffs/scripts/nat-start
 # call scripts in /koolshare/init.d/N*, eg: N98SoftEther.sh start_nat
 
