@@ -46,7 +46,7 @@ arIpv4DdnsUpdate() {
     recordID=$(echo $recordID | sed 's/.*{"id":"\([0-9]*\)".*"type":"A".*/\1/')
     # 更新记录IP
     myIPV4=$($(arIpv4Adress))
-    recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV4}&record_line=default")
+    recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV4}&record_line=默认")
     recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
     # 输出记录IP
     if [ "$recordCD" == "1" ]; then
@@ -74,7 +74,7 @@ arIpv6DdnsUpdate() {
     recordID=$(echo $recordID | sed 's/.*{"id":"\([0-9]*\)".*"type":"AAAA".*/\1/')
     # 更新记录IP
     myIPV6=$(echo $(arIpv6Adress))
-    recordRS=$(arApiPost "Record.Modify" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV6}&record_type=AAAA&ttl=120&record_line=default")
+    recordRS=$(arApiPost "Record.Modify" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV6}&record_type=AAAA&ttl=120&record_line=默认")
     recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
     # 输出记录IP
     if [ "$recordCD" == "1" ]; then
