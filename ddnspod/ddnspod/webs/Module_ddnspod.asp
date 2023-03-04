@@ -25,8 +25,8 @@
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script type="text/javascript">
 var db_ddnspod_ = {};
-var params_input = ["ddnspod_config_id", "ddnspod_config_token", "ddnspod_config_domain", "ddnspod_refresh_time"];
-var params_check = ["ddnspod_enable"];
+var params_input = ["ddnspod_site", "ddnspod_config_id", "ddnspod_config_token", "ddnspod_config_domain", "ddnspod_refresh_time"];
+var params_check = ["ddnspod_enable", "ddnspod_ipv6_enable"];
 
 function init() {
 	show_menu(menu_hook);
@@ -34,9 +34,11 @@ function init() {
 	buildswitch();
 	update_visibility();
 	get_status_v4();
-	get_status_v6();
 	setInterval("get_status_v4();", 5000);
-	setInterval("get_status_v6();", 5000);
+	if (db_ddnspod_["ddnspod_ipv6_enable"] == "1"){
+		get_status_v6();
+		setInterval("get_status_v6();", 5000);
+	}
 }
 
 function get_dbus_data() {
@@ -203,8 +205,8 @@ function menu_hook(title, tab) {
 													</tr>
 												</thead>
 												<tr>
-													<th>开启DDnspod</th>
-													<td colspan="2">
+													<th style="width: 28%;">开启DDnspod</th>
+													<td>
 														<div class="switch_field" style="display:table-cell;float: left;">
 															<label for="ddnspod_enable">
 																<input id="ddnspod_enable" class="switch" type="checkbox" style="display: none;">
@@ -219,12 +221,10 @@ function menu_hook(title, tab) {
 													</td>
 												</tr>
 												<tr id="status_tr">
-													<th width="35%">状态</th>
+													<th style="width: 28%;">状态</th>
 													<td>
-														<a>	<span id="ddnspod_run_state_v4"></span>
-														</a><br>
-														<a>	<span id="ddnspod_run_state_v6"></span>
-														</a>
+														<div><a><span id="ddnspod_run_state_v4"></span></a></div>
+														<div><a><span id="ddnspod_run_state_v6"></span></a></div>
 													</td>
 												</tr>												
 											</table>
@@ -236,25 +236,50 @@ function menu_hook(title, tab) {
 													</tr>
 												</thead>
 												<tr>
-													<th width="35%">dnspod ID</th>
+													<th style="width: 28%;">接口站点：</th>
 													<td>
-														<input type="text" class="input_ss_table" size="30" style="width:60px;" id="ddnspod_config_id" name="ddnspod_config_id" maxlength="50" placeholder="ID" value="">
+														<select id="ddnspod_site" name="ddnspod_site" class="input_option">
+															<option value="1">dnspod.cn</option>
+															<option value="2">dnspod.com</option>
+														</select>
 													</td>
 												</tr>
 												<tr>
-													<th width="35%">dnspod Token</th>
+													<th style="width: 28%;">dnspod ID</th>
 													<td>
-														<input type="text" class="input_ss_table" size="30" style="width:260px;" id="ddnspod_config_token" name="ddnspod_config_token" maxlength="50" placeholder="Token" value="">
+														<input type="password" class="input_ss_table" size="30" style="width:60px;" id="ddnspod_config_id" name="ddnspod_config_id" maxlength="50" placeholder="ID" autocomplete="off" autocorrect="off" autocapitalize="off" readonly onBlur="switchType(this, false);" onFocus="switchType(this, true);this.removeAttribute('readonly');" value="">
 													</td>
 												</tr>
 												<tr>
-													<th width="35%">域名</th>
+													<th style="width: 28%;">dnspod Token</th>
+													<td>
+														<input type="password" class="input_ss_table" size="30" style="width:260px;" id="ddnspod_config_token" name="ddnspod_config_token" maxlength="50" placeholder="Token"  autocomplete="off" autocorrect="off" autocapitalize="off" readonly onBlur="switchType(this, false);" onFocus="switchType(this, true);this.removeAttribute('readonly');" value="">
+													</td>
+												</tr>
+												<tr>
+													<th style="width: 28%;">域名</th>
 													<td>
 														<input type="text" class="input_ss_table" size="30" style="width:180px;" id="ddnspod_config_domain" name="ddnspod_config_domain" maxlength="40" placeholder="填写完整域名" value="">
 													</td>
 												</tr>
 												<tr>
-													<th width="35%">刷新时间</th>
+													<th style="width: 28%;">IPV6支持</th>
+													<td colspan="2">
+														<div class="switch_field" style="display:table-cell;float: left;">
+															<label for="ddnspod_ipv6_enable">
+																<input id="ddnspod_ipv6_enable" class="switch" type="checkbox" style="display: none;">
+																<div class="switch_container">
+																	<div class="switch_bar"></div>
+																	<div class="switch_circle transition_style">
+																		<div></div>
+																	</div>
+																</div>
+															</label>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<th style="width: 28%;">刷新时间</th>
 													<td>
 														<select id="ddnspod_refresh_time" name="ddnspod_refresh_time" class="input_option">
 															<option value="1">1H</option>
