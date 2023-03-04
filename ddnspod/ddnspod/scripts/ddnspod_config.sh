@@ -3,130 +3,83 @@ source /koolshare/scripts/base.sh
 eval `dbus export ddnspod`
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 # ====================================函数定义====================================
-# 获得外网地址
-arIpv4Adress() {
-    local interv4=$(curl -s v4.ipip.net)
-    #local inter=$(nvram get wan0_realip_ip)
-    echo $interv4
-}
-arIpv6Adress() {
-    local interv6=$(curl -s v6.ipip.net)
-    echo $interv6
-}
-# 查询域名地址
-# 参数: 待查询域名
-arIpv4Nslookup() {
-    local inter="http://119.29.29.29/d?dn="
-    wget --quiet --output-document=- "$inter$1"
-}
-arIpv6Nslookup() {
-    local inter="http://119.29.29.29/d?type=aaaa&dn="
-    wget --quiet --output-document=- "$inter$1"
+
+# 获得公网IP地址
+# 参数：IP协议类型
+arIPAddress() {
+	wget --quiet --output-document=- "v${1}.ipip.net"
 }
 
 # 读取接口数据
 # 参数: 接口类型 待提交数据
 arApiPost() {
+	local site
+	if [ $ddnspod_site -eq 1 ]; then
+		site="dnsapi.cn"
+	else
+		site="api.dnspod.com"
+	fi
     local agent="AnripDdns/5.07(mail@anrip.com)"
-    local inter="https://api.dnspod.com/${1:?'Info.Version'}"
+    local inter="https://${site}/${1:?'Info.Version'}"
     local param="login_token=$ddnspod_config_id,$ddnspod_config_token&format=json&${2}"
     wget --quiet --no-check-certificate --output-document=- --user-agent=$agent --post-data "$param" "$inter"
 }
 
-# 更新记录信息
-# 参数: 主域名 子域名
-arIpv4DdnsUpdate() {
-    local domainID recordID recordRS recordCD myIPV4 errMsg
-    # 获得域名ID
-    domainID=$(arApiPost "Domain.Info" "domain=${1}")
-	domainID=$(echo $domainID | sed 's/.*"id":"\([0-9]*\)".*/\1/')
-	
-    # 获得记录ID
-    recordID=$(arApiPost "Record.List" "domain_id=${domainID}&sub_domain=${2}")
-    recordID=$(echo $recordID | sed 's/.*{"id":"\([0-9]*\)".*"type":"A".*/\1/')
+# 更新域名记录信息
+# 参数: IP协议类型 主域名 子域名 记录ID 当前IP
+arDdnsUpdate() {
     # 更新记录IP
-    myIPV4=$($(arIpv4Adress))
-    recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV4}&record_line=default")
-    recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
-    # 输出记录IP
-    if [ "$recordCD" == "1" ]; then
-        dbus set ddnspod_run_status_v4="`echo_date` 更新成功，wan ipv4：${hostIPV4}"
-        echo 1
-    fi
-    # 输出错误信息
-    if [ "$recordCD" != "1" ]; then
-    	errMsg=$(echo $recordRS | sed 's/.*,"message":"\([^"]*\)".*/\1/')
-    	dbus set ddnspod_run_status_v4="失败，错误代码：$errMsg"
-    	echo $errMsg
-    fi
+    arApiPost "Record.Modify" "record_type=${1}&domain=${2}&sub_domain=${3}&record_id=${4}&value=${5}&record_line=default"
 }
 
-# 更新ipv6记录信息
-# 参数: 主域名 子域名
-arIpv6DdnsUpdate() {
-    local domainID recordID recordRS recordCD myIPV6 errMsg
-    # 获得域名ID
-    domainID=$(arApiPost "Domain.Info" "domain=${1}")
-	domainID=$(echo $domainID | sed 's/.*"id":"\([0-9]*\)".*/\1/')
-	
-    # 获得记录ID
-    recordID=$(arApiPost "Record.List" "domain_id=${domainID}&sub_domain=${2}")
-    recordID=$(echo $recordID | sed 's/.*{"id":"\([0-9]*\)".*"type":"AAAA".*/\1/')
-    # 更新记录IP
-    myIPV6=$(echo $(arIpv6Adress))
-    recordRS=$(arApiPost "Record.Modify" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&value=${myIPV6}&record_type=AAAA&ttl=120&record_line=default")
-    recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
-    # 输出记录IP
-    if [ "$recordCD" == "1" ]; then
-        dbus set ddnspod_run_status_v6=`echo_date` "更新成功，wan ipv6：${hostIPV6}"
-        echo 1
-    fi
-    # 输出错误信息
-    if [ "$recordCD" != "1" ]; then
-    	errMsg=$(echo $recordRS | sed 's/.*,"message":"\([^"]*\)".*/\1/')
-    	dbus set ddnspod_run_status_v6="失败，错误代码：$errMsg"
-    	echo $errMsg
-    fi
-
+# 获取域名记录列表
+# 参数: IP协议类型 主域名 子域名
+arDdnsList() {
+	# 获得记录列表
+    arApiPost "Record.List" "record_type=${1}&domain=${2}&sub_domain=${3}"
 }
 
-arIpv4DdnsCheck() {
-	local postRS
-	hostIPV4=$(arIpv4Adress)
-	lastIPV4=$(arIpv4Nslookup "${2}.${1}")
-	echo "hostIPV4: ${hostIPV4}"
-	echo "lastIPV4: ${lastIPV4}"
-	###
-	if [ "$lastIPV4" != "$hostIPV4" ]; then
-		dbus set ddnspod_run_status_4="更新中。。。"
-		postRS=$(arIpv4DdnsUpdate $1 $2)
-		echo "postRS: ${postRS}"
-		if [ $postRS -ne 1 ]; then
-			dbus set ddnspod_run_status_v4="wan ipv4：${hostIPV4} 更新失败，原因：${postRS}"
-		    return 1
-		fi
+# 检查DNS
+# 参数: IP协议类型 主域名 子域名
+arDdnsCheck() {
+	local recordRS recordID recordIP recordCD currentIP errMsg
+	local recordType
+	if [ $1 -eq 6 ]; then
+		recordType="AAAA"
 	else
-		dbus set ddnspod_run_status_v4="`echo_date` wan ipv4：${hostIPV4} 未改变，无需更新"
+		recordType="A"
 	fi
-	return 0
-}
 
-arIpv6DdnsCheck() {
-	local postRS
-	hostIPV6=$(arIpv6Adress)
-	lastIPV6=$(arIpv6Nslookup "${2}.${1}")
-	echo "hostIPV6: ${hostIPV6}"
-	echo "lastIPV6: ${lastIPV6}"
-	if [ "$lastIPV6" != "$hostIPV6" ]; then
-		dbus set ddnspod_run_status_v6="更新中。。。"
-		postRS=$(arIpv6DdnsUpdate $1 $2)
-		echo "postRS: ${postRS}"
-		if [ $postRS -ne 1 ]; then
-			dbus set ddnspod_run_status_v6="wan ipv6：${hostIPV6} 更新失败，原因：${postRS}"
-		    return 1
+	currentIP=$(arIPAddress $1)
+	recordRS=$(arDdnsList $recordType $2 $3)
+	recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
+	if [ "$recordCD" == "1" ]; then
+    	recordID=$(echo $recordRS | sed 's/.*{"id":"\([0-9]*\)".*"type":"'${recordType}'".*/\1/')
+		recordIP=$(echo $recordRS | sed 's/.*{"id":"'${recordID}'".*"value":"\([a-z0-9:.]*\)".*/\1/')
+	else
+    	errMsg=$(echo $recordRS | sed 's/.*,"message":"\([^"]*\)".*/\1/')
+		dbus set ddnspod_run_status_v${1}="WAN IPV${1}：${currentIP} 更新失败，原因：${errMsg}"
+    	echo $errMsg
+		return 1
+	fi
+
+	if [ "$currentIP" != "$recordIP" ]; then
+		dbus set ddnspod_run_status_v${1}="更新中。。。"
+
+		# 更新记录IP
+		recordRS=$(arDdnsUpdate $recordType $2 $3 $recordID $currentIP)
+		recordCD=$(echo $recordRS | sed 's/.*{"code":"\([0-9]*\)".*/\1/')
+
+		if [ "$recordCD" == "1" ]; then
+			dbus set ddnspod_run_status_v${1}=`echo_date` "更新成功，WAN IPV${1}：${currentIP}"
+		else
+    		errMsg=$(echo $recordRS | sed 's/.*,"message":"\([^"]*\)".*/\1/')
+			dbus set ddnspod_run_status_v${1}="WAN IPV${1}：${currentIP} 更新失败，原因：${errMsg}"
+			echo $errMsg
+    		return 1
 		fi
 	else
-		dbus set ddnspod_run_status_v6="`echo_date` wan ipv6：${hostIPV6} 未改变，无需更新"
+		dbus set ddnspod_run_status_v${1}="`echo_date` 无需更新，WAN IPV${1}：${currentIP}"
 	fi
 	return 0
 }
@@ -154,8 +107,10 @@ start)
 		logger "[软件中心]: 启动ddnspod！"
 		add_ddnspod_cru
 		parseDomain
-		arIpv4DdnsCheck $mainDomain $subDomain
-		arIpv6DdnsCheck $mainDomain $subDomain
+		arDdnsCheck 4 $mainDomain $subDomain
+		if [ "$ddnspod_ipv6_enable" == "1" ];then
+			arDdnsCheck 6 $mainDomain $subDomain
+		fi
 	else
 		logger "[软件中心]: ddnspod未设置开机启动，跳过！"
 	fi
@@ -167,8 +122,10 @@ stop | kill )
 update)
 	#此处为定时脚本设计
 	parseDomain
-	arIpv4DdnsCheck $mainDomain $subDomain
-	arIpv6DdnsCheck $mainDomain $subDomain
+	arDdnsCheck 4 $mainDomain $subDomain
+	if [ "$ddnspod_ipv6_enable" == "1" ];then
+		arDdnsCheck 6 $mainDomain $subDomain
+	fi
 	;;
 esac
 # ====================================submit by web====================================
@@ -179,8 +136,10 @@ case $2 in
 		[ ! -L "/koolshare/init.d/S99ddnspod.sh" ] && ln -sf /koolshare/scripts/ddnspod_config.sh /koolshare/init.d/S99ddnspod.sh
 		parseDomain
 		add_ddnspod_cru
-		arIpv4DdnsCheck $mainDomain $subDomain
-		arIpv6DdnsCheck $mainDomain $subDomain
+		arDdnsCheck 4 $mainDomain $subDomain
+		if [ "$ddnspod_ipv6_enable" == "1" ];then
+			arDdnsCheck 6 $mainDomain $subDomain
+		fi
 		http_response "$1"
 	else
 		stop_ddnspod
@@ -188,3 +147,4 @@ case $2 in
 	fi
 	;;
 esac
+
