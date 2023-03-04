@@ -58,19 +58,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-11-16_21:26:53", 
+            "build_date": "2022-12-07_20:38:28", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "adde6dfc0534d787a0dd0222d232d1d1", 
+            "md5": "0dda878118d78762de877dddb6f3857f", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.7"
+            "version": "3.8"
         }, 
         {
             "author": "freexiaoyao", 
@@ -382,17 +382,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-11-06_00:09:25", 
+            "build_date": "2022-12-10_22:42:30", 
             "changelog": "", 
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
             "home_url": "Module_tailscale.asp", 
             "link": "", 
-            "md5": "63427ba26047bef289f4b46427f181ee", 
+            "md5": "e55ffcfcccb3681bae32759ef2489dbb", 
             "name": "tailscale", 
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
-            "version": "1.1"
+            "version": "1.2"
         }, 
         {
             "author": "sadog", 

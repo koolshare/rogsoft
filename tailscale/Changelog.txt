@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.2
+   - update	更新tailscale主程序到1.34最新版本！
+
 1.0 -1.1
    - add	Tailscale插件上线，基于wiregurad协议的零配置内网穿透安全组网工具！
        		1. 配置及其简单，只需要点开开关，授权链接即可完成组网。
