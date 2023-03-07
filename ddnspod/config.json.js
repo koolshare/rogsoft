@@ -1,5 +1,5 @@
 {
-"version":"1.5",
+"version":"1.6",
 "md5":"86a5d14c596bafefe2c2d2595f267d44",
 "home_url":"Module_ddnspod.asp",
 "title":"ddnspod",
