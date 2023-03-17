@@ -1,5 +1,11 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.4
+   - update	更新tailscale主程序到1.38.1版本！
+
+1.3
+   - update	更新tailscale主程序到1.36.2版本！
+
 1.2
    - update	更新tailscale主程序到1.34最新版本！
 

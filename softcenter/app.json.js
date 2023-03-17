@@ -382,17 +382,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-03-07_17:06:14", 
+            "build_date": "2023-03-17_21:20:40", 
             "changelog": "", 
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
             "home_url": "Module_tailscale.asp", 
             "link": "", 
-            "md5": "48940b33976cb4ee0e0f4eff1356488e", 
+            "md5": "a452248a18746097b59480b4db024c1a", 
             "name": "tailscale", 
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
-            "version": "1.3"
+            "version": "1.4"
         }, 
         {
             "author": "sadog", 
