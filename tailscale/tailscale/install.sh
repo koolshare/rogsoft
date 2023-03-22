@@ -145,7 +145,7 @@ install_now(){
 	# start before install
 	if [ "$(dbus get tailscale_enable)" == "1" -a -f "/koolshare/scripts/tailscale_config" ];then
 		echo_date "重新开启插件..."
-		/koolshare/scripts/tailscale_config start >/dev/null 2>&1
+		/koolshare/scripts/tailscale_config start
 	fi
 
 	# finish

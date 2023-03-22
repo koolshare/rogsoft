@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.5
+   - add	添加tailscale是否使用ipv4/ipv6的开关
+
 1.4
    - update	更新tailscale主程序到1.38.1版本！
 
