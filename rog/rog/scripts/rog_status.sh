@@ -6,72 +6,165 @@ source $KSROOT/scripts/base.sh
 model=$(nvram get productid)
 #=================================================
 
-# CPU温度
-cpu_temperature_origin=$(cat /sys/class/thermal/thermal_zone0/temp)
-#cpu_temperature=$(expr $cpu_temperature_origin / 1000)
-cpu_temperature="CPU：$(awk 'BEGIN{printf "%.1f\n",('$cpu_temperature_origin'/'1000')}')°C"
-
-#网卡温度
-case "$model" in
-GT-AC5300|GT-AX11000|RT-AX95Q|RT-AX92U|XT12|ET12|ET8|GT-AXE11000|GT-AX11000_PRO)
-	interface_2g=$(nvram get wl0_ifname)
-	interface_5g1=$(nvram get wl1_ifname)
-	interface_5g2=$(nvram get wl2_ifname)
-
-	interface_2g_temperature=$(wl -i ${interface_2g} phy_tempsense | awk '{print $1}') 2>/dev/null
-	interface_5g1_temperature=$(wl -i ${interface_5g1} phy_tempsense | awk '{print $1}') 2>/dev/null
-	interface_5g2_temperature=$(wl -i ${interface_5g2} phy_tempsense | awk '{print $1}') 2>/dev/null
-	interface_2g_power=$(wl -i ${interface_2g} txpwr_target_max | awk '{print $NF}') 2>/dev/null
-	interface_5g1_power=$(wl -i ${interface_5g1} txpwr_target_max | awk '{print $NF}') 2>/dev/null
-	interface_5g2_power=$(wl -i ${interface_5g2} txpwr_target_max | awk '{print $NF}') 2>/dev/null
-	[ -n "${interface_2g_temperature}" ] && interface_2g_temperature_c="$(expr ${interface_2g_temperature} / 2 + 20)°C" || interface_2g_temperature_c="offline"
-	[ -n "${interface_5g1_temperature}" ] && interface_5g1_temperature_c="$(expr ${interface_5g1_temperature} / 2 + 20)°C" || interface_5g1_temperature_c="offline"
-	[ -n "${interface_5g2_temperature}" ] && interface_5g2_temperature_c="$(expr ${interface_5g2_temperature} / 2 + 20)°C" || interface_5g2_temperature_c="offline"
-	if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
-		wl_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 6G：${interface_5g2_temperature_c}"
+_get_model(){
+	local odmpid=$(nvram get odmpid)
+	local MODEL=$(nvram get productid)
+	if [ -n "${odmpid}" ];then
+		echo "${odmpid}"
 	else
-		wl_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-1：${interface_5g1_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G-2：${interface_5g2_temperature_c}"
+		echo "${MODEL}"
 	fi
-	if [ -n "${interface_2g_power}" -o -n "${interface_5g1_power}" -o -n "${interface_5g2_power}" ];then
-		[ -n "${interface_2g_power}" ] && interface_2g_power_d="${interface_2g_power} dBm" || interface_2g_power_d="offline"
-		[ -n "${interface_2g_power}" ] && interface_2g_power_p="$(awk -v x=${interface_2g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_2g_power_p="offline"
-		
-		[ -n "${interface_5g1_power}" ] && interface_5g1_power_d="${interface_5g1_power} dBm" || interface_5g1_power_d="offline"
-		[ -n "${interface_5g1_power}" ] && interface_5g1_power_p="$(awk -v x=${interface_5g1_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g1_power_p="offline"
-		
-		[ -n "${interface_5g2_power}" ] && interface_5g2_power_d="${interface_5g2_power} dBm" || interface_5g2_power_d="offline"
-		[ -n "${interface_5g2_power}" ] && interface_5g2_power_p="$(awk -v x=${interface_5g2_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g2_power_p="offline"
+}
+
+get_cpu_temp(){
+	# CPU温度
+	cpu_temp_origin=$(cat /sys/class/thermal/thermal_zone0/temp)
+	cpu_temp="CPU：$(awk 'BEGIN{printf "%.1f\n",('$cpu_temp_origin'/'1000')}')°C"
+}
+
+get_sta_info(){
+	# 对于华硕路由器，其2.4G的mac地址和br0相等，5G-1 mac地址需要加4，5G-2mac地址需要需要加8
+	# 如 br0 mac：A0:36:BC:70:33:C0
+	# 2.4G mac：A0:36:BC:70:33:C0
+	# 5.2G mac：A0:36:BC:70:33:C4
+	# 5.8G mac：A0:36:BC:70:33:D8
+	local raido_type=$1
+
+	local ifname_0=$(nvram get wl0_ifname)
+	local ifname_1=$(nvram get wl1_ifname)
+	local ifname_2=$(nvram get wl2_ifname)
+	
+	local mac_tail_if0=$(ifconfig ${ifname_0} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	local mac_tail_if1=$(ifconfig ${ifname_1} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	local mac_tail_if2=$(ifconfig ${ifname_2} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	
+	local mac_tail_24g=$(ifconfig br0 | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	local mac_tail_52g=$(awk -v x=${mac_tail_24g} 'BEGIN { printf "%.0f\n", x + 4}' | grep -o . | tail -n1)
+	local mac_tail_58g=$(awk -v x=${mac_tail_24g} 'BEGIN { printf "%.0f\n", x + 8}' | grep -o . | tail -n1)
+
+	if [ "${mac_tail_if0}" == "${mac_tail_24g}" ];then
+		interface_24g=${ifname_0}
+	fi
+	
+	if [ "${mac_tail_if1}" == "${mac_tail_24g}" ];then
+		interface_24g=${ifname_1}
+	fi
+	
+	if [ "${mac_tail_if2}" == "${mac_tail_24g}" ];then
+		interface_24g=${ifname_2}
+	fi
+
+	if [ "${mac_tail_if0}" == "${mac_tail_52g}" ];then
+		interface_52g=${ifname_0}
+	fi
+
+	if [ "${mac_tail_if1}" == "${mac_tail_52g}" ];then
+		interface_52g=${ifname_1}
+	fi
+
+	if [ "${mac_tail_if2}" == "${mac_tail_52g}" ];then
+		interface_52g=${ifname_2}
+	fi
+
+	if [ "${mac_tail_if0}" == "${mac_tail_58g}" ];then
+		interface_58g=${ifname_0}
+	fi
+
+	if [ "${mac_tail_if1}" == "${mac_tail_58g}" ];then
+		interface_58g=${ifname_1}
+	fi
+
+	if [ "${mac_tail_if2}" == "${mac_tail_58g}" ];then
+		interface_58g=${ifname_2}
+	fi
+	
+	# echo 2.4G: ${interface_24g}
+	# echo 5.2G: ${interface_52g}
+	# echo 5.8G: ${interface_58g}
+}
+
+get_tmp_pwr(){
+	# 1. get wireless eth info
+	if [ "$(_get_model)" == "RAX80" -o "$(_get_model)" == "RAX50" -o "$(_get_model)" == "RAX70" ];then
+		# netgear model
+		interface_24g=$(nvram get wl0_ifname)
+		interface_52g=$(nvram get wl1_ifname)
+	else
+		# asus model
+		get_sta_info
+	fi
+
+	interface_24g_isup=$(wl -i ${interface_24g} isup)
+	interface_52g_isup=$(wl -i ${interface_52g} isup)
+	interface_58g_isup=$(wl -i ${interface_58g} isup)
+
+	# 2G info
+	if [ "${interface_24g_isup}" == "1" ];then
+		interface_24g_temp_o=$(wl -i ${interface_24g} phy_tempsense | awk '{print $1}')
+		interface_24g_temp_c="$(expr ${interface_24g_temp_o} / 2 + 20)°C"
+		interface_24g_pwer_o=$(wl -i ${interface_24g} txpwr_target_max | awk '{print $NF}')
+		interface_24g_pwer_d="${interface_24g_pwer_o} dBm"
+		interface_24g_pwer_p="$(awk -v x=${interface_24g_pwer_o} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw"
+	else
+		interface_24g_temp_c="offline"
+		interface_24g_pwer_d="offline"
+		interface_24g_pwer_p="offline"
+	fi	
+
+	# 5G-1 info
+	if [ "${interface_52g_isup}" == "1" ];then
+		interface_52g_temp=$(wl -i ${interface_52g} phy_tempsense | awk '{print $1}')
+		interface_52g_temp_c="$(expr ${interface_52g_temp} / 2 + 20)°C"
+		interface_52g_power=$(wl -i ${interface_52g} txpwr_target_max | awk '{print $NF}')
+		interface_52g_pwer_d="${interface_52g_power} dBm"
+		interface_52g_pwer_p="$(awk -v x=${interface_52g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw"
+	else
+		interface_52g_temp_c="offline"
+		interface_52g_pwer_d="offline"
+		interface_52g_pwer_p="offline"
+	fi
+
+	# 5G-2/6G info
+	if [ "${interface_58g_isup}" == "1" ];then
+		interface_58g_temp=$(wl -i ${interface_58g} phy_tempsense | awk '{print $1}')
+		interface_58g_temp_c="$(expr ${interface_58g_temp} / 2 + 20)°C"
+		interface_58g_power=$(wl -i ${interface_58g} txpwr_target_max | awk '{print $NF}')
+		interface_58g_pwer_d="${interface_58g_power} dBm"
+		interface_58g_pwer_p="$(awk -v x=${interface_58g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw"
+	else
+		interface_58g_temp_c="offline"
+		interface_58g_pwer_d="offline"
+		interface_58g_pwer_p="offline"
+	fi
+
+	# intergrare info
+	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
+	if [ -n "${interface_58g}" ];then
 		if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
-			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 6G：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+			wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G：${interface_52g_temp_c} ${__spilt__} 6G：${interface_58g_temp_c}"
 		else
-			wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G-1：${interface_5g1_power_d} / ${interface_5g1_power_p} <br /> 5G-2：${interface_5g2_power_d} / ${interface_5g2_power_p}"
+			wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G-1：${interface_52g_temp_c} ${__spilt__} 5G-2：${interface_58g_temp_c}"
+		fi
+		
+		if [ -n "${interface_24g_power}" -o -n "${interface_52g_power}" -o -n "${interface_58g_power}" ];then
+			if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
+				wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G：${interface_52g_pwer_d} / ${interface_52g_pwer_p} <br /> 6G：${interface_58g_pwer_d} / ${interface_58g_pwer_p}"
+			else
+				wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G-1：${interface_52g_pwer_d} / ${interface_52g_pwer_p} <br /> 5G-2：${interface_58g_pwer_d} / ${interface_58g_pwer_p}"
+			fi
+		else
+			wl_txpwr=""
 		fi
 	else
-		wl_txpwr=""
+		wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G-1：${interface_52g_temp_c}"
+
+		if [ -n "${interface_24g_power}" -o -n "${interface_52g_power}" ];then
+			wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_52g_pwer_d} / ${interface_52g_pwer_p}"
+		fi
 	fi
-	;;
-RT-AC86U|RT-AX88U|TUF-AX3000|*)
-	interface_2g=$(nvram get wl0_ifname)
-	interface_5g1=$(nvram get wl1_ifname)
-	interface_2g_temperature=$(wl -i ${interface_2g} phy_tempsense | awk '{print $1}') 2>/dev/null
-	interface_5g1_temperature=$(wl -i ${interface_5g1} phy_tempsense | awk '{print $1}') 2>/dev/null
-	[ -n "${interface_2g_temperature}" ] && interface_2g_temperature_c="$(expr ${interface_2g_temperature} / 2 + 20)°C" || interface_2g_temperature_c="offline"
-	[ -n "${interface_5g1_temperature}" ] && interface_5g1_temperature_c="$(expr ${interface_5g1_temperature} / 2 + 20)°C" || interface_5g1_temperature_c="offline"
-	wl_temperature="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G：${interface_5g1_temperature_c}"
-	
-	interface_2g_power=$(wl -i ${interface_2g} txpwr_target_max | awk '{print $NF}') 2>/dev/null
-	interface_5g1_power=$(wl -i ${interface_5g1} txpwr_target_max | awk '{print $NF}') 2>/dev/null
-	if [ -n "${interface_2g_power}" -o -n "${interface_5g1_power}" ];then
-		[ -n "${interface_2g_power}" ] && interface_2g_power_d="${interface_2g_power} dBm" || interface_2g_power_d="offline"
-		[ -n "${interface_2g_power}" ] && interface_2g_power_p="$(awk -v x=${interface_2g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_2g_power_p="offline"
-		
-		[ -n "${interface_5g1_power}" ] && interface_5g1_power_d="${interface_5g1_power} dBm" || interface_5g1_power_d="offline"
-		[ -n "${interface_5g1_power}" ] && interface_5g1_power_p="$(awk -v x=${interface_5g1_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g1_power_p="offline"
-		wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_5g1_power_d} / ${interface_5g1_power_p}"
-	else
-		wl_txpwr=""
-	fi
-	;;
-esac
+}
+
+get_cpu_temp
+get_tmp_pwr
 #=================================================
-http_response "${cpu_temperature}@@${wl_temperature}@@${wl_txpwr}"
+http_response "${cpu_temp}@@${wl_temp}@@${wl_txpwr}"
