@@ -102,7 +102,7 @@ get_tmp_pwr(){
 	if [ "${interface_24g_isup}" == "1" ];then
 		interface_24g_temp_o=$(wl -i ${interface_24g} phy_tempsense | awk '{print $1}')
 		interface_24g_temp_c="$(expr ${interface_24g_temp_o} / 2 + 20)°C"
-		interface_24g_pwer_o=$(wl -i ${interface_24g} txpwr_target_max | awk '{print $NF}')
+		interface_24g_pwer_o=$(wl -i ${interface_24g} txpwr_target_max | awk -F":" '{print $3}' | awk '{print $1}')
 		interface_24g_pwer_d="${interface_24g_pwer_o} dBm"
 		interface_24g_pwer_p="$(awk -v x=${interface_24g_pwer_o} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw"
 	else
@@ -115,7 +115,7 @@ get_tmp_pwr(){
 	if [ "${interface_52g_isup}" == "1" ];then
 		interface_52g_temp=$(wl -i ${interface_52g} phy_tempsense | awk '{print $1}')
 		interface_52g_temp_c="$(expr ${interface_52g_temp} / 2 + 20)°C"
-		interface_52g_power=$(wl -i ${interface_52g} txpwr_target_max | awk '{print $NF}')
+		interface_52g_power=$(wl -i ${interface_52g} txpwr_target_max | awk -F":" '{print $3}' | awk '{print $1}')
 		interface_52g_pwer_d="${interface_52g_power} dBm"
 		interface_52g_pwer_p="$(awk -v x=${interface_52g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw"
 	else
@@ -128,7 +128,7 @@ get_tmp_pwr(){
 	if [ "${interface_58g_isup}" == "1" ];then
 		interface_58g_temp=$(wl -i ${interface_58g} phy_tempsense | awk '{print $1}')
 		interface_58g_temp_c="$(expr ${interface_58g_temp} / 2 + 20)°C"
-		interface_58g_power=$(wl -i ${interface_58g} txpwr_target_max | awk '{print $NF}')
+		interface_58g_power=$(wl -i ${interface_58g} txpwr_target_max | awk -F":" '{print $3}' | awk '{print $1}')
 		interface_58g_pwer_d="${interface_58g_power} dBm"
 		interface_58g_pwer_p="$(awk -v x=${interface_58g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw"
 	else
