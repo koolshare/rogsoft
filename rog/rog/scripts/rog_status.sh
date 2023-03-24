@@ -34,13 +34,21 @@ get_sta_info(){
 	local ifname_1=$(nvram get wl1_ifname)
 	local ifname_2=$(nvram get wl2_ifname)
 	
-	local mac_tail_if0=$(ifconfig ${ifname_0} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	local mac_tail_if1=$(ifconfig ${ifname_1} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	local mac_tail_if2=$(ifconfig ${ifname_2} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	[ -n "${ifname_0}" ] && local mac_tail_if0=$(ifconfig ${ifname_0} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	[ -n "${ifname_1}" ] && local mac_tail_if1=$(ifconfig ${ifname_1} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	[ -n "${ifname_2}" ] && local mac_tail_if2=$(ifconfig ${ifname_2} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
 	
-	local mac_tail_24g=$(ifconfig br0 | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	local mac_tail_52g=$(awk -v x=${mac_tail_24g} 'BEGIN { printf "%.0f\n", x + 4}' | grep -o . | tail -n1)
-	local mac_tail_58g=$(awk -v x=${mac_tail_24g} 'BEGIN { printf "%.0f\n", x + 8}' | grep -o . | tail -n1)
+	[ -n "${ifname_0}" ] && local mac_tail_24g=$(ifconfig br0 | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+	[ -n "${ifname_1}" ] && local mac_tail_52g=$(awk -v x=${mac_tail_24g} 'BEGIN { printf "%02X\n", x + 4}' | grep -o . | tail -n1)
+	[ -n "${ifname_2}" ] && local mac_tail_58g=$(awk -v x=${mac_tail_24g} 'BEGIN { printf "%02X\n", x + 8}' | grep -o . | tail -n1)
+
+	### [ -n "${ifname_0}" ] && echo mac_tail_if0 $mac_tail_if0
+	### [ -n "${ifname_1}" ] && echo mac_tail_if1 $mac_tail_if1
+	### [ -n "${ifname_2}" ] && echo mac_tail_if2 $mac_tail_if2
+
+	### [ -n "${ifname_0}" ] && echo mac_tail_24g $mac_tail_24g
+	### [ -n "${ifname_1}" ] && echo mac_tail_52g $mac_tail_52g
+	### [ -n "${ifname_2}" ] && echo mac_tail_58g $mac_tail_58g
 
 	if [ "${mac_tail_if0}" == "${mac_tail_24g}" ];then
 		interface_24g=${ifname_0}
@@ -66,21 +74,23 @@ get_sta_info(){
 		interface_52g=${ifname_2}
 	fi
 
-	if [ "${mac_tail_if0}" == "${mac_tail_58g}" ];then
-		interface_58g=${ifname_0}
-	fi
+	if [ -n "${ifname_2}" ];then
+		if [ "${mac_tail_if0}" == "${mac_tail_58g}" ];then
+			interface_58g=${ifname_0}
+		fi
 
-	if [ "${mac_tail_if1}" == "${mac_tail_58g}" ];then
-		interface_58g=${ifname_1}
-	fi
+		if [ "${mac_tail_if1}" == "${mac_tail_58g}" ];then
+			interface_58g=${ifname_1}
+		fi
 
-	if [ "${mac_tail_if2}" == "${mac_tail_58g}" ];then
-		interface_58g=${ifname_2}
+		if [ "${mac_tail_if2}" == "${mac_tail_58g}" ];then
+			interface_58g=${ifname_2}
+		fi
 	fi
 	
-	# echo 2.4G: ${interface_24g}
-	# echo 5.2G: ${interface_52g}
-	# echo 5.8G: ${interface_58g}
+	### [ -n "${ifname_0}" ] && echo 2.4G: ${interface_24g}
+	### [ -n "${ifname_1}" ] && echo 5.2G: ${interface_52g}
+	### [ -n "${ifname_2}" ] && echo 5.8G: ${interface_58g}
 }
 
 get_tmp_pwr(){
