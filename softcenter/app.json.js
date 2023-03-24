@@ -74,17 +74,17 @@
         }, 
         {
             "author": "freexiaoyao", 
-            "build_date": "2021-08-20_22:31:30", 
+            "build_date": "2023-03-25_00:03:18", 
             "changelog": "", 
             "description": "ddnspod", 
             "home_url": "Module_ddnspod.asp", 
             "link": "", 
-            "md5": "86a5d14c596bafefe2c2d2595f267d44", 
+            "md5": "c593de776cc58887a3ca3e243c2d38c8", 
             "name": "ddnspod", 
             "tags": "DDNS", 
             "tar_url": "ddnspod/ddnspod.tar.gz", 
             "title": "ddnspod", 
-            "version": "1.5"
+            "version": "1.7"
         }, 
         {
             "author": "xiaobao", 
@@ -410,19 +410,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-10-21_20:53:25", 
+            "build_date": "2023-03-25_00:03:46", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "54944932f9de31aecc60bebb4ad1726b", 
+            "md5": "7aa7e5ceeb201970151294626a9e1f90", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.8"
+            "version": "4.9"
         }, 
         {
             "author": "sadog", 

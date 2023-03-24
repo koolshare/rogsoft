@@ -143,7 +143,7 @@ a:focus {
 	background-color:#000;
 }
 #app[skin=ROG] .ui-widget-content {
-	background-color:#000;
+	background-color:#626262;
 }
 #app[skin=TUF] .ui-widget-content {
 	background-color:#fff;
@@ -184,34 +184,34 @@ a:focus {
 	top: 0;
 	height: 100%;
 }
-#app[skin=ASUSWRT] #slider .ui-slider-range {
+#app[skin=ASUSWRT] #slider24 .ui-slider-range, #app[skin=ASUSWRT] #slider52 .ui-slider-range, #app[skin=ASUSWRT] #slider58 .ui-slider-range {
 	background: #93E7FF; 
 	border-top-left-radius: 3px;
 	border-top-right-radius: 1px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 1px;
 }
-#app[skin=ASUSWRT] #slider .ui-slider-handle {
+#app[skin=ASUSWRT] #slider24 .ui-slider-handle, #app[skin=ASUSWRT] #slider52 .ui-slider-handle, #app[skin=ASUSWRT] #slider58 .ui-slider-handle {
 	border-color: #93E7FF;
 }
-#app[skin=ROG] #slider .ui-slider-range {
+#app[skin=ROG] #slider24 .ui-slider-range, #app[skin=ROG] #slider52 .ui-slider-range, #app[skin=ROG] #slider58 .ui-slider-range {
 	background: #93E7FF; 
 	border-top-left-radius: 3px;
 	border-top-right-radius: 1px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 1px;
 }
-#app[skin=ROG] #slider .ui-slider-handle {
+#app[skin=ROG] #slider24 .ui-slider-handle, #app[skin=ROG] #slider52 .ui-slider-handle, #app[skin=ROG] #slider58 .ui-slider-handle {
 	border-color: #93E7FF;
 }
-#app[skin=TUF] #slider .ui-slider-range {
+#app[skin=TUF] #slider24 .ui-slider-range, #app[skin=TUF] #slider52 .ui-slider-range, #app[skin=TUF] #slider58 .ui-slider-range {
 	background: #d0982c; 
 	border-top-left-radius: 3px;
 	border-top-right-radius: 1px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 1px;
 }
-#app[skin=TUF] #slider .ui-slider-handle {
+#app[skin=TUF] #slider24 .ui-slider-handle, #app[skin=TUF] #slider52 .ui-slider-handle, #app[skin=TUF] #slider58 .ui-slider-handle {
 	border-color: #d0982c;
 }
 .parental_th{
@@ -266,7 +266,27 @@ var orig_region = '<% nvram_get("location_code"); %>';
 var odm = '<% nvram_get("productid"); %>'
 var params_chk = ['wifiboost_boost_24', 'wifiboost_boost_52', 'wifiboost_boost_58'];
 var params_inp = ['wifiboost_key'];
-var boost_dbm;
+var max_dbm_24 = '28.50';
+var max_dbm_52 = '28.50';
+var max_dbm_58 = '28.50';
+if(odm == "GT10"){
+	max_dbm_24 = '29.00';
+}
+var boost_dbm_24;
+var boost_dbm_52;
+var boost_dbm_58;
+var current_maxp24;
+var current_maxp52;
+var current_maxp58;
+var current_dec_24;
+var current_dec_52;
+var current_dec_58;
+var current_dbm_24;
+var current_dbm_52;
+var current_dbm_58;
+var current_pwr_24;
+var current_pwr_52;
+var current_pwr_58;
 var	refresh_flag;
 var count_down;
 var asus = 0;
@@ -346,77 +366,116 @@ function try_activate(){
 }
 function register_event(){
 	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT10"){
 		// three wifi router
 		if(!current_maxp24_tmp){
-			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
-			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
-			var current_maxp58 = '<% nvram_get("3:maxp5gb0a0"); %>';
+			current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
+			current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+			current_maxp58 = '<% nvram_get("3:maxp5gb0a0"); %>';
 		}else{
-			var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
-			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
-			var current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
+			current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
+			current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+			current_maxp58 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		}
 	}else if(odm == "GT-AX11000_PRO"){
-		var current_maxp24 = '<% nvram_get("3:maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("4:maxp5gb0a0"); %>';
-		var current_maxp58 = '<% nvram_get("1:maxp5gb0a0"); %>';
+		current_maxp24 = '<% nvram_get("3:maxp2ga0"); %>';
+		current_maxp52 = '<% nvram_get("4:maxp5gb0a0"); %>';
+		current_maxp58 = '<% nvram_get("1:maxp5gb0a0"); %>';
 	}else if(odm == "RT-AX55" || odm == "RT-AX56U" || odm == "TUF-AX3000_V2"){
 		// two wifi router new format
-		var current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
+		current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
+		current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
 	}else{
 		// two wifi router old format
 		if(!current_maxp24_tmp){
-			var current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
-			var current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
+			current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
+			current_maxp52 = '<% nvram_get("2:maxp5gb0a0"); %>';
 		}else{
-			var current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
-			var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+			current_maxp24 = '<% nvram_get("0:maxp2ga0"); %>';
+			current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 		}
 	}
-
 	if(MODEL == "RAX50"){
-		var current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
-		var current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+		current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
+		current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
 	}
 
-
-	if(E("wifiboost_boost_24").checked == true){
-		var maxp = current_maxp24;
-	}else{
-		if (E("wifiboost_boost_52").checked == true){
-			var maxp = current_maxp52;
-		}else{
-			if (E("wifiboost_boost_58").checked == true){
-				var maxp = current_maxp58 || current_maxp24;
-			}else{
-				var maxp = current_maxp24;
-			}
-		}
-	}
-	var current_dec = parseInt(maxp);
-	var current_dbm = ((current_dec - 6)/4).toFixed(2);
-	var current_pwr = Math.pow(10,(current_dec - 6)/4/10).toFixed(2);
+	// define max dbm
+	current_dec_24 = parseInt(current_maxp24);
+	current_dbm_24 = ((current_dec_24 - 6)/4).toFixed(2);
+	current_pwr_24 = Math.pow(10,(current_dec_24 - 6)/4/10).toFixed(2);
+	boost_dbm_24 = current_dbm_24;
 	$(function() {
-		$( "#slider" ).slider({
+		$( "#slider24" ).slider({
 			orientation: "horizontal",
 			range: "min",
-			min: 24.00,
-			max: 28.50,
-			value: current_dbm,
+			min: 20.00,
+			max: max_dbm_24,
+			value: current_dbm_24,
 			step: 0.25,
 			slide:function(event, ui){
-				var dbm = ui.value.toFixed(2);
-				var power = Math.pow(10,ui.value/10).toFixed(2);
-				document.getElementById('tx_power_desc').innerHTML = ui.value + " dBm / " + power + " mw";
+				dbm = ui.value.toFixed(2);
+				var power_24 = Math.pow(10,ui.value/10).toFixed(2);
+				document.getElementById('tx_power_desc_24').innerHTML = ui.value.toFixed(2) + " dBm / " + power_24 + " mw";
 			},
 			stop:function(event, ui){
-				boost_dbm = ui.value;
+				boost_dbm_24 = ui.value;
 			},
 		}); 
 	});
-	document.getElementById('tx_power_desc').innerHTML = current_dbm + " dBm / " + current_pwr + " mw";
+	document.getElementById('tx_power_desc_24').innerHTML = current_dbm_24 + " dBm / " + current_pwr_24 + " mw";
+
+
+	current_dec_52 = parseInt(current_maxp52);
+	current_dbm_52 = ((current_dec_52 - 6)/4).toFixed(2);
+	current_pwr_52 = Math.pow(10,(current_dec_52 - 6)/4/10).toFixed(2);
+	boost_dbm_52 = current_dbm_52;
+	$(function() {
+		$( "#slider52" ).slider({
+			orientation: "horizontal",
+			range: "min",
+			min: 20.00,
+			max: max_dbm_52,
+			value: current_dbm_52,
+			step: 0.25,
+			slide:function(event, ui){
+				var dbm = ui.value.toFixed(2);
+				var power_52 = Math.pow(10,ui.value/10).toFixed(2);
+				document.getElementById('tx_power_desc_52').innerHTML = ui.value.toFixed(2) + " dBm / " + power_52 + " mw";
+			},
+			stop:function(event, ui){
+				boost_dbm_52 = ui.value;
+			},
+		}); 
+	});
+	document.getElementById('tx_power_desc_52').innerHTML = current_dbm_52 + " dBm / " + current_pwr_52 + " mw";
+
+	if (current_maxp58){
+		current_dec_58 = parseInt(current_maxp58);
+		current_dbm_58 = ((current_dec_58 - 6)/4).toFixed(2);
+		current_pwr_58 = Math.pow(10,(current_dec_58 - 6)/4/10).toFixed(2);
+		boost_dbm_58 = current_dbm_58;
+		$(function() {
+			$( "#slider58" ).slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 20.00,
+				max: max_dbm_58,
+				value: current_dbm_58,
+				step: 0.25,
+				slide:function(event, ui){
+					var dbm = ui.value.toFixed(2);
+					var power_58 = Math.pow(10,ui.value/10).toFixed(2);
+					document.getElementById('tx_power_desc_58').innerHTML = ui.value.toFixed(2) + " dBm / " + power_58 + " mw";
+				},
+				stop:function(event, ui){
+					boost_dbm_58 = ui.value;
+				},
+			}); 
+		});
+		document.getElementById('tx_power_desc_58').innerHTML = current_dbm_58 + " dBm / " + current_pwr_58 + " mw";	
+	}
+	
 	$(".popup_bar_bg_ks").click(
 		function() {
 			count_down = -1;
@@ -435,28 +494,29 @@ function register_event(){
 	});
 }
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT-AX11000_PRO"){
-		E("wifiboost_boost_58").style.display = "";
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT-AX11000_PRO" || odm == "GT10"){
+		E("wifiboost_boost_58_tr").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
 	}
 	if(MODEL == "RAX80"){
 		E("msg1").style.display = "none";
 		E("msg3").style.display = "none";
-		E("msg6").style.display = "none";
 		E("msg5").innerHTML = "修改完成后，卸载wifi boost插件、重置/双清固件、升级固件版本（梅林）、等操作均会保持最后一次的功率修改效果。";
-		E("msg7").innerHTML = "但是由于RAX80为移植机型，在刷回网件后将失去boost效果，再刷回梅林固件后，需要重新安装插件再进行一次boost操作。";
+		E("msg6").innerHTML = "但是由于RAX80为移植机型，在刷回网件后将失去boost效果，再刷回梅林固件后，需要重新安装插件再进行一次boost操作。";
 	}else if(MODEL == "RAX50"){
 		E("msg1").style.display = "none";
 		E("msg3").style.display = "none";
-		E("msg6").style.display = "none";
 		E("msg5").innerHTML = "修改完成后，卸载wifi boost插件、重置/双清固件、升级梅林/网件远程固件、等操作均会保持最后一次的功率修改效果。";
-		E("msg7").innerHTML = "虽然RAX50为梅林移植机型，但是即使其刷回网件原厂固件后再刷回梅林固件，其wifi boost的修改效果也不会丢失！";
+		E("msg6").innerHTML = "虽然RAX50为梅林移植机型，但是即使其刷回网件原厂固件后再刷回梅林固件，其wifi boost的修改效果也不会丢失！";
+	} else if(MODEL == "GT6"){
+		E("msg1").style.display = "";
+		E("msg3").style.display = "";
+		E("msg6").innerHTML = "ROG魔方 • 幻，即GT6，该机型的2.4G wifi在澳大利亚状态下已经是最高值29dbm，属于出厂灰烬无法再提高了，不过其余两个5G频段均能提高到28.5dbm";
 	} else {
 		E("msg1").style.display = "";
 		E("msg3").style.display = "";
-		E("msg6").style.display = "";
-		E("msg7").style.display = "none";
+		E("msg6").style.display = "none";
 	}
 }
 function get_dbus_data(){
@@ -640,7 +700,7 @@ function boost_now(action){
 	var dbus_new = {};
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"  || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"  || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT10"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
@@ -718,9 +778,16 @@ function boost_now(action){
 	for (var i = 0; i < params_inp.length; i++) {
 		dbus_new[params_inp[i]] = E(params_inp[i]).value;
 	}
-	if(boost_dbm){
-		dbus_new["wifiboost_boost_dbm"] = boost_dbm;
-	}else{
+	if(boost_dbm_24){
+		dbus_new["wifiboost_boost_dbm_24"] = boost_dbm_24;
+	}
+	if(boost_dbm_52){
+		dbus_new["wifiboost_boost_dbm_52"] = boost_dbm_52;
+	}
+	if(boost_dbm_58){
+		dbus_new["wifiboost_boost_dbm_58"] = boost_dbm_58;
+	}
+	if(boost_dbm_24 == current_dbm_24 && boost_dbm_52 == current_dbm_52 && boost_dbm_58 == current_dbm_58){
 		if(action == 1){
 			alert("功率值没有任何变化！插件将不会继续运行!\n\n请拉动功率调节条后再使用boost按钮！");
 			return false;
@@ -1041,6 +1108,7 @@ function verifyFields(r) {
 											<span>wifi boost可以极大的增强路由器wifi的发射功率，增强信号覆盖范围。
 												<a type="button" href="https://koolshare.cn/thread-184369-1-1.html" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >使用交流</a>
 												<a type="button" href="https://github.com/koolshare/rogsoft/blob/master/wifiboost/Changelog.txt" target="_blank" class="ks_btn" style="cursor: pointer;margin-left:5px;border:none" >更新日志</a>
+												<a type="button" class="ks_btn" href="javascript:void(0);" onclick="get_log(1)" style="margin-left:5px;border:none">显示日志</a></span>
 												<lable id="wifiboost_o_version"></lable>
 											</span>
 										</div>
@@ -1107,14 +1175,52 @@ function verifyFields(r) {
 															<tr>
 																<td style="border:0px;padding-left:0px;">
 																	<input type="checkbox" id="wifiboost_boost_24" onchange="verifyFields(this, 1);" style="vertical-align: middle;" checked=true /><lable id="LABLE_24">2.4G</lable>
-																	<input type="checkbox" id="wifiboost_boost_52" onchange="verifyFields(this, 1);" style="vertical-align: middle;" checked=true /><lable id="LABLE_52">5G</lable>
-																	<input type="checkbox" id="wifiboost_boost_58" onchange="verifyFields(this, 1);" style="vertical-align: middle;display: none" checked=true /><lable id="LABLE_58" style="display: none;">5G-2</lable>
 																</td>									
 																<td style="border:0px;padding-left:8px;">
-																	<div id="slider" style="width:220px;"></div>
+																	<div id="slider24" style="width:280px;"></div>
 																</td>									
 																<td style="border:0px;width:60px;">
-																	<div id="tx_power_desc" style="width:150px;font-size:14px;"></div>
+																	<div id="tx_power_desc_24" style="width:150px;font-size:12px;"></div>
+																</td>					
+															</tr>
+														</table>
+													</div>
+												</td>
+											</tr>
+											<tr>
+												<th>功率调节</th>
+												<td>
+													<div>
+														<table>
+															<tr>
+																<td style="border:0px;padding-left:0px;">
+																	<input type="checkbox" id="wifiboost_boost_52" onchange="verifyFields(this, 1);" style="vertical-align: middle;" checked=true /><lable id="LABLE_52">5.2G</lable>
+																</td>									
+																<td style="border:0px;padding-left:8px;">
+																	<div id="slider52" style="width:280px;"></div>
+																</td>									
+																<td style="border:0px;width:60px;">
+																	<div id="tx_power_desc_52" style="width:150px;font-size:12px;"></div>
+																</td>					
+															</tr>
+														</table>
+													</div>
+												</td>
+											</tr>
+											<tr id="wifiboost_boost_58_tr" style="display: none;">
+												<th>功率调节</th>
+												<td>
+													<div>
+														<table>
+															<tr>
+																<td style="border:0px;padding-left:0px;">
+																	<input type="checkbox" id="wifiboost_boost_58" onchange="verifyFields(this, 1);" style="vertical-align: middle;" checked=true /><lable id="LABLE_58">5G-2</lable>
+																</td>									
+																<td style="border:0px;padding-left:8px;">
+																	<div id="slider58" style="width:280px;"></div>
+																</td>									
+																<td style="border:0px;width:60px;">
+																	<div id="tx_power_desc_58" style="width:150px;font-size:12px;"></div>
 																</td>					
 															</tr>
 														</table>
@@ -1124,9 +1230,8 @@ function verifyFields(r) {
 										</table>
 										</div>
 										<div class="apply_gen">
-											<input class="button_gen" id="wifiboost_apply_1" onClick="boost_now(1)" type="button" value="boost" />
+											<input class="button_gen" id="wifiboost_apply_1" onClick="boost_now(1)" type="button" value="boost/增强功率" />
 											<input class="button_gen" id="wifiboost_apply_2" onClick="boost_now(2)" type="button" value="恢复原厂功率" />
-											<input class="button_gen" id="wifiboost_apply_3" onClick="get_log(1)" type="button" value="显示日志" />
 										</div>
 										<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 										<div id="spl2" style="margin:10px 0 10px 5px;" class="splitLine"></div>
@@ -1136,8 +1241,7 @@ function verifyFields(r) {
 											<li id="msg3">虽然插件可以保证修改过程相对安全，但还是强烈建议不要过于频繁的进行修改，以免发生意外导致机器wlan出厂设置被损坏。</li>
 											<li id="msg4">修改后插件会自动将地区切换为澳大利亚以发挥效果，非澳大利亚的功率和修改前一样。如果修改后功率未起作用，请重置一次路由。</li>
 											<li id="msg5">修改完成后，卸载wifi boost插件、升级固件版本、刷三方固件/原厂固件等操作均会保持最后一次的功率修改效果。</li>
-											<li id="msg6">wifi boost是开发者sadog个人作品，软件中心仅提供上线平台，wifi boost产品经营与koolshare软件中心/koolshare无关。</li>
-											<li id="msg7"></li>
+											<li id="msg6"></li>
 										</div>
 									</td>
 								</tr>

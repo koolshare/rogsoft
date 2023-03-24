@@ -25,7 +25,7 @@
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script type="text/javascript">
 var db_ddnspod_ = {};
-var params_input = ["ddnspod_site", "ddnspod_config_id", "ddnspod_config_token", "ddnspod_config_domain", "ddnspod_refresh_time"];
+var params_input = ["ddnspod_site", "ddnspod_config_id", "ddnspod_config_token", "ddnspod_config_sub_domain","ddnspod_config_main_domain", "ddnspod_refresh_time"];
 var params_check = ["ddnspod_enable", "ddnspod_ipv6_enable"];
 
 function init() {
@@ -259,7 +259,8 @@ function menu_hook(title, tab) {
 												<tr>
 													<th style="width: 28%;">域名</th>
 													<td>
-														<input type="text" class="input_ss_table" size="30" style="width:180px;" id="ddnspod_config_domain" name="ddnspod_config_domain" maxlength="40" placeholder="填写完整域名" value="">
+														<input type="text" style="width: 4em" id="ddnspod_config_sub_domain" placeholder="填写子域名,eg:router" value="" class="input_ss_table"  autocorrect="off" autocapitalize="off">.
+														<input type="text"  id="ddnspod_config_main_domain" placeholder="填写主域名,eg:exampl.com" value="" class="input_ss_table" autocorrect="off" autocapitalize="off">
 													</td>
 												</tr>
 												<tr>

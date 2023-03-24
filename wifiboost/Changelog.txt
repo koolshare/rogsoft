@@ -1,5 +1,11 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.9
+   - add	添加ROG魔方 • 幻（即GT6）机型的支持
+   - note	ROG魔方 • 幻，该机型的2.4G wifi在澳大利亚状态下已经是最高值29dbm，属于出厂灰烬无法再提高了，不过其余两个5G频段均能提高到28.5dbm
+   - update	将各个频率的功率修改条独立出来，可以给不同频率wifi同时修改不同功率
+   - update	将功率条最小功率设定为20dbm，可以用于自由降低wifi功率
+   
 4.8
    - add	添加RT-AX86U_PRO和GT-AX11000_PRO的支持
 

@@ -87,9 +87,8 @@ arDdnsCheck() {
 }
 
 parseDomain() {
-    mainDomain=`echo ${ddnspod_config_domain} | awk -F. '{print $(NF-1)"."$NF}'`
-    local tmp=${ddnspod_config_domain%$mainDomain}
-    subDomain=${tmp%.}
+    mainDomain=`echo ${ddnspod_config_main_domain}`
+    subDomain=`echo ${ddnspod_config_sub_domain}`
 }
 
 add_ddnspod_cru(){

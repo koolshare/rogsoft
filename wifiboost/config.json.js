@@ -1,6 +1,6 @@
 {
-"version":"4.8",
-"md5":"54944932f9de31aecc60bebb4ad1726b",
+"version":"4.9",
+"md5":"7aa7e5ceeb201970151294626a9e1f90",
 "home_url":"Module_wifiboost.asp",
 "title":"wifi boost",
 "description":"wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。",
@@ -8,7 +8,7 @@
 "tags":"系统 工具",
 "author":"sadog",
 "link":"",
-"build_date":"2022-10-21_20:53:25",
+"build_date":"2023-03-25_00:03:46",
 "server":"42.192.18.234",
 "port":"8083"
 }
