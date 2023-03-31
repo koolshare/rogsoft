@@ -6,9 +6,10 @@ alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 CONFIG_FILE="/tmp/cfddns_status.json"
 LOG_FILE="/tmp/upload/cfddns_log.txt"
 LOGTIME=$(TZ=UTC-8 date -R "+%Y-%m-%d %H:%M:%S")
-[ "$cfddns_method" = "" ] && cfddns_method="curl -s --interface ppp0 whatismyip.akamai.com"
+IPv4Regex="^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})(.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})){3}$"
+IPv6Regex="^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$"
+
 [ "$cfddns_ttl" = "" ] && cfddns_ttl="1"
-get_type="A"
 
 if [ "$cfddns_name" = "@" ];then
 	cfddns_name_domain=$cfddns_domain
@@ -28,66 +29,39 @@ get_bol() {
 }
 
 get_record_response() {
-	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/$cfddns_zid/dns_records?type=$get_type&name=${cfddns_name_domain}&order=type&direction=desc&match=all" \
-	-H "X-Auth-Email: $cfddns_email" \
-	-H "X-Auth-Key: $cfddns_akey" \
+	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records?type=${record_type}&name=${cfddns_name_domain}&order=type&direction=desc&match=all" \
+	-H "X-Auth-Email: ${cfddns_email}" \
+	-H "X-Auth-Key: ${cfddns_akey}" \
 	-H "Content-type: application/json"
 }
 
 update_record() {
-	curl -kLsX PUT "https://api.cloudflare.com/client/v4/zones/$cfddns_zid/dns_records/$cfddns_id" \
-	-H "X-Auth-Email: $cfddns_email" \
-	-H "X-Auth-Key: $cfddns_akey" \
+	curl -kLsX PUT "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records/${cfddns_id}" \
+	-H "X-Auth-Email: ${cfddns_email}" \
+	-H "X-Auth-Key: ${cfddns_akey}" \
 	-H "Content-Type: application/json" \
-	--data '{"type":"'$get_type'","name":"'${cfddns_name_domain}'","content":"'$update_to_ip'","ttl":'$cfddns_ttl',"proxied":'$(get_bol)'}'
+	--data '{"type":"'${record_type}'","name":"'${cfddns_name_domain}'","content":"'${update_to_ip}'","ttl":'${cfddns_ttl}',"proxied":'$(get_bol)'}'
 }
 
 get_info(){
-	get_type="A"
 	cfddns_result=`get_record_response`
 	if [ $(echo $cfddns_result | grep -c "\"success\":true") -gt 0 ];then
-		# CFDDNS的A记录ID
+		# CFDDNS的RECORD ID
 		cfddns_id=`echo $cfddns_result | awk -F"","" '{print $1}' | sed 's/{.*://g' | sed 's/\"//g'`
-		# CFDDNS的A记录IP
-		current_ip=`echo $cfddns_result | awk -F"","" '{print $6}' | grep -oE '([0-9]{1,3}\.?){4}'`
-		echo_date CloudFlare IP为 $current_ip
+		# CFDDNS的RECORD IP
+		record_ip=`echo $cfddns_result | awk -F"","" '{print $6}' | sed -e 's/\"//g' -e 's/content://'`
+		echo_date CloudFlare IP${ip_type}为 $record_ip
 	else
-		dbus set cfddns_status="【$LOGTIME】：获取IPV4解析记录错误！"
+		dbus set cfddns_status_${ip_type}="【$LOGTIME】：获取IP${ip_type}解析记录错误！"
 		exit 1
 	fi
 	
-	localip=`$cfddns_method 2>&1`
-	if [ $(echo $localip | grep -c "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$") -gt 0 ];then 
-		echo_date 本地IP为 $localip
+	localip=`$cfddns_method` 2>&1
+	if [ $(echo $localip | grep -Ec $IPv4Regex) -gt 0 -o $(echo $localip | grep -Ec $IPv6Regex) -gt 0 ];then 
+		echo_date 本地IP${ip_type}为 $localip
 	else
-		dbus set cfddns_status="【$LOGTIME】：获取本地IP错误！"
+		dbus set cfddns_status_${ip_type}="【$LOGTIME】：获取本地IP${ip_type}错误！"
 		exit 1
-	fi
-}
-
-get_local_ipv6(){
-	localipv6=`curl -s http://v4v6.ipv6-test.com/json/defaultproto.php | grep -oE '([a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){0,7}::[a-f0-9]{0,4}(:[a-f0-9]{1,4}){0,7})' 2>&1`
-}
-
-get_info_ipv6(){
-	get_type="AAAA"
-	get_local_ipv6
-	if [ "$localipv6" != "" ];then 
-		echo_date 本地IP为 $localipv6
-		# CFDDNS返回的JSON结果
-		cfddns_result=`get_record_response`
-		if [ $(echo $cfddns_result | grep -c "\"success\":true") -gt 0 ];then 
-			# CFDDNS的AAAA记录ID
-			cfddns_id=`echo $cfddns_result | awk -F"","" '{print $1}' | sed 's/{.*://g' | sed 's/\"//g'`
-			# CFDDNS的AAAA记录IP
-			current_ipv6=`echo $cfddns_result | awk -F"","" '{print $6}' | grep -oE '([a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){0,7}::[a-f0-9]{0,4}(:[a-f0-9]{1,4}){0,7})'`
-			echo_date CfddsnIP为 $current_ipv6
-		else
-			dbus set cfddns_status="【$LOGTIME】：获取IPV6解析记录错误！"
-			exit 1
-		fi
-	else
-		echo_date 没有IPV6地址！
 	fi
 }
 
@@ -103,41 +77,30 @@ update_ip(){
 }
 
 check_update(){
+	if [ $1 -eq 4 ];then
+		record_type="A"
+		ip_type="v4"
+		cfddns_method=$cfddns_method_v4
+		[ "cfddns_method" == "" ] && cfddns_method="curl -s --interface ppp0 v4.ipip.net"
+	else
+		record_type="AAAA"
+		cfddns_method=$cfddns_method_v6
+		[ "cfddns_method" == "" ] && cfddns_method="curl -s --interface ppp0 v6.ipip.net"
+		ip_type="v6"
+	fi
 	echo_date "CloudFlare DDNS更新启动!"
 	get_info
-	if [ "$localip" == "$current_ip" ];then
-		echo_date 两个IP相同，跳过更新！
-		dbus set cfddns_status="【$LOGTIME】：IP地址：$localip 未发生变化，跳过！"
+	if [ "$localip" == "$record_ip" ];then
+		echo_date 两个IP${ip_type}相同，跳过更新！
+		dbus set cfddns_status_${ip_type}="【$LOGTIME】：IP${ip_type}地址：$localip 未发生变化，跳过！"
 	else
 		update_to_ip=$localip
-		echo_date 两个IP不相同，开始更新！
+		echo_date 两个IP${ip_type}不相同，开始更新！
 		update_ip
-		dbus set cfddns_status="【$LOGTIME】：IP地址：$localip 更新成功！"
+		dbus set cfddns_status_${ip_type}="【$LOGTIME】：IP${ip_type}地址：$localip 更新成功！"
 	fi
-	
-	# if [ "$cfddns_ipv6" == "1" ];then
-	# 	get_info_ipv6
-	# 	if [ "$localipv6" == "$current_ipv6" ];then
-	# 		echo_date 两个IPV6相同，跳过更新！
-	# 	else
-	# 		update_to_ip=$localipv6
-	# 		echo_date 两个IPV6不相同，开始更新！
-	# 		update_ip
-	# 	fi
-	# fi
 	echo_date "======================================"
 }
-
-# add_cfddns_cru(){
-# 	sed -i '/cfddns/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
-# 	cru a cfddns "0 */$cfddns_refresh_time * * * /koolshare/scripts/cfddns_config.sh update"
-# }
-# 
-# stop_cfddns(){
-# 	sed -i '/cfddns/d' /var/spool/cron/crontabs/* >/dev/null 2>&1
-# }
-
-# ====================================used by init or cru====================================
 case $1 in
 start)
 	#此处为开机自启，wan重启动设计
@@ -151,7 +114,10 @@ start)
 		
 		echo_date "======================================" >> $LOG_FILE
 		echo_date "检测到网络拨号..." >> $LOG_FILE
-		check_update >> $LOG_FILE
+		check_update 4 >> $LOG_FILE
+		if [ "$cfddns_ipv6" == "1" ];then
+			check_update 6 >> $LOG_FILE
+		fi
 	else
 		logger "[软件中心]: CloudFlare DDNS未设置开机启动，跳过！"
 	fi
@@ -169,7 +135,10 @@ case $2 in
 	if [ "$cfddns_enable" == "1" ];then
 		[ ! -L "/koolshare/init.d/S99cfddns.sh" ] && ln -sf /koolshare/scripts/cfddns_config.sh /koolshare/init.d/S99cfddns.sh
 		echo_date "======================================" >> $LOG_FILE
-		check_update >> $LOG_FILE
+		check_update 4 >> $LOG_FILE
+		if [ "$cfddns_ipv6" == "1" ];then
+			check_update 6 >> $LOG_FILE
+		fi
 	else
 		echo_date "关闭CloudFlare DDNS!" >> $LOG_FILE
 		stop_cfddns
