@@ -1,6 +1,6 @@
 {
-"version":"1.6",
-"md5":"86a5d14c596bafefe2c2d2595f267d44",
+"version":"1.7",
+"md5":"c593de776cc58887a3ca3e243c2d38c8",
 "home_url":"Module_ddnspod.asp",
 "title":"ddnspod",
 "description":"ddnspod",
@@ -8,5 +8,5 @@
 "author":"freexiaoyao",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-20_22:31:30"
+"build_date":"2023-03-25_00:03:18"
 }

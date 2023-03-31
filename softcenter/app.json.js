@@ -74,17 +74,17 @@
         }, 
         {
             "author": "freexiaoyao", 
-            "build_date": "2021-08-20_22:31:30", 
+            "build_date": "2023-03-25_00:03:18", 
             "changelog": "", 
             "description": "ddnspod", 
             "home_url": "Module_ddnspod.asp", 
             "link": "", 
-            "md5": "86a5d14c596bafefe2c2d2595f267d44", 
+            "md5": "c593de776cc58887a3ca3e243c2d38c8", 
             "name": "ddnspod", 
             "tags": "DDNS", 
             "tar_url": "ddnspod/ddnspod.tar.gz", 
             "title": "ddnspod", 
-            "version": "1.5"
+            "version": "1.7"
         }, 
         {
             "author": "xiaobao", 
@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-10-21_20:53:34", 
+            "build_date": "2023-03-24_10:54:38", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "d43113819312ef53a7d6521a155f4699", 
+            "md5": "177076c3a41bbd57270d2fef9032c202", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "5.4"
+            "version": "5.7"
         }, 
         {
             "author": "囍冯总囍", 
@@ -382,17 +382,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-12-10_22:42:30", 
+            "build_date": "2023-03-22_23:09:33", 
             "changelog": "", 
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
             "home_url": "Module_tailscale.asp", 
             "link": "", 
-            "md5": "e55ffcfcccb3681bae32759ef2489dbb", 
+            "md5": "e282c8681c5bb3201428a085bea24318", 
             "name": "tailscale", 
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
-            "version": "1.2"
+            "version": "1.5"
         }, 
         {
             "author": "sadog", 
@@ -410,19 +410,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-10-21_20:53:25", 
+            "build_date": "2023-03-26_21:51:28", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "54944932f9de31aecc60bebb4ad1726b", 
+            "md5": "391caeb2d443da03fa2954e8f2e51a13", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.8"
+            "version": "4.9.1"
         }, 
         {
             "author": "sadog", 

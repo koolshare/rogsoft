@@ -17,7 +17,6 @@
 <script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
-<script type="text/javascript" src="/help.js"></script>
 <script type="text/javascript" src="/validator.js"></script>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/js/httpApi.js"></script>
@@ -25,6 +24,7 @@
 <script type="text/javascript" src="/js/table/table.js"></script>
 <script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
+<script type="text/javascript" src="/help.js"></script>
 <style>
 a:focus {
 	outline: none;
@@ -219,7 +219,7 @@ input[type=button]:focus {
 <script>
 var odm = '<% nvram_get("productid"); %>'
 var lan_ipaddr = "<% nvram_get(lan_ipaddr); %>"
-var params_chk = ['tailscale_enable'];
+var params_chk = ['tailscale_enable', 'tailscale_ipv4_enable', 'tailscale_ipv6_enable'];
 var	refresh_flag;
 var count_down;
 var myid;
@@ -256,7 +256,7 @@ function get_dbus_data(){
 	});
 }
 function conf2obj(){
-	for (var i = 0; i < params_chk.length; i++) {
+	for (var i = 0; i < params_chk.length; i++) { 
 		if(dbus[params_chk[i]]){
 			E(params_chk[i]).checked = dbus[params_chk[i]] != "0";
 		}
@@ -575,6 +575,57 @@ function write_netcheck() {
 		}
 	});
 }
+function open_alist_hint(itemNum) {
+	statusmenu = "";
+	width = "350px";
+	if (itemNum == 1) {
+		width = "600px";
+		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;1. 通常情况下，tailscale会自动使用你所有网络作为出口（Endpoints）备选，包括ipv4和ipv6（如果开启了ipv6的话），tailscale客户端（peer）之间进行通讯的时候，会自动选取一个网络进行直连通讯，比如当双方客户端都有公网ipv6地址时候，会利用ipv6进行通讯，如果无法通讯，会使用IPV4打洞后直连通讯。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;2. 一般来说，如果我们同时勾选IPV4和IPV6（如果路由器开启了ipv6的话），tailscale会自动选取速度较快的IP协议进行peer（客户端）之间的连接，所以一般情况我们将其都勾选就行了。但是也有时候tailscale客户端之间的连接会使用到速度较慢的IP协议上，此时我们可以通过勾选/去勾选右侧的IP协议，来达到强制使用特定IP协议进行tailscale客户端之间通讯的目的。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;3. 如果此时我们两台tailscale客户端都支持ipv4和ipv6，且ipv4速度非常慢（被公司单位防火墙限制等情况），而ipv6速度较好，希望tailscale能强制使用ipv6进行peer（客户端）之间的通讯，此时将IPV4选项去掉，插件会使用iptables规则丢掉tailscale相关的ipv4数据包，这样就能强制其使用ipv6。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;4. 同理，如果你希望强制使用IPV4，而不是IPV6进行客户端之间的通讯，也可以去掉ipv6选项<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;5. 你可以使用tailscale status按钮，查看当前本路由器与其它tailscale客户端通讯使用的ip协议。<br/><br/>"
+		_caption = "使用网络";
+		return overlib(statusmenu, OFFSETX, -160, OFFSETY, 10, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
+	}
+	if (itemNum == 2) {
+		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;1. 此处显示alist二进制程序的版本号及其内置的alist面板版本号。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;2. alist二进制程序下载自alist的github项目release页面的alist-linux-arm64版本。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;3.目前只支持hnd机型中的armv8机型，比如cpu型号为BCM4906、BCM4908、BCM4912等armv8机型。<br/><br/>"
+		_caption = "运行状态";
+	}
+
+	return overlib(statusmenu, OFFSETX, 10, OFFSETY, 10, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
+
+	var tag_name = document.getElementsByTagName('a');
+	for (var i = 0; i < tag_name.length; i++)
+		tag_name[i].onmouseout = nd;
+
+	if (helpcontent == [] || helpcontent == "" || hint_array_id > helpcontent.length)
+		return overlib('<#defaultHint#>', HAUTO, VAUTO);
+	else if (hint_array_id == 0 && hint_show_id > 21 && hint_show_id < 24)
+		return overlib(helpcontent[hint_array_id][hint_show_id], FIXX, 270, FIXY, 30);
+	else {
+		if (hint_show_id > helpcontent[hint_array_id].length)
+			return overlib('<#defaultHint#>', HAUTO, VAUTO);
+		else
+			return overlib(helpcontent[hint_array_id][hint_show_id], HAUTO, VAUTO);
+	}
+}
+function mOver(obj, hint){
+	$(obj).css({
+		"color": "#00ffe4",
+		"text-decoration": "underline"
+	});
+	open_alist_hint(hint);
+}
+function mOut(obj){
+	$(obj).css({
+		"color": "#fff",
+		"text-decoration": ""
+	});
+	E("overDiv").style.visibility = "hidden";
+}
 </script>
 </head>
 <body onload="init();">
@@ -691,6 +742,15 @@ function write_netcheck() {
 													<th>连接状态</th>
 													<td>
 														<a type="button" id="tailscale_status" class="ks_btn" onclick="tailscale_status();" target="_blank" style="margin-left:2px">tailscale status</a>
+													</td>
+												</tr>
+												<tr>
+													<th><a onmouseover="mOver(this, 1)" onmouseout="mOut(this)" class="hintstyle" href="javascript:void(0);">使用网络</a></th>
+													<td>
+														ipv4
+														<input type="checkbox" id="tailscale_ipv4_enable" style="vertical-align:middle;" checked="true">
+														ipv6
+														<input type="checkbox" id="tailscale_ipv6_enable" style="vertical-align:middle;" checked="true">
 													</td>
 												</tr>
 											</table>
