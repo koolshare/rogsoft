@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.1.9
+   - fix	修复软件中心在windows 4K 150%缩放比例下，部分插件边框厚度显示的问题（无功能更新，仅针对前端）
+
 1.9.1.4
    - update	修复部分用户升级软件中心提示出现极少错误的问题！
 

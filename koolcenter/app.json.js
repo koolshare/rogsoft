@@ -58,33 +58,33 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-09-01_10:47:54", 
+            "build_date": "2022-12-07_20:38:28", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "8049d81970e17d399387e21061c73444", 
+            "md5": "0dda878118d78762de877dddb6f3857f", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.7"
+            "version": "3.8"
         }, 
         {
             "author": "freexiaoyao", 
-            "build_date": "2021-08-20_22:31:30", 
+            "build_date": "2023-03-25_00:03:18", 
             "changelog": "", 
             "description": "ddnspod", 
             "home_url": "Module_ddnspod.asp", 
             "link": "", 
-            "md5": "86a5d14c596bafefe2c2d2595f267d44", 
+            "md5": "c593de776cc58887a3ca3e243c2d38c8", 
             "name": "ddnspod", 
             "tags": "DDNS", 
             "tar_url": "ddnspod/ddnspod.tar.gz", 
             "title": "ddnspod", 
-            "version": "1.5"
+            "version": "1.7"
         }, 
         {
             "author": "xiaobao", 
@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-29_09:00:32", 
+            "build_date": "2023-03-24_10:54:38", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "552d49b6c4311fb22b5a8c98b23585c8", 
+            "md5": "177076c3a41bbd57270d2fef9032c202", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "5.4"
+            "version": "5.7"
         }, 
         {
             "author": "囍冯总囍", 
@@ -382,6 +382,20 @@
         }, 
         {
             "author": "sadog", 
+            "build_date": "2023-03-22_23:09:33", 
+            "changelog": "", 
+            "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
+            "home_url": "Module_tailscale.asp", 
+            "link": "", 
+            "md5": "e282c8681c5bb3201428a085bea24318", 
+            "name": "tailscale", 
+            "tags": "穿透 VPN", 
+            "tar_url": "tailscale/tailscale.tar.gz", 
+            "title": "Tailscale", 
+            "version": "1.5"
+        }, 
+        {
+            "author": "sadog", 
             "build_date": "2022-04-20_22:16:19", 
             "changelog": "", 
             "description": "使用U盘轻松挂载jffs", 
@@ -396,37 +410,37 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-05-19_22:43:32", 
+            "build_date": "2023-03-26_21:51:28", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "21f0d66d7cf3850b6dcf0af9f6386cbb", 
+            "md5": "391caeb2d443da03fa2954e8f2e51a13", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.7"
+            "version": "4.9.1"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-03-17_21:41:35", 
+            "build_date": "2022-11-02_13:54:31", 
             "changelog": "", 
             "description": "ZeroTier 内网穿透", 
             "home_url": "Module_zerotier.asp", 
             "link": "", 
-            "md5": "f6dabd89c3ff3fb4a59c96e4ad25e158", 
+            "md5": "cf5c2e40189ad6048c93d2a4d15018d5", 
             "name": "zerotier", 
             "tags": "穿透 VPN", 
             "tar_url": "zerotier/zerotier.tar.gz", 
             "title": "ZeroTier", 
-            "version": "1.3.9"
+            "version": "1.4.0"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "55b85c474ded0d3181712cbf110c90d3", 
+    "md5": "ca0b5c7891a12ab80dcf11d2a99fccac", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.1.8"
+    "version": "1.9.1.9"
 }
