@@ -89,13 +89,16 @@ var dbus = {};
 var _responseLen;
 var noChange = 0;
 var x = 5;
-var params_inp = ['cfddns_email', 'cfddns_akey', 'cfddns_zid', 'cfddns_name', 'cfddns_domain', 'cfddns_ttl', 'cfddns_method'];
-var params_chk = ['cfddns_enable', 'cfddns_proxied'];
-//var params_chk = ['cfddns_enable', 'cfddns_proxied', 'cfddns_ipv6'];
+var params_inp = ['cfddns_email', 'cfddns_akey', 'cfddns_zid', 'cfddns_name', 'cfddns_domain', 'cfddns_ttl', 'cfddns_method_v4', 'cfddns_method_v6'];
+var params_chk = ['cfddns_enable', 'cfddns_proxied', 'cfddns_ipv6'];
 
 function init(){
 	show_menu(menu_hook);
 	get_dbus_data();
+	conf2obj();
+	toggle_func();
+	update_visibility();
+	get_status();
 }
 
 function conf2obj(){
@@ -119,17 +122,17 @@ function get_dbus_data(){
 		async: false,
 		success: function(data) {
 			dbus = data.result[0];
-			conf2obj();
-			toggle_func();
-			update_visibility();
-			get_status();
 		}
 	});
 }
 
 function get_status(){
 	if (dbus["cfddns_enable"] == "1"){
-		E('script_status').innerHTML = dbus["cfddns_status"] || "获取状态失败！";
+		inner_status = dbus["cfddns_status_v4"] || "获取状态失败！";
+		if (dbus["cfddns_ipv6"] == "1"){
+			inner_status = inner_status + "<br>" + (dbus["cfddns_status_v6"] || "获取状态失败！");
+		}
+		E('script_status').innerHTML = inner_status;
 	}else{
 		E('script_status').innerHTML = "插件未开启！";
 	}
@@ -156,6 +159,7 @@ function get_status1(){
 }
 
 function save(){
+	setInterval("get_status();",2000);
 	var dbus_new = {}
 	$("#show_btn2").trigger("click");
 	// collect data from input and checkbox
@@ -175,12 +179,11 @@ function save(){
 		dataType: "json",
 		data: JSON.stringify(postData),
 		success: function(response) {
-			console.log(response);
 			if (response.result == id){
 				get_log();
 				if(E("cfddns_enable").checked == false){
 					setTimeout("refreshpage();", 1000);
-				}
+				};
 			}
 		}
 	});
@@ -251,6 +254,16 @@ function toggle_func(){
 			E("cfddns_log").style.display = "none";
 			E("cfddns_help").style.display = "";
 		});
+	$("#cfddns_ipv6").click(
+		function(e){
+			if($('#cfddns_ipv6').prop("checked")){
+				E('cfddns_method_v6_tr').style.visibility = "";
+				E('cfddns_method_v6_tr').style.display = "";
+			}else{
+				E('cfddns_method_v6_tr').style.visibility = "hidden";
+				E('cfddns_method_v6_tr').style.display = "none";
+			};
+		});
 }
 
 function update_visibility(){
@@ -273,6 +286,13 @@ function update_visibility(){
 		E('cfddns_log').style.display = "none";
 		E('cfddns_help').style.display = "";
 	}
+	if($('#cfddns_ipv6').prop("checked")){
+		E('cfddns_method_v6_tr').style.visibility = "";
+		E('cfddns_method_v6_tr').style.display = "";
+	}else{
+		E('cfddns_method_v6_tr').style.visibility = "hidden";
+		E('cfddns_method_v6_tr').style.display = "none";
+	};
 }
 
 function menu_hook(){
@@ -417,16 +437,22 @@ function reload_Soft_Center(){
 														<input type="checkbox" id="cfddns_proxied" name="cfddns_proxied" >
 													</td>
 												</tr>
-												<!--<tr>
+												<tr>
 													<th title="请先确认是否路由能获得IPV6地址,并且能上网">IPV6支持[?]</th>
 													<td>
 														<input type="checkbox" id="cfddns_ipv6" name="cfddns_ipv6" >
 													</td>
-												</tr>-->
-												<tr>
-													<th title="可自行修改命令行，以获得正确的公网IP。如添加 '--interface vlan2' 以指定多播情况下的接口,可以空着">获得IP命令(get ip)[?]</th>
+												</tr>
+												<tr id="cfddns_method_v4_tr">
+													<th title="可自行修改命令行，以获得正确的公网IPv4。如添加 '--interface vlan2' 以指定多播情况下的接口,可以空着">获得IPv4命令(get ip)[?]</th>
 													<td>
-														<input type="text" id="cfddns_method" name="cfddns_method" value="curl -s --interface ppp0 whatismyip.akamai.com" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
+														<input type="text" id="cfddns_method_v4" name="cfddns_method_v6" value="curl -s --interface ppp0 v4.ipip.net" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
+													</td>
+												</tr>
+												<tr id="cfddns_method_v6_tr" style="visibility: hidden; display: none;">
+													<th title="可自行修改命令行，以获得正确的公网IPv6。如添加 '--interface vlan2' 以指定多播情况下的接口,可以空着">获得IPv6命令(get ip)[?]</th>
+													<td>
+														<input type="text" id="cfddns_method_v6" name="cfddns_method_v6" value="curl -s --interface ppp0 v6.ipip.net" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
 													</td>
 												</tr>
 											</table>
