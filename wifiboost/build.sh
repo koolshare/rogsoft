@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="wifiboost"
-VERSION="4.9.1"
+VERSION="4.9.2"
 TITLE="wifi boost"
 DESCRIPTION="wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。"
 HOME_URL="Module_wifiboost.asp"
