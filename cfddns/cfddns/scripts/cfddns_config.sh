@@ -29,16 +29,14 @@ get_bol() {
 }
 
 get_record_response() {
-	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records?type=${record_type}&name=${cfddns_name_domain}&order=type&direction=desc&match=all" \
-	-H "X-Auth-Email: ${cfddns_email}" \
-	-H "X-Auth-Key: ${cfddns_akey}" \
+	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records?type=${record_type}&name=${cfddns_name_domain}" \
+	-H "Authorization: Bearer ${cfddns_akey}" \
 	-H "Content-type: application/json"
 }
 
 update_record() {
 	curl -kLsX PUT "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records/${cfddns_id}" \
-	-H "X-Auth-Email: ${cfddns_email}" \
-	-H "X-Auth-Key: ${cfddns_akey}" \
+	-H "Authorization: Bearer ${cfddns_akey}" \
 	-H "Content-Type: application/json" \
 	--data '{"type":"'${record_type}'","name":"'${cfddns_name_domain}'","content":"'${update_to_ip}'","ttl":'${cfddns_ttl}',"proxied":'$(get_bol)'}'
 }
