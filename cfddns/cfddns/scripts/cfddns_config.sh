@@ -29,7 +29,7 @@ get_bol() {
 }
 
 get_record_response() {
-	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records?type=${record_type}&name=${cfddns_name_domain}" \
+	curl -kLsX GET "https://api.cloudflare.com/client/v4/zones/${cfddns_zid}/dns_records?type=${record_type}&name=${cfddns_name_domain}&order=type&direction=desc&match=all" \
 	-H "Authorization: Bearer ${cfddns_akey}" \
 	-H "Content-type: application/json"
 }
