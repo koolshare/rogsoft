@@ -1,6 +1,6 @@
 {
-"version":"2.2",
-"md5":"20dec7108c4a49d4c3bb4e2e4b1af4e1",
+"version":"2.3",
+"md5":"5213fca9471033a4b1afc137d7007fab",
 "home_url":"Module_aliddns.asp",
 "title":"阿里DDNS",
 "description":"aliddns",
@@ -8,5 +8,5 @@
 "author":"kyrios, sadog",
 "link":"",
 "changelog":"",
-"build_date":"2022-03-29_10:45:17"
+"build_date":"2023-05-10_16:42:14"
 }

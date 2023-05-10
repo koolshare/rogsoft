@@ -1,5 +1,11 @@
 Koolshare Asuswrt-Merlin Aliddns Changelog
 ===========================================
+2.3
+   - update     修复使用多级子域时，阿里云API无法获取Record ID问题
+
+2.2
+   - update     优化代码逻辑
+
 2.1
    - update	移除在【网络地图】首页显示aliddns域名的功能，因为这和系统DDNS有冲突并导致大量错误日志
 
