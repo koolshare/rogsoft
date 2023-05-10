@@ -1,5 +1,8 @@
 ﻿<script type="text/javascript" src="/js/jquery.js"></script>
 <script language="javascript">
+	function sleep (time) {
+		return new Promise((resolve) => setTimeout(resolve, time));
+	}
 	function try_on(){
 		var id = parseInt(Math.random() * 100000000);
 		var postData1 = {"id": id, "method": "center_config.sh", "params":["1"], "fields": ""};
@@ -12,11 +15,13 @@
 			dataType: "json",
 			success: function(response) {
 				if(response.result == id){
-					//alert("切换成功！");
-					location.href = "Module_Softcenter.asp"
+					sleep(100).then(() => {
+						location.href = "Module_Softcenter.asp"
+					});
 				}else{
-					alert(response.result);
-					location.href = "Module_Softcenter.asp"
+					sleep(100).then(() => {
+						location.href = "Module_Softcenter.asp"
+					});
 				}
 			},
 			error: function(){

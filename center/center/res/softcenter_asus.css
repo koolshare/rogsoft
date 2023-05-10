@@ -1,4 +1,7 @@
 /*common_style*/
+.FormTable, .FormTable thead tr td, .FormTable th, .FormTable td {
+	border-width: 0.5px
+}
 .KoolshareBottom {
 	width: 205px;
 	height: 100px;
