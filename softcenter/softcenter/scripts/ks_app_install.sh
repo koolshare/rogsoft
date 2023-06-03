@@ -323,17 +323,23 @@ install_ks_module() {
 	set_skin
 
 	# 16. 一些插件并未使用nvram值sc_skin来控制插件皮肤，还是使用的老的方式，做下兼容
-	if [ "${UI_TYPE}" == "ROG" ];then
-		echo_date "为插件【${softcenter_installing_name}】安装ROG风格皮肤..."
-		sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
-	else
-		if [ "${UI_TYPE}" == "TUF" ];then
-			echo_date "为插件【${softcenter_installing_name}】安装TUF风格皮肤..."
-			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+	if [ "${softcenter_installing_todo}" != "softcenter" -a "${softcenter_installing_todo}" != "koolcenter" ];then
+		if [ "${UI_TYPE}" == "ROG" ];then
+			echo_date "为插件【${softcenter_installing_name}】安装ROG风格皮肤..."
 			sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
 		else
-			echo_date "为插件【${softcenter_installing_name}】安装ASUSWRT风格皮肤..."
-			sed -i '/rogcss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+			if [ "${UI_TYPE}" == "TUF" ];then
+				echo_date "为插件【${softcenter_installing_name}】安装TUF风格皮肤..."
+				sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+				sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+			elif [ "${UI_TYPE}" == "TS" ];then
+				echo_date "为插件【${softcenter_installing_name}】安装天选TS风格皮肤..."
+				sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+				sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+			else
+				echo_date "为插件【${softcenter_installing_name}】安装ASUSWRT风格皮肤..."
+				sed -i '/rogcss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
+			fi
 		fi
 	fi
 
