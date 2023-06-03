@@ -12,7 +12,7 @@ rm -f softcenter.tar.gz
 python ./gen_install.py stage1
 
 # ----------------------------
-if [ "$ME" == "build.sh" ];then
+if [ "$ME" = "build.sh" ];then
 	# for hnd
 	echo "build koolcenter for hnd"
 	rm -rf $DIR/build
@@ -27,14 +27,14 @@ if [ "$ME" == "build.sh" ];then
 	cp -rf ${DIR}/../softcenter/softcenter/install.sh $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/res/* $DIR/build/softcenter/res
 	tar -zcf softcenter.tar.gz softcenter
-	if [ "$?" == "0" ];then
+	if [ "$?" = "0" ];then
 		echo "build success!"
 		mv $DIR/build/softcenter.tar.gz $DIR/
 		cp -rf $DIR/softcenter.tar.gz $DIR/koolcenter.tar.gz
 	fi
 	rm -rf $DIR/build
 	cd $DIR
-elif [ "$ME" == "build_mtk.sh" ];then
+elif [ "$ME" = "build_mtk.sh" ];then
 	# for mtk
 	echo "build koolcenter for mtk"
 	rm -rf $DIR/build
@@ -49,7 +49,7 @@ elif [ "$ME" == "build_mtk.sh" ];then
 	cp -rf ${DIR}/../softcenter/softcenter/install.sh $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/res/* $DIR/build/softcenter/res	
 	tar -zcf softcenter.tar.gz softcenter
-	if [ "$?" == "0" ];then
+	if [ "$?" = "0" ];then
 		echo "build success!"
 		mv $DIR/build/softcenter.tar.gz $DIR/
 		cp -rf $DIR/softcenter.tar.gz $DIR/koolcenter.tar.gz

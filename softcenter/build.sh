@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # build script for rogsoft project
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
@@ -15,7 +15,7 @@ chmod 755 ./softcenter/scripts/ks_app_install.sh
 
 # ----------------------------
 # for mtk
-if [ "$ME" == "build.sh" ];then
+if [ "$ME" = "build.sh" ];then
 	echo "build softcenter for hnd"
 	rm -rf $DIR/build
 	mkdir -p $DIR/build
@@ -23,13 +23,13 @@ if [ "$ME" == "build.sh" ];then
 	cd ./build
 	rm -rf softcenter/bin-mtk
 	tar -zcf softcenter.tar.gz softcenter
-	if [ "$?" == "0" ];then
+	if [ "$?" = "0" ];then
 		echo "build success!"
 		mv softcenter.tar.gz ..
 	fi
 	cd ..
 	rm -rf ./build
-elif [ "$ME" == "build_mtk.sh" ];then
+elif [ "$ME" = "build_mtk.sh" ];then
 	echo "build softcenter for mtk"
 	rm -rf ./build
 	mkdir -p ./build
@@ -38,7 +38,7 @@ elif [ "$ME" == "build_mtk.sh" ];then
 	cp -rf softcenter/bin-mtk/* softcenter/bin/
 	rm -rf softcenter/bin-mtk
 	tar -zcf softcenter.tar.gz softcenter
-	if [ "$?" == "0" ];then
+	if [ "$?" = "0" ];then
 		echo "build success!"
 		mv softcenter.tar.gz ..
 	fi
