@@ -1,7 +1,6 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- version: 1.8 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache"/>
@@ -23,60 +22,6 @@
 <script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
-#app[skin=ASUSWRT] .rog_btn {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-#app[skin=ASUSWRT] .rog_btn:hover {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-#app[skin=ROG] .rog_btn {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-#app[skin=ROG] .rog_btn:hover {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-#app[skin=TUF] .rog_btn {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #92650F  0%, #74500b 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-#app[skin=TUF] .rog_btn:hover {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #c58813  0%, #92650F 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
 .loading_bar {
 	width:250px;
 	border: 0px;
@@ -428,7 +373,7 @@ function menu_hook(title, tab) {
 															</table>
 														</div>
 														<div style="margin-top: -29px;margin-left: 280px;">
-														<button id="ram_flush" onclick="flush_ram();" class="rog_btn" style="width:110px;cursor:pointer;">一键释放内存</button>
+														<button id="ram_flush" onclick="flush_ram();" class="ks_btn" style="width:110px;cursor:pointer;">一键释放内存</button>
 														</div>
 													</td>
 												</tr>
@@ -444,7 +389,7 @@ function menu_hook(title, tab) {
 															<option value="3">3档</option>
 															<option value="4">4档</option>
 														</select>
-														<a style="cursor:pointer;margin-left: 10px;" class="rog_btn" onclick="apply_fan()" >应用风扇档位</a>
+														<a style="cursor:pointer;margin-left: 10px;" class="ks_btn" onclick="apply_fan()" >应用风扇档位</a>
 													</td>
 												</tr>
 											</table>

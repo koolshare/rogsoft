@@ -94,22 +94,6 @@ set_skin(){
 	fi
 }
 
-set_url(){
-	# set url
-	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
-	if [ "${LINUX_VER}" -ge "41" ];then
-		local SC_URL=https://rogsoft.ddnsto.com
-	fi
-	if [ "${LINUX_VER}" -eq "26" ];then
-		local SC_URL=https://armsoft.ddnsto.com
-	fi
-	local SC_URL_NVRAM=$(nvram get sc_url)
-	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
-		nvram set sc_url=${SC_URL}
-		nvram commit
-	fi
-}
-
 get_current_jffs_device(){
 	# 查看当前/jffs的挂载点是什么设备，如/dev/mtdblock9, /dev/sda1；有usb2jffs的时候，/dev/sda1，无usb2jffs的时候，/dev/mtdblock9，出问题未正确挂载的时候，为空
 	local cur_patition=$(df -h | /bin/grep /jffs | awk '{print $1}')
@@ -337,8 +321,6 @@ center_install() {
 
 	# reset some default value
 	echo_date "设定一些默认值..."
-	set_url
-	
 	if [ -n "$(pidof skipd)" -a -f "/usr/bin/dbus" ];then
 		/usr/bin/dbus set softcenter_installing_todo=""
 		/usr/bin/dbus set softcenter_installing_title=""

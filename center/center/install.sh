@@ -2,7 +2,6 @@
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 MODEL=
-UI_TYPE=ASUSWRT
 FW_TYPE_CODE=
 FW_TYPE_NAME=
 DIR=$(cd $(dirname $0); pwd)
@@ -23,7 +22,7 @@ get_fw_type() {
 	if [ -d "/koolshare" ];then
 		if [ -n "${KS_TAG}" ];then
 			FW_TYPE_CODE="2"
-			FW_TYPE_NAME="koolshare官改固件"
+			FW_TYPE_NAME="${KS_TAG}官改固件"
 		else
 			FW_TYPE_CODE="4"
 			FW_TYPE_NAME="koolshare梅林改版固件"
@@ -39,8 +38,16 @@ get_fw_type() {
 	fi
 }
 
+platform_test(){
+	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
+	if [ -d "/koolshare" -a -f "/usr/bin/skipd" -a "${LINUX_VER}" -ge "41" ];then
+		echo_date 机型："${MODEL} ${FW_TYPE_NAME} 符合安装要求，开始安装插件！"
+	else
+		exit_install 1
+	fi
+}
+
 set_skin(){
-	# new nethod: use nvram value to set skin
 	local UI_TYPE=ASUSWRT
 	local SC_SKIN=$(nvram get sc_skin)
 	local ROG_FLAG=$(grep -o "680516" /www/form_style.css 2>/dev/null|head -n1)
@@ -86,15 +93,6 @@ set_skin(){
 	fi
 }
 
-platform_test(){
-	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
-	if [ -d "/koolshare" -a -f "/usr/bin/skipd" -a "${LINUX_VER}" -ge "41" ];then
-		echo_date 机型："${MODEL} ${FW_TYPE_NAME} 符合安装要求，开始安装插件！"
-	else
-		exit_install 1
-	fi
-}
-
 exit_install(){
 	local state=$1
 	case $state in
@@ -114,23 +112,20 @@ exit_install(){
 }
 
 set_kc_value(){
-	local SC_URL=$(nvram get sc_url)
-
-	if [ -z "${SC_URL}" ];then
-		local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
-		if [ "${LINUX_VER}" -ge "41" ];then
-			nvram set sc_url=https://rogsoft.ddnsto.com
-			nvram commit
-		fi
-		if [ "${LINUX_VER}" -eq "26" ];then
-			nvram set sc_url=https://armsoft.ddnsto.com
-			nvram commit
-		fi
+	# set url, do it before platform_test
+	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
+	if [ "${LINUX_VER}" -ge "41" ];then
+		local SC_URL=https://rogsoft.ddnsto.com
 	fi
-
-	local SC_SKN=$(nvram get sc_skin)
-	if [ -z "${SC_SKN}" ];then
-		nvram set sc_skin="${UI_TYPE}"
+	if [ "${LINUX_VER}" -eq "26" ];then
+		local SC_URL=https://armsoft.ddnsto.com
+	fi
+	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "TX-AX6000" ];then
+		local SC_URL=https://mtksoft.ddnsto.com
+	fi
+	local SC_URL_NVRAM=$(nvram get sc_url)
+	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
+		nvram set sc_url=${SC_URL}
 		nvram commit
 	fi
 }
