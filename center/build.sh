@@ -16,16 +16,20 @@ DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 # prepare, copy koolcenter necessary file
 rm -rf $DIR/center/res/soft-v*
 
+# get VERSION
+soft_ver=$(cat $DIR/../softcenter/build.sh |grep "VERSION=" | cut -d "=" -f2)
+kool_ver=$(cat $DIR/../koolcenter/build.sh |grep "VERSION=" | cut -d "=" -f2)
+
 soft_folder=$(dirname $DIR/../koolcenter/softcenter/res/soft-v*/assets)
 
 cp $DIR/../koolcenter/softcenter/webs/Module_Softcenter.asp $DIR/center/webs/Module_Softcenter_new.asp
 cp -rf $soft_folder $DIR/center/res/
 cp $DIR/../koolcenter/softcenter/scripts/ks_home_status.sh $DIR/center/scripts/
-cp $DIR/../koolcenter/softcenter/.soft_ver $DIR/center/.soft_ver_new
+echo ${kool_ver} >$DIR/center/.soft_ver_new
 
 cp $DIR/../softcenter/softcenter/webs/Module_Softcenter.asp $DIR/center/webs/Module_Softcenter_old.asp
 cp $DIR/../softcenter/softcenter/webs/Module_Softsetting.asp $DIR/center/webs/Module_Softsetting.asp
-cp $DIR/../softcenter/softcenter/.soft_ver $DIR/center/.soft_ver_old
+echo ${soft_ver} >$DIR/center/.soft_ver_old
 
 cp $DIR/../softcenter/softcenter/res/softcenter_*.css $DIR/center/res/
 
