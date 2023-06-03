@@ -20,15 +20,19 @@ TARGET_DIR=/tmp/upload
 set_skin(){
 	UI_TYPE=ASUSWRT
 	local SC_SKIN=$(nvram get sc_skin)
-	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
-	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
+	local ROG_FLAG=$(grep -o "680516" /www/form_style.css 2>/dev/null|head -n1)
+	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css 2>/dev/null|head -n1)
+	local TS_FLAG=$(grep -o "2ED9C3" /www/css/difference.css 2>/dev/null|head -n1)
 	if [ -n "${ROG_FLAG}" ];then
 		UI_TYPE="ROG"
 	fi
 	if [ -n "${TUF_FLAG}" ];then
 		UI_TYPE="TUF"
 	fi
-	
+	if [ -n "${TS_FLAG}" ];then
+		UI_TYPE="TS"
+	fi
+
 	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
 		nvram set sc_skin="${UI_TYPE}"
 		nvram commit
@@ -42,11 +46,11 @@ jffs_space(){
 
 clean(){
 	if [ -n "${NAME_PREFIX}" -a -d "/tmp/${NAME_PREFIX}" ];then
-		echo_date "删除文件夹-1：/tmp/${NAME_PREFIX}"
+		echo_date "删除文件夹：/tmp/${NAME_PREFIX}"
 		rm -rf /tmp/${NAME_PREFIX} >/dev/null 2>&1
 	fi
 	if [ -n "${MODULE_NAME}" -a -d "/tmp/${MODULE_NAME}" ];then
-		echo_date "删除文件夹-2：/tmp/${MODULE_NAME}"
+		echo_date "删除文件夹：/tmp/${MODULE_NAME}"
 		rm -rf /tmp/${MODULE_NAME} >/dev/null 2>&1
 	fi
 	if [ -n "${TAR_NAME}" -a -f "/tmp/${TAR_NAME}" ];then
@@ -215,15 +219,20 @@ install_tar(){
 		exit_tar_install 1
 	fi
 
-	# 13. 检查下安装包是否是hnd的
-	local PLATFORM=$(grep -E "hnd" ${SCRIPT_AB_DIR}/.valid)
+	# 13. 检查下安装包是否是本平台的
+	if [ "$(nvram get odmpid)" == "TX-AX6000" ];then
+		VALID_STRING="mtk"
+	else
+		VALID_STRING="hnd"
+	fi
+	local PLATFORM=$(grep -E $VALID_STRING ${SCRIPT_AB_DIR}/.valid)
 	if [ -f "${SCRIPT_AB_DIR}/.valid" -a -n "${PLATFORM}" ];then
 		continue
 	elif [ "${MODULE_NAME}" == "shadowsocks" ];then
-		# hnd的不可描述包，有些版本没有校验字符串，避免安装失败
+		# 不可描述包，有些版本没有校验字符串，避免安装失败
 		continue
 	else
-		echo_date "你上传的离线安装包不是hnd/axhnd/axhnd.675x平台的离线包！！！"
+		echo_date "你上传的离线安装包不是ASUS ${VALID_STRING}平台的离线包！！！"
 		echo_date "请上传正确的离线安装包！！！"
 		echo_date "删除相关文件并退出..."
 		exit_tar_install 1

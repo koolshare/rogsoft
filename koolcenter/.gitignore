@@ -1,1 +1,3 @@
-shell
+*.tar.gz
+app.json.js
+config.json.js

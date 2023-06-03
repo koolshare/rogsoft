@@ -30,17 +30,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-04-20_23:05:17", 
+            "build_date": "2023-05-10_23:49:25", 
             "changelog": "", 
             "description": "koolcenter/softcenter 一键来回切换！", 
             "home_url": "Module_center.asp", 
             "link": "", 
-            "md5": "ceb79fca9e616fe12b3d98c5c9874a73", 
+            "md5": "b65663c35bcb17ca0d96b9bf52ce9d28", 
             "name": "center", 
             "tags": "辅助 工具", 
             "tar_url": "center/center.tar.gz", 
             "title": "软件中心一键切换", 
-            "version": "1.6"
+            "version": "1.7"
         }, 
         {
             "author": "sadog", 
@@ -410,19 +410,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-03-26_21:51:28", 
+            "build_date": "2023-04-10_15:51:15", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "391caeb2d443da03fa2954e8f2e51a13", 
+            "md5": "be37aac6eac01c01ad43df3832d01940", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.9.1"
+            "version": "4.9.2"
         }, 
         {
             "author": "sadog", 
@@ -440,7 +440,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "ca0b5c7891a12ab80dcf11d2a99fccac", 
+    "md5": "7458f483d95fa2a09d62fc80b1c20368", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
     "version": "1.9.1.9"
 }

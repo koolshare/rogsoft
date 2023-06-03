@@ -288,6 +288,13 @@ String.prototype.myReplace = function(f, e){
     return this.replace(reg, e); 
 }
 
+var ro_model = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
+if ( ro_model == "TX-AX6000" ){
+	var SOFT_ARCH = "mtksoft"
+}else{
+	var SOFT_ARCH = "rogsoft"
+}
+
 function checkField(o, f, d) {
 	if (typeof o[f] == "undefined") {
 		o[f] = d;
@@ -296,7 +303,7 @@ function checkField(o, f, d) {
 }
 function appPostScript(moduleInfo, script) {
 	var data = {};
-	data["softcenter_home_url"] = "https://rogsoft.ddnsto.com";
+	data["softcenter_home_url"] = "https://" + SOFT_ARCH + ".ddnsto.com";
 	data["softcenter_installing_todo"] = moduleInfo.name;
 	data["softcenter_installing_title"] = moduleInfo.title;
 	if (script == "ks_app_install.sh") {
@@ -420,7 +427,9 @@ function renderView(apps) {
 	$('.show-uninstall-btn').val('未安装(' + uninstallCount + ')');
 }
 function getRemoteData() {
-	var remoteURL = db_softcenter_["softcenter_home_url"] + '/softcenter/app.json.js';
+	var json_app = '/softcenter/app.json.js'
+	
+	var remoteURL = db_softcenter_["softcenter_home_url"] + json_app;
 	return $.ajax({
 		url: remoteURL,
 		method: 'GET',
@@ -519,7 +528,7 @@ function init(cb) {
 				// 如果已安装的插件,那图标必定在 /koolshare/res 目录, 通过 /res/icon-{name}.png 请求路径得到图标
 				// 如果是未安装的插件,则必定在 https://rogsoft.ddnsto.com/{name}/{name}/icon-{name}.png
 				// TODO 如果因为一些错误导致没有图标, 有可能显示一张默认图标吗?
-				item.icon = parseInt(item.install, 10) !== 0 ? ('/res/icon-' + item.name + '.png') : ('https://rogsoft.ddnsto.com' + new Array(3).join('/softcenter') + '/res/icon-' + item.name + '.png');
+				item.icon = parseInt(item.install, 10) !== 0 ? ('/res/icon-' + item.name + '.png') : ('https://' + SOFT_ARCH + '.ddnsto.com' + new Array(3).join('/softcenter') + '/res/icon-' + item.name + '.png');
 			});
 			return result;
 		};
@@ -563,7 +572,7 @@ $(function() {
 		cache: false,
 		success: function(response) {
 			db_softcenter_ = response.result[0];
-			db_softcenter_["softcenter_home_url"] = "https://rogsoft.ddnsto.com";
+			db_softcenter_["softcenter_home_url"] = "https://" + SOFT_ARCH + ".ddnsto.com";
 			if (!db_softcenter_["softcenter_version"]) {
 				db_softcenter_["softcenter_version"] = "0.0";
 			}
@@ -657,7 +666,7 @@ function menu_hook() {
 }
 function notice_show() {
 	$.ajax({
-		url: 'https://rogsoft.ddnsto.com/softcenter/push_message.json.js',
+		url: 'https://' + SOFT_ARCH + '.ddnsto.com/softcenter/push_message.json.js',
 		type: 'GET',
 		dataType: 'jsonp',
 		success: function(res) {
