@@ -225,7 +225,6 @@ install_ks_module() {
 	fi
 
 	# 11. 检查jffs空间
-	
 	# 检查前尝试删掉 uu.tar.gz uu.tar.gz.md5，这并无其它影响，因为uu还会下载下来的，但是对小jffs分区如RT-AX56U_V2、RT-AX57比较友好
 	find /jffs/ -name "uu.tar.gz*" -type f | xargs rm -rf
 	
@@ -319,10 +318,7 @@ install_ks_module() {
 		cp -rf /tmp/${softcenter_installing_todo}/uninstall.sh /koolshare/scripts/uninstall_${softcenter_installing_todo}.sh
 	fi
 
-	# 15. set skin nvram value
-	set_skin
-
-	# 16. 一些插件并未使用nvram值sc_skin来控制插件皮肤，还是使用的老的方式，做下兼容
+	# 15. 一些插件并未使用nvram值sc_skin来控制插件皮肤，还是使用的老的方式，做下兼容
 	if [ "${softcenter_installing_todo}" != "softcenter" -a "${softcenter_installing_todo}" != "koolcenter" ];then
 		if [ "${UI_TYPE}" == "ROG" ];then
 			echo_date "为插件【${softcenter_installing_name}】安装ROG风格皮肤..."
@@ -343,7 +339,7 @@ install_ks_module() {
 		fi
 	fi
 
-	# 17. 运行install.sh进行插件安装
+	# 16. 运行install.sh进行插件安装
 	echo_date "使用插件【${softcenter_installing_name}】提供的install.sh脚本进行安装..."
 	[ "${softcenter_installing_todo}" != "softcenter" ] && echo_date =========================== step 2 ================================
 	chmod a+x /tmp/${softcenter_installing_todo}/install.sh
@@ -358,6 +354,11 @@ install_ks_module() {
 		echo_date "本次插件安装失败！退出！"
 		quit_ks_install
 	fi
+
+	# 17. set skin nvram value
+	# set skin after install.sh excuted, incase wrong sc_skin written to nvram
+	set_skin
+	
 	[ "${softcenter_installing_todo}" != "softcenter" ] && echo_date =========================== step 3 ================================
 
 	# 18. 安装完毕，写入安装相关的值
