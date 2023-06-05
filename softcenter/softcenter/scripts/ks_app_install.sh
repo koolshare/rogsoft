@@ -319,6 +319,8 @@ install_ks_module() {
 	fi
 
 	# 15. 一些插件并未使用nvram值sc_skin来控制插件皮肤，还是使用的老的方式，做下兼容
+	# set_skin once to get UI_TYPE
+	set_skin
 	if [ "${softcenter_installing_todo}" != "softcenter" -a "${softcenter_installing_todo}" != "koolcenter" ];then
 		if [ "${UI_TYPE}" == "ROG" ];then
 			echo_date "为插件【${softcenter_installing_name}】安装ROG风格皮肤..."
@@ -356,7 +358,7 @@ install_ks_module() {
 	fi
 
 	# 17. set skin nvram value
-	# set skin after install.sh excuted, incase wrong sc_skin written to nvram
+	# set skin again after install.sh excuted, incase wrong sc_skin written to nvram
 	set_skin
 	
 	[ "${softcenter_installing_todo}" != "softcenter" ] && echo_date =========================== step 3 ================================

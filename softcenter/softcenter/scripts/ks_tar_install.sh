@@ -325,21 +325,23 @@ install_tar(){
 		echo_date "ks_tar_install.sh: 因为插件${MODULE_NAME}安装失败！退出离线安装！"
 		exit_tar_install 1 ${MODULE_NAME}
 	fi
+
+	# 18. 使用nvram值控制软件中心皮肤
+	set_skin
 	
-	# 18. UI，兼容
+	# 19. UI，兼容，部分插件未使用sc_skin控制皮肤
 	if [ "${UI_TYPE}" == "ROG" ];then
 		continue
 	else
 		if [ "${UI_TYPE}" == "TUF" ];then
+			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+		elif [ "${UI_TYPE}" == "TS" ];then
 			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
 		else
 			sed -i '/rogcss/d' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
 		fi
 	fi
 	sync
-
-	# 19. 使用nvram值控制软件中心皮肤
-	set_skin
 	# -----------------------------------------------------------------------
 	echo_date "========================== step 3 ==============================="
 	
