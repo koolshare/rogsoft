@@ -315,10 +315,7 @@ install_tar(){
 	# 16. 先移除版本号，后面再写
 	dbus remove softcenter_module_${MODULE_NAME}_version
 
-	# 17. 使用nvram值控制软件中心皮肤
-	set_skin
-	
-	# 18. 运行安装脚本
+	# 17. 运行安装脚本
 	chmod +x ${INSTALL_SCRIPT} >/dev/null 2>&1
 	echo_date "运行安装脚本..."
 	echo_date "========================== step 2 ==============================="
@@ -329,7 +326,7 @@ install_tar(){
 		exit_tar_install 1 ${MODULE_NAME}
 	fi
 	
-	# 19. UI，兼容
+	# 18. UI，兼容
 	if [ "${UI_TYPE}" == "ROG" ];then
 		continue
 	else
@@ -340,6 +337,9 @@ install_tar(){
 		fi
 	fi
 	sync
+
+	# 19. 使用nvram值控制软件中心皮肤
+	set_skin
 	# -----------------------------------------------------------------------
 	echo_date "========================== step 3 ==============================="
 	
