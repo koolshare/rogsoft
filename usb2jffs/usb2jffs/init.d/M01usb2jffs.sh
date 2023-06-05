@@ -73,6 +73,9 @@ get_jffs_original_mount_device(){
 			GT-AX6000|XT12)
 				mtd_disk="ubi:jffs2"
 				;;
+			TX-AX6000)
+				mtd_disk="/dev/ubi0_5"
+				;;
 			*)
 				mtd_disk=""
 				return 1

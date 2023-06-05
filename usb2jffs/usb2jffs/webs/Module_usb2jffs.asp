@@ -65,6 +65,19 @@
 	border: 1px solid #92650F;
 	background: #92650F;
 }
+#app[skin=TS] .show-btn1, #app[skin=TS] .show-btn2, #app[skin=TS] .show-btn3, #app[skin=TS] .show-btn4, #app[skin=TS] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border: 1px solid #2ed9c3;
+	background: none;
+}
+#app[skin=TS] .show-btn1:hover, #app[skin=TS] .show-btn2:hover, #app[skin=TS] .show-btn3:hover, #app[skin=TS] .show-btn4:hover, #app[skin=TS] .show-btn5:hover, #app[skin=TS] .active {
+	border: 1px solid #2ed9c3;
+	background: #2ed9c3;
+}
 #log_content{
 	outline: 1px solid #222;
 	width:748px;
@@ -110,68 +123,23 @@
 	background:#475A5F;
 	background:transparent;
 }
-#app[skin=ASUSWRT] .ks_btn {
-	border: 1px solid #222;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
-}
-#app[skin=ASUSWRT] .ks_btn:hover {
-	border: 1px solid #222;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
-}
-#app[skin=ROG] .ks_btn {
-	border: 1px solid #222;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%);
-}
-#app[skin=ROG] .ks_btn:hover {
-	border: 1px solid #222;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);
-}
-#app[skin=TUF] .ks_btn {
-	border: 1px solid #222;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #92650F  0%, #74500b 100%);
-}
-#app[skin=TUF] .ks_btn:hover {
-	border: 1px solid #222;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #c58813  0%, #92650F 100%);
+#app[skin=TS] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
 }
 #app[skin=ROG] #usb2jffs_disks_status, #app[skin=ROG] #usb2jffs_mount_status, #app[skin=ROG] #tablet_1, #app[skin=ROG] #tablet_2, #app[skin=ROG] #tablet_3, #app[skin=ROG] #tablet_4, #app[skin=ROG] #tablet_5 { border:1px solid #91071f; }
 #app[skin=TUF] #usb2jffs_disks_status, #app[skin=TUF] #usb2jffs_mount_status, #app[skin=TUF] #tablet_1, #app[skin=TUF] #tablet_2, #app[skin=TUF] #tablet_3, #app[skin=TUF] #tablet_4, #app[skin=TUF] #tablet_5 { border:1px solid #92650F; }
+#app[skin=TS] #usb2jffs_disks_status, #app[skin=TS] #usb2jffs_mount_status, #app[skin=TS] #tablet_1, #app[skin=TS] #tablet_2, #app[skin=TS] #tablet_3, #app[skin=TS] #tablet_4, #app[skin=TS] #tablet_5 { border:1px solid #2ed9c3; }
 .input_option{
 	vertical-align:middle;
 	font-size:12px;
