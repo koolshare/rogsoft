@@ -2,7 +2,6 @@
 source /koolshare/scripts/base.sh
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 MODEL=
-UI_TYPE=ASUSWRT
 FW_TYPE_CODE=
 FW_TYPE_NAME=
 DIR=$(cd $(dirname $0); pwd)
@@ -48,14 +47,25 @@ platform_test(){
 	fi
 }
 
-get_ui_type(){
-	local ROG_FLAG=$(grep -o "680516" /www/form_style.css|head -n1)
-	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css|head -n1)
+set_skin(){
+	local UI_TYPE=ASUSWRT
+	local SC_SKIN=$(nvram get sc_skin)
+	local ROG_FLAG=$(grep -o "680516" /www/form_style.css 2>/dev/null|head -n1)
+	local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css 2>/dev/null|head -n1)
+	local TS_FLAG=$(grep -o "2ED9C3" /www/css/difference.css 2>/dev/null|head -n1)
 	if [ -n "${ROG_FLAG}" ];then
 		UI_TYPE="ROG"
 	fi
 	if [ -n "${TUF_FLAG}" ];then
 		UI_TYPE="TUF"
+	fi
+	if [ -n "${TS_FLAG}" ];then
+		UI_TYPE="TS"
+	fi
+
+	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
 	fi
 }
 
@@ -75,24 +85,6 @@ exit_install(){
 			exit 0
 			;;
 	esac
-}
-
-install_ui(){
-	# intall different UI
-	get_ui_type
-	if [ "${UI_TYPE}" == "ROG" ];then
-		echo_date "安装ROG皮肤！"
-		sed -i '/asuscss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
-	fi
-	if [ "${UI_TYPE}" == "TUF" ];then
-		echo_date "安装TUF皮肤！"
-		sed -i '/asuscss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
-	fi
-	if [ "${UI_TYPE}" == "ASUSWRT" ];then
-		echo_date "安装ASUSWRT皮肤！"
-		sed -i '/rogcss/d' /koolshare/webs/Module_${module}.asp >/dev/null 2>&1
-	fi
 }
 
 install_now(){
@@ -115,7 +107,7 @@ install_now(){
 	rm -rf /koolshare/webs/Module_tailscale.asp >/dev/null 2>&1
 	find /koolshare/init.d -name "*tailscale*" | xargs rm -rf	
 
-	# isntall file
+	# install file
 	echo_date "安装插件相关文件..."
 	cd /tmp
 	cp -rf /tmp/${module}/bin/* /koolshare/bin/
@@ -131,7 +123,7 @@ install_now(){
 	chmod 755 /koolshare/init.d/*tailscale.sh >/dev/null 2>&1
 
 	# intall different UI
-	install_ui
+	set_skin
 
 	# dbus value
 	echo_date "设置插件默认参数..."
@@ -142,7 +134,7 @@ install_now(){
 	dbus set softcenter_module_${module}_title="${TITLE}"
 	dbus set softcenter_module_${module}_description="${DESCR}"
 
-	# start before install
+	# start after install
 	if [ "$(dbus get tailscale_enable)" == "1" -a -f "/koolshare/scripts/tailscale_config" ];then
 		echo_date "重新开启插件..."
 		/koolshare/scripts/tailscale_config start
