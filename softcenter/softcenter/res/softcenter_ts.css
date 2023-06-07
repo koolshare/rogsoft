@@ -53,8 +53,8 @@
 	font-size:13px;
 	font-family: Lucida Console;
 	background-image:none;
-	background-color: #3e2902;
-	border:1px solid #92650F;
+	border: 1px solid #4c4c4c;
+	background-color: #373737;
 	color:#FFFFFF;
 }
 .splitLine{
@@ -340,8 +340,8 @@
 	font-size:13px;
 	font-family: Lucida Console;
 	background-image:none;
-	background-color: #3e2902;
-	border:1px solid #92650F;
+	border: 1px solid #4c4c4c;
+	background-color: #373737;
 	color:#FFFFFF;
 }
 #app[skin=TUF] .splitLine{
@@ -440,8 +440,8 @@
 	font-size:13px;
 	font-family: Lucida Console;
 	background-image:none;
-	background-color: #3e2902;
-	border:1px solid #2ed9c3;
+	border: 1px solid #4c4c4c;
+	background-color: #373737;
 	color:#FFFFFF;
 }
 #app[skin=TS] .splitLine{
