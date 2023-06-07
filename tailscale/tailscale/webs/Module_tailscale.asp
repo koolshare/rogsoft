@@ -136,11 +136,14 @@ input[type=button]:focus {
 .FormTable_table{
 	margin-top:0px;
 }
+.FormTable th {
+    width: 35%;
+}
 #app[skin=ASUSWRT] #tailscale_main, #app[skin=ASUSWRT] #tailscale_tcnets {
 	outline: none;
 }
 #app[skin=ASUSWRT] .loadingBarBlock{
-	width:740px;
+	width:770px;
 	outline: none;
 }
 #app[skin=ASUSWRT] .content_status{
@@ -150,7 +153,7 @@ input[type=button]:focus {
 	outline: 1px solid #91071f;
 }
 #app[skin=ROG] .loadingBarBlock{
-	width:740px;
+	width:770px;
 	outline: 1px solid #91071f;
 }
 #app[skin=ROG] .content_status{
@@ -160,7 +163,7 @@ input[type=button]:focus {
 	outline: 1px solid #ffa523;
 }
 #app[skin=TUF] .loadingBarBlock{
-	width:740px;
+	width:770px;
 	outline: 1px solid #ffa523;
 }
 #app[skin=TUF] .content_status{
@@ -170,7 +173,7 @@ input[type=button]:focus {
 	outline: 1px solid #2ed9c3;
 }
 #app[skin=TS] .loadingBarBlock{
-	width:740px;
+	width:770px;
 	outline: 1px solid #2ed9c3;
 }
 #app[skin=TS] .content_status{
@@ -180,7 +183,7 @@ input[type=button]:focus {
 <script>
 var odm = '<% nvram_get("productid"); %>'
 var lan_ipaddr = "<% nvram_get(lan_ipaddr); %>"
-var params_chk = ['tailscale_enable', 'tailscale_ipv4_enable', 'tailscale_ipv6_enable'];
+var params_chk = ['tailscale_enable', 'tailscale_ipv4_enable', 'tailscale_ipv6_enable', 'tailscale_advertise_routes', 'tailscale_accept_routes', 'tailscale_exit_node'];
 var	refresh_flag;
 var count_down;
 var myid;
@@ -386,7 +389,7 @@ function showWBLoadingBar(){
 	var log_h = E("loadingBarBlock").clientHeight;
 	var log_w = E("loadingBarBlock").clientWidth;
 	var log_h_offset = (page_h - log_h) / 2;
-	var log_w_offset = (page_w - log_w) / 2 + 90;
+	var log_w_offset = (page_w - log_w) / 2 + 95;
 	$('#loadingBarBlock').offset({top: log_h_offset, left: log_w_offset});
 }
 function hideWBLoadingBar(){
@@ -553,17 +556,40 @@ function open_alist_hint(itemNum) {
 		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;4. 同理，如果你希望强制使用IPV4，而不是IPV6进行客户端之间的通讯，也可以去掉ipv6选项<br/><br/>"
 		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;5. 你可以使用tailscale status按钮，查看当前本路由器与其它tailscale客户端通讯使用的ip协议。<br/><br/>"
 		_caption = "使用网络";
-		return overlib(statusmenu, OFFSETX, -160, OFFSETY, 10, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
+		return overlib(statusmenu, OFFSETX, 160, OFFSETY, 10, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
 	}
 	if (itemNum == 2) {
-		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;1. 此处显示alist二进制程序的版本号及其内置的alist面板版本号。<br/><br/>"
-		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;2. alist二进制程序下载自alist的github项目release页面的alist-linux-arm64版本。<br/><br/>"
-		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;3.目前只支持hnd机型中的armv8机型，比如cpu型号为BCM4906、BCM4908、BCM4912等armv8机型。<br/><br/>"
-		_caption = "运行状态";
+		width = "780px";
+		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;<b>宣告路由表</b>：将本路由器lan网段，如192.168.50.0/24，宣告给tailnet，如果其它tailscale客户端接受了此路由表，那么其它客户端可以通过192.168.50.0/24内的ip地址访问本路由器和路由器下的客户端。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;<b>接受路由表</b>：在同一个tailnet网络下，如有其它tailscale客户端宣告了自己的路由表，可以通过此开关选择是否接受此路由表，如果接受，怎可以通过宣告的网段访问到网段内的设备。<br/><br/>"
+		statusmenu += "-------------------------------------------------------------------------------------------------------------------<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>情形1：</font><br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;假如你此路由器在A地，lan网段为192.168.50.0/24，lan网段里包含：路由器本身：192.168.50.1，一台电脑PC-1：192.168.50.23，一台NAS：192.168.50.55，此时打开2ed9c3宣告路由表开关，则此网段信息:192.168.50.0/24就会被告知到tailnet（tailscale局域网）。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;此时如果你有一台电脑PC-2在B地运行了tailscale客户端，且该电脑的自己的网卡ip不是192.168.50.x，且tailscale设置了接受路由表：（--accept-routes），那么此时在B地的PC-2上，可以直接通过192.168.50.1访问到A地的路由器；直接通过192.168.50.23访问到A地的PC-1；直接通过192.168.50.55访问到A地的NAS<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>情形2：</font><br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;当然在B地的也可以是一台运行了tailscale的路由器，该路由器的lan网段需要与A地的路由器不同，且tailscale设置了接受路由表：（--accept-routes），那么此时在B地路由器下的所有设备，都能访问A地网段下的所有设备了！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;同理，如果需要A地路由器下的所有设备能访问B地路由器下的所有设备，那么需要：1. B地路由器上运行的tailscale设置了2ed9c3宣告路由表，2. A地路由器上运行的tailscale设置了接受路由表<br/><br/>"
+		statusmenu += "-------------------------------------------------------------------------------------------------------------------<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>注意1：</font><br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;1. 如果不开启2ed9c3宣告路由表，则其它tailscale客户端只能通过tailscale提供的ip地址来访问此路由器！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;2. 即使在客户端处开启了2ed9c3宣告路由表，还需要在后台（admin console）的Edit route settings处确认开启才能生效！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;3. 如果你在有多个客户端需要开启2ed9c3宣告路由表，请一定保证每个路由表都是不同网段，不然会导致路由表冲突使得设备无法登陆后台且无法上网！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;4. 当然你也可以将2ed9c3宣告路由表功能保持开启，如遇到冲突，可以在控制台不允许该路由表即可！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;5. 如果你的上级路由开启了tailscale且宣告了路由表，下级路由器运行tailscale请不要接受路由表，不然也会出现路由表冲突导致无法上网！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>提示！</font><br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;1. 如果你开启插件后发现无法上网了，请关闭接受路由表选项！<br/><br/>"
+		_caption = "宣告路由表";
+		return overlib(statusmenu, OFFSETX, 20, OFFSETY, -330, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
 	}
-
-	return overlib(statusmenu, OFFSETX, 10, OFFSETY, 10, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
-
+	if (itemNum == 3) {
+		width = "780px";
+		statusmenu = "&nbsp;&nbsp;&nbsp;&nbsp;<b>互联网出口</b>：开启该功能后，可以将其它tailscale客户端的互联网出口会切换到这台路由器，相当于VPN的功能！<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>示例：</font><br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;1. 开启此功能后，需要将在后台（admin console）的Edit route settings处将Use as exit node选项打开。<br/><br/>"
+		statusmenu += "&nbsp;&nbsp;&nbsp;&nbsp;2. 然后需要在对应的tailscale客户端上，选择exit node作为互联网出口节点即可，比如在ios的tailscale客户端上，连上tailscale后，点击右上角三个点(...)，选择Use Exit Node，然后点击你要使用的出口即可！。<br/><br/>"
+		_caption = "宣告路由表";
+		return overlib(statusmenu, OFFSETX, 20, OFFSETY, -330, RIGHT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
+	}
 	var tag_name = document.getElementsByTagName('a');
 	for (var i = 0; i < tag_name.length; i++)
 		tag_name[i].onmouseout = nd;
@@ -605,7 +631,7 @@ function mOut(obj){
 				<div id="loading_block_title" style="margin:10px auto;margin-left:10px;width:85%; font-size:12pt;"></div>
 				<div id="loading_block_spilt" style="margin:10px 0 10px 5px;" class="loading_block_spilt"></div>
 				<div style="margin-left:15px;margin-right:15px;margin-top:10px;overflow:hidden">
-					<textarea cols="50" rows="26" wrap="off" readonly="readonly" id="log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ></textarea>
+					<textarea cols="50" rows="26" wrap="on" readonly="readonly" id="log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ></textarea>
 				</div>
 				<div id="ok_button" class="apply_gen" style="background:#000;visibility:hidden;">
 					<input id="ok_button1" class="button_gen" type="button" onclick="hideWBLoadingBar()" value="确定">
@@ -719,6 +745,24 @@ function mOut(obj){
 														<input type="checkbox" id="tailscale_ipv4_enable" style="vertical-align:middle;" checked="true">
 														ipv6
 														<input type="checkbox" id="tailscale_ipv6_enable" style="vertical-align:middle;" checked="true">
+													</td>
+												</tr>
+												<tr>
+													<th><a onmouseover="mOver(this, 2)" onmouseout="mOut(this)" class="hintstyle" href="javascript:void(0);">宣告路由表（--advertise-routes）</a></th>
+													<td>
+														<input type="checkbox" id="tailscale_advertise_routes" style="vertical-align:middle;" checked="true">
+													</td>
+												</tr>
+												<tr>
+													<th><a onmouseover="mOver(this, 2)" onmouseout="mOut(this)" class="hintstyle" href="javascript:void(0);">接受路由表（--accept-routes）</a></th>
+													<td>
+														<input type="checkbox" id="tailscale_accept_routes" style="vertical-align:middle;" checked="true">
+													</td>
+												</tr>
+												<tr>
+													<th><a onmouseover="mOver(this, 3)" onmouseout="mOut(this)" class="hintstyle" href="javascript:void(0);">互联网出口（--advertise-exit-node）</a></th>
+													<td>
+														<input type="checkbox" id="tailscale_exit_node" style="vertical-align:middle;">
 													</td>
 												</tr>
 											</table>
