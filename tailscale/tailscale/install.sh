@@ -125,6 +125,19 @@ install_now(){
 	# intall different UI
 	set_skin
 
+	# set default value, incase in upgrade, newer script can't get latest key-value from web
+	if [ -z "${tailscale_accept_routes}" ];then
+		dbus set tailscale_accept_routes="1"
+	fi
+
+	if [ -z "${tailscale_advertise_routes}" ];then
+		dbus set tailscale_advertise_routes="1"
+	fi
+
+	if [ -z "${tailscale_exit_node}" ];then
+		dbus set tailscale_advertise_routes="0"
+	fi
+	
 	# dbus value
 	echo_date "设置插件默认参数..."
 	dbus set ${module}_version="${PLVER}"
