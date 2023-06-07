@@ -1,5 +1,13 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.7
+   - add	更新tailscale二进制到最新1.42.0版本！
+   - update	mtk平台使用64位二进制！
+   - update	更新ROG、TUF、TS风格皮肤
+   
+1.6
+   - add	添加mtk平台支持
+
 1.5
    - add	添加tailscale是否使用ipv4/ipv6的开关
 

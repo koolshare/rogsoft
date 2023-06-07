@@ -59,10 +59,6 @@ i {
 	background-size: cover;
 	opacity: .94;
 }
-.loadingBarBlock{
-	width:740px;
-	border: 1px solid #2ED9C3;
-}
 .loading_block_spilt {
     background: #656565;
     height: 1px;
@@ -104,39 +100,6 @@ i {
 	overflow-x:hidden;
 	line-height:1.5;
 }
-.contentM_qis {
-	position: absolute;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	z-index: 200;
-	background-color:#2B373B;
-	margin-left: 10px;
-	top: 250px;
-	width:730px;
-	return height:auto;
-	box-shadow: 3px 3px 10px #000;
-	/*display:none;*/
-	line-height:1.8;
-	visibility:hidden;
-}
-.pop_div_bg{
-	background-color: #2B373B; /* W3C  */
-}
-.QISform_wireless {
-	width:690px;
-	font-size:14px;
-	color:#FFFFFF;
-}
-.remove_btn{
-	background: transparent url(/res/zt_del.png) no-repeat scroll center top;
-}
-.edit_btn{
-  background: transparent url(/res/zt_edt.png) no-repeat scroll center top;
-}
-.add_btn{
-	background: transparent url(/res/zt_add.png) no-repeat scroll center top;
-}
 input[type=button]:focus {
 	outline: none;
 }
@@ -170,8 +133,48 @@ input[type=button]:focus {
 	font-size: 14px;
 	font-family: Roboto-Light, "Microsoft JhengHei";
 }
-#tailscale_main, #tailscale_tcnets, #tailscale_route_div_2, #tailscale_interface_div_0, #tailscale_interface_div_1, #tailscale_interface_div_2, #tailscale_interface_div_3, #tailscale_interface_div_4, #tailscale_interface_div_5 {
-	border: none; /* W3C  */
+.FormTable_table{
+	margin-top:0px;
+}
+#app[skin=ASUSWRT] #tailscale_main, #app[skin=ASUSWRT] #tailscale_tcnets {
+	outline: none;
+}
+#app[skin=ASUSWRT] .loadingBarBlock{
+	width:740px;
+	outline: none;
+}
+#app[skin=ASUSWRT] .content_status{
+	outline: none;
+}
+#app[skin=ROG] #tailscale_main, #app[skin=ROG] #tailscale_tcnets {
+	outline: 1px solid #91071f;
+}
+#app[skin=ROG] .loadingBarBlock{
+	width:740px;
+	outline: 1px solid #91071f;
+}
+#app[skin=ROG] .content_status{
+	outline: 1px solid #91071f;
+}
+#app[skin=TUF] #tailscale_main, #app[skin=TUF] #tailscale_tcnets {
+	outline: 1px solid #ffa523;
+}
+#app[skin=TUF] .loadingBarBlock{
+	width:740px;
+	outline: 1px solid #ffa523;
+}
+#app[skin=TUF] .content_status{
+	outline: 1px solid #ffa523;
+}
+#app[skin=TS] #tailscale_main, #app[skin=TS] #tailscale_tcnets {
+	outline: 1px solid #2ed9c3;
+}
+#app[skin=TS] .loadingBarBlock{
+	width:740px;
+	outline: 1px solid #2ed9c3;
+}
+#app[skin=TS] .content_status{
+	outline: 1px solid #2ed9c3;
 }
 </style>
 <script>
@@ -236,7 +239,6 @@ function show_hide_element(){
 	E("tailscale_state_tr").style.display = "";
 	E("tailscale_console_tr").style.display = "";
 	E("tailscale_jion_btn_div").style.display = "";
-	//E("tailscale_main2").style.display = "";
 }
 function register_event(){
 	$("#tailscale_enable").click(
@@ -616,7 +618,7 @@ function mOut(obj){
 	<div id="tailscale_status_div" class="content_status">
 		<div class="user_title">tailscale status 状态</div>
 		<div style="margin-left:15px"><i>此处展示命令：tailscale status 显示的内容。</i></div>
-		<div style="margin: 10px 10px 10px 15px;width:918px;text-align:center;overflow:hidden;outline:1px solid #818181;padding-top:10px">
+		<div style="margin: 10px 10px 10px 15px;width:918px;text-align:center;overflow:hidden;border-top:1px solid #818181;padding-top:10px">
 			<textarea cols="63" rows="18" wrap="off" id="ts_status" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 		</div>
 		<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
@@ -627,7 +629,7 @@ function mOut(obj){
 	<div id="tailscale_netcheck_div" class="content_status">
 		<div class="user_title">tailscale netcheck 状态</div>
 		<div style="margin-left:15px"><i>此处展示命令：tailscale netcheck 显示的内容。</i></div>
-		<div style="margin: 10px 10px 10px 15px;width:918px;text-align:center;overflow:hidden;outline:1px solid #818181;padding-top:10px">
+		<div style="margin: 10px 10px 10px 15px;width:918px;text-align:center;overflow:hidden;border-top:1px solid #818181;padding-top:10px">
 			<textarea cols="63" rows="30" wrap="off" id="ts_check" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 		</div>
 		<div style="margin-top:5px;padding-bottom:10px;width:100%;text-align:center;">
@@ -706,7 +708,8 @@ function mOut(obj){
 												<tr id="tailscale_status_tr">
 													<th>连接状态</th>
 													<td>
-														<a type="button" id="tailscale_status" class="ks_btn" onclick="tailscale_status();" target="_blank" style="margin-left:2px">tailscale status</a>
+														<a type="button" id="tailscale_status" class="ks_btn" onclick="tailscale_status();" target="_blank" style="margin-left:2px;cursor:pointer;">tailscale status</a>
+														<a type="button" id="tailscale_netcheck" class="ks_btn" onclick="tailscale_netcheck();" target="_blank" style="margin-left:2px;cursor:pointer;">tailscale netcheck</a>
 													</td>
 												</tr>
 												<tr>
@@ -750,7 +753,7 @@ function mOut(obj){
 											</table>
 										</div>-->
 										<div id="tailscale_tcnets" style="margin:10px 0px 0px 0px;display:none;">
-											<table id="tailscale_tcnets_status" style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable_table">
+											<table id="tailscale_tcnets_status" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable_table">
 												<thead>
 													<tr>
 														<td colspan="5">tailscale - 网口状态</td>
