@@ -67,26 +67,26 @@
 	margin: 1px 0;
 }
 .show-install-btn, .show-uninstall-btn {
-	border: 1px solid #D0982C;
+	border: 1px solid #2ed9c3;
 	background: none;
 	color: #fff;
 	padding: 10px 20px;
 	border-radius: 5px 5px 0px 0px;
 }
 .active {
-	background: #D0982C;
-	border: 1px solid #D0982C;
+	background: #2ed9c3;
+	border: 1px solid #2ed9c3;
 }
 #soft_log {
 	width:99%;
 	font-family:'Lucida Console';
 	font-size:12px;
 	background:transparent;
-	border:1px solid #92650F;
+	border:1px solid #2ed9c3;
 	color:#FFFFFF;
 }
 #IconContainer {
-	border: 1px solid #D0982C;
+	border: 1px solid #2ed9c3;
 }
 .ks_btn {
 	border: 1px solid #222;
@@ -96,7 +96,7 @@
 	border-radius: 5px 5px 5px 5px;
 	width:14%;
 	vertical-align: middle;
-	background: linear-gradient(to bottom, #92650F  0%, #74500b 100%);
+	background: linear-gradient(to bottom, #2ed9c3  0%, #0a7264 100%);
 }
 .ks_btn:hover {
 	border: 1px solid #222;
@@ -106,14 +106,14 @@
 	border-radius: 5px 5px 5px 5px;
 	width:14%;
 	vertical-align: middle;
-	background: linear-gradient(to bottom, #c58813  0%, #92650F 100%);
+	background: linear-gradient(to bottom, #2ed9c3  0%, #22c0bf 100%);
 }
 .soft_setting_log{
 	margin-top:10px;
 	display:block;
 	overflow:hidden;
 	outline: 1px solid #222;
-	outline: 1px solid #92650F;
+	outline: 1px solid #2ed9c3;
 }
 .soft_setting_log1{
 	width:97%;

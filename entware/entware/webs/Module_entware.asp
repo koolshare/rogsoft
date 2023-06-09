@@ -23,90 +23,68 @@
 <script type="text/javascript" language="JavaScript" src="/client_function.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
-	.show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5 {
-		font-size:10pt;
-		color: #fff;
-		padding: 10px 3.75px;
-		border-radius: 5px 5px 0px 0px;
-		width:8.42%;
-		border-left: 1px solid #67767d;
-		border-top: 1px solid #67767d;
-		border-right: 1px solid #67767d;
-		border-bottom: none;
-		background: #67767d;
-		border: 1px solid #91071f; /* W3C rogcss */
-		background: none; /* W3C rogcss */
-	}
-	.show-btn1:hover, .show-btn2:hover, .show-btn3:hover, .show-btn4:hover, .show-btn5:hover, .active {
-		border: 1px solid #2f3a3e;
-		background: #2f3a3e;
-		border: 1px solid #91071f; /* W3C rogcss */
-		background: #91071f; /* W3C rogcss */
-	}
-	#log_content{
-		width:748px;
-		outline: 1px solid #222;
-		outline: 1px solid #91071f; /* W3C rogcss */
-	}
-	#log_content_text{
-		width:97%;
-		padding-left:4px;
-		padding-right:37px;
-		font-family:'Lucida Console';
-		font-size:10px;
-		line-height:1.5;
-		color:#FFFFFF;
-		outline:none;
-		overflow-x:hidden;
-		border:0px solid #222;
-		background:#475A5F;
-		background:transparent; /* W3C rogcss */
-	}
-	.ks_btn {
-		border: 1px solid #222;
-		font-size:10pt;
-		color: #fff;
-		padding: 5px 5px 5px 5px;
-		border-radius: 5px 5px 5px 5px;
-		width:14%;
-		vertical-align: middle;
-		background: linear-gradient(to bottom, #003333  0%, #000000 100%);
-		background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
-	}
-	.ks_btn:hover {
-		border: 1px solid #222;
-		font-size:10pt;
-		color: #fff;
-		padding: 5px 5px 5px 5px;
-		border-radius: 5px 5px 5px 5px;
-		width:14%;
-		vertical-align: middle;
-		background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
-		background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
-	}
-	#entware_disks_status, #entware_mount_status, #tablet_1, #tablet_2, #tablet_3, #tablet_4, #tablet_5 { border:1px solid #91071f; } /* W3C rogcss */
-	.input_option{
-		vertical-align:middle;
-		font-size:12px;
-	}
-	input[type=button]:focus {
-		outline: none;
-	}
-	.content_status {
-		position: absolute;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius:10px;
-		z-index: 10;
-		/*background-color:#2B373B;*/
-		margin-left: -215px;
-		top: 140px;
-		width:980px;
-		return height:auto;
-		box-shadow: 3px 3px 10px #000;
-		background: rgba(0,0,0,0.85);
-		display:none;
-	}
+.show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border-left: 1px solid #67767d;
+	border-top: 1px solid #67767d;
+	border-right: 1px solid #67767d;
+	border-bottom: none;
+	background: #67767d;
+	border: 1px solid #91071f; /* W3C rogcss */
+	background: none; /* W3C rogcss */
+}
+.show-btn1:hover, .show-btn2:hover, .show-btn3:hover, .show-btn4:hover, .show-btn5:hover, .active {
+	border: 1px solid #2f3a3e;
+	background: #2f3a3e;
+	border: 1px solid #91071f; /* W3C rogcss */
+	background: #91071f; /* W3C rogcss */
+}
+#log_content{
+	width:748px;
+	outline: 1px solid #222;
+	outline: 1px solid #91071f; /* W3C rogcss */
+}
+#log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:10px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent; /* W3C rogcss */
+}
+#entware_disks_status, #entware_mount_status, #tablet_1, #tablet_2, #tablet_3, #tablet_4, #tablet_5 { border:1px solid #91071f; } /* W3C rogcss */
+.input_option{
+	vertical-align:middle;
+	font-size:12px;
+}
+input[type=button]:focus {
+	outline: none;
+}
+.content_status {
+	position: absolute;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius:10px;
+	z-index: 10;
+	/*background-color:#2B373B;*/
+	margin-left: -215px;
+	top: 140px;
+	width:980px;
+	return height:auto;
+	box-shadow: 3px 3px 10px #000;
+	background: rgba(0,0,0,0.85);
+	display:none;
+}
 </style>
 <script>
 var dbus = {};
