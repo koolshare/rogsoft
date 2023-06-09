@@ -29,7 +29,11 @@ do_build() {
 		cd ./build
 		echo mtk >entware/.valid
 		rm -rf entware/scripts
+		rm -rf install.sh
+		rm -rf uninstall.sh
 		mv -f entware/scripts-mtk entware/scripts/
+		mv -f install_mtk.sh install.sh
+		mv -f uninstall_mtk.sh uninstall_mtk.sh
 		tar -zcf entware.tar.gz entware
 		if [ "$?" = "0" ];then
 			echo "build success!"
@@ -45,6 +49,8 @@ do_build() {
 		cd ./build
 		echo hnd >entware/.valid
 		rm -rf entware/scripts-mtk
+		rm -rf entware/install_mtk.sh
+		rm -rf entware/uninstall_mtk.sh
 		tar -zcf entware.tar.gz entware
 		if [ "$?" = "0" ];then
 			echo "build success!"
