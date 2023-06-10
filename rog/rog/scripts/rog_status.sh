@@ -101,7 +101,7 @@ get_tmp_pwr(){
 		interface_24g_temp_c=$(iwpriv ra0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
 		interface_52g_temp_c=$(iwpriv rax0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
 
-		wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G-1：${interface_52g_temp_c}"
+		wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G： ${interface_52g_temp_c}"
 
 		return
 	fi
@@ -177,7 +177,7 @@ get_tmp_pwr(){
 			wl_txpwr=""
 		fi
 	else
-		wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G-1：${interface_52g_temp_c}"
+		wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G： ${interface_52g_temp_c}"
 
 		if [ -n "${interface_24g_power}" -o -n "${interface_52g_power}" ];then
 			wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_52g_pwer_d} / ${interface_52g_pwer_p}"
