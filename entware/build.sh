@@ -29,11 +29,11 @@ do_build() {
 		cd ./build
 		echo mtk >entware/.valid
 		rm -rf entware/scripts
-		rm -rf install.sh
-		rm -rf uninstall.sh
+		rm -rf entware/install.sh
+		rm -rf entware/uninstall.sh
 		mv -f entware/scripts-mtk entware/scripts/
-		mv -f install_mtk.sh install.sh
-		mv -f uninstall_mtk.sh uninstall_mtk.sh
+		mv -f entware/install_mtk.sh entware/install.sh
+		mv -f entware/uninstall_mtk.sh entware/uninstall.sh
 		tar -zcf entware.tar.gz entware
 		if [ "$?" = "0" ];then
 			echo "build success!"
