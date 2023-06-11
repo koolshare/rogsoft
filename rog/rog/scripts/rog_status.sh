@@ -97,7 +97,7 @@ get_tmp_pwr(){
 	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
 
 	# 0. mediatek
-	if [ "$(_get_model)" == "TX-AX6000" ];then
+	if [ "$(_get_model)" == "TX-AX6000" -o "$(_get_model)" == "TUF-AX4200Q" ];then
 		interface_24g_temp_c=$(iwpriv ra0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
 		interface_52g_temp_c=$(iwpriv rax0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
 
