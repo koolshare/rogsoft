@@ -139,6 +139,9 @@ set_url(){
 	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "TX-AX6000" ];then
 		local SC_URL=https://mtksoft.ddnsto.com
 	fi
+	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "TUF-AX4200Q" ];then
+		local SC_URL=https://mtksoft.ddnsto.com
+	fi
 	local SC_URL_NVRAM=$(nvram get sc_url)
 	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
 		nvram set sc_url=${SC_URL}
