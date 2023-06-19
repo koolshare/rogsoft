@@ -287,8 +287,8 @@ JFFS2USB(){
 		nvram commit
 
 		# 把原来的jffs分区挂载到cifs
-		if [ "${LINUX_VER}" == "419" ];then
-			mount -t ubifs ubi:jffs2 /cifs2
+		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+			mount -t ubifs ${mtd_disk} /cifs2
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /cifs2
 		fi

@@ -142,8 +142,8 @@ start(){
 
 	# 恢复jffs分区原始挂载方式
 	echo_date "USB2JFFS：重新挂载${mtd_disk}到/jffs..."
-	if [ "${LINUX_VER}" == "419" ];then
-		mount -t ubifs ubi:jffs2 /jffs
+	if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+		mount -t ubifs ${mtd_disk} /jffs
 	else
 		mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
 	fi	

@@ -299,8 +299,8 @@ start_usb2jffs(){
 	
 		# 把原来的jffs分区挂载到cifs2
 		echo_date "将${mtd_disk}挂载在/cifs2"
-		if [ "${LINUX_VER}" == "419" ];then
-			mount -t ubifs ubi:jffs2 /cifs2
+		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+			mount -t ubifs ${mtd_disk} /cifs2
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /cifs2
 		fi
@@ -316,8 +316,8 @@ start_usb2jffs(){
 	else
 		echo_date "USB型JFFS挂载失败！！"
 		echo_date "尝试恢复原始挂载方式！"
-		if [ "${LINUX_VER}" == "419" ];then
-			mount -t ubifs ubi:jffs2 /jffs
+		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+			mount -t ubifs ${mtd_disk} /jffs
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
 		fi		
@@ -397,8 +397,8 @@ stop_usb2jffs(){
 	if [ "$?" == "0" ]; then
 		echo_date "/jffs卸载成功..."
 		echo_date "将文件系统${mtd_disk}挂载到jffs分区..."
-		if [ "${LINUX_VER}" == "419" ];then
-			mount -t ubifs ubi:jffs2 /jffs
+		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+			mount -t ubifs ${mtd_disk} /jffs
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
 		fi
