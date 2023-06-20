@@ -23,7 +23,7 @@
 <script type="text/javascript" language="JavaScript" src="/client_function.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
-.show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5 {
+#app[skin=ASUSWRT] .show-btn1, #app[skin=ASUSWRT] .show-btn2, #app[skin=ASUSWRT] .show-btn3, #app[skin=ASUSWRT] .show-btn4, #app[skin=ASUSWRT] .show-btn5 {
 	font-size:10pt;
 	color: #fff;
 	padding: 10px 3.75px;
@@ -34,35 +34,124 @@
 	border-right: 1px solid #67767d;
 	border-bottom: none;
 	background: #67767d;
-	border: 1px solid #91071f; /* W3C rogcss */
-	background: none; /* W3C rogcss */
 }
-.show-btn1:hover, .show-btn2:hover, .show-btn3:hover, .show-btn4:hover, .show-btn5:hover, .active {
+#app[skin=ASUSWRT] .show-btn1:hover, #app[skin=ASUSWRT] .show-btn2:hover, #app[skin=ASUSWRT] .show-btn3:hover, #app[skin=ASUSWRT] .show-btn4:hover, #app[skin=ASUSWRT] .show-btn5:hover, #app[skin=ASUSWRT] .active {
 	border: 1px solid #2f3a3e;
 	background: #2f3a3e;
-	border: 1px solid #91071f; /* W3C rogcss */
-	background: #91071f; /* W3C rogcss */
 }
-#log_content{
-	width:748px;
+#app[skin=ROG] .show-btn1, #app[skin=ROG] .show-btn2, #app[skin=ROG] .show-btn3, #app[skin=ROG] .show-btn4, #app[skin=ROG] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border: 1px solid #91071f;
+	background: none;
+}
+#app[skin=ROG] .show-btn1:hover, #app[skin=ROG] .show-btn2:hover, #app[skin=ROG] .show-btn3:hover, #app[skin=ROG] .show-btn4:hover, #app[skin=ROG] .show-btn5:hover, #app[skin=ROG] .active {
+	border: 1px solid #91071f;
+	background: #91071f;
+}
+#app[skin=TUF] .show-btn1, #app[skin=TUF] .show-btn2, #app[skin=TUF] .show-btn3, #app[skin=TUF] .show-btn4, #app[skin=TUF] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border: 1px solid #92650F;
+	background: none;
+}
+#app[skin=TUF] .show-btn1:hover, #app[skin=TUF] .show-btn2:hover, #app[skin=TUF] .show-btn3:hover, #app[skin=TUF] .show-btn4:hover, #app[skin=TUF] .show-btn5:hover, #app[skin=TUF] .active {
+	border: 1px solid #92650F;
+	background: #92650F;
+}
+#app[skin=TS] .show-btn1, #app[skin=TS] .show-btn2, #app[skin=TS] .show-btn3, #app[skin=TS] .show-btn4, #app[skin=TS] .show-btn5 {
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 3.75px;
+	border-radius: 5px 5px 0px 0px;
+	width:8.42%;
+	border: 1px solid #2ed9c3;
+	background: none;
+}
+#app[skin=TS] .show-btn1:hover, #app[skin=TS] .show-btn2:hover, #app[skin=TS] .show-btn3:hover, #app[skin=TS] .show-btn4:hover, #app[skin=TS] .show-btn5:hover, #app[skin=TS] .active {
+	border: 1px solid #2ed9c3;
+	background: #2ed9c3;
+}
+#app[skin=ASUSWRT] #log_content{
 	outline: 1px solid #222;
-	outline: 1px solid #91071f; /* W3C rogcss */
+	width:748px;
 }
-#log_content_text{
+#app[skin=ROG] #log_content{
+	outline: 1px solid #91071f;
+	width:748px;
+}
+#app[skin=TUF] #log_content{
+	outline: 1px solid #92650F;
+	width:748px;
+}
+#app[skin=TS] #log_content{
+	outline: 1px solid #2ed9c3;
+	width:748px;
+}
+#app[skin=ASUSWRT] #log_content_text{
 	width:97%;
 	padding-left:4px;
 	padding-right:37px;
 	font-family:'Lucida Console';
-	font-size:10px;
+	font-size:11px;
 	line-height:1.5;
 	color:#FFFFFF;
 	outline:none;
 	overflow-x:hidden;
 	border:0px solid #222;
 	background:#475A5F;
-	background:transparent; /* W3C rogcss */
 }
-#entware_disks_status, #entware_mount_status, #tablet_1, #tablet_2, #tablet_3, #tablet_4, #tablet_5 { border:1px solid #91071f; } /* W3C rogcss */
+#app[skin=ROG] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+#app[skin=TUF] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+#app[skin=TS] #log_content_text{
+	width:97%;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+#app[skin=ROG] #entware_disks_status, #app[skin=ROG] #usb2jffs_mount_status, #app[skin=ROG] #tablet_1, #app[skin=ROG] #tablet_2, #app[skin=ROG] #tablet_3, #app[skin=ROG] #tablet_4, #app[skin=ROG] #tablet_5 { border:1px solid #92650F; }
+#app[skin=TUF] #entware_disks_status, #app[skin=TUF] #usb2jffs_mount_status, #app[skin=TUF] #tablet_1, #app[skin=TUF] #tablet_2, #app[skin=TUF] #tablet_3, #app[skin=TUF] #tablet_4, #app[skin=TUF] #tablet_5 { border:1px solid #92650F; }
+#app[skin=TS] #entware_disks_status, #app[skin=TS] #usb2jffs_mount_status, #app[skin=TS] #tablet_1, #app[skin=TS] #tablet_2, #app[skin=TS] #tablet_3, #app[skin=TS] #tablet_4, #app[skin=TS] #tablet_5 { border:1px solid #2ed9c3; }
 .input_option{
 	vertical-align:middle;
 	font-size:12px;
@@ -98,7 +187,14 @@ var softver;
 
 function init() {
 	show_menu(menu_hook);
+	set_skin();
 	get_dbus_data();
+}
+function set_skin(){
+	var SKN = '<% nvram_get("sc_skin"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
 }
 
 function get_disks(){
@@ -489,7 +585,7 @@ function help(){
 }
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin="ASUSWRT" onload="init();">
 <div id="TopBanner"></div>
 <div id="Loading" class="popup_bg"></div>
 <iframe name="hidden_frame" id="hidden_frame" src="" width="0" height="0" frameborder="0"></iframe>
