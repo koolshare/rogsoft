@@ -149,7 +149,7 @@
 	background:#475A5F;
 	background:transparent;
 }
-#app[skin=ROG] #entware_disks_status, #app[skin=ROG] #usb2jffs_mount_status, #app[skin=ROG] #tablet_1, #app[skin=ROG] #tablet_2, #app[skin=ROG] #tablet_3, #app[skin=ROG] #tablet_4, #app[skin=ROG] #tablet_5 { border:1px solid #92650F; }
+#app[skin=ROG] #entware_disks_status, #app[skin=ROG] #usb2jffs_mount_status, #app[skin=ROG] #tablet_1, #app[skin=ROG] #tablet_2, #app[skin=ROG] #tablet_3, #app[skin=ROG] #tablet_4, #app[skin=ROG] #tablet_5 { border:1px solid #91071f; }
 #app[skin=TUF] #entware_disks_status, #app[skin=TUF] #usb2jffs_mount_status, #app[skin=TUF] #tablet_1, #app[skin=TUF] #tablet_2, #app[skin=TUF] #tablet_3, #app[skin=TUF] #tablet_4, #app[skin=TUF] #tablet_5 { border:1px solid #92650F; }
 #app[skin=TS] #entware_disks_status, #app[skin=TS] #usb2jffs_mount_status, #app[skin=TS] #tablet_1, #app[skin=TS] #tablet_2, #app[skin=TS] #tablet_3, #app[skin=TS] #tablet_4, #app[skin=TS] #tablet_5 { border:1px solid #2ed9c3; }
 .input_option{
