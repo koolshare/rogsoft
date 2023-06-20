@@ -312,14 +312,14 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:44:32", 
+            "build_date": "2023-06-20_14:19:34", 
             "changelog": "", 
             "description": "Sftp Server", 
             "home_url": "Module_sftpserver.asp", 
             "link": "", 
-            "md5": "5cfd232f8c1fb888115f48b866919f78", 
+            "md5": "f7d7322489a2e3a96337d35aa196389a", 
             "name": "sftpserver", 
-            "tags": "Entware", 
+            "tags": "sftpserver", 
             "tar_url": "sftpserver/sftpserver.tar.gz", 
             "title": "Sftp Server", 
             "version": "1.3"
