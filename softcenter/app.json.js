@@ -58,19 +58,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-06-16_09:30:59", 
+            "build_date": "2023-07-08_08:32:49", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "f95ba54321378dfa428a1c9c4ab33c45", 
+            "md5": "12ddae1fd0c27fb77f433390915e1c4e", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.9"
+            "version": "4.0"
         }, 
         {
             "author": "freexiaoyao", 
@@ -393,6 +393,20 @@
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
             "version": "1.8"
+        }, 
+        {
+            "author": "sadog", 
+            "build_date": "2023-06-20_16:42:22", 
+            "changelog": "", 
+            "description": "tmux是一个终端复用器,它可以启动一系列终端会话。", 
+            "home_url": "Module_tmux.asp", 
+            "link": "", 
+            "md5": "68e743268d3d50c957f38ec3b82b74df", 
+            "name": "tmux", 
+            "tags": "Entware", 
+            "tar_url": "tmux/tmux.tar.gz", 
+            "title": "tmux", 
+            "version": "1.0"
         }, 
         {
             "author": "sadog", 
