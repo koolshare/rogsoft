@@ -15,9 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="css/element.css">
 	<link rel="stylesheet" type="text/css" href="/res/softcenter.css">
 	<link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
-    <link rel="modulepreload" href="/res/soft-v19/assets/vendor.cad358c0.js">
-    <link rel="stylesheet" href="/res/soft-v19/assets/style.6e05d620.css">
-	<link rel="stylesheet" type="text/css" href="/css/difference.css">
+	<script type="text/javascript" src="/res/Browser.js"></script>
 	<script type="text/javascript" src="/res/softcenter.js"></script>
 	<script type="text/javascript" src="/state.js"></script>
 	<script type="text/javascript" src="/js/jquery.js"></script>
@@ -48,7 +46,9 @@
 		}
 	</script>
 	<!--  -->
-	<script type="module" crossorigin src="/res/soft-v19/assets/index.b2655c80.js"></script>
+  <script type="module" crossorigin src="/res/soft-v19/assets/index.b2655c80.js"></script>
+    <link rel="modulepreload" href="/res/soft-v19/assets/vendor.cad358c0.js">
+    <link rel="stylesheet" href="/res/soft-v19/assets/style.6e05d620.css">
 	<!--  -->
 </head>
 

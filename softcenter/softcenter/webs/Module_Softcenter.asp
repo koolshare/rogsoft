@@ -289,7 +289,7 @@ String.prototype.myReplace = function(f, e){
 }
 
 var ro_model = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-if ( ro_model == "TX-AX6000" ){
+if ( ro_model == "TX-AX6000" || ro_model == "TUF-AX4200Q" ){
 	var SOFT_ARCH = "mtksoft"
 }else{
 	var SOFT_ARCH = "rogsoft"
