@@ -8,5 +8,6 @@
 {"module": "phddns", "branch":"master", "git_source": "https://github.com/OrayDev/phddns_for_koolshare.git"},
 {"module": "filebrowser", "branch":"master", "git_source": "https://github.com/flyhigherpi/filebrowser.git"},
 {"module": "signdog", "branch":"master", "git_source": "https://github.com/koolshare/signdog_hnd.git"},
+{"module": "mfun", "branch":"main", "git_source": "https://github.com/Carseason/rogsoft_mfun.git"},
 {"module": "routerdog", "branch":"master", "git_source": "https://github.com/koolshare/router_dog.git"}
 ]
