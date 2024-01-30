@@ -123,7 +123,10 @@ start)
 	fi
 	;;
 update)
-	check_update >> $LOG_FILE
+	check_update 4 >> $LOG_FILE
+	if [ "$cfddns_ipv6" == "1" ];then
+		check_update 6 >> $LOG_FILE
+	fi
 	;;
 esac
 # ====================================submit by web====================================
