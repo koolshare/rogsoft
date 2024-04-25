@@ -65,7 +65,8 @@ quit_ks_uninstall(){
 }
 
 jffs_space(){
-	local JFFS_AVAL=$(df | grep -w "/jffs" | awk '{print $4}')
+	# 修复U盘挂载 /jffs 子目录导致计算可用空间失败:现象是卸载插件时页面一直卡住
+	local JFFS_AVAL=$(df /jffs | awk '/jffs$/{print $4}')
 	echo ${JFFS_AVAL}
 }
 
@@ -398,7 +399,7 @@ install_ks_module() {
 }
 
 uninstall_ks_module() {
-	local JFFS_AVAL=$(df | grep -w "/jffs" | awk '{print $4}')
+	local JFFS_AVAL=$(jffs_space)
 	
 	# 1. before uninstall, detect if some value exist.
 	if [ -z "${softcenter_installing_todo}" -o -z "${softcenter_installing_title}" -o "${softcenter_installing_todo}" == "softcenter" ]; then
