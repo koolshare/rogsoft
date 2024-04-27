@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.9
+   - update	更新tailscale二进制到最新1.64.0版本！
+
 1.8
    - add	新增宣告路由表（--advertise-routes）功能
    - add	新增接受路由表（--accept-routes）功能
