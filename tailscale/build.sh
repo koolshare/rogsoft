@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="tailscale"
-VERSION="1.8"
+VERSION="1.9"
 TITLE="Tailscale"
 DESCRIPTION="基于wiregurad协议的零配置内网穿透安全组网工具！"
 HOME_URL="Module_tailscale.asp"
