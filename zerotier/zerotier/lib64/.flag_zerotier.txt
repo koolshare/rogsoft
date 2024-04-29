@@ -6,9 +6,9 @@ zerotier libgcc_s.so.1
 zerotier liblzma.so.5
 zerotier liblzma.so.5.2.5
 zerotier libm-2.27.so
+zerotier libm.so.6
 zerotier libminiupnpc.so.17
 zerotier libminiupnpc.so.2.2.3
-zerotier libm.so.6
 zerotier libnatpmp.so.1
 zerotier libnatpmp.so.20150609
 zerotier libpthread-2.27.so

@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="zerotier"
-VERSION="1.4.0"
+VERSION="1.5.0"
 TITLE="ZeroTier"
 DESCRIPTION="ZeroTier 内网穿透"
 HOME_URL="Module_zerotier.asp"

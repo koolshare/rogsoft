@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.5.0 (20240429)
+   - update	armv7/armv8机型更新zerotier-one到最新版本：1.12.2
+
 1.4.0
    - update	armv7/armv8机型更新zerotier-one到最新版本：1.10.2
    - fix	修复网络重启后zerotier可能失效的问题

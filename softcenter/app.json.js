@@ -392,7 +392,7 @@
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
-            "version": "1.8"
+            "version": "1.9"
         }, 
         {
             "author": "sadog", 
@@ -440,17 +440,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-11-02_13:54:31", 
+            "build_date": "2024-04-29_22:35:40", 
             "changelog": "", 
             "description": "ZeroTier 内网穿透", 
             "home_url": "Module_zerotier.asp", 
             "link": "", 
-            "md5": "cf5c2e40189ad6048c93d2a4d15018d5", 
+            "md5": "38643d3bf231fe39d4c9053971f2118b", 
             "name": "zerotier", 
             "tags": "穿透 VPN", 
             "tar_url": "zerotier/zerotier.tar.gz", 
             "title": "ZeroTier", 
-            "version": "1.4.0"
+            "version": "1.5.0"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
