@@ -1,5 +1,5 @@
 [
-{"module": "alist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_alist.git"},
+{"module": "alist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_alist"},
 {"module": "rustdesk", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_rustdesk.git"},
 {"module": "ddnsgo", "branch":"master", "git_source": "https://github.com/2TimesMeta/Koolcenter_ddns-go.git"},
 {"module": "lookcat", "branch":"main", "git_source": "https://github.com/vj23456/LookCat"},
