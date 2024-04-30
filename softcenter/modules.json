@@ -1,8 +1,8 @@
 [
 {"module": "alist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_alist"},
 {"module": "rustdesk", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_rustdesk.git"},
-{"module": "ddnsgo", "branch":"master", "git_source": "https://github.com/2TimesMeta/Koolcenter_ddns-go.git"},
-{"module": "lookcat", "branch":"main", "git_source": "https://github.com/vj23456/LookCat"},
+{"module": "ddnsgo", "branch":"master", "git_source": "https://github.com/MetaSquared/Koolcenter_ddns-go.git"},
+{"module": "lookcat", "branch":"main", "git_source": "https://github.com/vj23456/LookCat.git"},
 {"module": "aria2", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_aria2.git"},
 {"module": "linkease", "branch":"master", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
 {"module": "xunyou", "branch":"master", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
