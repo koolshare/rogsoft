@@ -80,7 +80,7 @@ def sync_module(module, git_path, branch):
         if os.path.isdir(module_path):
             cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module" 
         else:
-            cmd = "cd $parent_path && $git_bin clone $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
+            cmd = "cd $parent_path && $git_bin clone --depth 1 $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
         t = Template(cmd)
         params = {"parent_path": parent_path, "git_path": git_path, "module_path": module_path, "module": module, "git_bin": git_bin}
         s = t.substitute(params)
