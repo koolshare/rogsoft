@@ -126,16 +126,16 @@ install_now(){
 	set_skin
 
 	# set default value, incase in upgrade, newer script can't get latest key-value from web
-	if [ -z "${tailscale_accept_routes}" ];then
+	if [ -z "$(dbus get tailscale_accept_routes)" ];then
 		dbus set tailscale_accept_routes="1"
 	fi
 
-	if [ -z "${tailscale_advertise_routes}" ];then
+	if [ -z "$(dbus get tailscale_advertise_routes)" ];then
 		dbus set tailscale_advertise_routes="1"
 	fi
 
-	if [ -z "${tailscale_exit_node}" ];then
-		dbus set tailscale_advertise_routes="0"
+	if [ -z "$(dbus get tailscale_exit_node)" ];then
+		dbus set tailscale_exit_node="0"
 	fi
 	
 	# dbus value
