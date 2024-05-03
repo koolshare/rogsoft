@@ -96,7 +96,7 @@ function get_disks(){
 				//check for swap exist
 				disk_format = usbDevicesList[i].partition[j].format
 				if(disk_format.indexOf("ext") != -1){
-					dbus["swap_check_partName_" + (parseInt(i)) + "_" + (parseInt(j))] = '/mnt/' + usbDevicesList[i].partition[j].partName || "";
+					db_ddnsto["swap_check_partName_" + (parseInt(i)) + "_" + (parseInt(j))] = '/mnt/' + usbDevicesList[i].partition[j].partName || "";
 				}
 				//write table
 				var totalsize = ((usbDevicesList[i].partition[j].size)/1000000).toFixed(2);
