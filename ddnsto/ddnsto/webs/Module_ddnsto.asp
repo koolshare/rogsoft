@@ -45,27 +45,6 @@
 	background:#C0D1D3 url(/res/proceding.gif);
 }
 
-.rog_btn {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
-	background: linear-gradient(to bottom, #91071f 0%, #700618 100%); /* W3C rogcss */
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-.rog_btn:hover {
-	border: 1px solid #222;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-	background: linear-gradient(to bottom, #cf0a2c 0%, #91071f 100%); /* W3C rogcss */
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-}
-
 input[type=button]:focus {
     outline: none;
 }
@@ -76,9 +55,17 @@ var noChange_status=0;
 var _responseLen;
 function init() {
 	show_menu(menu_hook);
+	set_skin();
 	get_dbus_data();
 	get_run_status();
 	get_disks();
+}
+
+function set_skin(){
+	var SKN = '<% nvram_get("sc_skin"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
 }
 
 var db_ddnsto = {};
@@ -317,7 +304,7 @@ function reload_Soft_Center() {
 }
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin="ASUSWRT" onload="init();">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<div id="LoadingBar" class="popup_bar_bg">
@@ -396,9 +383,9 @@ function reload_Soft_Center() {
 											</tr>
 											<tr id="rule_update_switch">
 												<th>管理/帮助</th>
-												<td> <a type="button" class="rog_btn" style="cursor:pointer" href="https://www.ddnsto.com/app/#/devices" target="_blank">点击前往DDNSTO控制台</a>
-<a type="button" class="rog_btn" style="cursor:pointer" href="https://doc.linkease.com/zh/guide/ddnsto/" target="_blank">如何获取令牌?</a>
- <!-- <a type="button" class="rog_btn" style="cursor:pointer" onclick="openShutManager(this,'NoteBox',false,'关闭使用说明','如何获取令牌') "
+												<td> <a type="button" class="ks_btn" style="cursor:pointer" href="https://www.ddnsto.com/app/#/devices" target="_blank">点击前往DDNSTO控制台</a>
+<a type="button" class="ks_btn" style="cursor:pointer" href="https://doc.linkease.com/zh/guide/ddnsto/" target="_blank">如何获取令牌?</a>
+ <!-- <a type="button" class="ks_btn" style="cursor:pointer" onclick="openShutManager(this,'NoteBox',false,'关闭使用说明','如何获取令牌') "
 													href="javascript:void(0);">如何获取令牌</a> -->
 												</td>
 											</tr>
@@ -434,7 +421,7 @@ function reload_Soft_Center() {
 											<tr >
 												<th>Webdav地址</th>
 												<td>
-													<a  type="button" class="rog_btn" id="ddnsto_feat_path" target="_blank" rel="noopener noreferrer">获取中...</a>
+													<a  type="button" class="ks_btn" id="ddnsto_feat_path" target="_blank" rel="noopener noreferrer">获取中...</a>
 												</td>
 											</tr>
 											<tr>
