@@ -100,10 +100,6 @@ install_now(){
 	cp -rf /tmp/${module}/scripts/* /koolshare/scripts/
 	cp -rf /tmp/${module}/webs/* /koolshare/webs/
 	cp -rf /tmp/${module}/uninstall.sh /koolshare/scripts/uninstall_${module}.sh
-	if [ ! -x "/koolshare/bin/jq" ]; then
-		echo_date "安装jq..."
-		cp -f /tmp/${module}/bin/jq /koolshare/bin/
-	fi
 	if [ "${MODEL}" == "GT-AC5300" -a ! -x "/koolshare/bin/wl" ];then
 		echo_date "安装wl..."
 		cp -rf /tmp/${module}/bin/wl /koolshare/bin/
@@ -112,6 +108,7 @@ install_now(){
 		echo_date "安装风扇控制开机启动..."
 		cp -rf /tmp/${module}/init.d/* /koolshare/init.d/
 	fi
+	cp -f /tmp/${module}/bin/mhz /koolshare/bin/
 
 	# Permissions
 	chmod 755 /koolshare/bin/* >/dev/null 2>&1

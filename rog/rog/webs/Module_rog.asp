@@ -134,6 +134,7 @@ function get_temperature(){
 			}else{
 				E("rog_wl_power_tr").style.display = "none";
 			}
+			E("rog_cpu_mhz").innerHTML = Math.round(response.result.split("@@")[3]) + " MHz";
 			setTimeout("get_temperature();", 2000);
 		},
 		error: function(){
@@ -346,6 +347,10 @@ function menu_hook(title, tab) {
 												<tr>
 													<th>CPU温度</th>
 													<td><span id="rog_cpu_temperature"></span></td>
+												</tr>
+												<tr>
+													<th>CPU频率</th>
+													<td><span id="rog_cpu_mhz"></span></td>
 												</tr>
 												<tr>
 													<th>网卡温度</th>

@@ -19,7 +19,7 @@ _get_model(){
 get_cpu_temp(){
 	# CPU温度
 	cpu_temp_origin=$(cat /sys/class/thermal/thermal_zone0/temp)
-	cpu_temp="CPU：$(awk 'BEGIN{printf "%.1f\n",('$cpu_temp_origin'/'1000')}')°C"
+	cpu_temp="$(awk 'BEGIN{printf "%.1f\n",('$cpu_temp_origin'/'1000')}')°C"
 }
 
 get_sta_info(){
@@ -184,8 +184,15 @@ get_tmp_pwr(){
 		fi
 	fi
 }
+get_mhz(){
+	cpu_mhz="null"
+	if [ -x "/koolshare/bin/mhz" ];then
+		cpu_mhz=$(/koolshare/bin/mhz -c)
+	fi
+}
 
 get_cpu_temp
 get_tmp_pwr
+get_mhz
 #=================================================
-http_response "${cpu_temp}@@${wl_temp}@@${wl_txpwr}"
+http_response "${cpu_temp}@@${wl_temp}@@${wl_txpwr}@@${cpu_mhz}"
