@@ -54,8 +54,8 @@ i {
 	background-repeat: repeat;
 	visibility:hidden;
 	overflow:hidden;
-	background:rgba(68, 79, 83, 0.85) none repeat scroll 0 0 !important; /* W3C asuscss */
-	background: url(/images/New_ui/login_bg.png); /* W3C rogcss */
+	background:rgba(68, 79, 83, 0.85) none repeat scroll 0 0 !important;
+	background: url(/images/New_ui/login_bg.png);
 	background-position: 0 0;
 	background-size: cover;
 	opacity: .94;
@@ -73,7 +73,7 @@ i {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius:10px;
-	z-index: 10;
+	z-index: 100;
 	margin-left: -215px;
 	top: 0;
 	left: 0;
@@ -121,8 +121,7 @@ i {
 	visibility:hidden;
 }
 .pop_div_bg{
-	background-color: #2B373B; /* W3C asuscss */
-	background-color: #030102; /* W3C rogcss */
+	background-color: #2B373B;
 }
 .QISform_wireless {
 	width:690px;
@@ -138,58 +137,88 @@ i {
 .add_btn{
 	background: transparent url(/res/zt_add.png) no-repeat scroll center top;
 }
-.ks_btn {
-	border:none;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	cursor: pointer;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C asuscss */
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
-}
-.ks_btn:hover {
-	border:none;
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:14%;
-	cursor: pointer;
-	vertical-align: middle;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C asuscss */
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
-}
 input[type=button]:focus {
 	outline: none;
 }
-.show-btn0, .show-btn1, .show-btn2, .show-btn3, .show-btn4, .show-btn5 {
+
+#app[skin=ASUSWRT] .show-btn0, #app[skin=ASUSWRT] .show-btn1, #app[skin=ASUSWRT] .show-btn2, #app[skin=ASUSWRT] .show-btn3, #app[skin=ASUSWRT] .show-btn4, #app[skin=ASUSWRT] .show-btn5 {
 	font-family: Roboto-Light, "Microsoft JhengHei";
 	font-size:10pt;
 	color: #fff;
 	padding: 10px 4px;
 	border-radius: 5px 5px 0px 0px;
 	width:12%;
-	border-left: 1px solid #67767d; /* W3C asuscss */
-	border-top: 1px solid #67767d; /* W3C asuscss */
-	border-right: 1px solid #67767d; /* W3C asuscss */
-	border-bottom: none; /* W3C asuscss */
-	background: #67767d; /* W3C asuscss */
-	border: 1px solid #91071f; /* W3C rogcss */
-	background: none; /* W3C rogcss */
+	border-left: 1px solid #67767d;
+	border-top: 1px solid #67767d;
+	border-right: 1px solid #67767d;
+	border-bottom: none;
+	background: #67767d;
 	margin-right: 6px;
 	cursor:pointer
 }
-.show-btn0:hover, .show-btn1:hover, .show-btn2:hover, .show-btn3:hover, .show-btn4:hover, .show-btn5:hover, .active {
+#app[skin=ASUSWRT] .show-btn0:hover, #app[skin=ASUSWRT] .show-btn1:hover, #app[skin=ASUSWRT] .show-btn2:hover, #app[skin=ASUSWRT] .show-btn3:hover, #app[skin=ASUSWRT] .show-btn4:hover, #app[skin=ASUSWRT] .show-btn5:hover, #app[skin=ASUSWRT] .active {
 	cursor:pointer
 	font-family: Roboto-Light, "Microsoft JhengHei";
-	border: 1px solid #2f3a3e; /* W3C asuscss */
-	background: #2f3a3e; /* W3C asuscss */
-	border: 1px solid #91071f; /* W3C rogcss */
-	background: #91071f; /* W3C rogcss */
+	border: 1px solid #2f3a3e;
+	background: #2f3a3e;
 }
+#app[skin=ROG] .show-btn0, #app[skin=ROG] .show-btn1, #app[skin=ROG] .show-btn2, #app[skin=ROG] .show-btn3, #app[skin=ROG] .show-btn4, #app[skin=ROG] .show-btn5 {
+	font-family: Roboto-Light, "Microsoft JhengHei";
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 4px;
+	border-radius: 5px 5px 0px 0px;
+	width:12%;
+	border: 1px solid #91071f;
+	background: none;
+	margin-right: 6px;
+	cursor:pointer
+}
+#app[skin=ROG] .show-btn0:hover, #app[skin=ROG] .show-btn1:hover, #app[skin=ROG] .show-btn2:hover, #app[skin=ROG] .show-btn3:hover, #app[skin=ROG] .show-btn4:hover, #app[skin=ROG] .show-btn5:hover, #app[skin=ROG] .active {
+	cursor:pointer
+	font-family: Roboto-Light, "Microsoft JhengHei";
+	border: 1px solid #91071f;
+	background: #91071f;
+}
+
+#app[skin=TUF] .show-btn0, #app[skin=TUF] .show-btn1, #app[skin=TUF] .show-btn2, #app[skin=TUF] .show-btn3, #app[skin=TUF] .show-btn4, #app[skin=TUF] .show-btn5 {
+	font-family: Roboto-Light, "Microsoft JhengHei";
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 4px;
+	border-radius: 5px 5px 0px 0px;
+	width:12%;
+	border: 1px solid #92650F;
+	background: none;
+	margin-right: 6px;
+	cursor:pointer
+}
+#app[skin=TUF] .show-btn0:hover, #app[skin=TUF] .show-btn1:hover, #app[skin=TUF] .show-btn2:hover, #app[skin=TUF] .show-btn3:hover, #app[skin=TUF] .show-btn4:hover, #app[skin=TUF] .show-btn5:hover, #app[skin=TUF] .active {
+	cursor:pointer
+	font-family: Roboto-Light, "Microsoft JhengHei";
+	border: 1px solid #92650F;
+	background: #92650F;
+}
+
+#app[skin=TS] .show-btn0, #app[skin=TS] .show-btn1, #app[skin=TS] .show-btn2, #app[skin=TS] .show-btn3, #app[skin=TS] .show-btn4, #app[skin=TS] .show-btn5 {
+	font-family: Roboto-Light, "Microsoft JhengHei";
+	font-size:10pt;
+	color: #fff;
+	padding: 10px 4px;
+	border-radius: 5px 5px 0px 0px;
+	width:12%;
+	border: 1px solid #2ED9C3;
+	background: none;
+	margin-right: 6px;
+	cursor:pointer
+}
+#app[skin=TS] .show-btn0:hover, #app[skin=TS] .show-btn1:hover, #app[skin=TS] .show-btn2:hover, #app[skin=TS] .show-btn3:hover, #app[skin=TS] .show-btn4:hover, #app[skin=TS] .show-btn5:hover, #app[skin=TS] .active {
+	cursor:pointer
+	font-family: Roboto-Light, "Microsoft JhengHei";
+	border: 1px solid #2ED9C3;
+	background: #2ED9C3;
+}
+
 #log_content {
 	border:1px solid #000;
 	width:99%;
@@ -220,9 +249,32 @@ input[type=button]:focus {
 	font-size: 14px;
 	font-family: Roboto-Light, "Microsoft JhengHei";
 }
-#zerotier_main, #zerotier_ztnets, #zerotier_route_div_2, #zt_moons_settings_div, #zerotier_interface_div_0, #zerotier_interface_div_1, #zerotier_interface_div_2, #zerotier_interface_div_3, #zerotier_interface_div_4, #zerotier_interface_div_5 {
-	border: none; /* W3C asuscss */
-	border: 1px solid #91071f; /* W3C rogcss */
+#app[skin=ASUSWRT] .ks_btn:hover {
+	cursor: pointer;
+}
+#app[skin=ASUSWRT] .loadingBarBlock{
+	width:740px;
+}
+#app[skin=ROG] .loadingBarBlock{
+	width:740px;
+	border:1px solid #91071f
+}
+#app[skin=TUF] .loadingBarBlock{
+	width:740px;
+	border:1px solid #92650F
+}
+#app[skin=TS] .loadingBarBlock{
+	width:740px;
+	border:1px solid #2ED9C3
+}
+#app[skin=ROG] #zerotier_main, #app[skin=ROG] #zerotier_peers_status_div, #app[skin=ROG] #zt_moons_settings, #app[skin=ROG] #zerotier_ztnets, #app[skin=ROG] #zerotier_route_div_2, #app[skin=ROG] #zt_moons_settings_div, #app[skin=ROG] #zerotier_interface_div_0, #app[skin=ROG] #zerotier_interface_div_1, #app[skin=ROG] #zerotier_interface_div_2, #app[skin=ROG] #zerotier_interface_div_3, #app[skin=ROG] #zerotier_interface_div_4, #app[skin=ROG] #zerotier_interface_div_5 {
+	border: 1px solid #91071f;
+}
+#app[skin=TUF] #zerotier_main, #app[skin=TUF] #zerotier_peers_status_div, #app[skin=TUF] #zt_moons_settings, #app[skin=TUF] #zerotier_ztnets, #app[skin=TUF] #zerotier_route_div_2, #app[skin=TUF] #zt_moons_settings_div, #app[skin=TUF] #zerotier_interface_div_0, #app[skin=TUF] #zerotier_interface_div_1, #app[skin=TUF] #zerotier_interface_div_2, #app[skin=TUF] #zerotier_interface_div_3, #app[skin=TUF] #zerotier_interface_div_4, #app[skin=TUF] #zerotier_interface_div_5 {
+	border: 1px solid #92650F;
+}
+#app[skin=TS] #zerotier_main, #app[skin=TS] #zerotier_peers_status_div, #app[skin=TS] #zt_moons_settings, #app[skin=TS] #zerotier_ztnets, #app[skin=TS] #zerotier_route_div_2, #app[skin=TS] #zt_moons_settings_div, #app[skin=TS] #zerotier_interface_div_0, #app[skin=TS] #zerotier_interface_div_1, #app[skin=TS] #zerotier_interface_div_2, #app[skin=TS] #zerotier_interface_div_3, #app[skin=TS] #zerotier_interface_div_4, #app[skin=TS] #zerotier_interface_div_5 {
+	border: 1px solid #2ED9C3;
 }
 </style>
 <script>
@@ -242,7 +294,14 @@ var active_tab = 0;
 
 function init() {
 	show_menu(menu_hook);
+	set_skin();
 	get_dbus_data();
+}
+function set_skin(){
+	var SKN = '<% nvram_get("sc_skin"); %>';
+	if(SKN){
+		$("#app").attr("skin", '<% nvram_get("sc_skin"); %>');
+	}
 }
 function get_dbus_data(){
 	$.ajax({
@@ -893,8 +952,11 @@ function refresh_html() {
 function close_peers_info() {
 	//$("#zerotier_peers_status_div").fadeOut(200);
 	E("zerotier_peers_status_div").style.visibility = "hidden";
+	$("body").find(".fullScreen").fadeOut(0, function() { tableApi.removeElement("fullScreen"); });
 }
 function open_peers_info() {
+	$('body').prepend(tableApi.genFullScreen());
+	$('.fullScreen').show();
 	document.scrollingElement.scrollTop = 0;
 	E("zerotier_peers_status_div").style.visibility = "visible";
 	var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -964,9 +1026,9 @@ function get_moons_status() {
 	});
 }
 function open_moons_sett() {
-	get_moons_status();
 	$('body').prepend(tableApi.genFullScreen());
 	$('.fullScreen').show();
+	get_moons_status();
 	document.scrollingElement.scrollTop = 0;
 	E("zt_moons_settings").style.visibility = "visible";
 	var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -982,7 +1044,7 @@ function open_moons_sett() {
 }
 function close_moons_sett() {
 	E("zt_moons_settings").style.visibility = "hidden";
-	$("body").find(".fullScreen").fadeOut(300, function() { tableApi.removeElement("fullScreen"); });
+	$("body").find(".fullScreen").fadeOut(0, function() { tableApi.removeElement("fullScreen"); });
 }
 function upload_moon() {
 	var file_name = $("#file").val();
@@ -1061,7 +1123,7 @@ function apply_uppoaded_moon(Info) {
 }
 </script>
 </head>
-<body onload="init();">
+<body id="app" skin="ASUSWRT" onload="init();">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<div id="LoadingBar" class="popup_bar_bg_ks" style="z-index: 200;" >

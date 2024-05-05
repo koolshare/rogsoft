@@ -220,7 +220,7 @@ install_tar(){
 	fi
 
 	# 13. 检查下安装包是否是本平台的
-	if [ "$(nvram get odmpid)" == "TX-AX6000" ];then
+	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" ];then
 		VALID_STRING="mtk"
 	else
 		VALID_STRING="hnd"
@@ -330,15 +330,18 @@ install_tar(){
 	set_skin
 	
 	# 19. UI，兼容，部分插件未使用sc_skin控制皮肤
-	if [ "${UI_TYPE}" == "ROG" ];then
-		continue
-	else
-		if [ "${UI_TYPE}" == "TUF" ];then
-			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
-		elif [ "${UI_TYPE}" == "TS" ];then
-			sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+	SKIN_FLAG="$(cat /koolshare/webs/Module_${MODULE_NAME}.asp | grep body | grep app | grep onload | grep skin)"
+	if [ -z "${SKIN_FLAG}" ];then
+		if [ "${UI_TYPE}" == "ROG" ];then
+			continue
 		else
-			sed -i '/rogcss/d' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+			if [ "${UI_TYPE}" == "TUF" ];then
+				sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+			elif [ "${UI_TYPE}" == "TS" ];then
+				sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+			else
+				sed -i '/rogcss/d' /koolshare/webs/Module_${MODULE_NAME}.asp >/dev/null 2>&1
+			fi
 		fi
 	fi
 	sync
