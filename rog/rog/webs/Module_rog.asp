@@ -16,11 +16,12 @@
 <script language="JavaScript" type="text/javascript" src="/help.js"></script>
 <script language="JavaScript" type="text/javascript" src="/general.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/httpApi.js"></script>
 <script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
 <script language="JavaScript" type="text/javascript" src="/validator.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
-<script type="text/javascript" src="/res/softcenter.js"></script>
+<script language="JavaScript" type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
+<script language="JavaScript" type="text/javascript" src="/res/softcenter.js"></script>
 <style>
 .loading_bar {
 	width:250px;
@@ -317,19 +318,20 @@ function menu_hook(title, tab) {
 													<script type="text/javascript">
 														var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
 														var BUILD = '<% nvram_get("buildno"); %>'
+														var FSVER = '<% nvram_get("firmver"); %>'
 														var FWVER = '<% nvram_get("extendno"); %>';
 														var RC_SUPPORT = '<% nvram_get("rc_support"); %>';
 														if (BUILD.indexOf(".") != -1){
 															if(RC_SUPPORT.indexOf("koolsoft") != -1){
-																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;梅林改版固件");
+																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FSVER + "_" + BUILD + "_" + FWVER + "&nbsp;&nbsp;梅林改版固件");
 															}else{
-																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;梅林原版固件");
+																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FSVER + "_" + BUILD + "_" + FWVER + "&nbsp;&nbsp;梅林原版固件");
 															}
 														}else{
 															if(RC_SUPPORT.indexOf("koolsoft") != -1){
-																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
+																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FSVER + "_" + BUILD + "_" + FWVER + "&nbsp;&nbsp;官改固件");
 															}else{
-																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + BUILD + "_" + FWVER + "&nbsp;&nbsp;华硕官方固件");
+																$("#rog_ver").html(MODEL + "&nbsp;&nbsp;" + FSVER + "_" + BUILD + "_" + FWVER + "&nbsp;&nbsp;华硕官方固件");
 															}
 														}
 													</script>													
@@ -369,10 +371,16 @@ function menu_hook(title, tab) {
 																<tr>
 																	<td class="loading_bar" colspan="2" style="border: 0px;">
 																		<div>
-																			<div id="ram_bar" class="status_bar"></div>
+																			<div>
+																				<div style="vertical-align:middle" id="ram_bar" class="status_bar"></div>
 																		</div>
-																		<span style="float: left;margin-top: -20px;background:transparent"><font id="rog_ram_used" color='#000000'>484MB</font></span>
-																		<span style="float: left;margin-top: -20px;background:transparent;margin-left: 207px;"><font id="rog_ram_free" color='#000000'>555MB</font></span>
+																			<div style="float: left;margin-top: -19px;background:transparent;margin-left: 5px;">
+																				<font id="rog_ram_used" color='#000000'></font>
+																			</div>
+																			<div style="float: left;margin-top: -19px;background:transparent;margin-left: 135px;text-align: right;">
+																				<font id="rog_ram_free" color='#000000'></font>
+																			</div>
+																		</div>
 																	</td>
 																</tr>
 															</table>
