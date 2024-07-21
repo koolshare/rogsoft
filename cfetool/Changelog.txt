@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin cfetool Changelog for HND/AXHND platform
-===========================================\
+===========================================
+4.2
+   - update	修复RT-AX86U_PRO的支持，新增RT-AX88U_PRO的支持
+
 3.8 - 3.9
    - update	新增RT-AX68U和RT-AX57的支持
 
