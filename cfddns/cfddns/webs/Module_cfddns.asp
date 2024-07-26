@@ -21,8 +21,6 @@
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
-<script src="/state.js"></script>
-<script src="/help.js"></script>
 <style>
 	.show-btn1, .show-btn2, .show-btn3 {
 		font-size:10pt;
