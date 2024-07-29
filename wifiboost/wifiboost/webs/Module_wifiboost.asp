@@ -18,7 +18,6 @@
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/client_function.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/res/jquery-ui.js"></script> 

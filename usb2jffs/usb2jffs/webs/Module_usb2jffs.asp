@@ -20,7 +20,6 @@
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" language="JavaScript" src="/js/table/table.js"></script>
-<script type="text/javascript" language="JavaScript" src="/client_function.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
 #app[skin=ASUSWRT] .show-btn1, #app[skin=ASUSWRT] .show-btn2, #app[skin=ASUSWRT] .show-btn3, #app[skin=ASUSWRT] .show-btn4, #app[skin=ASUSWRT] .show-btn5 {
