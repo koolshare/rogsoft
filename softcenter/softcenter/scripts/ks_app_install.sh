@@ -360,6 +360,11 @@ install_ks_module() {
 		quit_ks_install
 	fi
 
+	# 16.5 一些插件安装好后需要进行一些改动
+	if [ "${softcenter_installing_todo}" == "xunyou" ];then
+		sed -i '/client_function\.js/d' /koolshare/webs/Module_xunyou.asp >/dev/null 2>&1
+	fi
+
 	# 17. set skin nvram value
 	# set skin again after install.sh excuted, incase wrong sc_skin written to nvram
 	set_skin
