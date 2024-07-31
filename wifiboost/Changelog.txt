@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.9.3
+   - update	适配RT-BE88U
+
 4.9.2
    - fix	修复RT-AX56U_V2等部分机型最大支持功率显示错误的问题
 
