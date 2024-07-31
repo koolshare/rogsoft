@@ -408,9 +408,8 @@ function register_event(){
 	if(MODEL == "RT-BE88U"){
 		current_dbm_24 = (current_dec_24/4).toFixed(2);
 		current_pwr_24 = Math.pow(10,current_dec_24/4/10).toFixed(2);
-	}
-	else{
-		current_dbm_24 = ((current_dec_52 - 6)/4).toFixed(2);
+	}else{
+		current_dbm_24 = ((current_dec_24 - 6)/4).toFixed(2);
 		current_pwr_24 = Math.pow(10,(current_dec_24 - 6)/4/10).toFixed(2);
 	}
 	boost_dbm_24 = current_dbm_24;

@@ -1,5 +1,5 @@
 {
-"version":"4.9.3",
+"version":"4.9.4",
 "md5":"26ccaf031ff187a986d97f3c3642cf4f",
 "home_url":"Module_wifiboost.asp",
 "title":"wifi boost",
