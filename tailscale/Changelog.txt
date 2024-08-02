@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
+1.9.2
+   - update	更新tailscale二进制到最新v1.70.0版本！
+
 1.9.1
    - fix	修复更新版本后，宣告路由表设置失效的问题
 
