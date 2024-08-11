@@ -31,9 +31,8 @@ set_skin(){
 		fi
 		if [ -n "${ROG_FLAG}" ];then
 			UI_TYPE="ROG"
-		fi
+		fi	
 	fi
-
 	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
 		nvram set sc_skin="${UI_TYPE}"
 		nvram commit
