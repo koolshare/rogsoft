@@ -18,5 +18,5 @@ _LOG(){
 
 http_response()  {
     ARG0="$@"
-    curl -X POST -d "$ARG0" http://$LANIP/_resp/$ID
+    curl -X POST -d "$ARG0" http://$LANIP:3030/_resp/$ID
 }

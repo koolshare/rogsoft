@@ -392,7 +392,7 @@
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
-            "version": "1.9"
+            "version": "1.9.2"
         }, 
         {
             "author": "sadog", 
@@ -424,19 +424,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-04-10_15:51:15", 
+            "build_date": "2024-07-31_09:47:44", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "be37aac6eac01c01ad43df3832d01940", 
+            "md5": "26ccaf031ff187a986d97f3c3642cf4f", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.9.2"
+            "version": "4.9.4"
         }, 
         {
             "author": "sadog", 
@@ -454,7 +454,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "2194cf691f9e58c97b1658d72305be37", 
+    "md5": "e70c75db7ed7557502fbca0f86ea4e79", 
     "tar_url": "softcenter/softcenter.tar.gz", 
-    "version": "1.9.0"
+    "version": "1.9.4"
 }
