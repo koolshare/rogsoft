@@ -324,7 +324,9 @@ install_ks_module() {
 	# 15. 一些插件并未使用nvram值sc_skin来控制插件皮肤，还是使用的老的方式，做下兼容
 	# set_skin once to get UI_TYPE
 	set_skin
-	if [ "${softcenter_installing_todo}" != "softcenter" -a "${softcenter_installing_todo}" != "koolcenter" ];then
+
+	local skin_flag=$(grep -o "skin=" /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp)
+	if [ -z "${skin_flag}" -a "${softcenter_installing_todo}" != "softcenter" -a "${softcenter_installing_todo}" != "koolcenter" ];then
 		if [ "${UI_TYPE}" == "ROG" ];then
 			echo_date "为插件【${softcenter_installing_name}】安装ROG风格皮肤..."
 			sed -i '/asuscss/d' /tmp/${softcenter_installing_todo}/webs/Module_${softcenter_installing_todo}.asp >/dev/null 2>&1
