@@ -58,19 +58,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-12-07_20:38:28", 
+            "build_date": "2024-07-21_16:56:39", 
             "changelog": "", 
             "description": "CFE工具箱，查看CFE信息，改机器为国区", 
             "home_url": "Module_cfetool.asp", 
             "link": "", 
-            "md5": "0dda878118d78762de877dddb6f3857f", 
+            "md5": "e0f44876efbd3fa376f2dfc380e40834", 
             "name": "cfetool", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "cfetool/cfetool.tar.gz", 
             "title": "CFE工具箱", 
-            "version": "3.8"
+            "version": "4.2"
         }, 
         {
             "author": "freexiaoyao", 
@@ -102,17 +102,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-02-27_19:50:33", 
+            "build_date": "2024-07-25_10:56:39", 
             "changelog": "", 
             "description": "轻松安装/管理Entware环境", 
             "home_url": "Module_entware.asp", 
             "link": "", 
-            "md5": "91476b1c8dcf83f0e3878c95b5d110e6", 
+            "md5": "1d8158f988a4dcb5be0e5e1754459a82", 
             "name": "entware", 
             "tags": "Entware USB", 
             "tar_url": "entware/entware.tar.gz", 
             "title": "Entware", 
-            "version": "1.4"
+            "version": "1.5"
         }, 
         {
             "author": "sadog", 
@@ -214,12 +214,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-02-27_19:55:20", 
+            "build_date": "2023-06-20_15:42:40", 
             "changelog": "", 
             "description": "Node.js", 
             "home_url": "Module_nodejs.asp", 
             "link": "", 
-            "md5": "a04d3c578231095cf71b7b38044b382f", 
+            "md5": "453b94e44854e0a0c48c14434fff5747", 
             "name": "nodejs", 
             "tags": "Entware", 
             "tar_url": "nodejs/nodejs.tar.gz", 
@@ -270,17 +270,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-03-24_10:54:38", 
+            "build_date": "2024-05-03_19:00:50", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
-            "link": "https://koolshare.cn/thread-179110-1-5.html", 
-            "md5": "177076c3a41bbd57270d2fef9032c202", 
+            "link": "", 
+            "md5": "d38c3c349186d616e63d182d91cec594", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "5.7"
+            "version": "5.9"
         }, 
         {
             "author": "囍冯总囍", 
@@ -312,14 +312,14 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2021-08-20_22:44:32", 
+            "build_date": "2023-06-20_14:19:34", 
             "changelog": "", 
             "description": "Sftp Server", 
             "home_url": "Module_sftpserver.asp", 
             "link": "", 
-            "md5": "5cfd232f8c1fb888115f48b866919f78", 
+            "md5": "f7d7322489a2e3a96337d35aa196389a", 
             "name": "sftpserver", 
-            "tags": "Entware", 
+            "tags": "sftpserver", 
             "tar_url": "sftpserver/sftpserver.tar.gz", 
             "title": "Sftp Server", 
             "version": "1.3"
@@ -382,65 +382,79 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-03-22_23:09:33", 
+            "build_date": "2023-06-07_22:11:53", 
             "changelog": "", 
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
             "home_url": "Module_tailscale.asp", 
             "link": "", 
-            "md5": "e282c8681c5bb3201428a085bea24318", 
+            "md5": "fc2394d58ddac363969f149961c0139e", 
             "name": "tailscale", 
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
             "title": "Tailscale", 
-            "version": "1.5"
+            "version": "1.9.2"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-06-05_23:12:50", 
+            "build_date": "2023-06-20_16:42:22", 
+            "changelog": "", 
+            "description": "tmux是一个终端复用器,它可以启动一系列终端会话。", 
+            "home_url": "Module_tmux.asp", 
+            "link": "", 
+            "md5": "68e743268d3d50c957f38ec3b82b74df", 
+            "name": "tmux", 
+            "tags": "Entware", 
+            "tar_url": "tmux/tmux.tar.gz", 
+            "title": "tmux", 
+            "version": "1.0"
+        }, 
+        {
+            "author": "sadog", 
+            "build_date": "2023-08-02_11:44:40", 
             "changelog": "", 
             "description": "使用U盘轻松挂载jffs", 
             "home_url": "Module_usb2jffs.asp", 
             "link": "", 
-            "md5": "91d99088dfe282f10c1904e6a0859fc4", 
+            "md5": "f2a9e7d69949a5d89cefbbe1410ad9be", 
             "name": "usb2jffs", 
             "tags": "USB", 
             "tar_url": "usb2jffs/usb2jffs.tar.gz", 
             "title": "USB2JFFS", 
-            "version": "2.1.1"
+            "version": "2.1.3"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2023-04-10_15:51:15", 
+            "build_date": "2024-08-12_00:22:52", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "be37aac6eac01c01ad43df3832d01940", 
+            "md5": "eeeb48b3478ad0a1b63a901b1211a8d5", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.9.2"
+            "version": "4.9.4"
         }, 
         {
             "author": "sadog", 
-            "build_date": "2022-11-02_13:54:31", 
+            "build_date": "2024-05-05_11:30:35", 
             "changelog": "", 
             "description": "ZeroTier 内网穿透", 
             "home_url": "Module_zerotier.asp", 
             "link": "", 
-            "md5": "cf5c2e40189ad6048c93d2a4d15018d5", 
+            "md5": "aeee29196bf9956c56abee976acbfc19", 
             "name": "zerotier", 
             "tags": "穿透 VPN", 
             "tar_url": "zerotier/zerotier.tar.gz", 
             "title": "ZeroTier", 
-            "version": "1.4.0"
+            "version": "1.5.1"
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "b5851c38bae49c9492be29ac529e75d6", 
+    "md5": "492ee876cd3835a9fefd6858724eeee2", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.21"
+    "version": "1.9.28"
 }
