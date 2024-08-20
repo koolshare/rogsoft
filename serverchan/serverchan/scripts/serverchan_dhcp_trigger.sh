@@ -142,7 +142,7 @@ serverchan_send_content=$(cat ${serverchan_lease_text})
 sckey_nu=$(dbus list serverchan_config_sckey | sort -n -t "_" -k 4 | cut -d "=" -f 1 | cut -d "_" -f 4)
 for nu in ${sckey_nu}; do
     serverchan_config_sckey=$(dbus get serverchan_config_sckey_${nu})
-    url="https://sc.ftqq.com/${serverchan_config_sckey}.send"
+    url="https://sctapi.ftqq.com/${serverchan_config_sckey}.send"
     result=$(wget --no-check-certificate --post-data "text=${serverchan_send_title}&desp=${serverchan_send_content}" -qO- ${url})
     if [ -n $(echo $result | grep "success") ]; then
         [ "${serverchan_info_logger}" == "1" ] && logger "[ServerChan]: 设备上线信息推送到 SCKEY No.${nu} 成功！！"
