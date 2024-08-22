@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.9.5
+   - add	添加GT-BE96支持，限制BE96最大功率29dbm
+
 4.9.4
    - fix	修复部分机型2.4G功率条显示错误
 
