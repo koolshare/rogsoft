@@ -116,9 +116,13 @@ check_start(){
 }
 
 set_premissions(){
-	chmod 755 /jffs/scripts/* >/dev/null 2>&1
-	chmod 755 /koolshare/bin/* >/dev/null 2>&1
-	chmod 755 /koolshare/scripts/* >/dev/null 2>&1
+	# remove broken links
+	find /koolshare/ -xtype l | xargs rm -rf
+
+	# set_premissions
+	chmod 755 /jffs/scripts/* 2>/dev/null
+	chmod 755 /koolshare/bin/* 2>/dev/null
+	chmod 755 /koolshare/scripts/* 2>/dev/null
 }
 
 set_value(){
@@ -153,6 +157,7 @@ set_skin(){
 	# new nethod: use nvram value to set skin
 	local UI_TYPE=ASUSWRT
 	local SC_SKIN=$(nvram get sc_skin)
+	local TS_FLAG=$(grep -o "2ED9C3" /www/css/difference.css 2>/dev/null|head -n1)
 	local ROG_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "2071044")
 	local TUF_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "D0982C")
 	local WRT_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "4F5B5F")
