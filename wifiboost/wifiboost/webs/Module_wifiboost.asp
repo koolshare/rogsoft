@@ -18,7 +18,6 @@
 <script type="text/javascript" src="/res/softcenter.js"></script>
 <script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/client_function.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/res/jquery-ui.js"></script> 
@@ -270,7 +269,16 @@ var max_dbm_24 = '28.50';
 var max_dbm_52 = '28.50';
 var max_dbm_58 = '28.50';
 if(odm == "GT10"){
-	max_dbm_24 = '29.00';
+	var max_dbm_24 = '29.00';
+}
+if(odm == "RT-BE88U"){
+	var max_dbm_24 = '30.00';
+	var max_dbm_52 = '30.00';
+}
+if(odm == "GT-BE96"){
+	var max_dbm_24 = '29.00';
+	var max_dbm_52 = '29.00';
+	var max_dbm_58 = '29.00';
 }
 var boost_dbm_24;
 var boost_dbm_52;
@@ -366,7 +374,7 @@ function try_activate(){
 }
 function register_event(){
 	var current_maxp24_tmp = '<% nvram_get("0:maxp2ga0"); %>';
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT10"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"  || odm == "GT-AXE16000" || odm == "GT10"){
 		// three wifi router
 		if(!current_maxp24_tmp){
 			current_maxp24 = '<% nvram_get("1:maxp2ga0"); %>';
@@ -381,6 +389,10 @@ function register_event(){
 		current_maxp24 = '<% nvram_get("3:maxp2ga0"); %>';
 		current_maxp52 = '<% nvram_get("4:maxp5gb0a0"); %>';
 		current_maxp58 = '<% nvram_get("1:maxp5gb0a0"); %>';
+	}else if(odm == "GT-BE96"){
+		current_maxp24 = '<% nvram_get("3:maxp2ga0"); %>';
+		current_maxp52 = '<% nvram_get("1:maxp5gb0a0"); %>';
+		current_maxp58 = '<% nvram_get("4:maxp5gb0a0"); %>';
 	}else if(odm == "RT-AX55" || odm == "RT-AX56U" || odm == "TUF-AX3000_V2"){
 		// two wifi router new format
 		current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
@@ -402,8 +414,16 @@ function register_event(){
 
 	// define max dbm
 	current_dec_24 = parseInt(current_maxp24);
-	current_dbm_24 = ((current_dec_24 - 6)/4).toFixed(2);
-	current_pwr_24 = Math.pow(10,(current_dec_24 - 6)/4/10).toFixed(2);
+	if(MODEL == "RT-BE88U"){
+		current_dbm_24 = (current_dec_24/4).toFixed(2);
+		current_pwr_24 = Math.pow(10,current_dec_24/4/10).toFixed(2);
+	}else if(MODEL == "GT-BE96"){
+		current_dbm_24 = ((current_dec_24 - 4)/4).toFixed(2);
+		current_pwr_24 = Math.pow(10,(current_dec_24 - 4)/4/10).toFixed(2);
+	}else{
+		current_dbm_24 = ((current_dec_24 - 6)/4).toFixed(2);
+		current_pwr_24 = Math.pow(10,(current_dec_24 - 6)/4/10).toFixed(2);
+	}
 	boost_dbm_24 = current_dbm_24;
 	$(function() {
 		$( "#slider24" ).slider({
@@ -425,10 +445,18 @@ function register_event(){
 	});
 	document.getElementById('tx_power_desc_24').innerHTML = current_dbm_24 + " dBm / " + current_pwr_24 + " mw";
 
-
 	current_dec_52 = parseInt(current_maxp52);
-	current_dbm_52 = ((current_dec_52 - 6)/4).toFixed(2);
-	current_pwr_52 = Math.pow(10,(current_dec_52 - 6)/4/10).toFixed(2);
+	if(MODEL == "RT-BE88U"){
+		current_dbm_52 = (current_dec_52/4).toFixed(2);
+		current_pwr_52 = Math.pow(10,current_dec_52/4/10).toFixed(2);
+	}else if(MODEL == "GT-BE96"){
+		current_dbm_52 = ((current_dec_52 - 4)/4).toFixed(2);
+		current_pwr_52 = Math.pow(10,(current_dec_52 - 4)/4/10).toFixed(2);
+	}else{
+		current_dbm_52 = ((current_dec_52 - 6)/4).toFixed(2);
+		current_pwr_52 = Math.pow(10,(current_dec_52 - 6)/4/10).toFixed(2);
+	}
+
 	boost_dbm_52 = current_dbm_52;
 	$(function() {
 		$( "#slider52" ).slider({
@@ -451,9 +479,16 @@ function register_event(){
 	document.getElementById('tx_power_desc_52').innerHTML = current_dbm_52 + " dBm / " + current_pwr_52 + " mw";
 
 	if (current_maxp58){
-		current_dec_58 = parseInt(current_maxp58);
-		current_dbm_58 = ((current_dec_58 - 6)/4).toFixed(2);
-		current_pwr_58 = Math.pow(10,(current_dec_58 - 6)/4/10).toFixed(2);
+		if(MODEL == "GT-BE96"){
+			current_dec_58 = parseInt(current_maxp58);
+			current_dbm_58 = ((current_dec_58 - 4)/4).toFixed(2);
+			current_pwr_58 = Math.pow(10,(current_dec_58 - 4)/4/10).toFixed(2);
+		}else{
+			current_dec_58 = parseInt(current_maxp58);
+			current_dbm_58 = ((current_dec_58 - 6)/4).toFixed(2);
+			current_pwr_58 = Math.pow(10,(current_dec_58 - 6)/4/10).toFixed(2);
+		}
+
 		boost_dbm_58 = current_dbm_58;
 		$(function() {
 			$( "#slider58" ).slider({
@@ -494,7 +529,7 @@ function register_event(){
 	});
 }
 function show_hide_elem(){
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT-AX11000_PRO" || odm == "GT10"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000"  || odm == "GT-AX11000_PRO" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"  || odm == "GT-AXE16000" || odm == "GT10" || odm == "GT-BE96"){
 		E("wifiboost_boost_58_tr").style.display = "";
 		E("LABLE_58").style.display = "";
 		E("LABLE_52").innerHTML = "5G-1";
@@ -700,7 +735,7 @@ function boost_now(action){
 	var dbus_new = {};
 	var current_url = window.location.href;
 	net_address = current_url.split("/Module")[0];
-	if(odm == "GT-AC5300" || odm == "GT-AX11000" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300"  || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000" || odm == "GT10"){
+	if(odm == "GT-AC5300" || odm == "GT-AX11000"  || odm == "GT-AX11000_PRO" || odm == "GT-AX11000_BO4" || odm == "RT-AX92U" || odm == "RT-AX95Q" || odm == "RT-AC5300" || odm == "XT12" || odm == "ET12" || odm == "GT-AXE11000"  || odm == "GT-AXE16000" || odm == "GT10" || odm == "GT-BE96"){
 		if (E("wifiboost_boost_24").checked == false && E("wifiboost_boost_52").checked == false && E("wifiboost_boost_58").checked == false){
 			alert("请至少选择一个你要修改功率的wifi信号！");
 			return false;
@@ -1237,7 +1272,7 @@ function verifyFields(r) {
 										<div id="spl2" style="margin:10px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
 											<li id="msg1">wifi boost通过修改机器出厂wlan设置，突破出厂设定的最大发射功率，须知修改出厂wlan设置有风险，由此带来的风险请自行承担！</li>
-											<li id="msg2">更高的发射功率可能影响速率、稳定性等，甚至有烧功放的风险，请勿盲目追求过高的发射功率，建议设定不超过27.00dBm！</li>
+											<li id="msg2">更高的发射功率可能影响速率、稳定性等，甚至会烧功放，请勿盲目追求过高的发射功率，建议WIFI6机型设定不超过27.50dBm！</li>
 											<li id="msg3">虽然插件可以保证修改过程相对安全，但还是强烈建议不要过于频繁的进行修改，以免发生意外导致机器wlan出厂设置被损坏。</li>
 											<li id="msg4">修改后插件会自动将地区切换为澳大利亚以发挥效果，非澳大利亚的功率和修改前一样。如果修改后功率未起作用，请重置一次路由。</li>
 											<li id="msg5">修改完成后，卸载wifi boost插件、升级固件版本、刷三方固件/原厂固件等操作均会保持最后一次的功率修改效果。</li>

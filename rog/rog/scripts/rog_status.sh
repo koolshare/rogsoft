@@ -161,15 +161,15 @@ get_tmp_pwr(){
 
 	# intergrare info
 	if [ -n "${interface_58g}" ];then
-		if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
-			wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G：${interface_52g_temp_c} ${__spilt__} 6G：${interface_58g_temp_c}"
+		if [ "${model}" == "GT-AXE11000" -o "${model}" == "ET8" -o "${model}" == "ET12" -o "${model}" == "RT-BE96U" ];then
+			wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G：&nbsp;${interface_52g_temp_c} ${__spilt__} 6G：&nbsp;${interface_58g_temp_c}"
 		else
 			wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G-1：${interface_52g_temp_c} ${__spilt__} 5G-2：${interface_58g_temp_c}"
 		fi
 		
 		if [ -n "${interface_24g_power}" -o -n "${interface_52g_power}" -o -n "${interface_58g_power}" ];then
-			if [ "{$model}" == "GT-AXE11000" -o "{$model}" == "ET8" -o "{$model}" == "ET12" ];then
-				wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G：${interface_52g_pwer_d} / ${interface_52g_pwer_p} <br /> 6G：${interface_58g_pwer_d} / ${interface_58g_pwer_p}"
+			if [ "${model}" == "GT-AXE11000" -o "${model}" == "ET8" -o "${model}" == "ET12" -o "${model}" == "RT-BE96U" ];then
+				wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G：&nbsp;${interface_52g_pwer_d} / ${interface_52g_pwer_p} <br /> 6G：&nbsp;${interface_58g_pwer_d} / ${interface_58g_pwer_p}"
 			else
 				wl_txpwr="2.4G：${interface_24g_pwer_d} / ${interface_24g_pwer_p} <br /> 5G-1：${interface_52g_pwer_d} / ${interface_52g_pwer_p} <br /> 5G-2：${interface_58g_pwer_d} / ${interface_58g_pwer_p}"
 			fi

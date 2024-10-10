@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="entware"
-VERSION="1.5"
+VERSION="1.6"
 TITLE="Entware"
 DESCRIPTION="轻松安装/管理Entware环境"
 HOME_URL="Module_entware.asp"

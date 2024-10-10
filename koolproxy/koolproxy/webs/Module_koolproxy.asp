@@ -14,20 +14,20 @@
 <link rel="stylesheet" type="text/css" href="css/element.css">
 <link rel="stylesheet" type="text/css" href="/device-map/device-map.css">
 <link rel="stylesheet" type="text/css" href="/res/softcenter.css">
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/state.js"></script>
-<script type="text/javascript" src="/popup.js"></script>
-<script type="text/javascript" src="/validator.js"></script>
-<script type="text/javascript" src="/general.js"></script>
-<script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
-<script type="text/javascript" src="/client_function.js"></script>
-<script type="text/javascript" src="/help.js"></script>
-<script type="text/javascript" src="/res/softcenter.js"></script>
+<script language="JavaScript" type="text/javascript" src="/state.js"></script>
+<script language="JavaScript" type="text/javascript" src="/popup.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="/js/httpApi.js"></script>
+<script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
+<script language="JavaScript" type="text/javascript" src="/validator.js"></script>
+<script language="JavaScript" type="text/javascript" src="/general.js"></script>
+<script language="JavaScript" type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
+<script language="JavaScript" type="text/javascript" src="/help.js"></script>
+<script language="JavaScript" type="text/javascript" src="/res/softcenter.js"></script>
 <style>
 .kp_btn {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
-	background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -37,7 +37,6 @@
 .kp_btn:hover {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
-	background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -62,7 +61,6 @@
 	border-radius:10px;
 	z-index: 10;
 	background-color:#2B373B;
-	background-color:none; /* W3C rogcss */
 	margin-left: -215px;
 	top: 240px;
 	width:980px;
@@ -85,21 +83,17 @@
 	color:#FFFFFF;
 	font-family: Lucida Console;
 	font-size:12px;
-	border:1px solid #91071f; /* W3C rogcss */
-	background-color: #3e030d; /* W3C rogcss */
 }
 
 .FormTable1{
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	border: 1px solid #000000;
-	border: none; /* W3C rogcss */
 	border-collapse: collapse;
 }
 .FormTable1 th{
 	font-family:Arial, Helvetica, sans-serif;
 	background-color:#1F2D35;
-	background-color:none; /* W3C rogcss */
 	color:#FFFFFF;	/*Viz add*/
 	/*font-weight:normal;*/
 	line-height:15px;
@@ -109,8 +103,6 @@
 	width:35%;	/*Viz add*/
 	padding-left: 10px;
 	border-collapse: collapse;
-	background:#2F3A3E; /* W3C rogcss */
-	border: 1px solid #000000; /* W3C rogcss */
 }
 .FormTable1 thead td{
 	color: #FFF;
@@ -130,17 +122,13 @@
 	background: linear-gradient(to bottom, #92A0A5  0%, #66757C 100%); /* W3C */
 	border: 1px solid #222;
 	background: none;
-	background: #91071f; /* W3C rogcss */
 }
 .FormTable1 td{
 	/*padding-left: 10px;*/
 	background-color:#475A5F;
-	background-color:none; /* W3C rogcss */
 	border: 1px solid #000000;
-	border: 1px solid #91071f; /* W3C rogcss */
 	border-collapse: collapse;
 	word-break: break-word;
-	background:transparent; /* W3C rogcss */
 }
 .input_ss_table {
 	font-size: 12px;
@@ -151,7 +139,6 @@ input[type=button]:focus {
 }
 #basic_settings, #rule_table_div, #ACL_table_div{
 	border:none;
-	border:1px solid #91071f; /* W3C rogcss */
 }
 textarea{
 	width:97%;
@@ -163,8 +150,6 @@ textarea{
 	outline: none;
 	background:#475A5F;
 	border:1px solid #222;
-	background:transparent; /* W3C rogcss */
-	border:1px solid #91071f; /* W3C rogcss */
 }
 </style>
 <script>
@@ -1207,9 +1192,9 @@ function openkpHint(itemNum) {
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
-											<li id="push_content1" style="margin-top:-5px;">
-												KP(KidsProtect)是一款高效的基于规则过滤上网流量包的软件，用于过滤页面垃圾推广元素、不良信息、不健康内容等，并且支持https！
-											</li>
+											<span id="push_content1" style="margin-top:-5px;">
+											KP(KidsProtect)是一款高效的基于规则过滤上网流量包的软件，用于过滤页面垃圾推广元素、不良信息、不健康内容等，并且支持https！
+											</span>
 										</div>
 										<!-- this is the popup area for user rules -->
 										<div id="vpnc_settings" class="contentM_qis" style="box-shadow: 3px 3px 10px #000;margin-top: -65px;">

@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="rog"
-VERSION="5.9.1"
+VERSION="5.9.2"
 TITLE="ROG工具箱"
 DESCRIPTION="一些小功能的插件"
 HOME_URL="Module_rog.asp"

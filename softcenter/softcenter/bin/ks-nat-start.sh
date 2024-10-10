@@ -12,7 +12,7 @@ ACTION=$1
 ks_nat=$(nvram get ks_nat)
 [ "$ks_nat" == "1" ] && echo exit $(date) >> /tmp/ks_nat_log.txt && exit
 
-for i in $(find /koolshare/init.d/ -name 'N*' | sort -n) ;
+for i in $(find /koolshare/init.d/ -name 'N*' | sort -k1.20 -n) ;
 do
 	case "$i" in
 		*.sh )
