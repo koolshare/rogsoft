@@ -248,22 +248,27 @@ center_install() {
 	local _BINS="httpdb htop perpd perpls perpstat perpboot perpctl perpok perphup tinylog start-stop-daemon"
 	for _BIN in ${_BINS}
 	do
+		echo_date "检测${_BIN}..."
 		if [ -f "/rom/etc/koolshare/bin/${_BIN}" -a -f "/tmp/${module}/bin/${_BIN}" ];then
 			# both in install folder and rom folder
 			local _BIN_MD5_ROM=$(md5sum /rom/etc/koolshare/bin/${_BIN} | awk '{print $1}')
 			local _BIN_MD5_TMP=$(md5sum /tmp/${module}/bin/${_BIN} | awk '{print $1}')
 			if [ "${_BIN_MD5_ROM}" == "${_BIN_MD5_TMP}" ];then
 				# same md5, just make a link
+				echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5一致，生成软连接！"
 				rm -rf /${KSHOME}/.koolshare/bin/${_BIN}
 				ln -sf /rom/etc/koolshare/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
+				rm -rf /tmp/${module}/bin/${_BIN}
 			else
 				# different md5, mv new binary to target folder
+				echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5不一致，开始安装！"
 				mv /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
 				chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
 			fi
 			sync
 		elif [ ! -f "/rom/etc/koolshare/bin/${_BIN}" -a -f "/tmp/${module}/bin/${_BIN}" ];then
 			# only in install folder, not in rom folder, maybe a new file, just copy it
+			echo_date "安装${_BIN}！"
 			mv /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
 			chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
 		fi
