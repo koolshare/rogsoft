@@ -178,6 +178,9 @@ center_install() {
 	[ -L "/${KSHOME}/.koolshare/webs/files" ] && rm -rf /${KSHOME}/.koolshare/webs/files
 	[ -d "/tmp/files" ] && rm -rf /tmp/files
 
+	# remove possible broken symbol link
+	find -L /koolshare/ -type l | xargs rm -rf
+
 	# remove more files by legacy bug package
 	rm -rf /${KSHOME}/.koolshare/bin/bin-hnd >/dev/null 2>&1
 	rm -rf /${KSHOME}/.koolshare/bin/bin-mtk >/dev/null 2>&1
@@ -245,43 +248,32 @@ center_install() {
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
 
 	# to save jffs useage, just make link for some binary file when md5sum is the same
-	local _BINS="httpdb htop perpd perpls perpstat perpboot perpctl perpok perphup tinylog sissylog versioncmp start-stop-daemon"
+	local _BINS=$(find /tmp/${module}/bin/* | awk -F "/" '{print $NF}' | sed '/^$/d')
 	for _BIN in ${_BINS}
 	do
-		if [ -f "/tmp/${module}/bin/${_BIN}" ];then
-			mkdir -p /tmp/${module}/bin-big
-			mv /tmp/${module}/bin/${_BIN} /tmp/${module}/bin-big/
-			sync
-		fi
-		
-		if [ -f "/rom/etc/koolshare/bin/${_BIN}" -a -f "/tmp/${module}/bin-big/${_BIN}" ];then
+		if [ -f "/rom/etc/koolshare/bin/${_BIN}" ];then
 			# both in install folder and rom folder
 			local _BIN_MD5_ROM=$(md5sum /rom/etc/koolshare/bin/${_BIN} | awk '{print $1}')
-			local _BIN_MD5_TMP=$(md5sum /tmp/${module}/bin-big/${_BIN} | awk '{print $1}')
+			local _BIN_MD5_TMP=$(md5sum /tmp/${module}/bin/${_BIN} | awk '{print $1}')
 			if [ "${_BIN_MD5_ROM}" == "${_BIN_MD5_TMP}" ];then
 				# same md5, just make a link
 				# echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5一致，生成软连接！"
 				rm -rf /${KSHOME}/.koolshare/bin/${_BIN}
 				ln -sf /rom/etc/koolshare/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
 			else
-				# different md5, mv new binary to target folder
+				# different md5, copy new binary to target folder
 				# echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5不一致，开始安装！"
-				cp -rf /tmp/${module}/bin-big/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
+				cp -rf /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
 				chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
 			fi
-			sync
-		elif [ ! -f "/rom/etc/koolshare/bin/${_BIN}" -a -f "/tmp/${module}/bin-big/${_BIN}" ];then
+		elif [ ! -f "/rom/etc/koolshare/bin/${_BIN}" ];then
 			# only in install folder, not in rom folder, maybe a new file, just copy it
-			cp -rf /tmp/${module}/bin-big/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
+			cp -rf /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
 			chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
-			sync
 		fi
 	done
-
-	# copy others
-	cp -rf /tmp/${module}/bin/* /${KSHOME}/.koolshare/bin/
 	sync
-	
+
 	echo_date "文件复制结束，开始创建相关的软连接..."
 	
 	# ssh PATH environment

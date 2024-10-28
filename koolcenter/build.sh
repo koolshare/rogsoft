@@ -2,7 +2,7 @@
 # build script for rogsoft project
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
-VERSION=1.9.30
+VERSION=1.9.31
 
 echo $VERSION > ./softcenter/.soft_ver
 
@@ -27,6 +27,7 @@ if [ "$ME" = "build.sh" ];then
 	cp -rf ${DIR}/../softcenter/softcenter/scripts $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/install.sh $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/res/* $DIR/build/softcenter/res
+	rm -rf $DIR/build/softcenter/res/icon-*.png
 	tar -zcf softcenter.tar.gz softcenter
 	if [ "$?" = "0" ];then
 		echo "build success!"
@@ -50,6 +51,7 @@ elif [ "$ME" = "build_mtk.sh" ];then
 	cp -rf ${DIR}/../softcenter/softcenter/scripts $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/install.sh $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/res/* $DIR/build/softcenter/res	
+	rm -rf $DIR/build/softcenter/res/icon-*.png
 	tar -zcf softcenter.tar.gz softcenter
 	if [ "$?" = "0" ];then
 		echo "build success!"

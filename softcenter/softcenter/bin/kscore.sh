@@ -117,7 +117,7 @@ check_start(){
 
 set_premissions(){
 	# remove broken links
-	find /koolshare/ -xtype l | xargs rm -rf
+	/usr/bin/find -L /koolshare/ -type l | xargs rm -rf
 
 	# set_premissions
 	chmod 755 /jffs/scripts/* 2>/dev/null
