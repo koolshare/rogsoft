@@ -245,7 +245,7 @@ center_install() {
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
 
 	# to save jffs useage, just make link for some binary file when md5sum is the same
-	local _BINS="httpdb htop perpd perpls perpstat perpboot perpctl perpok perphup tinylog start-stop-daemon"
+	local _BINS="httpdb htop perpd perpls perpstat perpboot perpctl perpok perphup tinylog sissylog versioncmp start-stop-daemon"
 	for _BIN in ${_BINS}
 	do
 		if [ -f "/tmp/${module}/bin/${_BIN}" ];then
