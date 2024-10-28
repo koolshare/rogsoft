@@ -249,7 +249,7 @@ center_install() {
 	for _BIN in ${_BINS}
 	do
 		if [ -f "/tmp/${module}/bin/${_BIN}" ];then
-			mkdir /tmp/${module}/bin-big
+			mkdir -p /tmp/${module}/bin-big
 			mv /tmp/${module}/bin/${_BIN} /tmp/${module}/bin-big/
 			sync
 		fi
