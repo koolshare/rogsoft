@@ -56,9 +56,6 @@ set_skin(){
 	local TUF_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "D0982C")
 	local WRT_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "4F5B5F")
 
-	#local ROG_FLAG=$(grep -o "680516" /www/form_style.css 2>/dev/null|head -n1)
-	#local TUF_FLAG=$(grep -o "D0982C" /www/form_style.css 2>/dev/null|head -n1)
-	#local TS_FLAG=$(grep -o "2ED9C3" /www/css/difference.css 2>/dev/null|head -n1)
 	if [ -n "${TS_FLAG}" ];then
 		UI_TYPE="TS"
 	else
@@ -150,6 +147,9 @@ center_install() {
 
 	# remove some value discard exist
 	nvram unset rc_service
+
+	# set important value
+	nvram set 3rd-party=merlin
 	nvram commit
 
 	local CENTER_TYPE_1=$(cat /tmp/${module}/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
@@ -177,6 +177,21 @@ center_install() {
 	[ -L "/${KSHOME}/configs/profile" ] && rm -rf /${KSHOME}/configs/profile
 	[ -L "/${KSHOME}/.koolshare/webs/files" ] && rm -rf /${KSHOME}/.koolshare/webs/files
 	[ -d "/tmp/files" ] && rm -rf /tmp/files
+
+	# remove more files by legacy bug package
+	rm -rf /${KSHOME}/.koolshare/bin/bin-hnd >/dev/null 2>&1
+	rm -rf /${KSHOME}/.koolshare/bin/bin-mtk >/dev/null 2>&1
+
+	# remove files form jffs
+	if [ "${MODEL}" == "RT-AX56U_V2" -o "${MODEL}" == "RT-AX57" ];then
+		rm -rf /jffs/syslog.log
+		rm -rf /jffs/syslog.log-1
+		rm -rf /jffs/wglist
+		rm -rf /jffs/.sys/diag_db/*
+	fi
+	rm -rf /jffs/uu.tar.gz*
+	echo 1 > /proc/sys/vm/drop_caches
+	sync
 
 	# do not install some file for some model
 	JFFS_TOTAL=$(df|grep -Ew "/${KSHOME}" | awk '{print $2}')
@@ -225,10 +240,38 @@ center_install() {
 	
 	# start to install files
 	cp -rf /tmp/${module}/init.d/* /${KSHOME}/.koolshare/init.d/
-	cp -rf /tmp/${module}/bin/* /${KSHOME}/.koolshare/bin/
 	cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
 	cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
+
+	# to save jffs useage, just make link for some binary file when md5sum is the same
+	local _BINS="httpdb htop perpd perpls perpstat perpboot perpctl perpok perphup tinylog start-stop-daemon"
+	for _BIN in ${_BINS}
+	do
+		if [ -f "/rom/etc/koolshare/bin/${_BIN}" -a -f "/tmp/${module}/bin/${_BIN}" ];then
+			# both in install folder and rom folder
+			local _BIN_MD5_ROM=$(md5sum /rom/etc/koolshare/bin/${_BIN} | awk '{print $1}')
+			local _BIN_MD5_TMP=$(md5sum /tmp/${module}/bin/${_BIN} | awk '{print $1}')
+			if [ "${_BIN_MD5_ROM}" == "${_BIN_MD5_TMP}" ];then
+				# same md5, just make a link
+				rm -rf /${KSHOME}/.koolshare/bin/${_BIN}
+				ln -sf /rom/etc/koolshare/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
+			else
+				# different md5, mv new binary to target folder
+				mv /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
+				chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
+			fi
+			sync
+		elif [ ! -f "/rom/etc/koolshare/bin/${_BIN}" -a -f "/tmp/${module}/bin/${_BIN}" ];then
+			# only in install folder, not in rom folder, maybe a new file, just copy it
+			mv /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
+			chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
+		fi
+	done
+
+	# copy others
+	cp -rf /tmp/${module}/bin/* /${KSHOME}/.koolshare/bin/
+	
 	echo_date "文件复制结束，开始创建相关的软连接..."
 	
 	# ssh PATH environment

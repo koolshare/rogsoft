@@ -424,19 +424,19 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2024-08-12_00:22:52", 
+            "build_date": "2024-08-22_17:53:59", 
             "changelog": "", 
             "description": "wifi boost: 路由器WiFi功率增强，增加信号覆盖范围。", 
             "home_url": "Module_wifiboost.asp", 
             "link": "", 
-            "md5": "eeeb48b3478ad0a1b63a901b1211a8d5", 
+            "md5": "9dcdac2f4bc27b78205d3dea7cf3f5af", 
             "name": "wifiboost", 
             "port": "8083", 
             "server": "42.192.18.234", 
             "tags": "系统 工具", 
             "tar_url": "wifiboost/wifiboost.tar.gz", 
             "title": "wifi boost", 
-            "version": "4.9.4"
+            "version": "4.9.5"
         }, 
         {
             "author": "sadog", 
@@ -454,7 +454,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "492ee876cd3835a9fefd6858724eeee2", 
+    "md5": "a3b7197a47df5321b7b23706ec97aa22", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.28"
+    "version": "1.9.29"
 }

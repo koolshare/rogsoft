@@ -2,7 +2,7 @@
 # build script for rogsoft project
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
-VERSION=1.9.7
+VERSION=1.9.8
 
 echo $VERSION > ./softcenter/.soft_ver
 
@@ -23,6 +23,7 @@ if [ "$ME" = "build.sh" ];then
 	cd ./build
 	cp -rf softcenter/bin-hnd/* softcenter/bin/
 	rm -rf softcenter/bin-hnd
+	rm -rf softcenter/bin-mtk
 	tar -zcf softcenter.tar.gz softcenter
 	if [ "$?" = "0" ];then
 		echo "build hnd success!"
@@ -38,6 +39,7 @@ elif [ "$ME" = "build_mtk.sh" ];then
 	cd ./build
 	cp -rf softcenter/bin-mtk/* softcenter/bin/
 	rm -rf softcenter/bin-mtk
+	rm -rf softcenter/bin-hnd
 	tar -zcf softcenter.tar.gz softcenter
 	if [ "$?" = "0" ];then
 		echo "build mtk success!"

@@ -126,6 +126,7 @@ set_premissions(){
 }
 
 set_value(){
+	nvram set 3rd-party=merlin
 	nvram set jffs2_scripts=1
 	nvram unset rc_service
 	nvram commit
