@@ -47,7 +47,7 @@
 			ready: function(e) {
 				var t = "layer",
 					i = "",
-					n = (a ? "modules/layer/" : "theme/") + "default/layer.css?v=" + r.v + i;
+					n = (a ? "modules/layer/" : "theme/") + "default/layer.css";
 				return a ? layui.addcss(n, e, t) : o.link(n, e, t), this
 			},
 			alert: function(e, t, n) {
