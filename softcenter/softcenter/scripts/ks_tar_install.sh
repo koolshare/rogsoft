@@ -63,7 +63,8 @@ clean(){
 	fi
 	
 	# incase of delete install package delete failed
-	rm -rf /tmp/*.tar.gz >/dev/null 2>&1
+	local _TARS="/tmp/*.tar.gz*"
+	rm -rf ${_TARS} >/dev/null 2>&1
 	rm -rf /tmp/upload/*.tar.gz >/dev/null 2>&1
 	
 	# remove some value if exist

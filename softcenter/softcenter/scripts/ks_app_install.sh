@@ -158,7 +158,8 @@ install_ks_module() {
 	fi
 
 	# 6. 下载准备，再删除一次插件包，避免 xxx.tar.gz 下载为 xxx.tar.gz1等名字
-	rm -rf /tmp/*.tar.gz* >/dev/null 2>&1
+	local _TARS="/tmp/*.tar.gz*"
+	rm -rf ${_TARS} >/dev/null 2>&1
 	local MAXDEPTH_SUPP=$(find --help 2>&1|grep -Eco maxdepth)
 	if [ "${MAXDEPTH_SUPP}" == "1" ];then
 		local INSTALL_SCRIPT_TMP=$(find /tmp -maxdepth 2 -name "install.sh")
