@@ -25,6 +25,14 @@ detect(){
 		mkdir -p ${source_path}
 		ln -sf /koolshare/scripts/base.sh ${source_file} >/dev/null 2>&1
 	fi
+
+	# make sure software center install script exist
+	if [ ! -f "/koolshare/scripts/ks_app_install.sh" ];then
+		ln -sf /rom/etc/koolshare/scripts/ks_app_install.sh /koolshare/scripts/ks_app_install.sh
+	fi
+	if [ ! -f "/koolshare/scripts/ks_tar_install.sh" ];then
+		ln -sf /rom/etc/koolshare/scripts/ks_tar_install.sh /koolshare/scripts/ks_tar_install.sh
+	fi
 	
 	# make some link
 	if [ ! -L "/koolshare/bin/base64_decode" -a -f "/koolshare/bin/base64_encode" ];then
