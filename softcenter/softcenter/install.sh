@@ -267,12 +267,12 @@ center_install() {
 				# different md5, copy new binary to target folder
 				# echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5不一致，开始安装！"
 				cp -rf /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
-				chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
+				chmod +x /${KSHOME}/.koolshare/bin/${_BIN} >/dev/null 2>&1
 			fi
 		elif [ ! -f "/rom/etc/koolshare/bin/${_BIN}" ];then
 			# only in install folder, not in rom folder, maybe a new file, just copy it
 			cp -rf /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
-			chmod +x /${KSHOME}/.koolshare/bin/${_BIN} 
+			chmod +x /${KSHOME}/.koolshare/bin/${_BIN} >/dev/null 2>&1
 		fi
 	done
 	sync
