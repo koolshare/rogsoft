@@ -225,7 +225,7 @@ install_tar(){
 	fi
 
 	# 13. 检查下安装包是否是本平台的
-	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" ];then
+	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
 		VALID_STRING="mtk"
 	else
 		VALID_STRING="hnd"
