@@ -2,7 +2,7 @@
 #
 ########################################################################
 #
-# Copyright (C) 2011/2022 kooldev
+# Copyright (C) 2011/2024 kooldev
 #
 # 此脚本为 hnd/axhnd/axhnd.675x/p1axhnd.675x平台软件中心安装脚本。
 # 软件中心地址: https://github.com/koolshare/rogsoft
@@ -364,7 +364,7 @@ center_install() {
 	echo_date "开机启动项检查完毕！"
 
 	chmod 755 /${KSHOME}/scripts/* >/dev/null 2>&1
-	chmod 755 /${KSHOME}/.koolshare/bin/* >/dev/null 2>&1
+	#chmod 755 /${KSHOME}/.koolshare/bin/* >/dev/null 2>&1
 	chmod 755 /${KSHOME}/.koolshare/init.d/* >/dev/null 2>&1
 	chmod 755 /${KSHOME}/.koolshare/perp/* >/dev/null 2>&1
 	chmod 755 /${KSHOME}/.koolshare/perp/.boot/* >/dev/null 2>&1
