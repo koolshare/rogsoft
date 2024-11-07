@@ -3,7 +3,16 @@ Koolshare Asuswrt-Merlin softeware center Changelog
 1.9.12/1.9.34
    - fix	修复使用entware环境时，软件中心日志时间显示错误的问题
    - fix	修复更新软件中心导致一些插件停止运行的问题
-   - fix	修复更新软件中心导致一些插件停止运行的问题
+   - fix	修复mtk平台离线安装软件中心报错
+   - update	优化/koolshare/bin目录，优先创建链接以节约空间
+
+1.9.11/1.9.33
+   - add	新增mtk平台机型RT-AX57_GO的支持
+   
+1.9.11/1.9.33
+   - fix	修复软件中心前台js错误
+   - fix	避免被asd移除核心文件
+
 
 1.9.8/1.9.30 - 1.9.9/1.9.31
    - fix	修复koolcenter插件升级时，架构专属二进制安装位置不正确的问题
