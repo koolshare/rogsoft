@@ -8,7 +8,8 @@
 # 软件中心地址: https://github.com/koolshare/rogsoft
 #
 ########################################################################
-
+NEW_PATH=$(echo $PATH|tr ':' '\n'|sed '/opt/d;/mmc/d'|awk '!a[$0]++'|tr '\n' ':'|sed '$ s/:$//')
+export PATH=${NEW_PATH}
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 MODEL=
 FW_TYPE_CODE=
@@ -137,6 +138,118 @@ get_usb2jffs_status(){
 	return 0
 }
 
+cmcp(){
+	# compare then copy
+	local _source=$1
+	local _target=$2
+	local _origin=$3
+	local _action=$4
+	local _FILES=$(find ${_source}/* -type f 2>/dev/null)
+	for _FILE in ${_FILES}
+	do
+		local _FILENAME=$(basename ${_FILE})
+		local _FILEPATH=$(dirname ${_FILE})
+		local _DESTPATH=$(echo ${_FILEPATH} | sed "s/\/tmp\/${module}/\/${KSHOME}\/\.koolshare/g")
+		local _ORIGPATH=$(echo ${_FILEPATH} | sed "s/\/tmp\/${module}/\/rom\/etc\/koolshare/g")
+		local _FILE_JFF="${_DESTPATH}/${_FILENAME}"
+		local _FILE_TMP="${_FILEPATH}/${_FILENAME}"
+		local _FILE_ROM="${_ORIGPATH}/${_FILENAME}"
+		mkdir -p ${_DESTPATH}
+		
+		if [ -f "${_FILE_JFF}" ];then
+			readlink -f ${_FILE_JFF} >/dev/null 2>&1
+			if [ "$?" == "0" ];then
+				# it's a link, we need to compare to its origin file then copy
+				local _FILE_ORI=$(readlink -f ${_FILE_JFF})
+				local _FILE_ORI_MD5=$(md5sum ${_FILE_ORI} | awk '{print $1}')
+				local _FILE_TMP_MD5=$(md5sum ${_FILE_TMP} | awk '{print $1}')
+				if [ "${_FILE_ORI_MD5}" != "${_FILE_TMP_MD5}" ];then
+					# different md5, remove link and copy new file from source to target folder
+					echo_date "copy | ${_FILE_TMP} ➡️ ${_FILE_JFF}"
+					rm -rf ${_FILE_JFF} >/dev/null 2>&1
+					cp -rf ${_FILE_TMP} ${_FILE_JFF}
+					chmod +x ${_FILE_JFF} >/dev/null 2>&1
+				else
+					# same md5, do nothing, keep the link
+					echo_date "jump | ${_FILE_JFF} link not change!"
+					echo 1 >/dev/null 2>&1
+				fi
+			elif [ "$?" == "1" ];then
+				# it's a file, we need to compare then copy
+				local _FILE_JFF_MD5=$(md5sum ${_FILE_JFF} | awk '{print $1}')
+				local _FILE_TMP_MD5=$(md5sum ${_FILE_TMP} | awk '{print $1}')
+				local _FILE_ROM_MD5=$(md5sum ${_FILE_ROM} | awk '{print $1}')
+				if [ "${_FILE_JFF_MD5}" != "${_FILE_TMP_MD5}" ];then
+					if [ "${_FILE_TMP_MD5}" == "${_FILE_ROM_MD5}" ];then
+						# same md5, file maybe change by user? or otehr malware, correct it with link
+						if [ ${_action} == "link" ];then
+							echo_date "link | ${_FILE_ROM} ➡️ ${_FILE_JFF}"
+							rm -rf ${_FILE_JFF} >/dev/null 2>&1
+							ln -sf ${_FILE_ROM} ${_FILE_JFF}
+						else
+							echo_date "copy | ${_FILE_ROM} ➡️ ${_FILE_JFF}"
+							rm -rf ${_FILE_JFF} >/dev/null 2>&1
+							cp -rf ${_FILE_ROM} ${_FILE_JFF}
+							chmod +x ${_FILE_JFF} >/dev/null 2>&1
+						fi
+					else
+						# different md5, file in target is newer, copry it to target
+						echo_date "copy | ${_FILE_TMP} ➡️ ${_FILE_JFF}"
+						cp -rf ${_FILE_TMP} ${_FILE_JFF}
+						chmod +x ${_FILE_JFF} >/dev/null 2>&1
+					fi
+				else
+					if [ "${_FILE_JFF_MD5}" == "${_FILE_ROM_MD5}" ];then
+						if [ ${_action} == "link" ];then
+							# same md5, remove file, make link
+							echo_date "link | ${_FILE_ROM} ➡️ ${_FILE_JFF}"
+							rm -rf ${_FILE_JFF} >/dev/null 2>&1
+							ln -sf ${_FILE_ROM} ${_FILE_JFF}
+						else
+							# same md5, do nothing, keep the file
+							echo_date "jump | ${_FILE_JFF} file not change!"
+							echo 1 >/dev/null 2>&1
+						fi
+					else
+						# keep it as file, because source file is newer than file in rom
+						echo_date "jump | ${_FILE_JFF} file not change!"
+						echo 1 >/dev/null 2>&1
+					fi
+				fi
+			fi
+		else
+			if [ -f "${_FILE_ROM}" ];then
+				# maybe lost in target, compare to source
+				local _FILE_ROM_MD5=$(md5sum ${_FILE_ROM} | awk '{print $1}')
+				local _FILE_TMP_MD5=$(md5sum ${_FILE_TMP} | awk '{print $1}')			
+				if [ "${_FILE_ROM_MD5}" != "${_FILE_TMP_MD5}" ];then
+					# different md5, copy new file from source to target folder
+					echo_date "copy | ${_FILE_TMP} ➡️ ${_FILE_JFF}"
+					cp -rf ${_FILE_TMP} ${_FILE_JFF}
+					chmod +x ${_FILE_JFF} >/dev/null 2>&1
+				else
+					if [ ${_action} == "link" ];then
+						# same md5, make a link
+						echo_date "link | ${_FILE_ROM} ➡️ ${_FILE_JFF}"
+						ln -sf ${_FILE_ROM} ${_FILE_JFF}
+					else
+						# same md5, copy file
+						echo_date "copy | ${_FILE_TMP} ➡️ ${_FILE_JFF}"
+						cp -rf ${_FILE_TMP} ${_FILE_JFF}
+					fi
+				fi
+			else
+				# only in /tmp folder, not in koolshare folder, copy file
+				echo_date "copy | ${_FILE_TMP} ➡️ ${_FILE_JFF}"
+				cp -rf ${_FILE_TMP} ${_FILE_JFF}
+				chmod +x ${_FILE_JFF} >/dev/null 2>&1		
+			fi
+		fi
+	done
+	sync
+
+}
+
 center_install() {
 	local KSHOME=$1
 
@@ -168,6 +281,7 @@ center_install() {
 	mkdir -p /${KSHOME}/.koolshare/init.d/
 	mkdir -p /${KSHOME}/.koolshare/scripts/
 	mkdir -p /${KSHOME}/.koolshare/configs/
+	mkdir -p /${KSHOME}/.koolshare/perp/
 	mkdir -p /${KSHOME}/.koolshare/webs/
 	mkdir -p /${KSHOME}/.koolshare/res/
 	mkdir -p /tmp/upload
@@ -245,37 +359,14 @@ center_install() {
 	set_skin
 	
 	# start to install files
-	cp -rf /tmp/${module}/init.d/* /${KSHOME}/.koolshare/init.d/
-	cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
-	cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
+	cmcp /tmp/${module}/bin /${KSHOME}/.koolshare/bin /rom/etc/koolshare/bin link
+	cmcp /tmp/${module}/init.d /${KSHOME}/.koolshare/init.d /rom/etc/koolshare/init.d file
+	cmcp /tmp/${module}/perp /${KSHOME}/.koolshare/perp /rom/etc/koolshare/perp file
+	cmcp /tmp/${module}/scripts /${KSHOME}/.koolshare/scripts /rom/etc/koolshare/scripts file
+	#cp -rf /tmp/${module}/init.d/* /${KSHOME}/.koolshare/init.d/
+	#cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
+	#cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
-
-	# to save jffs useage, just make link for some binary file when md5sum is the same
-	local _BINS=$(find /tmp/${module}/bin/* | awk -F "/" '{print $NF}' | sed '/^$/d')
-	for _BIN in ${_BINS}
-	do
-		if [ -f "/rom/etc/koolshare/bin/${_BIN}" ];then
-			# both in install folder and rom folder
-			local _BIN_MD5_ROM=$(md5sum /rom/etc/koolshare/bin/${_BIN} | awk '{print $1}')
-			local _BIN_MD5_TMP=$(md5sum /tmp/${module}/bin/${_BIN} | awk '{print $1}')
-			if [ "${_BIN_MD5_ROM}" == "${_BIN_MD5_TMP}" ];then
-				# same md5, just make a link
-				# echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5一致，生成软连接！"
-				rm -rf /${KSHOME}/.koolshare/bin/${_BIN}
-				ln -sf /rom/etc/koolshare/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
-			else
-				# different md5, copy new binary to target folder
-				# echo_date "在/rom/etc/koolshare/bin/下找到${_BIN}与即将安装的${_BIN} md5不一致，开始安装！"
-				cp -rf /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
-				chmod +x /${KSHOME}/.koolshare/bin/${_BIN} >/dev/null 2>&1
-			fi
-		elif [ ! -f "/rom/etc/koolshare/bin/${_BIN}" ];then
-			# only in install folder, not in rom folder, maybe a new file, just copy it
-			cp -rf /tmp/${module}/bin/${_BIN} /${KSHOME}/.koolshare/bin/${_BIN}
-			chmod +x /${KSHOME}/.koolshare/bin/${_BIN} >/dev/null 2>&1
-		fi
-	done
-	sync
 
 	echo_date "文件复制结束，开始创建相关的软连接..."
 	
@@ -369,11 +460,9 @@ center_install() {
 	chmod 755 /${KSHOME}/scripts/* >/dev/null 2>&1
 	#chmod 755 /${KSHOME}/.koolshare/bin/* >/dev/null 2>&1
 	chmod 755 /${KSHOME}/.koolshare/init.d/* >/dev/null 2>&1
-	chmod 755 /${KSHOME}/.koolshare/perp/* >/dev/null 2>&1
+	chmod 755 /${KSHOME}/.koolshare/scripts/* >/dev/null 2>&1
 	chmod 755 /${KSHOME}/.koolshare/perp/.boot/* >/dev/null 2>&1
 	chmod 755 /${KSHOME}/.koolshare/perp/.control/* >/dev/null 2>&1
-	chmod 755 /${KSHOME}/.koolshare/perp/httpdb/* >/dev/null 2>&1
-	chmod 755 /${KSHOME}/.koolshare/scripts/* >/dev/null 2>&1
 
 	# reset some default value
 	echo_date "设定一些默认值..."
