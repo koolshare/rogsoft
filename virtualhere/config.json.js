@@ -1,12 +1,12 @@
 {
-"version":"1.6",
-"md5":"b2c24ae594c9566bcca2fa3a1606e19f",
+"version":"1.0",
+"md5":"05ae7d8c3e5be0284c07f5b3452f6499",
 "home_url":"Module_virtualhere.asp",
-"title":"usb over ip",
-"description":"virtualhere",
+"title":"virtualhere",
+"description":"usb over ip",
 "tags":"辅助 工具",
-"author":"anonymous",
+"author":"jeremy",
 "link":"",
 "changelog":"",
-"build_date":"2021-08-22_16:09:01"
+"build_date":"2024-11-08_11:08:26"
 }
