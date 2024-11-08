@@ -160,11 +160,11 @@ install_now(){
 	chmod 755 /koolshare/scripts/${module}_*.sh >/dev/null 2>&1
 
 	# make start up script link
-	if [ ! -L "/koolshare/init.d/N97${module}.sh" -a -f "/koolshare/scripts/${module}_config.sh" ];then
-		ln -sf /koolshare/scripts/${module}_config.sh /koolshare/init.d/N97${module}.sh
+	if [ ! -L "/koolshare/init.d/N97${module}.sh" -a -f "/koolshare/scripts/${module}.sh" ];then
+		ln -sf /koolshare/scripts/${module}.sh /koolshare/init.d/N97${module}.sh
 	fi
-	if [ ! -L "/koolshare/init.d/S97${module}.sh" -a -f "/koolshare/scripts/${module}_config.sh" ];then
-		ln -sf /koolshare/scripts/${module}_config.sh /koolshare/init.d/S97${module}.sh
+	if [ ! -L "/koolshare/init.d/S97${module}.sh" -a -f "/koolshare/scripts/${module}.sh" ];then
+		ln -sf /koolshare/scripts/${module}.sh /koolshare/init.d/S97${module}.sh
 	fi
 
 	# intall different UI
