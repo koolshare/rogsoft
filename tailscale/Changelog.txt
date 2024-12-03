@@ -1,6 +1,6 @@
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
-2.0.0
+2.0.0 - 2.0.1
    - fix	修复启动脚本，兼容新版本二进制！
    - update	更新tailscale二进制到最新v1.76.6版本！
    - update	现在采用官方推荐的小体积构建方法，将tailscale + tailscaled两个二进制合并，总大小降低至5.3MB

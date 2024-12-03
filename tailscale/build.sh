@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="tailscale"
-VERSION="2.0.0"
+VERSION="2.0.1"
 TITLE="Tailscale"
 DESCRIPTION="基于wiregurad协议的零配置内网穿透安全组网工具！"
 HOME_URL="Module_tailscale.asp"
@@ -26,6 +26,7 @@ do_build() {
 		mkdir -p ./build
 		cp -rf ./tailscale ./build/
 		cd ./build
+		echo "mtk" >tailscale/.valid
 		rm -rf tailscale/bin
 		mv -f tailscale/bin-mtk tailscale/bin/
 		rm -rf tailscale/scripts
@@ -43,6 +44,7 @@ do_build() {
 		mkdir -p ./build
 		cp -rf ./tailscale ./build/
 		cd ./build
+		echo "hnd" >tailscale/.valid
 		rm -rf tailscale/bin-mtk
 		rm -rf tailscale/scripts-mtk
 		tar -zcf tailscale.tar.gz tailscale
