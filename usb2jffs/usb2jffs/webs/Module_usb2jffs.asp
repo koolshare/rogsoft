@@ -14,10 +14,10 @@
 <link rel="stylesheet" type="text/css" href="usp_style.css"/>
 <link rel="stylesheet" type="text/css" href="css/element.css">
 <link rel="stylesheet" type="text/css" href="res/softcenter.css">
+<script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/help.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" language="JavaScript" src="/js/table/table.js"></script>
 <script type="text/javascript" src="/res/softcenter.js"></script>

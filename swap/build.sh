@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="swap"
-VERSION="2.9"
+VERSION="3.0"
 TITLE="虚拟内存"
 DESCRIPTION="让路由器运行更稳定~"
 HOME_URL="Module_swap.asp"
