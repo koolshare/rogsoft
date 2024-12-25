@@ -300,7 +300,7 @@ center_install() {
 	rm -rf /${KSHOME}/.koolshare/bin/bin-mtk >/dev/null 2>&1
 
 	# remove files no longer needed by softcenter
-	rm -rf /${KSHOME}/.koolshare/res/Browser.js
+	# rm -rf /${KSHOME}/.koolshare/res/Browser.js
 
 	# remove files form jffs
 	if [ "${MODEL}" == "RT-AX56U_V2" -o "${MODEL}" == "RT-AX57" ];then

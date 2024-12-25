@@ -12,15 +12,17 @@
 <link rel="stylesheet" type="text/css" href="index_style.css"/> 
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="css/element.css">
+<link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
 <link rel="stylesheet" type="text/css" href="/res/softcenter.css">
 <link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
-<script type="text/javascript" src="/res/Browser.js"></script>
-<script type="text/javascript" src="/res/softcenter.js"></script>
-<script type="text/javascript" src="/state.js"></script>
+<script type="text/javascript" src="/res/Browser1.js"></script>
 <script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/res/layer/layer.js"></script>
+<script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/res/jquery-ui.js"></script> 
+<script type="text/javascript" src="/res/softcenter.js"></script>
 <style>
 #app[skin=ASUSWRT] .wifiboost_btn {
 	border: 1px solid #222;
@@ -684,15 +686,13 @@ function show_err_code() {
 			err_mesg = '<br/><span style="color: #CC3300">错误代码9：' + MODEL + '当前暂时不支持wifi boost插件！</span><br/><br>';
 		break;
 	}
-	require(['/res/layer/layer.js'], function(layer) {
-		layer.alert('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/>' + err_mesg + '出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/>点击确定将关闭此窗口，如果错误未解决，此窗口下次还会和你相见！', {
-			time: 3e4,
-			shade: 0.8,
-			maxWidth: '800px'
-		}, function(index) {
-			layer.close(index);
-			return false;
-		});
+	layer.alert('<span style="font-size: 18px;">wifi boost插件检测到错误！错误信息如下：</span><br/>' + err_mesg + '出现错误提示意味着你可能无法使用wifi boost修改最大功率。<br/>点击确定将关闭此窗口，如果错误未解决，此窗口下次还会和你相见！', {
+		time: 3e4,
+		shade: 0.8,
+		maxWidth: '800px'
+	}, function(index) {
+		layer.close(index);
+		return false;
 	});
 }
 function get_wl_status(){
@@ -765,16 +765,14 @@ function boost_now(action){
 			msg += '<br/>';
 			msg += '点击立即激活，你将会获得wifi boost激活码，同时兑换码将会失效。';
 			
-			require(['/res/layer/layer.js'], function(layer) {
-				layer.confirm(msg, {
-					btn: ['立即激活', '取消'],
-					shade: 0.8,
-					maxWidth: '600px'
-				}, function(index) {
-					layer.close(index);
-					location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=3&uuid=" + wb_key + "&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
-					return true;
-				});
+			layer.confirm(msg, {
+				btn: ['立即激活', '取消'],
+				shade: 0.8,
+				maxWidth: '600px'
+			}, function(index) {
+				layer.close(index);
+				location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=3&uuid=" + wb_key + "&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+				return true;
 			});
 			E("wifiboost_key").value = "";
 			return true;
@@ -992,30 +990,28 @@ function open_buy() {
 	note += "<li>如遇到无法支付、无法获得激活码等问题，可以联系下方客服邮箱解决。</li></h5>";
 	note += "<h4 style='text-align:right'>客服邮箱：<a style='color:#22ab39;' href='mailto:mjy211@gmail.com?subject=wifi boost咨询&body=这是邮件的内容'>mjy211@gmail.com</a></h4>";
 	//note += "<h5>如果你已经有<font color='#FF6600'>wifiboost-xxx-xxx-xxx-xxx-xxx</font>形式的兑换码，请跳过支付流程，直接在激活码栏内输入兑换码即可获得激活码。</h5>";
-	require(['/res/layer/layer.js'], function(layer) {
-		layer.open({
-			type: 0,
-			skin: 'layui-layer-lan',
-			shade: 0.8,
-			title: '请选择【wifi boost】购买方式！',
-			time: 0,
-			area: '540px',
-			offset: '250px',
-			btnAlign: 'c',
-			maxmin: true,
-			content: note,
-			btn: ['微信支付', '支付宝', '人工邮件购买'],
-			btn1: function() {
-				location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
-			},
-			btn2: function() {
-				location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
-			},
-			btn3: function() {
-				$("#qrcode_show").css("margin-top", "-50px");
-				$("#qrcode_show").fadeIn(300);
-			},
-		});
+	layer.open({
+		type: 0,
+		skin: 'layui-layer-lan',
+		shade: 0.8,
+		title: '请选择【wifi boost】购买方式！',
+		time: 0,
+		area: '540px',
+		offset: '250px',
+		btnAlign: 'c',
+		maxmin: true,
+		content: note,
+		btn: ['微信支付', '支付宝', '人工邮件购买'],
+		btn1: function() {
+			location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=1&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+		},
+		btn2: function() {
+			location.href = "http://" + pay_server + ":" + pay_port + "/pay.php?paytype=2&mcode=" + dbus["wifiboost_mcode"].replace(/\+/g, "-") + "&router=" + net_address;
+		},
+		btn3: function() {
+			$("#qrcode_show").css("margin-top", "-50px");
+			$("#qrcode_show").fadeIn(300);
+		},
 	});
 }
 function close_info(){
@@ -1027,33 +1023,31 @@ function open_info(){
 }
 function pop_help() {
 	$("#qrcode_show").fadeOut(300);
-	require(['/res/layer/layer.js'], function(layer) {
-		layer.open({
-			type: 1,
-			title: false,
-			closeBtn: false,
-			area: '600px;',
-			offset: '250px',
-			shade: 0.8,
-			shadeClose: 1,
-			scrollbar: false,
-			id: 'LAY_layuipro',
-			btn: ['返回'],
-			btnAlign: 'c',
-			moveType: 1,
-			content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">\
-				<b>wifi boost 购买订单号获取</b><br><br>\
-				● 微信订单号获取：<span style="color:#e7bd16">我 → 支付 → 钱包 → 账单 → 点击付款订单 → 转账单号</span><br>\
-				● 支付宝订单号获取：<span style="color:#e7bd16">我的 → 账单 → 点击付款订单 → 订单号</span><br><br>\
-				目前订单处理方式为人工，最长大约需要一个工作日，会通过邮件返回激活码信息。<br>\
-				wifi boost的激活码为一机一码，一次激活终身使用。<br>\
-				</div>',
-			yes: function(index, layero){
-				$("#qrcode_show").css("margin-top", "-50px");
-				$("#qrcode_show").fadeIn(300);
-				layer.close(index);
-			}
-		});
+	layer.open({
+		type: 1,
+		title: false,
+		closeBtn: false,
+		area: '600px;',
+		offset: '250px',
+		shade: 0.8,
+		shadeClose: 1,
+		scrollbar: false,
+		id: 'LAY_layuipro',
+		btn: ['返回'],
+		btnAlign: 'c',
+		moveType: 1,
+		content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">\
+			<b>wifi boost 购买订单号获取</b><br><br>\
+			● 微信订单号获取：<span style="color:#e7bd16">我 → 支付 → 钱包 → 账单 → 点击付款订单 → 转账单号</span><br>\
+			● 支付宝订单号获取：<span style="color:#e7bd16">我的 → 账单 → 点击付款订单 → 订单号</span><br><br>\
+			目前订单处理方式为人工，最长大约需要一个工作日，会通过邮件返回激活码信息。<br>\
+			wifi boost的激活码为一机一码，一次激活终身使用。<br>\
+			</div>',
+		yes: function(index, layero){
+			$("#qrcode_show").css("margin-top", "-50px");
+			$("#qrcode_show").fadeIn(300);
+			layer.close(index);
+		}
 	});
 }
 function verifyFields(r) {
