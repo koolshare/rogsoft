@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="nodejs"
-VERSION="1.3"
+VERSION="1.4"
 TITLE="Node.js"
 DESCRIPTION="Node.js"
 HOME_URL="Module_nodejs.asp"
