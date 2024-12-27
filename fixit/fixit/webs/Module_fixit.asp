@@ -21,41 +21,6 @@
 <script language="JavaScript" type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
 <script language="JavaScript" type="text/javascript" src="/res/softcenter.js"></script>
 <style>
-.ks_btn {
-	border: none;
-	background: linear-gradient(to bottom, #003333  0%, #000000 100%);
-	font-size:10pt;
-	color: #fff;
-	padding: 5px 5px;
-	border-radius: 5px 5px 5px 5px;
-	width:165px;
-	margin:  5px 5px 5px 5px;
-	cursor:pointer;
-	vertical-align: middle;
-}
-.ks_btn:hover {
-	border: none;
-	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
-}
-.FormTable th{
-	width:16%;
-}
-.content_status {
-	position: absolute;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius:10px;
-	z-index: 10;
-	top: 80px;
-	return height:auto;
-	box-shadow: 3px 3px 10px #000;
-	box-shadow: 3px 3px 10px #000;
-	background: #fff;
-	margin-left:90px;
-	width:580px;
-	height:520px;
-	display: none;
-}
 input:focus {
 	outline: none;
 }
@@ -78,30 +43,7 @@ String.prototype.myReplace = function(f, e){
 }
 function init() {
 	show_menu(menu_hook);
-	get_dbus_data();
 	get_log();
-}
-function get_dbus_data(){
-	$.ajax({
-		type: "GET",
-		url: "/_api/fixit_",
-		dataType: "json",
-		async: false,
-		success: function(data) {
-			dbus = data.result[0];
-			conf2obj();
-		}
-	});
-}
-function conf2obj(){
-	for (var i = 0; i < params_inp.length; i++) {
-		if (dbus[params_inp[i]]) {
-			$("#" + params_inp[i]).val(dbus[params_inp[i]]);
-		}
-	}
-	if (dbus["fixit_version"]){
-		E("fixit_version").innerHTML = " - " + dbus["fixit_version"]
-	}
 }
 function get_log(action){
 	$.ajax({
@@ -132,42 +74,6 @@ function get_log(action){
 function menu_hook(title, tab) {
 	tabtitle[tabtitle.length - 1] = new Array("", "fixit");
 	tablink[tablink.length - 1] = new Array("", "Module_fixit.asp");
-}
-function versionCompare(v1, v2, options) {
-	var lexicographical = options && options.lexicographical,
-		zeroExtend = options && options.zeroExtend,
-		v1parts = v1.split('.'),
-		v2parts = v2.split('.');
-	function isValidPart(x) {
-		return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
-	}
-	if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
-		return NaN;
-	}
-	if (zeroExtend) {
-		while (v1parts.length < v2parts.length) v1parts.push("0");
-		while (v2parts.length < v1parts.length) v2parts.push("0");
-	}
-	if (!lexicographical) {
-		v1parts = v1parts.map(Number);
-		v2parts = v2parts.map(Number);
-	}
-	for (var i = 0; i < v1parts.length; ++i) {
-		if (v2parts.length == i) {
-			return true;
-		}
-		if (v1parts[i] == v2parts[i]) {
-			continue;
-		} else if (v1parts[i] > v2parts[i]) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	if (v1parts.length != v2parts.length) {
-		return false;
-	}
-	return false;
 }
 function fixit(action){
 	var dbus_new = {}
@@ -207,13 +113,13 @@ function fixit(action){
 									<tr>
 										<td bgcolor="#4D595D" colspan="3" valign="top">
 											<div>&nbsp;</div>
-											<div class="formfonttitle">漏洞修复 - fixit<lable id="fixit_version"><lable></div>
+											<div class="formfonttitle">安全检测 - fixit<lable id="fixit_version"><lable></div>
 											<div style="float:right; width:15px; height:25px;margin-top:-20px">
 												<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 											<div id="head_note">
-												<span>本插件可以检测路由器软件中心是否被恶意代码篡改，并且可以尝试修复已知漏洞。</span>
+												<span>本插件可以检测路由器软件中心是否被恶意代码篡改，并且可以尝试修复被篡改的文件。</span>
 												<lable id="fixit_o_version"></lable>
 											</div>
 											<div id="log_content" class="soft_setting_log">
@@ -225,9 +131,9 @@ function fixit(action){
 											<div id="warn_msg_1" style="display: none;text-align:center; line-height: 4em;"><i></i></div>
 											<div style="margin:10px 0 10px 5px;display: none;" class="splitLine" id="spl"></div>
 											<div class="SimpleNote" id="message" style="display: none;">
-												<li id="msg1">本插件通过修改底层CFE来实现修改路由器国家地区，须知修改CFE有风险，由此带来的风险请自行承担！</li>
-												<li id="msg2">华硕通过地区代码来限制固件功能，如wifi选区澳大利亚，UU加速器，中文语言显示等，改CFE为国区后这些功能将不会再受到限制。</li>
-												<li id="msg3">修改完成后，卸载本插件、重置路由器、升级固件、刷三方固件/原厂固件等操作，只要不损坏CFE分区，机器均会保持国行状态。</li>
+												<li id="msg1"></li>
+												<li id="msg2"></li>
+												<li id="msg3"></li>
 											</div>
 										</td>
 									</tr>
