@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="qiandao"
-VERSION="1.5"
+VERSION="1.6"
 TITLE="自动签到"
 DESCRIPTION="自动签到"
 HOME_URL="Module_qiandao.asp"

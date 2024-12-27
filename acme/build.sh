@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="acme"
-VERSION="3.3"
+VERSION="3.4"
 TITLE="Let's Encrypt"
 DESCRIPTION="自动部署SSL证书"
 HOME_URL="Module_acme.asp"

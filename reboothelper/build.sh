@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="reboothelper"
-VERSION="0.6"
+VERSION="0.7"
 TITLE="重启助手"
 DESCRIPTION="解决重启Bug"
 HOME_URL="Module_reboothelper.asp"

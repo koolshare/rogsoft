@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="ssid"
-VERSION="1.3"
+VERSION="1.4"
 TITLE="中文SSID"
 DESCRIPTION="中文SSID，装逼利器！"
 HOME_URL="Module_ssid.asp"

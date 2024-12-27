@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="frps"
-VERSION="1.5.3"
+VERSION="1.5.4"
 TITLE="frps穿透服务器"
 DESCRIPTION="内网穿透利器，谁用谁知道。"
 HOME_URL="Module_frps.asp"

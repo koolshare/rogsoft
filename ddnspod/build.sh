@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="ddnspod"
-VERSION="1.7"
+VERSION="1.8"
 TITLE="ddnspod"
 DESCRIPTION="ddnspod"
 HOME_URL="Module_ddnspod.asp"

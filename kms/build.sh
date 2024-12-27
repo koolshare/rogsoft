@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="kms"
-VERSION="1.6"
+VERSION="1.7"
 TITLE="系统工具"
 DESCRIPTION="kms"
 AUTHOR="anonymous"

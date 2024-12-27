@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="softether"
-VERSION="1.9"
+VERSION="1.9.1"
 TITLE="SoftEther_VPN_Server"
 DESCRIPTION="VPN全家桶, ver 4.29 build 9680"
 HOME_URL="Module_softether.asp"

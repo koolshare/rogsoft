@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="sftpserver"
-VERSION="1.3"
+VERSION="1.4"
 TITLE="Sftp Server"
 DESCRIPTION="Sftp Server"
 HOME_URL="Module_sftpserver.asp"

@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="mdial"
-VERSION="1.3"
+VERSION="1.4"
 TITLE="单线多拨"
 DESCRIPTION="pppoe单线多拨，带宽提升神器！"
 HOME_URL="Module_mdial.asp"
