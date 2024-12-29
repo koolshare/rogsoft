@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="fixit"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="安全检查"
 DESCRIPTION="检测软件中心重要文件是否被篡改，如果检测到恶意篡改，将其修复"
 HOME_URL="Module_fixit.asp"
@@ -26,7 +26,7 @@ do_build() {
 		rm -rf fixit/bin
 		mv -f fixit/bin-mtk fixit/bin/
 		rm -rf fixit/scripts
-		rm -rf fixit/scripts-mtk fixit/scripts
+		mv -f fixit/scripts-mtk fixit/scripts
 
 		echo mtk >fixit/.valid
 		
