@@ -55,13 +55,7 @@ function get_log(action){
 			var retArea = E("log_content_text");
 			if (response.search("XU6J03M6") != -1) {
 				retArea.value = response.myReplace("XU6J03M6", " ");
-				if(action){
-					var newURL = location.href.split("?")[0];
-					window.history.pushState('object', document.title, newURL);
-					refreshpage();
-				}else{
-					return false;
-				}
+				return false;
 			}
 			if(action){
 				setTimeout("get_log(1);", 350);
