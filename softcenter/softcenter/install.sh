@@ -247,7 +247,6 @@ cmcp(){
 		fi
 	done
 	sync
-
 }
 
 center_install() {
