@@ -18,7 +18,7 @@ detect(){
 	# ssh PATH environment
 	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
 	rm -rf /jffs/etc/profile >/dev/null 2>&1
-	source_file=$(cat /etc/profile|grep -v nvram|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/")
+	source_file=$(cat /etc/profile|awk '{print $NF}'|grep -E "profile"|grep "jffs"|grep "/"|head -n1)
 	source_path=$(dirname $source_file)
 	if [ -n "${source_file}" -a -n "${source_path}" ];then
 		rm -rf ${source_file} >/dev/null 2>&1

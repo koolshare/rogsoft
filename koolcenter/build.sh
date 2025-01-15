@@ -2,7 +2,7 @@
 # build script for rogsoft project
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
-VERSION=1.9.35
+VERSION=1.9.36
 
 echo $VERSION > ./softcenter/.soft_ver
 
