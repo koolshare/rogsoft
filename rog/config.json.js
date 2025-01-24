@@ -1,6 +1,6 @@
 {
-"version":"5.9.5",
-"md5":"b4129e37902a085f9b8f9e9408a9a820",
+"version":"5.9.6",
+"md5":"84ddb28c64ca6a39a970759d91226e8e",
 "home_url":"Module_rog.asp",
 "title":"ROG工具箱",
 "description":"一些小功能的插件",
@@ -8,5 +8,5 @@
 "author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2025-01-24_12:59:54"
+"build_date":"2025-01-24_21:01:49"
 }

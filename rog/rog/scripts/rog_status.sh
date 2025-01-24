@@ -194,11 +194,18 @@ get_mhz(){
 get_system_info(){
 	kernel_ver=$(uname -r 2>/dev/null)
 	hardware_type=$(uname -m 2>/dev/null)
-	build_date_cst=$(uname -v | cut -d " " -f4-9)
-	build_date=$(date -D "%a %b %d %H:%M:%S %Z %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
+	#build_date_cst=$(uname -v | cut -d " " -f4-9)
 
+	if [ "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" ];then
+		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
+		build_date=$(date -D "%a %b %d %H:%M:%S %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
+	else
+		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$(NF-1),$NF}')
+		build_date=$(date -D "%a %b %d %H:%M:%S %Z %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
+	fi
 
-	TZ=UTC-8 date -dD "Sun Jan 22 22:58:22 CST 2025" +"%Y-%m-%d %H:%M:%S"
+	# BCM: #1 SMP PREEMPT Wed Jan 22 22:58:22 CST 2025
+	# MTK: #1 SMP Mon May 6 18:18:06 CST 2024
 	if [ -z "${kernel_ver}" ];then
 		kernel_ver="null"
 	fi
