@@ -191,8 +191,30 @@ get_mhz(){
 	fi
 }
 
+get_system_info(){
+	kernel_ver=$(uname -r 2>/dev/null)
+	hardware_type=$(uname -m 2>/dev/null)
+	build_date_cst=$(uname -v | cut -d " " -f4-9)
+	build_date=$(date -D "%a %b %d %H:%M:%S %Z %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
+
+
+	TZ=UTC-8 date -dD "Sun Jan 22 22:58:22 CST 2025" +"%Y-%m-%d %H:%M:%S"
+	if [ -z "${kernel_ver}" ];then
+		kernel_ver="null"
+	fi
+
+	if [ -z "${hardware_type}" ];then
+		hardware_type="null"
+	fi
+	
+	if [ -z "${build_date}" ];then
+		build_date="null"
+	fi
+}
+
 get_cpu_temp
 get_tmp_pwr
 get_mhz
+get_system_info
 #=================================================
-http_response "${cpu_temp}@@${wl_temp}@@${wl_txpwr}@@${cpu_mhz}"
+http_response "${cpu_temp}@@${wl_temp}@@${wl_txpwr}@@${cpu_mhz}@@${kernel_ver}@@${hardware_type}@@${build_date}"

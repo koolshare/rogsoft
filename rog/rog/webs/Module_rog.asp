@@ -134,6 +134,9 @@ function get_temperature(){
 				E("rog_wl_power_tr").style.display = "none";
 			}
 			E("rog_cpu_mhz").innerHTML = Math.round(response.result.split("@@")[3]) + " MHz";
+			E("rog_kernel").innerHTML = response.result.split("@@")[4];
+			E("rog_systype").innerHTML = response.result.split("@@")[5];
+			E("rog_build_time").innerHTML = response.result.split("@@")[6];
 			setTimeout("get_temperature();", 2000);
 		},
 		error: function(){
@@ -343,6 +346,18 @@ function menu_hook(title, tab) {
 													<td>
 														<span id="boot_days"></span> 天 <span id="boot_hours"></span> 时 <span id="boot_minutes"></span> 分 <span id="boot_seconds"></span> 秒
 													</td>
+												</tr>
+												<tr>
+													<th>内核版本</th>
+													<td id="rog_kernel"></td>
+												</tr>
+												<tr>
+													<th>系统架构</th>
+													<td id="rog_systype"></td>
+												</tr>
+												<tr>
+													<th>编译日期</th>
+													<td id="rog_build_time"></td>
 												</tr>
 												<tr>
 													<th>CPU温度</th>
