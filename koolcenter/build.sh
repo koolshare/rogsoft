@@ -2,7 +2,7 @@
 # build script for rogsoft project
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
-VERSION=1.9.36
+VERSION=1.9.37
 
 echo $VERSION > ./softcenter/.soft_ver
 
@@ -48,6 +48,31 @@ elif [ "$ME" = "build_mtk.sh" ];then
 	# copy files from softcenter
 	cp -rf ${DIR}/../softcenter/softcenter/bin $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/bin-mtk/* $DIR/build/softcenter/bin
+	cp -rf ${DIR}/../softcenter/softcenter/init.d $DIR/build/softcenter/
+	cp -rf ${DIR}/../softcenter/softcenter/perp $DIR/build/softcenter/
+	cp -rf ${DIR}/../softcenter/softcenter/scripts $DIR/build/softcenter/
+	cp -rf ${DIR}/../softcenter/softcenter/install.sh $DIR/build/softcenter/
+	cp -rf ${DIR}/../softcenter/softcenter/res/* $DIR/build/softcenter/res	
+	rm -rf $DIR/build/softcenter/res/icon-*.png
+	tar -zcf softcenter.tar.gz softcenter
+	if [ "$?" = "0" ];then
+		echo "build success!"
+		mv $DIR/build/softcenter.tar.gz $DIR/
+		cp -rf $DIR/softcenter.tar.gz $DIR/koolcenter.tar.gz
+	fi
+	rm -rf $DIR/build
+	cd $DIR
+elif [ "$ME" = "build_ipq.sh" ];then
+	# for ipq
+	echo "build koolcenter for ipq"
+	rm -rf $DIR/build
+	mkdir -p $DIR/build
+	cp -rf $DIR/softcenter $DIR/build/
+	cd $DIR/build
+	echo "ipq" > $DIR/build/softcenter/.valid
+	# copy files from softcenter
+	cp -rf ${DIR}/../softcenter/softcenter/bin $DIR/build/softcenter/
+	cp -rf ${DIR}/../softcenter/softcenter/bin-ipq/* $DIR/build/softcenter/bin
 	cp -rf ${DIR}/../softcenter/softcenter/init.d $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/perp $DIR/build/softcenter/
 	cp -rf ${DIR}/../softcenter/softcenter/scripts $DIR/build/softcenter/

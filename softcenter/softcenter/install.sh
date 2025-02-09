@@ -538,6 +538,9 @@ set_url(){
 	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "RT-AX57_Go" ];then
 		local SC_URL=https://mtksoft.ddnsto.com
 	fi
+	if [ "$(nvram get odmpid)" == "ZenWiFi_BD4" ];then
+		local SC_URL=https://ipqsoft.ddnsto.com
+	fi
 	local SC_URL_NVRAM=$(nvram get sc_url)
 	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
 		nvram set sc_url=${SC_URL}
