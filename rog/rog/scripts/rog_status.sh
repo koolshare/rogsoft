@@ -93,19 +93,9 @@ get_sta_info(){
 	### [ -n "${ifname_2}" ] && echo 5.8G: ${interface_58g}
 }
 
-get_tmp_pwr(){
+get_tmp_pwr_hnd(){
 	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
 
-	# 0. mediatek
-	if [ "$(_get_model)" == "TX-AX6000" -o "$(_get_model)" == "TUF-AX4200Q" -o "$(_get_model)" == "RT-AX57_Go" ];then
-		interface_24g_temp_c=$(iwpriv ra0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
-		interface_52g_temp_c=$(iwpriv rax0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
-
-		wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G： ${interface_52g_temp_c}"
-
-		return
-	fi
-	
 	# 1. get wireless eth info
 	if [ "$(_get_model)" == "RAX80" -o "$(_get_model)" == "RAX50" -o "$(_get_model)" == "RAX70" ];then
 		# netgear model
@@ -196,7 +186,7 @@ get_system_info(){
 	hardware_type=$(uname -m 2>/dev/null)
 	#build_date_cst=$(uname -v | cut -d " " -f4-9)
 
-	if [ "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" ];then
+	if [ "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" ];then
 		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
 		build_date=$(date -D "%a %b %d %H:%M:%S %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
 	else
@@ -216,6 +206,43 @@ get_system_info(){
 	
 	if [ -z "${build_date}" ];then
 		build_date="null"
+	fi
+}
+get_tmp_pwr_ipq(){
+	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
+	interface_24g_temp_c=$(iwpriv ra0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
+	interface_52g_temp_c=$(iwpriv rax0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
+
+	wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G： ${interface_52g_temp_c}"
+}
+
+get_tmp_pwr_ipq(){
+	#网卡温度
+	WIFI_2G_DISABLE=$(iwconfig ath0|grep "Encryption key:off")
+	WIFI_5G_DISABLE=$(iwconfig ath1|grep "Encryption key:off")
+	
+	interface_2g_temperature=$(thermaltool -i wifi0 -get|sed -n 's/.*temperature: \([0-9][0-9]\).*/\1/p') 2>/dev/null
+	interface_5g1_temperature=$(thermaltool -i wifi1 -get|sed -n 's/.*temperature: \([0-9][0-9]\).*/\1/p') 2>/dev/null
+	[ -z "${WIFI_2G_DISABLE}" ] && interface_2g_temperature_c="${interface_2g_temperature}°C" || interface_2g_temperature_c="offline"
+	[ -z "${WIFI_5G_DISABLE}" ] && interface_5g1_temperature_c="${interface_5g1_temperature}°C" || interface_5g1_temperature_c="offline"
+	wl_temp="2.4G：${interface_2g_temperature_c} &nbsp;&nbsp;|&nbsp;&nbsp; 5G：${interface_5g1_temperature_c}"
+	
+	interface_2g_power=$(iwconfig ath0|sed -n 's/.*Tx-Power.*\([0-9][0-9]\).*/\1/p') 2>/dev/null
+	interface_5g1_power=$(iwconfig ath1|sed -n 's/.*Tx-Power.*\([0-9][0-9]\).*/\1/p') 2>/dev/null
+	[ -z "${WIFI_2G_DISABLE}" ] && interface_2g_power_d="${interface_2g_power} dBm" || interface_2g_power_d="offline"
+	[ -z "${WIFI_2G_DISABLE}" ] && interface_2g_power_p="$(awk -v x=${interface_2g_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_2g_power_p="offline"
+	[ -z "${WIFI_5G_DISABLE}" ] && interface_5g1_power_d="${interface_5g1_power} dBm" || interface_5g1_power_d="offline"
+	[ -z "${WIFI_5G_DISABLE}" ] && interface_5g1_power_p="$(awk -v x=${interface_5g1_power} 'BEGIN { printf "%.2f\n", 10^(x/10)}') mw" || interface_5g1_power_p="offline"
+	wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_5g1_power_d} / ${interface_5g1_power_p}"
+}
+
+get_tmp_pwr(){
+	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
+		get_tmp_pwr_mtk
+	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" ];then
+		get_tmp_pwr_ipq
+	else
+		get_tmp_pwr_hnd
 	fi
 }
 

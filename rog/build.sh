@@ -35,6 +35,25 @@ do_build() {
 		fi
 		cd ..
 		rm -rf ./build
+	elif [ "$ME" = "build_ipq.sh" ];then
+		echo "build rog for ipq"
+		rm -rf ./build
+		mkdir -p ./build
+		cp -rf ./rog ./build/
+		cd ./build
+		
+		rm -rf rog/bin
+		mv -f rog/bin-ipq rog/bin/
+
+		echo ipq >rog/.valid
+		
+		tar -zcf rog.tar.gz rog
+		if [ "$?" = "0" ];then
+			echo "build success!"
+			mv rog.tar.gz ..
+		fi
+		cd ..
+		rm -rf ./build
 	elif [ "$ME" = "build.sh" ];then
 		echo "build rog for hnd"
 		rm -rf ./build
