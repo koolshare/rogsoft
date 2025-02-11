@@ -37,6 +37,27 @@ do_build() {
 		fi
 		cd ..
 		rm -rf ./build
+	elif [ "$ME" = "build_ipq.sh" ];then
+		echo "build fixit for ipq"
+		rm -rf ./build
+		mkdir -p ./build
+		cp -rf ./fixit ./build/
+		cd ./build
+		
+		rm -rf fixit/bin
+		mv -f fixit/bin-ipq fixit/bin/
+		rm -rf fixit/scripts
+		mv -f fixit/scripts-ipq fixit/scripts
+
+		echo ipq >fixit/.valid
+		
+		tar -zcf fixit.tar.gz fixit
+		if [ "$?" = "0" ];then
+			echo "build success!"
+			mv fixit.tar.gz ..
+		fi
+		cd ..
+		rm -rf ./build
 	elif [ "$ME" = "build.sh" ];then
 		echo "build fixit for hnd"
 		rm -rf ./build
