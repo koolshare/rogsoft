@@ -27,6 +27,7 @@ do_build() {
 		rm -rf zerotier/bin32
 		rm -rf zerotier/lib32
 		rm -rf zerotier/scripts-hnd
+		rm -rf zerotier/scripts-ipq
 		mv -f zerotier/scripts-mtk zerotier/scripts
 
 		echo mtk >zerotier/.valid
@@ -38,6 +39,27 @@ do_build() {
 		fi
 		cd ..
 		rm -rf ./build
+	elif [ "$ME" = "build_ipq.sh" ];then
+		echo "build zerotier for ipq"
+		rm -rf ./build
+		mkdir -p ./build
+		cp -rf ./zerotier ./build/
+		cd ./build
+		
+		rm -rf zerotier/scripts-hnd
+		rm -rf zerotier/scripts-mtk
+		mv -f zerotier/scripts-ipq zerotier/scripts
+
+		echo ipq >zerotier/.valid
+
+		tar -zcf zerotier.tar.gz zerotier
+		if [ "$?" = "0" ];then
+			echo "build success!"
+			mv zerotier.tar.gz ..
+		fi
+		cd ..
+		rm -rf ./build
+		
 	elif [ "$ME" = "build.sh" ];then
 		echo "build zerotier for hnd"
 		rm -rf ./build
@@ -46,6 +68,7 @@ do_build() {
 		cd ./build
 
 		rm -rf zerotier/scripts-mtk
+		rm -rf zerotier/scripts-ipq
 		mv -f zerotier/scripts-hnd zerotier/scripts
 		
 		echo hnd >zerotier/.valid

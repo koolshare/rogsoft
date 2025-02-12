@@ -167,10 +167,20 @@ install_now(){
 	copy cp -rf /tmp/${module}/webs/* /koolshare/webs/
 	copy cp -rf /tmp/${module}/uninstall.sh /koolshare/scripts/uninstall_${module}.sh
 	mkdir -p /koolshare/lib/
-	if [ ! -x "/koolshare/bin/jq" ]; then
-		echo_date "安装jq..."
-		copy cp -fP /tmp/${module}/bin/jq /koolshare/bin/
+
+	# jq is included in official 102 stock firmware higher version(RT-BE86U)
+	if [ -f /usr/bin/jq ];then
+		rm -rf /tmp/${module}/bin/jq
+		if [ ! -L /koolshare/bin/jq ];then
+			ln -sf /usr/bin/jq /koolshare/bin/jq
+		fi
+	else
+		if [ ! -x "/koolshare/bin/jq" ]; then
+			echo_date "安装jq..."
+			copy cp -fP /tmp/${module}/bin/jq /koolshare/bin/
+		fi
 	fi
+
 	if [ "$ARCH" == "aarch64" ]; then
 		echo_date "安装64位zerotier-one..."
 		copy cp -fP /tmp/${module}/lib64/.flag_*.txt /koolshare/lib/
