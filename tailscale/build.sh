@@ -30,7 +30,26 @@ do_build() {
 		rm -rf tailscale/bin
 		mv -f tailscale/bin-mtk tailscale/bin/
 		rm -rf tailscale/scripts
+		rm -rf tailscale/scripts-ipq
 		mv -f tailscale/scripts-mtk tailscale/scripts/
+		tar -zcf tailscale.tar.gz tailscale
+		if [ "$?" = "0" ];then
+			echo "build success!"
+			mv tailscale.tar.gz ..
+		fi
+		cd ..
+		rm -rf ./build
+	elif [ "$ME" = "build_ipq.sh" ];then
+		echo "build tailscale for ipq"
+		rm -rf ./build
+		mkdir -p ./build
+		cp -rf ./tailscale ./build/
+		cd ./build
+		echo "ipq" >tailscale/.valid
+		rm -rf tailscale/bin-mtk
+		rm -rf tailscale/scripts
+		rm -rf tailscale/scripts-mtk
+		mv -f tailscale/scripts-ipq tailscale/scripts/
 		tar -zcf tailscale.tar.gz tailscale
 		if [ "$?" = "0" ];then
 			echo "build success!"
@@ -46,6 +65,7 @@ do_build() {
 		cd ./build
 		echo "hnd" >tailscale/.valid
 		rm -rf tailscale/bin-mtk
+		rm -rf tailscale/scripts
 		rm -rf tailscale/scripts-mtk
 		tar -zcf tailscale.tar.gz tailscale
 		if [ "$?" = "0" ];then
