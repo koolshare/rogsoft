@@ -396,12 +396,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2025-02-12_23:32:30", 
+            "build_date": "2025-02-18_00:40:46", 
             "changelog": "", 
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
             "home_url": "Module_tailscale.asp", 
             "link": "", 
-            "md5": "fe6aa2a1a3b1e804a7cbb06d41b1a107", 
+            "md5": "956deb5a7063fe1beebcbc4df6a7b44e", 
             "name": "tailscale", 
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
@@ -468,7 +468,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "4f008b15951167d6f568cb7f986499bb", 
+    "md5": "a71ff1601795536a6bf2d0829aa00a86", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
     "version": "1.9.38"
 }

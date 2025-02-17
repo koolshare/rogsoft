@@ -225,10 +225,13 @@ install_tar(){
 	fi
 
 	# 13. 检查下安装包是否是本平台的
-	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
+	local RO_MODEL=$(nvram get odmpid)
+	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" ];then
 		VALID_STRING="mtk"
-	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" ];then
-		VALID_STRING="ipq"
+	elif [ "${RO_MODEL}" == "ZenWiFi_BD4" ];then
+		VALID_STRING="ipq32"
+	elif [ "${RO_MODEL}" == "TUF_6500" ];then
+		VALID_STRING="ipq64"
 	else
 		VALID_STRING="hnd"
 	fi

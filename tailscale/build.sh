@@ -20,11 +20,13 @@ do_build() {
 		TAGS="其它"
 	fi
 
+	#----------------------------------------------------
+	# start to make tar
+	rm -rf ./build && mkdir -p ./build
+	cp -rf ./tailscale ./build/ && cd ./build
 	if [ "$ME" = "build_mtk.sh" ];then
 		# mtk platform use 64 bit version of bianry
 		echo "build tailscale for mtk"
-		rm -rf ./build && mkdir -p ./build
-		cp -rf ./tailscale ./build/ && cd ./build
 		
 		# valid string
 		echo "mtk" >tailscale/.valid
@@ -34,23 +36,10 @@ do_build() {
 		mv -f tailscale/bin_64 tailscale/bin/
 		
 		# scripts (encrypted)
-		rm -rf tailscale/scripts-hnd
-		rm -rf tailscale/scripts-ipq32
-		rm -rf tailscale/scripts-ipq64
-		mv -f tailscale/scripts-mtk tailscale/scripts/
-
-		# make tar
-		tar -zcf tailscale.tar.gz tailscale
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv tailscale.tar.gz ..
-		fi
-		cd .. && rm -rf ./build
+		cp -rf tailscale/scripts-mtk tailscale/scripts/
 	elif [ "$ME" = "build_ipq64.sh" ];then
 		# ipq64 use mtk's 64 bit binary
 		echo "build tailscale for ipq64"
-		rm -rf ./build && mkdir -p ./build
-		cp -rf ./tailscale ./build/ && cd ./build
 		
 		# valid string
 		echo "ipq64" >tailscale/.valid
@@ -60,24 +49,10 @@ do_build() {
 		mv -f tailscale/bin_64 tailscale/bin/
 		
 		# scripts (encrypted)
-		rm -rf tailscale/scripts-hnd
-		rm -rf tailscale/scripts-mtk
-		rm -rf tailscale/scripts-ipq32
-		mv -f tailscale/scripts-ipq64 tailscale/scripts/
-
-		# make tar
-		tar -zcf tailscale.tar.gz tailscale
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv tailscale.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
+		cp -rf tailscale/scripts-ipq64 tailscale/scripts/
 	elif [ "$ME" = "build_ipq32.sh" ];then
 		# ipq32 use hnd's 32 bit binary and it's own scripts
 		echo "build tailscale for ipq32"
-		rm -rf ./build && mkdir -p ./build
-		cp -rf ./tailscale ./build/ && cd ./build
 		
 		# valid string
 		echo "ipq32" >tailscale/.valid
@@ -87,24 +62,10 @@ do_build() {
 		mv -f tailscale/bin_32 tailscale/bin/
 
 		# scripts (encrypted)
-		rm -rf tailscale/scripts-hnd
-		rm -rf tailscale/scripts-mtk
-		rm -rf tailscale/scripts-ipq64
-		mv -f tailscale/scripts-ipq32 tailscale/scripts/
-		
-		# make tar
-		tar -zcf tailscale.tar.gz tailscale
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv tailscale.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
+		cp -rf tailscale/scripts-ipq32 tailscale/scripts/
 	elif [ "$ME" = "build.sh" ];then
 		# hnd platform use 32 bit version of bianry
 		echo "build tailscale for hnd"
-		rm -rf ./build && mkdir -p ./build
-		cp -rf ./tailscale ./build/ && cd ./build
 		
 		# valid string
 		echo "hnd" >tailscale/.valid
@@ -114,20 +75,21 @@ do_build() {
 		mv -f tailscale/bin_32 tailscale/bin/
 		
 		# scripts (encrypted)
-		rm -rf tailscale/scripts-mtk
-		rm -rf tailscale/scripts-ipq32
-		rm -rf tailscale/scripts-ipq64
-		mv -f tailscale/scripts-hnd tailscale/scripts/
-		
-		# make tar
-		tar -zcf tailscale.tar.gz tailscale
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv tailscale.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
+		cp -rf tailscale/scripts-hnd tailscale/scripts/
 	fi
+	rm -rf tailscale/scripts-hnd
+	rm -rf tailscale/scripts-mtk
+	rm -rf tailscale/scripts-ipq32
+	rm -rf tailscale/scripts-ipq64
+	# make tar
+	tar -zcf tailscale.tar.gz tailscale
+	if [ "$?" = "0" ];then
+		echo "build success!"
+		mv tailscale.tar.gz ..
+	fi
+	cd .. && rm -rf ./build
+
+	#----------------------------------------------------
 	
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
