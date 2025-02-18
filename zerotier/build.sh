@@ -12,76 +12,44 @@ AUTHOR="sadog"
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
+PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+
+if [ "${ME}" = "build.sh" ];then
+	echo "build error!"
+	exit 1
+fi
+
+if [ "${PLATFORM}" = "mtk" -o "${PLATFORM}" = "ipq64" ];then
+	ARCH=64
+elif [ "${PLATFORM}" = "hnd" -o "${PLATFORM}" = "ipq32" ];then
+	ARCH=32
+fi
 
 do_build() {
-	rm -f ${MODULE}.tar.gz
-	ls -lF ${DIR}/zerotier/lib64|awk '{print $9}'|sed '/^$/d'|sed 's/^/zerotier /g'|sed 's/*$//g' > ${DIR}/zerotier/lib64/.flag_zerotier.txt
-
-	if [ "$ME" = "build_mtk.sh" ];then
-		echo "build zerotier for mtk"
-		rm -rf ./build
-		mkdir -p ./build
-		cp -rf ./zerotier ./build/
-		cd ./build
-		
-		rm -rf zerotier/bin32
-		rm -rf zerotier/lib32
-		rm -rf zerotier/scripts-hnd
-		rm -rf zerotier/scripts-ipq
-		mv -f zerotier/scripts-mtk zerotier/scripts
-
-		echo mtk >zerotier/.valid
-
-		tar -zcf zerotier.tar.gz zerotier
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv zerotier.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
-	elif [ "$ME" = "build_ipq.sh" ];then
-		echo "build zerotier for ipq"
-		rm -rf ./build
-		mkdir -p ./build
-		cp -rf ./zerotier ./build/
-		cd ./build
-		
-		rm -rf zerotier/scripts-hnd
-		rm -rf zerotier/scripts-mtk
-		mv -f zerotier/scripts-ipq zerotier/scripts
-
-		echo ipq >zerotier/.valid
-
-		tar -zcf zerotier.tar.gz zerotier
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv zerotier.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
-		
-	elif [ "$ME" = "build.sh" ];then
-		echo "build zerotier for hnd"
-		rm -rf ./build
-		mkdir -p ./build
-		cp -rf ./zerotier ./build/
-		cd ./build
-
-		rm -rf zerotier/scripts-mtk
-		rm -rf zerotier/scripts-ipq
-		mv -f zerotier/scripts-hnd zerotier/scripts
-		
-		echo hnd >zerotier/.valid
-		
-		tar -zcf zerotier.tar.gz zerotier
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv zerotier.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
+	ls -lF ${DIR}/zerotier/lib_${ARCH}|awk '{print $9}'|sed '/^$/d'|sed 's/^/zerotier /g'|sed 's/*$//g' > ${DIR}/zerotier/lib_${ARCH}/.flag_zerotier.txt
+	#-----------------------------------------------------------------------
+	# prepare to build
+	rm -rf ${DIR}/${MODULE}.tar.gz
+	rm -rf ${DIR}/build && mkdir -p ${DIR}/build
+	cp -rf ${DIR}/${MODULE} ${DIR}/build/ && cd ${DIR}/build
+	echo "build ${MODULE} for ${PLATFORM}"
+	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
+	# different architecture of binary/script go to coresponding folder
+	cp -rf ${DIR}/build/${MODULE}/bin_${ARCH}/* ${DIR}/build/${MODULE}/bin/
+	cp -rf ${DIR}/build/${MODULE}/lib_${ARCH} ${DIR}/build/${MODULE}/lib
+	cp -rf ${DIR}/build/${MODULE}/scripts-${PLATFORM} ${DIR}/build/${MODULE}/scripts
+	# remove extra folder
+	rm -rf ${DIR}/build/${MODULE}/bin_*
+	rm -rf ${DIR}/build/${MODULE}/lib_*
+	rm -rf ${DIR}/build/${MODULE}/scripts-*
+	# make tar
+	tar -zcf ${MODULE}.tar.gz ${MODULE}
+	if [ "$?" = "0" ];then
+		echo "build success!"
+		mv ${DIR}/build/${MODULE}.tar.gz ${DIR}
 	fi
-	
+	cd ${DIR} && rm -rf ${DIR}/build
+	#-----------------------------------------------------------------------
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
 	md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)
