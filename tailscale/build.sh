@@ -19,9 +19,9 @@ if [ "${ME}" = "build.sh" ];then
 	exit 1
 fi
 
-if [ "${PLATFORM}" == "mtk" -o "${PLATFORM}" == "ipq64" ];then
+if [ "${PLATFORM}" = "mtk" -o "${PLATFORM}" = "ipq64" ];then
 	ARCH=64
-elif [ "${PLATFORM}" == "hnd" -o "${PLATFORM}" == "ipq32" ];then
+elif [ "${PLATFORM}" = "hnd" -o "${PLATFORM}" = "ipq32" ];then
 	ARCH=32
 fi
 
