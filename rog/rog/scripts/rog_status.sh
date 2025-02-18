@@ -186,7 +186,7 @@ get_system_info(){
 	hardware_type=$(uname -m 2>/dev/null)
 	#build_date_cst=$(uname -v | cut -d " " -f4-9)
 
-	if [ "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" ];then
+	if [ "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
 		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
 		build_date=$(date -D "%a %b %d %H:%M:%S %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
 	else
@@ -208,7 +208,7 @@ get_system_info(){
 		build_date="null"
 	fi
 }
-get_tmp_pwr_ipq(){
+get_tmp_pwr_mtk(){
 	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
 	interface_24g_temp_c=$(iwpriv ra0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
 	interface_52g_temp_c=$(iwpriv rax0 stat | grep "CurrentTemperature" | head -n1 | awk -F '= ' '{print $2}')°C
@@ -239,7 +239,7 @@ get_tmp_pwr_ipq(){
 get_tmp_pwr(){
 	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
 		get_tmp_pwr_mtk
-	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" ];then
+	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
 		get_tmp_pwr_ipq
 	else
 		get_tmp_pwr_hnd
