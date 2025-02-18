@@ -14,7 +14,7 @@ DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
 PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
 
-if [ "${ME}" == "build.sh" ];then
+if [ "${ME}" = "build.sh" ];then
 	echo "build error!"
 	exit 1
 fi
