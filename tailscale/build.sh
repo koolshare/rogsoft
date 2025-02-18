@@ -12,85 +12,41 @@ AUTHOR="sadog"
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
+PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+
+if [ "${ME}" == "build.sh" ];then
+	echo "build error!"
+	exit 1
+fi
+
+if [ "${PLATFORM}" == "mtk" -o "${PLATFORM}" == "ipq64" ];then
+	ARCH=64
+elif [ "${PLATFORM}" == "hnd" -o "${PLATFORM}" == "ipq32" ];then
+	ARCH=32
+fi
 
 do_build() {
-	rm -f ${MODULE}.tar.gz
-
-	if [ -z "$TAGS" ];then
-		TAGS="其它"
-	fi
-
-	#----------------------------------------------------
-	# start to make tar
-	rm -rf ./build && mkdir -p ./build
-	cp -rf ./tailscale ./build/ && cd ./build
-	if [ "$ME" = "build_mtk.sh" ];then
-		# mtk platform use 64 bit version of bianry
-		echo "build tailscale for mtk"
-		
-		# valid string
-		echo "mtk" >tailscale/.valid
-		
-		# binary
-		rm -rf tailscale/bin_32
-		mv -f tailscale/bin_64 tailscale/bin/
-		
-		# scripts (encrypted)
-		cp -rf tailscale/scripts-mtk tailscale/scripts/
-	elif [ "$ME" = "build_ipq64.sh" ];then
-		# ipq64 use mtk's 64 bit binary
-		echo "build tailscale for ipq64"
-		
-		# valid string
-		echo "ipq64" >tailscale/.valid
-
-		# binary
-		rm -rf tailscale/bin_32
-		mv -f tailscale/bin_64 tailscale/bin/
-		
-		# scripts (encrypted)
-		cp -rf tailscale/scripts-ipq64 tailscale/scripts/
-	elif [ "$ME" = "build_ipq32.sh" ];then
-		# ipq32 use hnd's 32 bit binary and it's own scripts
-		echo "build tailscale for ipq32"
-		
-		# valid string
-		echo "ipq32" >tailscale/.valid
-
-		# binary
-		rm -rf tailscale/bin_64
-		mv -f tailscale/bin_32 tailscale/bin/
-
-		# scripts (encrypted)
-		cp -rf tailscale/scripts-ipq32 tailscale/scripts/
-	elif [ "$ME" = "build.sh" ];then
-		# hnd platform use 32 bit version of bianry
-		echo "build tailscale for hnd"
-		
-		# valid string
-		echo "hnd" >tailscale/.valid
-		
-		# binary
-		rm -rf tailscale/bin_64
-		mv -f tailscale/bin_32 tailscale/bin/
-		
-		# scripts (encrypted)
-		cp -rf tailscale/scripts-hnd tailscale/scripts/
-	fi
-	rm -rf tailscale/scripts-hnd
-	rm -rf tailscale/scripts-mtk
-	rm -rf tailscale/scripts-ipq32
-	rm -rf tailscale/scripts-ipq64
+	#-----------------------------------------------------------------------
+	# prepare to build
+	rm -rf ${DIR}/${MODULE}.tar.gz
+	rm -rf ${DIR}/build && mkdir -p ${DIR}/build
+	cp -rf ${DIR}/${MODULE} ${DIR}/build/ && cd ${DIR}/build
+	echo "build ${MODULE} for ${PLATFORM}"
+	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
+	# different architecture of binary/script go to coresponding folder
+	cp -rf ${DIR}/build/${MODULE}/bin_${ARCH} ${DIR}/build/${MODULE}/bin/
+	cp -rf ${DIR}/build/${MODULE}/scripts-${PLATFORM} ${DIR}/build/${MODULE}/scripts
+	# remove extra folder
+	rm -rf ${DIR}/build/${MODULE}/bin_*
+	rm -rf ${DIR}/build/${MODULE}/scripts-*
 	# make tar
-	tar -zcf tailscale.tar.gz tailscale
+	tar -zcf ${MODULE}.tar.gz ${MODULE}
 	if [ "$?" = "0" ];then
 		echo "build success!"
-		mv tailscale.tar.gz ..
+		mv ${DIR}/build/${MODULE}.tar.gz ${DIR}
 	fi
-	cd .. && rm -rf ./build
-
-	#----------------------------------------------------
-	
+	cd ${DIR} && rm -rf ${DIR}/build
+	#-----------------------------------------------------------------------
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
 	md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)

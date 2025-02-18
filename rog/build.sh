@@ -30,10 +30,7 @@ do_build() {
 	# different architecture of binary/script go to coresponding folder
 	cp -rf ${DIR}/build/${MODULE}/bin-${PLATFORM} ${DIR}/build/${MODULE}/bin/
 	# remove extra folder
-	rm -rf ${DIR}/build/${MODULE}/bin-hnd
-	rm -rf ${DIR}/build/${MODULE}/bin-mtk
-	rm -rf ${DIR}/build/${MODULE}/bin-ipq32
-	rm -rf ${DIR}/build/${MODULE}/bin-ipq64
+	rm -rf ${DIR}/build/${MODULE}/bin-*
 	# make tar
 	tar -zcf ${MODULE}.tar.gz ${MODULE}
 	if [ "$?" = "0" ];then

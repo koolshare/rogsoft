@@ -1,48 +1,38 @@
 #!/bin/bash
 # build script for rogsoft project
-DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
-ME=$(basename "$0")
+MODULE="softcenter"
 VERSION=1.9.16
 
-echo $VERSION > ./softcenter/.soft_ver
+# Check and include base
+DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
+ME=$(basename "$0")
+PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+
+if [ "${ME}" == "build.sh" ];then
+	echo "build error!"
+	exit 1
+fi
+
+echo ${VERSION} > ${DIR}/softcenter/.soft_ver
 
 echo build version: ${VERSION}
-rm -f softcenter.tar.gz
+rm -f ${DIR}/softcenter.tar.gz
 
 python ./gen_install.py stage1
 
-chmod 755 ./softcenter/scripts/ks_app_install.sh
-
 # ----------------------------
-rm -rf $DIR/build && mkdir -p $DIR/build
-cp -rf ./softcenter ./build/ && cd ./build
-if [ "$ME" = "build.sh" ];then
-	# for hnd
-	echo "build softcenter for hnd"
-	cp -rf softcenter/bin-hnd/* softcenter/bin/
-elif [ "$ME" = "build_ipq32.sh" ];then
-	# for ipq3232
-	echo "build softcenter for ipq32"
-	cp -rf softcenter/bin-ipq32/* softcenter/bin/
-elif [ "$ME" = "build_mtk.sh" ];then
-	# for mtk
-	echo "build softcenter for mtk"
-	cp -rf softcenter/bin-mtk/* softcenter/bin/
-elif [ "$ME" = "build_ipq64.sh" ];then
-	# for ipq6432
-	echo "build softcenter for ipq64"
-	cp -rf softcenter/bin-ipq64/* softcenter/bin/
-fi
-rm -rf softcenter/bin-mtk
-rm -rf softcenter/bin-hnd
-rm -rf softcenter/bin-ipq32
-rm -rf softcenter/bin-ipq64
+rm -rf ${DIR}/build && mkdir -p ${DIR}/build
+cp -rf ${DIR}/softcenter ${DIR}/build/ && cd ${DIR}/build
+echo "build softcenter for ${PLATFORM}"
+echo ${PLATFORM} >${DIR}/build/softcenter/.valid
+cp -rf softcenter/bin-${PLATFORM}/* softcenter/bin/
+rm -rf ${DIR}/build/softcenter/bin-*
 tar -zcf softcenter.tar.gz softcenter
 if [ "$?" = "0" ];then
-	echo "build hnd success!"
-	mv softcenter.tar.gz ..
+	echo "build success!"
+	mv ${DIR}/build/softcenter.tar.gz ${DIR}
 fi
-cd .. && rm -rf ./build
+cd ${DIR} && rm -rf ${DIR}/build
 # ----------------------------
 
 md5value=$(md5sum softcenter.tar.gz|awk '{print $1}')

@@ -130,12 +130,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2024-12-31_22:01:48", 
+            "build_date": "2025-02-18_15:13:02", 
             "changelog": "", 
             "description": "检测软件中心重要文件是否被篡改，如果检测到恶意篡改，将其修复", 
             "home_url": "Module_fixit.asp", 
             "link": "", 
-            "md5": "f58d0a22fc73d0922b2973edf172c642", 
+            "md5": "823a230f2829c667d0a12c74489b0d9b", 
             "name": "fixit", 
             "tags": "系统 工具", 
             "tar_url": "fixit/fixit.tar.gz", 
@@ -284,17 +284,17 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2025-01-24_21:01:49", 
+            "build_date": "2025-02-18_15:33:54", 
             "changelog": "", 
             "description": "一些小功能的插件", 
             "home_url": "Module_rog.asp", 
             "link": "", 
-            "md5": "84ddb28c64ca6a39a970759d91226e8e", 
+            "md5": "77e050951ee7f2ec7957c22396fadfc5", 
             "name": "rog", 
             "tags": "系统 工具", 
             "tar_url": "rog/rog.tar.gz", 
             "title": "ROG工具箱", 
-            "version": "5.9.6"
+            "version": "5.9.7"
         }, 
         {
             "author": "囍冯总囍", 
@@ -396,12 +396,12 @@
         }, 
         {
             "author": "sadog", 
-            "build_date": "2025-02-18_00:40:46", 
+            "build_date": "2025-02-18_15:55:40", 
             "changelog": "", 
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！", 
             "home_url": "Module_tailscale.asp", 
             "link": "", 
-            "md5": "956deb5a7063fe1beebcbc4df6a7b44e", 
+            "md5": "c7efd35f8679668af4189f80b38c1a0a", 
             "name": "tailscale", 
             "tags": "穿透 VPN", 
             "tar_url": "tailscale/tailscale.tar.gz", 
@@ -468,7 +468,7 @@
         }
     ], 
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master", 
-    "md5": "a71ff1601795536a6bf2d0829aa00a86", 
+    "md5": "14be470ea66020fbcab972472e663a2c", 
     "tar_url": "koolcenter/softcenter.tar.gz", 
-    "version": "1.9.38"
+    "version": "1.9.39"
 }

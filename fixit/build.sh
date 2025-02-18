@@ -31,14 +31,8 @@ do_build() {
 	cp -rf ${DIR}/build/${MODULE}/bin-${PLATFORM} ${DIR}/build/${MODULE}/bin/
 	cp -rf ${DIR}/build/${MODULE}/scripts-${PLATFORM} ${DIR}/build/${MODULE}/scripts
 	# remove extra folder
-	rm -rf ${DIR}/build/${MODULE}/bin-hnd
-	rm -rf ${DIR}/build/${MODULE}/bin-mtk
-	rm -rf ${DIR}/build/${MODULE}/bin-ipq32
-	rm -rf ${DIR}/build/${MODULE}/bin-ipq64
-	rm -rf ${DIR}/build/${MODULE}/scripts-hnd
-	rm -rf ${DIR}/build/${MODULE}/scripts-mtk
-	rm -rf ${DIR}/build/${MODULE}/scripts-ipq32
-	rm -rf ${DIR}/build/${MODULE}/scripts-ipq64
+	rm -rf ${DIR}/build/${MODULE}/bin-*
+	rm -rf ${DIR}/build/${MODULE}/scripts-*
 	# make tar
 	tar -zcf ${MODULE}.tar.gz ${MODULE}
 	if [ "$?" = "0" ];then
