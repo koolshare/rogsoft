@@ -1,12 +1,12 @@
 {
-"version":"1.3",
-"md5":"f7d7322489a2e3a96337d35aa196389a",
+"version":"1.4",
+"md5":"be810fca7662716287d144ece5515117",
 "home_url":"Module_sftpserver.asp",
 "title":"Sftp Server",
 "description":"Sftp Server",
-"tags":"sftpserver",
+"tags":"Entware",
 "author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2023-06-20_14:19:34"
+"build_date":"2025-02-19_01:12:33"
 }
