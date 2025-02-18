@@ -12,39 +12,36 @@ AUTHOR="sadog"
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
+PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+
+if [ "${ME}" == "build.sh" ];then
+	echo "build error!"
+	exit 1
+fi
 
 do_build() {
-	rm -f ${MODULE}.tar.gz
-
+	#-----------------------------------------------------------------------
+	# prepare to build
+	rm -rf ${DIR}/${MODULE}.tar.gz
 	rm -rf ${DIR}/build && mkdir -p ${DIR}/build
-	cp -rf ${DIR}/rog ${DIR}/build/ && cd ${DIR}/build
-	if [ "$ME" = "build_mtk.sh" ];then
-		echo "build rog for mtk"
-		echo mtk >rog/.valid
-		cp -rf rog/bin-mtk rog/bin/
-	elif [ "$ME" = "build_ipq64.sh" ];then
-		echo "build rog for ipq64"
-		echo ipq64 >rog/.valid
-		cp -rf rog/bin-ipq64 rog/bin/
-	elif [ "$ME" = "build_ipq32.sh" ];then
-		echo "build rog for ipq32"
-		echo ipq32 >rog/.valid
-		cp -rf rog/bin-ipq32 rog/bin/
-	elif [ "$ME" = "build.sh" ];then
-		echo "build rog for hnd"
-		echo hnd >rog/.valid
-		cp -rf rog/bin-hnd rog/bin/
-	fi
-	rm -rf rog/bin-hnd
-	rm -rf rog/bin-mtk
-	rm -rf rog/bin-ipq32
-	rm -rf rog/bin-ipq64
-	tar -zcf rog.tar.gz rog
+	cp -rf ${DIR}/${MODULE} ${DIR}/build/ && cd ${DIR}/build
+	echo "build ${MODULE} for ${PLATFORM}"
+	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
+	# different architecture of binary/script go to coresponding folder
+	cp -rf ${DIR}/build/${MODULE}/bin-${PLATFORM} ${DIR}/build/${MODULE}/bin/
+	# remove extra folder
+	rm -rf ${DIR}/build/${MODULE}/bin-hnd
+	rm -rf ${DIR}/build/${MODULE}/bin-mtk
+	rm -rf ${DIR}/build/${MODULE}/bin-ipq32
+	rm -rf ${DIR}/build/${MODULE}/bin-ipq64
+	# make tar
+	tar -zcf ${MODULE}.tar.gz ${MODULE}
 	if [ "$?" = "0" ];then
 		echo "build success!"
-		mv rog.tar.gz ${DIR}
+		mv ${DIR}/build/${MODULE}.tar.gz ${DIR}
 	fi
 	cd ${DIR} && rm -rf ${DIR}/build
+	#-----------------------------------------------------------------------
 	
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
