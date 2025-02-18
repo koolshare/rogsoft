@@ -2,7 +2,7 @@
 
 # build script for zerotier project
 MODULE="zerotier"
-VERSION="1.5.1"
+VERSION="1.5.2"
 TITLE="ZeroTier"
 DESCRIPTION="ZeroTier 内网穿透"
 HOME_URL="Module_zerotier.asp"
@@ -35,12 +35,8 @@ do_build() {
 	echo "build ${MODULE} for ${PLATFORM}"
 	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
 	# different architecture of binary/script go to coresponding folder
-	cp -rf ${DIR}/build/${MODULE}/bin_${ARCH}/* ${DIR}/build/${MODULE}/bin/
-	cp -rf ${DIR}/build/${MODULE}/lib_${ARCH} ${DIR}/build/${MODULE}/lib
 	cp -rf ${DIR}/build/${MODULE}/scripts-${PLATFORM} ${DIR}/build/${MODULE}/scripts
 	# remove extra folder
-	rm -rf ${DIR}/build/${MODULE}/bin_*
-	rm -rf ${DIR}/build/${MODULE}/lib_*
 	rm -rf ${DIR}/build/${MODULE}/scripts-*
 	# make tar
 	tar -zcf ${MODULE}.tar.gz ${MODULE}

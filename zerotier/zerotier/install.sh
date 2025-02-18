@@ -171,6 +171,7 @@ install_now(){
 	# jq is included in official 102 stock firmware higher version(RT-BE86U)
 	if [ -f /usr/bin/jq ];then
 		rm -rf /tmp/${module}/bin/jq
+		echo_date "系统自带jq，不安装..."
 		if [ ! -L /koolshare/bin/jq ];then
 			ln -sf /usr/bin/jq /koolshare/bin/jq
 		fi
@@ -181,17 +182,17 @@ install_now(){
 		fi
 	fi
 
-	if [ "$ARCH" == "aarch64" ]; then
+	if [ "${ARCH}" == "aarch64" ]; then
 		echo_date "安装64位zerotier-one..."
-		copy cp -fP /tmp/${module}/lib64/.flag_*.txt /koolshare/lib/
-		copy cp -fP /tmp/${module}/bin64/* /koolshare/bin/
-		copy cp -fP /tmp/${module}/lib64/* /koolshare/lib/
+		copy cp -fP /tmp/${module}/lib_64/.flag_*.txt /koolshare/lib/
+		copy cp -fP /tmp/${module}/bin_64/* /koolshare/bin/
+		copy cp -fP /tmp/${module}/lib_64/* /koolshare/lib/
 	fi
-	if [ "$ARCH" == "armv7l" ]; then
+	if [ "${ARCH}" == "armv7l" ]; then
 		echo_date "安装32位zerotier-one..."
-		copy cp -fP /tmp/${module}/lib32/.flag_*.txt /koolshare/lib/
-		copy cp -fP /tmp/${module}/bin32/* /koolshare/bin/
-		copy cp -fP /tmp/${module}/lib32/* /koolshare/lib/
+		copy cp -fP /tmp/${module}/lib_32/.flag_*.txt /koolshare/lib/
+		copy cp -fP /tmp/${module}/bin_32/* /koolshare/bin/
+		copy cp -fP /tmp/${module}/lib_32/* /koolshare/lib/
 	fi
 
 	# Permissions
