@@ -54,7 +54,7 @@ _get_model(){
 }
 
 get_jffs_original_mount_device(){
-	local mtd_jffs=$(df -h | /bin/grep -E "/jffs|cifs2" | awk '{print $1}' | /bin/grep -E "/dev/mtd|ubi:jffs" | head -n1)
+	local mtd_jffs=$(df -h | /bin/grep -E "/jffs|cifs2" | awk '{print $1}' | /bin/grep -E "/dev/mtd|ubi:jffs|/dev/ubi" | head -n1)
 	if [ -n "${mtd_jffs}" ];then
 		mtd_disk="${mtd_jffs}"
 		dbus set usb2jffs_mtd_jffs="${mtd_jffs}"
@@ -77,7 +77,7 @@ get_jffs_original_mount_device(){
 			GT-AX6000|XT12)
 				mtd_disk="ubi:jffs2"
 				;;
-			TX-AX6000|TUF-AX4200Q)
+			TX-AX6000|TUF-AX4200Q|ZenWiFi_BD4|TUF_6500)
 				mtd_disk="/dev/ubi0_5"
 				;;
 			*)
