@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="tmux"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="tmux"
 DESCRIPTION="tmux是一个终端复用器,它可以启动一系列终端会话。"
 HOME_URL="Module_tmux.asp"
