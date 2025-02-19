@@ -43,6 +43,7 @@ do_build() {
 		mv ${DIR}/build/${MODULE}.tar.gz ${DIR}
 	fi
 	cd ${DIR} && rm -rf ${DIR}/build
+	#-----------------------------------------------------------------------
 	
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
