@@ -6,7 +6,7 @@ VERSION="1.4"
 TITLE="Sftp Server"
 DESCRIPTION="Sftp Server"
 HOME_URL="Module_sftpserver.asp"
-TAGS="Entware"
+TAGS="Entware USB"
 AUTHOR="sadog"
 
 # Check and include base

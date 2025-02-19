@@ -44,6 +44,7 @@ do_build() {
 	fi
 	cd ${DIR} && rm -rf ${DIR}/build
 	#-----------------------------------------------------------------------
+	
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
 	md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)

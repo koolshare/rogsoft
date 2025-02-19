@@ -1,9 +1,8 @@
 #!/bin/sh
 
 # build script for rogsoft project
-
 MODULE="tmux"
-VERSION="1.0"
+VERSION="1.1"
 TITLE="tmux"
 DESCRIPTION="tmux是一个终端复用器,它可以启动一系列终端会话。"
 HOME_URL="Module_tmux.asp"
@@ -13,52 +12,38 @@ AUTHOR="sadog"
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")
+PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+
+if [ "${ME}" = "build.sh" ];then
+	echo "build error!"
+	exit 1
+fi
 
 do_build() {
-	rm -f ${MODULE}.tar.gz
-
-	if [ -z "$TAGS" ];then
-		TAGS="其它"
+	#-----------------------------------------------------------------------
+	# prepare to build
+	rm -rf ${DIR}/${MODULE}.tar.gz
+	rm -rf ${DIR}/build && mkdir -p ${DIR}/build
+	cp -rf ${DIR}/${MODULE} ${DIR}/build/ && cd ${DIR}/build
+	echo "build ${MODULE} for ${PLATFORM}"
+	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
+	# different architecture of binary/script go to coresponding folder
+	cp -rf ${DIR}/build/${MODULE}/scripts-${PLATFORM} ${DIR}/build/${MODULE}/scripts
+	# remove extra folder
+	cp -rf ${DIR}/build/${MODULE}/install_${PLATFORM}.sh ${DIR}/build/${MODULE}/install.sh
+	cp -rf ${DIR}/build/${MODULE}/uninstall_${PLATFORM}.sh ${DIR}/build/${MODULE}/uninstall.sh
+	# remove
+	rm -rf ${DIR}/build/${MODULE}/scripts-*
+	rm -rf ${DIR}/build/${MODULE}/install_*
+	rm -rf ${DIR}/build/${MODULE}/uninstall_*
+	# make tar
+	tar -zcf ${MODULE}.tar.gz ${MODULE}
+	if [ "$?" = "0" ];then
+		echo "build success!"
+		mv ${DIR}/build/${MODULE}.tar.gz ${DIR}
 	fi
-
-	if [ "$ME" = "build_mtk.sh" ];then
-		echo "build tmux for mtk"
-		rm -rf ./build
-		mkdir -p ./build
-		cp -rf ./tmux ./build/
-		cd ./build
-		echo mtk >tmux/.valid
-		rm -rf tmux/scripts
-		rm -rf tmux/install.sh
-		rm -rf tmux/uninstall.sh
-		mv -f tmux/scripts-mtk tmux/scripts/
-		mv -f tmux/install_mtk.sh tmux/install.sh
-		mv -f tmux/uninstall_mtk.sh tmux/uninstall.sh
-		tar -zcf tmux.tar.gz tmux
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv tmux.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
-	elif [ "$ME" = "build.sh" ];then
-		echo "build tmux for hnd"
-		rm -rf ./build
-		mkdir -p ./build
-		cp -rf ./tmux ./build/
-		cd ./build
-		echo hnd >tmux/.valid
-		rm -rf tmux/scripts-mtk
-		rm -rf tmux/install_mtk.sh
-		rm -rf tmux/uninstall_mtk.sh
-		tar -zcf tmux.tar.gz tmux
-		if [ "$?" = "0" ];then
-			echo "build success!"
-			mv tmux.tar.gz ..
-		fi
-		cd ..
-		rm -rf ./build
-	fi
+	cd ${DIR} && rm -rf ${DIR}/build
+	#-----------------------------------------------------------------------
 	
 	# add version to the package
 	echo ${VERSION} >${MODULE}/version
