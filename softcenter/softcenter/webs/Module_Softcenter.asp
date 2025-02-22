@@ -287,10 +287,12 @@ String.prototype.myReplace = function(f, e){
 }
 
 var ro_model = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-if ( ro_model == "TX-AX6000" || ro_model == "TUF-AX4200Q"  || ro_model == "RT-AX57_Go" ){
+if ( ro_model == "TX-AX6000" || ro_model == "TUF-AX4200Q"  || ro_model == "RT-AX57_Go" || ro_model == "GS7" ){
 	var SOFT_ARCH = "mtksoft"
 }else if(ro_model == "ZenWiFi_BD4"){
-	var SOFT_ARCH = "ipqsoft"
+	var SOFT_ARCH = "ipq32soft"
+}else if(ro_model == "TUF_6500"){
+	var SOFT_ARCH = "ipq64soft"
 }else{
 	var SOFT_ARCH = "rogsoft"
 }

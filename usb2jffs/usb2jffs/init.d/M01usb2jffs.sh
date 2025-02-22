@@ -76,6 +76,9 @@ get_jffs_original_mount_device(){
 			TX-AX6000|TUF-AX4200Q|ZenWiFi_BD4|TUF_6500)
 				mtd_disk="/dev/ubi0_5"
 				;;
+			GS7)
+				mtd_disk="/dev/ubi0_4"
+				;;
 			*)
 				mtd_disk=""
 				return 1

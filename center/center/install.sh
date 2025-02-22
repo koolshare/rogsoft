@@ -111,23 +111,23 @@ exit_install(){
 	esac
 }
 
-set_kc_value(){
-	# set url, do it before platform_test
-	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
+set_url(){
+	local LINUX_VER=$(uname -r | awk -F"." '{print $1$2}')
 	if [ "${LINUX_VER}" -ge "41" ];then
 		local SC_URL=https://rogsoft.ddnsto.com
 	fi
 	if [ "${LINUX_VER}" -eq "26" ];then
 		local SC_URL=https://armsoft.ddnsto.com
 	fi
-	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "TX-AX6000" ];then
+	local RO_MODEL=$(nvram get odmpid)
+	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" -o "${RO_MODEL}" == "GS7" ];then
 		local SC_URL=https://mtksoft.ddnsto.com
 	fi
-	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "TUF-AX4200Q" ];then
-		local SC_URL=https://mtksoft.ddnsto.com
+	if [ "${RO_MODEL}" == "ZenWiFi_BD4" ];then
+		local SC_URL=https://ipq32soft.ddnsto.com
 	fi
-	if [ "${LINUX_VER}" -eq "54" -a "$(nvram get odmpid)" == "RT-AX57_Go" ];then
-		local SC_URL=https://mtksoft.ddnsto.com
+	if [ "${RO_MODEL}" == "TUF_6500" ];then
+		local SC_URL=https://ipq64soft.ddnsto.com
 	fi
 	local SC_URL_NVRAM=$(nvram get sc_url)
 	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
@@ -149,7 +149,7 @@ install_now(){
 	local PLVER=$(cat ${DIR}/version)
 
 	# set koolcenter val
-	set_kc_value
+	set_url
 
 	# install file
 	echo_date "安装插件相关文件..."
