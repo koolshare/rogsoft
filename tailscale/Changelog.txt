@@ -1,3 +1,7 @@
+script是乱码, 不知道怎么提PR, 说下问题:
+  iptables 未加入SNAT, 会导致访问tailnet中其他node时, 数据包无法返回
+  例: iptables -t nat -A POSTROUTING ! -s 192.168.50.1/32 -o tailscale0 -j MASQUERADE
+
 Koolshare Asuswrt-Merlin ZeroTier Changelog for HND/AXHND platform
 ===========================================
 2.0.0 - 2.0.1
