@@ -184,7 +184,6 @@ get_mhz(){
 get_system_info(){
 	kernel_ver=$(uname -r 2>/dev/null)
 	hardware_type=$(uname -m 2>/dev/null)
-	#build_date_cst=$(uname -v | cut -d " " -f4-9)
 
 	if [ "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" -o "$(nvram get odmpid)" == "GS7" ];then
 		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
@@ -216,6 +215,13 @@ get_tmp_pwr_mtk(){
 	wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G： ${interface_52g_temp_c}"
 }
 
+get_tmp_pwr_MT7988X(){
+	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
+	interface_24g_temp_c=$(mwctl ra0 stat | grep "CurrentTemperature" | awk '{print $3}')°C
+	interface_52g_temp_c=$(mwctl rai0 stat | grep "CurrentTemperature" | awk '{print $3}')°C
+	wl_temp="2.4G：${interface_24g_temp_c} ${__spilt__} 5G： ${interface_52g_temp_c}"
+}
+
 get_tmp_pwr_ipq(){
 	#网卡温度
 	WIFI_2G_DISABLE=$(iwconfig ath0|grep "Encryption key:off")
@@ -237,8 +243,10 @@ get_tmp_pwr_ipq(){
 }
 
 get_tmp_pwr(){
-	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" -o "$(nvram get odmpid)" == "GS7" ];then
+	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
 		get_tmp_pwr_mtk
+	elif [ "$(nvram get odmpid)" == "GS7" ];then
+		get_tmp_pwr_MT7988X
 	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
 		get_tmp_pwr_ipq
 	else
