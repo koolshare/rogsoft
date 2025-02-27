@@ -21,7 +21,8 @@ stop_software_center(){
 
 start_software_center(){
 	stop_software_center
-	service start_skipd >/dev/null 2>&1
+	sleep 2
+	service restart_skipd >/dev/null 2>&1
 	/koolshare/perp/perp.sh start >/dev/null 2>&1
 }
 
