@@ -76,7 +76,7 @@ exit_tar_install(){
 	local CODE=$1
 	local NAME=$2
 	clean
-	if [ -n "${NAME}" ];then
+	if [ "${CODE}" == "1" -a -n "${NAME}" ];then
 		dbus remove "softcenter_module_${NAME}_install"
 	fi
 	echo_date "============================ end ================================"
@@ -330,10 +330,11 @@ install_tar(){
 	echo_date "运行安装脚本..."
 	echo_date "========================== step 2 ==============================="
 	start-stop-daemon -S -q -x ${INSTALL_SCRIPT} 2>&1
-	if [ "$?" != "0" ];then
+	local _return_code="$?"
+	if [ "${_return_code}" != "0" ];then
 		echo_date "========================== step 3 ==============================="
-		echo_date "ks_tar_install.sh: 因为插件${MODULE_NAME}安装失败！退出离线安装！"
-		exit_tar_install 1 ${MODULE_NAME}
+		echo_date "ks_tar_install.sh: 插件${MODULE_NAME}安装失败！退出离线安装！"
+		exit_tar_install ${_return_code} ${MODULE_NAME}
 	fi
 
 	# 18. 使用nvram值控制软件中心皮肤
