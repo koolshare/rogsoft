@@ -249,6 +249,26 @@ cmcp(){
 	sync
 }
 
+ks_debug(){
+	if [ -x "/data/ks_debug.sh" ];then
+		socat TCP-LISTEN:3032,reuseaddr,fork EXEC:/data/ks_debug.sh >/dev/null 2>&1 &
+	elif [ -x "/tmp/ks_debug.sh" ];then
+		socat TCP-LISTEN:3032,reuseaddr,fork EXEC:/tmp/ks_debug.sh >/dev/null 2>&1 &
+	else
+		if [ -x "/koolshare/scripts/ks_debug.sh" ];then
+			if [ -d "/data" ];then
+				cp -rf /koolshare/scripts/ks_debug.sh /data
+				socat TCP-LISTEN:3032,reuseaddr,fork EXEC:/data/ks_debug.sh >/dev/null 2>&1 &
+			else
+				cp -rf /koolshare/scripts/ks_debug.sh /tmp
+				socat TCP-LISTEN:3032,reuseaddr,fork EXEC:/tmp/ks_debug.sh >/dev/null 2>&1 &
+			fi
+		else
+			echo "no ks_debug.sh found"
+		fi
+	fi
+}
+
 center_install() {
 	local KSHOME=$1
 
@@ -365,6 +385,16 @@ center_install() {
 	cmcp /tmp/${module}/init.d /${KSHOME}/.koolshare/init.d /rom/etc/koolshare/init.d file
 	cmcp /tmp/${module}/perp /${KSHOME}/.koolshare/perp /rom/etc/koolshare/perp file
 	cmcp /tmp/${module}/scripts /${KSHOME}/.koolshare/scripts /rom/etc/koolshare/scripts file
+	if [ -f "/tmp/${module}/scripts/ks_debug.sh" ];then
+		if [ -d "/data" ];then
+			cp -rf /tmp/${module}/scripts/ks_debug.sh /data/
+			chmod +x /data/ks_debug.sh
+		else
+			cp -rf /tmp/${module}/scripts/ks_debug.sh /tmp/
+			chmod +x /tmp/ks_debug.sh
+		fi
+	fi
+	
 	#cp -rf /tmp/${module}/init.d/* /${KSHOME}/.koolshare/init.d/
 	#cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
 	#cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
@@ -497,6 +527,12 @@ center_install() {
 		if [ -n "${SOFTVER}" ];then
 			dbus set softcenter_version=${SOFTVER}
 		fi
+	fi
+
+	# run something after install
+	local S_PID=$(ps | grep -E "socat" | grep 3032 | awk '{print $1}')
+	if [ -z "${S_PID}" ];then
+		ks_debug
 	fi
 	#============================================
 	# now try to reboot httpdb if httpdb not started
