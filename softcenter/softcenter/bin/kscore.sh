@@ -7,13 +7,13 @@ detect(){
 		/usr/bin/jffsinit.sh
 	fi
 
-	chmod 755 /koolshare/bin/*
-	chmod 755 /koolshare/init.d/*
-	chmod 755 /koolshare/perp/*
-	chmod 755 /koolshare/perp/.boot/*
-	chmod 755 /koolshare/perp/.control/*
-	chmod 755 /koolshare/perp/httpdb/*
-	chmod 755 /koolshare/scripts/*
+	chmod 755 /koolshare/bin/* >/dev/null 2>&1
+	chmod 755 /koolshare/init.d/* >/dev/null 2>&1
+	chmod 755 /koolshare/perp/* >/dev/null 2>&1
+	chmod 755 /koolshare/perp/.boot/* >/dev/null 2>&1
+	chmod 755 /koolshare/perp/.control/* >/dev/null 2>&1
+	chmod 755 /koolshare/perp/httpdb/* >/dev/null 2>&1
+	chmod 755 /koolshare/scripts/* >/dev/null 2>&1
 
 	# ssh PATH environment
 	rm -rf /jffs/configs/profile.add >/dev/null 2>&1
@@ -119,7 +119,7 @@ check_start(){
 		[ "$STARTCOMAND6" == "0" ] && sed -i '1a /koolshare/bin/ks-unmount.sh $1' /jffs/scripts/unmount
 	fi
 
-	chmod +x /jffs/scripts/*
+	chmod +x /jffs/scripts/* >/dev/null 2>&1
 	sync
 }
 
@@ -216,37 +216,7 @@ set_skin(){
 	fi
 }
 
-ks_debug(){
-	# run something after install
-	local S_PID=$(ps | grep -E "socat" | grep 3032 | awk '{print $1}')
-	if [ -n "${S_PID}" ];then
-		return 1
-	fi
-	
-	if [ -x "/data/ks_debug.sh" ];then
-		socat TCP-LISTEN:3032,bind=asusrouter.com,reuseaddr,fork EXEC:/data/ks_debug.sh >/dev/null 2>&1 &
-	elif [ -x "/tmp/ks_debug.sh" ];then
-		socat TCP-LISTEN:3032,bind=asusrouter.com,reuseaddr,fork EXEC:/tmp/ks_debug.sh >/dev/null 2>&1 &
-	else
-		if [ -x "/koolshare/scripts/ks_debug.sh" ];then
-			if [ -d "/data" ];then
-				cp -rf /koolshare/scripts/ks_debug.sh /data
-				socat TCP-LISTEN:3032,bind=asusrouter.com,reuseaddr,fork EXEC:/data/ks_debug.sh >/dev/null 2>&1 &
-			else
-				cp -rf /koolshare/scripts/ks_debug.sh /tmp
-				socat TCP-LISTEN:3032,bind=asusrouter.com,reuseaddr,fork EXEC:/tmp/ks_debug.sh >/dev/null 2>&1 &
-			fi
-		else
-			echo "no ks_debug.sh found"
-		fi
-	fi
-}
-
-
 init_core(){
-	# ks debug page
-	ks_debug
-	
 	# prepare
 	mkdir -p /tmp/upload
 
