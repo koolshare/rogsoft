@@ -1,7 +1,10 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.9.7
+   - fix	修复BE88U提示错误3的问题
+
 4.9.6
-   - fix	修复BE86U和BV88U最新102_37xxx固件的页面显示问题
+   - fix	修复BE86U和BE88U最新102_37xxx固件的页面显示问题
 
 4.9.5
    - add	添加GT-BE96支持，限制BE96最大功率29dbm
