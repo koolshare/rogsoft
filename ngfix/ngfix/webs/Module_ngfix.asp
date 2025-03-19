@@ -14,6 +14,7 @@
 <link rel="stylesheet" type="text/css" href="res/softcenter.css">
 <link rel="stylesheet" type="text/css" href="/res/layer/theme/default/layer.css">
 <script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="JavaScript" type="text/javascript" src="/res/layer/layer.js"></script>
 <script language="JavaScript" type="text/javascript" src="/state.js"></script>
 <script language="JavaScript" type="text/javascript" src="/help.js"></script>
 <script language="JavaScript" type="text/javascript" src="/general.js"></script>
@@ -243,28 +244,26 @@ function ofw_guide() {
 	note += "<font color='#676767'>&nbsp;&nbsp;&nbsp;&nbsp;更多信息，请参考RAX80梅林386固件发布贴: <a style='color:#22ab39;' target='_blank' href='https://koolshare.cn/thread-201178-1-1.html'><u>https://koolshare.cn/thread-201178-1-1.html</u></a></font>"
 	note += "</div>"
 	
-	require(['/res/layer/layer.js'], function(layer) {
-		layer.open({
-			type: 0,
-			skin: 'layui-layer-lan',
-			shade: 0.8,
-			title: '网件RAX80梅林固件刷回网件官方固件',
-			time: 0,
-			area: '660px',
-			btnAlign: 'c',
-			maxmin: true,
-			content: note,
-			btn: ['帮助', '取消'],
-			btn1: function() {
-				if(E("ofw_help").style.display == "none"){
-					E("ofw_help").style.display = "";
-					$('.layui-layer-btn0').html("关闭帮助")
-				}else{
-					E("ofw_help").style.display = "none";
-					$('.layui-layer-btn0').html("帮助")
-				}
-			},
-		});
+	layer.open({
+		type: 0,
+		skin: 'layui-layer-lan',
+		shade: 0.8,
+		title: '网件RAX80梅林固件刷回网件官方固件',
+		time: 0,
+		area: '660px',
+		btnAlign: 'c',
+		maxmin: true,
+		content: note,
+		btn: ['帮助', '取消'],
+		btn1: function() {
+			if(E("ofw_help").style.display == "none"){
+				E("ofw_help").style.display = "";
+				$('.layui-layer-btn0').html("关闭帮助")
+			}else{
+				E("ofw_help").style.display = "none";
+				$('.layui-layer-btn0').html("帮助")
+			}
+		},
 	});
 }
 </script>
