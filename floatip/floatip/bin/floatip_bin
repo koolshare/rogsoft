@@ -108,7 +108,12 @@ fallback_loop() {
 	done
 }
 
+VERSION="0.7.1"
 main() {
+	if [ "$1" = "-v" ]; then
+    echo "Version: $VERSION"
+    exit 0
+	fi
 	fallback_loop
 }
 
