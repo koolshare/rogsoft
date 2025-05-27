@@ -1,0 +1,139 @@
+#!/bin/sh
+
+LOCK_FILE="/tmp/var/floatip_loop.lock"
+DEFAULT_PREFIX=24
+
+# random number 0-255
+random() {
+	local num=$(dd if=/dev/urandom bs=1 count=1 2>/dev/null | hexdump -ve '1/1 "%u"')
+	if [[ -z "$num" ]]; then
+		num=$(($(grep -om1 '[0-9][0-9]$' /proc/uptime) * 255 / 100))
+	fi
+	echo ${num:-1}
+}
+
+# check host alive, timeout in 2 seconds
+host_alive() {
+	ping -4 -c 2 -t 1 -W 1 -q "$1" >/dev/null
+	# arping -f -q -b -c 2 -w 2 -i 1 -I br-lan "$1"
+}
+
+set_ip_in_asus() {
+  IP_ADDR=$1
+  INTERFACE="br0"
+  LABEL="${INTERFACE}:0"
+
+  if ! ip addr show "$INTERFACE" | grep -qw "$LABEL"; then
+      ip addr add "$IP_ADDR" dev "$INTERFACE" label "$LABEL"
+  fi
+}
+
+del_ip_in_asus() {
+  TARGET_IP=$(ip addr show dev br0 | awk '/secondary br0:0/ {print $2}')
+  if [ -n "$TARGET_IP" ]; then
+    ip addr del $TARGET_IP dev br0
+  fi
+}
+
+set_up() {
+	local ipaddr="$1"
+	echo "set my floatip to $ipaddr" >&2
+  set_ip_in_asus $ipaddr
+}
+
+safe_sleep() {
+	local sec="$1"
+	[[ "$sec" -lt 1 ]] && sec=1
+	sleep $sec
+}
+
+fallback_loop() {
+	local set_ip check_ip set_net set_prefix
+  set_ip="192.168.50.3/24"
+	[[ -n "$set_ip" ]] || return 1
+	[[ "$set_ip" = "*/*" ]] || set_ip="$set_ip/$DEFAULT_PREFIX"
+	eval "$(/koolshare/bin/ipcalc.sh "$set_ip" )";set_net=$NETWORK;set_prefix=$PREFIX;set_ip=$IP
+	local ipaddr="$set_ip/$set_prefix"
+	echo "ipaddr=$ipaddr"
+
+	local valid_check_ip cip
+  check_ip="192.168.50.2"
+	for cip in $check_ip; do
+		eval "$(/koolshare/bin/ipcalc.sh $cip/$set_prefix )"
+		[[ "$NETWORK" = "$set_net" ]] && valid_check_ip="$valid_check_ip $cip"
+	done
+	valid_check_ip="$valid_check_ip "
+
+	local order_check_ip="$valid_check_ip"
+	local found_alive consume_time
+	local dead_counter=0 floatip_up=0
+	while :; do
+		found_alive=0
+		consume_time=0
+		echo "checking host(s) $order_check_ip is alive?"
+		for cip in $order_check_ip; do
+			if host_alive $cip; then
+				echo "host $cip alive"
+				found_alive=1
+				# reorder to reduce check time
+				order_check_ip=" ${cip}${valid_check_ip// $cip / }"
+				break
+			fi
+			consume_time=$(($consume_time + 2))
+		done
+		if [[ $found_alive = 1 ]]; then
+			if [[ $floatip_up = 1 ]]; then
+				echo "set down floatip" >&2
+        del_ip_in_asus
+				floatip_up=0
+			else
+				dead_counter=0
+			fi
+			safe_sleep $((10 - $consume_time))
+			continue
+		fi
+		if [[ $floatip_up = 1 ]]; then
+			safe_sleep $((5 - $consume_time))
+			continue
+		fi
+		dead_counter=$(($dead_counter + 1))
+		if [[ $dead_counter -lt 3 ]]; then
+			safe_sleep $((10 - $consume_time))
+			continue
+		fi
+		echo "no host alive, set up floatip $ipaddr" >&2
+		set_up "$ipaddr"
+		floatip_up=1
+		sleep 5
+	done
+}
+
+main() {
+	fallback_loop
+}
+
+VERSION="0.7.1"
+if [ "$1" = "-v" ]; then
+	echo "Version: $VERSION"
+	exit 0
+fi
+
+try_lock() {
+	exec 200>"$LOCK_FILE"
+	flock -x 200 && return 0
+	return 1
+}
+
+echo "locking $LOCK_FILE" >&2
+try_lock || {
+	echo "lock $LOCK_FILE failed, already running?" >&2
+	exit 1
+}
+echo "lock $LOCK_FILE success" >&2 
+
+if [[ -n "$1" ]]; then
+	[[ "$1" -ge 0 && "$1" -lt 32 ]] && DEFAULT_PREFIX=$1
+fi
+
+main
+
