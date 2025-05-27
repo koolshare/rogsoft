@@ -2,18 +2,17 @@
 source /koolshare/scripts/base.sh
 
 cd /tmp
-killall ddnsto >/dev/null 2>&1
+killall floatip >/dev/null 2>&1
 
-find /koolshare/init.d/ -name "*ddnsto.sh*"|xargs rm -rf >/dev/null 2>&1
-find /koolshare/bin/ -name "*ddnsto*"|xargs rm -rf >/dev/null 2>&1
-rm -rf /koolshare/bin/ddnsto
-rm -rf /koolshare/bin/ddwebdav
-rm -rf /koolshare/res/icon-ddnsto.png
-rm -rf /koolshare/scripts/ddnsto*.sh
-rm -rf /koolshare/scripts/uninstall_ddnsto.sh
-rm -rf /koolshare/webs/Module_ddnsto.asp
+find /koolshare/init.d/ -name "*floatip.sh*"|xargs rm -rf >/dev/null 2>&1
+find /koolshare/bin/ -name "*floatip*"|xargs rm -rf >/dev/null 2>&1
+rm -f /koolshare/bin/floatip_bin
+rm -f /koolshare/res/icon-floatip.png
+rm -f /koolshare/scripts/floatip*.sh
+rm -f /koolshare/scripts/uninstall_floatip.sh
+rm -f /koolshare/webs/Module_floatip.asp
 
-values=$(dbus list ddnsto_ | cut -d "=" -f 1)
+values=$(dbus list floatip_ | cut -d "=" -f 1)
 for value in $values
 do
 	dbus remove $value
