@@ -3,11 +3,11 @@
 # build script for rogsoft project
 
 MODULE="floatip"
-VERSION="0.7.1"
+VERSION="1.0.9"
 TITLE="floatip"
 DESCRIPTION="浮动网关"
 HOME_URL="Module_floatip.asp"
-TAGS="穿透 DDNS"
+TAGS="网络"
 AUTHOR="xiaobao"
 LINK="https://www.asusgo.com"
 

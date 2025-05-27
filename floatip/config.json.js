@@ -1,12 +1,12 @@
 {
-"version":"0.7.1",
-"md5":"3c3bd23d7ed6e68b9fadb437baf6398f",
+"version":"1.0.9",
+"md5":"",
 "home_url":"Module_floatip.asp",
 "title":"floatip",
 "description":"浮动网关",
-"tags":"穿透 DDNS",
+"tags":"网络",
 "author":"xiaobao",
 "link":"https://www.asusgo.com",
 "changelog":"",
-"build_date":"2022-07-19_15:44:42"
+"build_date":"2025-05-27_15:54:50"
 }
