@@ -8,5 +8,5 @@
 "author":"xiaobao",
 "link":"https://www.asusgo.com",
 "changelog":"",
-"build_date":"2025-05-27_15:54:50"
+"build_date":"2025-05-27_16:01:07"
 }
