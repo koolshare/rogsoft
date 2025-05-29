@@ -125,6 +125,15 @@ if [ "$1" = "-v" ]; then
 	exit 0
 fi
 
+if [ "$1" = "stop" ]; then
+	del_ip_in_asus
+	if [ -f "/jffs/configs/dnsmasq.d/floatip.conf" ]; then
+		rm -f /jffs/configs/dnsmasq.d/floatip.conf
+		service restart_dnsmasq
+	fi
+	exit 0
+fi
+
 try_lock() {
 	exec 200>"$LOCK_FILE"
 	flock -x 200 && return 0

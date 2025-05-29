@@ -33,6 +33,7 @@ start)
             rm -f $PID_FILE
         fi
         killall floatip_bin
+        floatip_bin stop
     fi
     http_response "$1"
     ;;
