@@ -1,5 +1,13 @@
 [
 {"module": "alist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_alist.git"},
+{"module": "rustdesk", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_rustdesk.git"},
+{"module": "onehub", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_onehub.git"},
+{"module": "querydns", "branch":"master", "git_source": "https://github.com/vj23456/QueryDNS.git"},
+{"module": "wangxinyun", "branch":"main", "git_source": "https://github.com/jannson/wangxinyun.git"},
+{"module": "ddnsgo", "branch":"main", "git_source": "https://github.com/MetaSquared/Koolcenter_ddns-go.git"},
+{"module": "lucky", "branch":"main", "git_source": "https://github.com/vj23456/MerlinLucky.git"},
+{"module": "clouddrive", "branch":"main", "git_source": "https://github.com/vj23456/MerlinCloudDrive.git"},
+{"module": "lookcat", "branch":"main", "git_source": "https://github.com/vj23456/LookCat.git"},
 {"module": "aria2", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_aria2.git"},
 {"module": "linkease", "branch":"master", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
 {"module": "xunyou", "branch":"master", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
@@ -7,5 +15,6 @@
 {"module": "phddns", "branch":"master", "git_source": "https://github.com/OrayDev/phddns_for_koolshare.git"},
 {"module": "filebrowser", "branch":"master", "git_source": "https://github.com/flyhigherpi/filebrowser.git"},
 {"module": "signdog", "branch":"master", "git_source": "https://github.com/koolshare/signdog_hnd.git"},
+{"module": "mfun", "branch":"main", "git_source": "https://github.com/Carseason/rogsoft_mfun.git"},
 {"module": "routerdog", "branch":"master", "git_source": "https://github.com/koolshare/router_dog.git"}
 ]
