@@ -1,6 +1,8 @@
 [
 {"module": "alist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_alist.git"},
 {"module": "rustdesk", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_rustdesk.git"},
+{"module": "onehub", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_onehub.git"},
+{"module": "querydns", "branch":"master", "git_source": "https://github.com/vj23456/QueryDNS.git"},
 {"module": "wangxinyun", "branch":"main", "git_source": "https://github.com/jannson/wangxinyun.git"},
 {"module": "ddnsgo", "branch":"main", "git_source": "https://github.com/MetaSquared/Koolcenter_ddns-go.git"},
 {"module": "lucky", "branch":"main", "git_source": "https://github.com/vj23456/MerlinLucky.git"},
