@@ -399,6 +399,9 @@ function register_event(){
 		// two wifi router new format
 		current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
 		current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
+	}else if(odm == "RT-BE82M"){
+		current_maxp24 = '<% nvram_get("sb/1/maxp2ga0"); %>';
+		current_maxp52 = '<% nvram_get("sb/0/maxp5gb0a0"); %>';
 	}else{
 		// two wifi router old format
 		if(!current_maxp24_tmp){

@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.9.8
+   - fix	添加RT-BE82U(RT-BE82M)的支持
+
 4.9.7
    - fix	修复BE88U提示错误3的问题
 
