@@ -26,9 +26,9 @@ def work_paths_by_walk():
     for root,subdirs,files in os.walk(parent_path):
         index += 1
         for filepath in files:
-            print os.path.join(root,filepath)
+            print(os.path.join(root,filepath))
         for sub in subdirs:
-            print os.path.join(root,sub)
+            print(os.path.join(root,sub))
 
 def work_parent():
     ignore_paths = frozenset(["koolcenter", "softcenter", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "qiaodao", "uamas"])
@@ -41,8 +41,8 @@ def work_parent():
 
         path = os.path.join(parent_path, fname)
         if os.path.isdir(path):
-            #print fname
-            #print path
+            #print(fname)
+            #print(path)
             yield fname, path
 
 def work_parent_ext():
@@ -56,8 +56,8 @@ def work_parent_ext():
 
         path = os.path.join(parent_path, fname)
         if os.path.isdir(path):
-            print fname
-            print path
+            print(fname)
+            print(path)
             yield fname, path
 
 def work_files(parent, ext):
@@ -73,7 +73,7 @@ def check_subdir(module, path, name, ext, target_path):
     if os.path.isdir(script_path):
         for f in work_files(script_path, ext):
             target_file = os.path.join(target_path, os.path.basename(f))
-            #print "copy", f, "-->", target_file
+            #print("copy", f, "-->", target_file)
             copyfile(f, target_file)
             if not target_file.endswith(".png") and to_remove:
                 to_remove.write(target_file+"\n")
@@ -146,4 +146,7 @@ elif stage == "stage2":
         gmodules["md5"] = conf["md5"]
 
         with codecs.open(os.path.join(curr_path, "app.json.js"), "w", "utf-8") as fw:
-            json.dump(gmodules, fw, sort_keys = True, indent = 4, ensure_ascii=False, encoding='utf8')
+            if sys.version_info[0] == 2:
+                json.dump(gmodules, fw, sort_keys = True, indent = 4, ensure_ascii=False, encoding='utf8')
+            else:
+                json.dump(gmodules, fw, sort_keys=True, indent=4, ensure_ascii=False)

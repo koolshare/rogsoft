@@ -2,6 +2,8 @@
 
 # Now in module working directory
 
+md5_cmd=$(command -v md5sum || command -v md5)
+
 do_build_result() {
 	rm -f ${MODULE}/.DS_Store
 	rm -f ${MODULE}/*/.DS_Store
@@ -17,7 +19,7 @@ do_build_result() {
 	EOF
 	
 	tar -zcvf ${MODULE}.tar.gz $MODULE
-	md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)
+	md5value=$($md5_cmd ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)
 	cat > ./version <<-EOF
 	${VERSION}
 	${md5value}

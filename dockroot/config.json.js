@@ -1,0 +1,12 @@
+{
+"version":"1.0.9",
+"md5":"MD5",
+"home_url":"Module_dockroot.asp",
+"title":"dockroot",
+"description":"轻量版Docker",
+"tags":"系统",
+"author":"xiaobao",
+"link":"https://www.asusgo.com",
+"changelog":"",
+"build_date":"2025-07-09_07:57:37"
+}
