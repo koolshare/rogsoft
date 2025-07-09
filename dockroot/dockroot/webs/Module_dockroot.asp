@@ -7,7 +7,7 @@
 <meta HTTP-EQUIV="Expires" CONTENT="-1"/>
 <link rel="shortcut icon" href="images/favicon.png"/>
 <link rel="icon" href="images/favicon.png"/>
-<title>软件中心 - dockroot远程控制</title>
+<title>软件中心 - 轻量版Docker</title>
 <link rel="stylesheet" type="text/css" href="index_style.css"/>
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="usp_style.css"/>
@@ -67,53 +67,34 @@ function set_skin(){
 }
 
 var db_dockroot = {};
+function formatDiskSize(bytes) {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let size = bytes;
+    let unitIndex = 0;
+    
+    while (size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex++;
+    }
+    
+    return `${size.toFixed(2)} ${units[unitIndex]}`;
+}
 function get_disks(){
 	require(['/require/modules/diskList.js'], function(diskList) {
 		usbDevicesList = diskList.list();
-		//console.log(usbDevicesList)
-		var html = '';
-		html += '<thead>'
-		html += '<tr>'
-		html += '<td colspan="8">磁盘列表</td>'
-		html += '</tr>'
-		html += '</thead>'	
-		html += '<tr>'
-		html += '<th style="width:auto">端口</th>'
-		html += '<th style="width:auto">名称</th>'
-		html += '<th style="width:auto">大小</th>'
-		html += '<th style="width:auto">已用</th>'
-		html += '<th style="width:auto">权限</th>'
-		html += '<th style="width:auto">格式</th>'
-		html += '<th style="width:auto">挂载点</th>'
-		html += '<th style="width:auto">路径</th>'
-		html += '</tr>'
+		console.log(usbDevicesList)
 		for (var i = 0; i < usbDevicesList.length; ++i){
 			for (var j = 0; j < usbDevicesList[i].partition.length; ++j){
-				//append options
-				$("#dockroot_feat_disk_path_selected").append("<option value='"  + "/mnt/" + usbDevicesList[i].partition[j].partName + "'>" + usbDevicesList[i].partition[j].partName + "</option>");
-				//check for swap exist
-				disk_format = usbDevicesList[i].partition[j].format
-				if(disk_format.indexOf("ext") != -1){
-					db_dockroot["swap_check_partName_" + (parseInt(i)) + "_" + (parseInt(j))] = '/mnt/' + usbDevicesList[i].partition[j].partName || "";
-				}
-				//write table
+				var disk_format = usbDevicesList[i].partition[j].format;
 				var totalsize = ((usbDevicesList[i].partition[j].size)/1000000).toFixed(2);
 				var usedsize = ((usbDevicesList[i].partition[j].used)/1000000).toFixed(2);
 				var usedpercent = (usedsize/totalsize*100).toFixed(2) + " %";
-				var used = usedsize + " GB" + " (" + usedpercent + ")"
-				html += '<tr>'
-				html += '<td>' + usbDevicesList[i].usbPath + '</td>'
-				html += '<td>' + usbDevicesList[i].deviceName + '</td>'
-				html += '<td>' + totalsize + " GB" + '</td>'
-				html += '<td>' + used + '</td>'
-				html += '<td>' + usbDevicesList[i].partition[j].status + '</td>'
-				html += '<td>' + disk_format + '</td>'
-				html += '<td>' + usbDevicesList[i].partition[j].mountPoint + '</td>'
-				html += '<td>' + '/tmp/mnt/' + usbDevicesList[i].partition[j].partName + '</td>'
-				html += '</tr>'
+				var used = totalsize + " GB" + " (" + usedpercent + ")" ;
+				var mount = '/tmp/mnt/' + usbDevicesList[i].partition[j].partName;
+				var txt = usbDevicesList[i].partition[j].partName + "/"+ disk_format + "/" + used;
+				$("#dockroot_path_selected").append("<option value='" + mount + "'>" + txt + "</option>");
 			}
 		}
-		$('#disk_table').html(html);
 	});
 }
 
@@ -146,22 +127,6 @@ function get_run_status() {
 			if (result){
 				console.log(result)
 				E("status").innerHTML = result.status == 1 ? "已运行" + " PID:" + result.pid : "未运行";
-				E("dockroot_router_id").innerHTML = result.router_id;
-				var feat = result.feat //获取feat值
-				if (feat){
-					if (feat.status == 1){
-						E("dockroot_feat_status").innerHTML = "已运行" 
-						var el = E("dockroot_feat_path")
-						var hostname = "http://" + location.hostname + ":" + feat.port + feat.disk_path
-						el.textContent = hostname ;
-						el.href= hostname
-					}else{
-						E("dockroot_feat_status").innerHTML = "未运行" 
-						E("dockroot_feat_path").textContent = feat.disk_path ;
-					}
-				}
-				var feat_username = feat.username
-				var feat_disk_path = feat.disk_path
 			}
 			setTimeout("get_run_status();", 10000);
 		},
@@ -172,25 +137,13 @@ function get_run_status() {
 }
 
 function conf_to_obj() {
-	E("dockroot_enable").checked = db_dockroot["dockroot_enable"] == "1";
-	E("dockroot_token").value = db_dockroot["dockroot_token"] || "";
-	E("dockroot_feat_enabled").checked = db_dockroot["dockroot_feat_enabled"] == "1";
-	E("dockroot_feat_port").value = db_dockroot["dockroot_feat_port"] || 3303;
-	E("dockroot_feat_username").value = db_dockroot["dockroot_feat_username"] || "";
-	E("dockroot_feat_password").value = db_dockroot["dockroot_feat_password"] || "";
-	E("dockroot_feat_disk_path_selected").value = db_dockroot["dockroot_feat_disk_path_selected"] || "";
+	E("dockroot_path_selected").value = db_dockroot["dockroot_path_selected"] || "";
 }
 
 function onSubmitCtrl() {
 	showSSLoadingBar();
 	// collect basic data
-	db_dockroot["dockroot_token"] = E("dockroot_token").value
-	db_dockroot["dockroot_enable"] = E("dockroot_enable").checked ? "1" : "0";
-	db_dockroot["dockroot_feat_enabled"] = E("dockroot_feat_enabled").checked ? "1" : "0";
-	db_dockroot["dockroot_feat_port"] = E("dockroot_feat_port").value;
-	db_dockroot["dockroot_feat_username"] = E("dockroot_feat_username").value;
-	db_dockroot["dockroot_feat_password"] = E("dockroot_feat_password").value;
-	db_dockroot["dockroot_feat_disk_path_selected"] = E("dockroot_feat_disk_path_selected").value;
+	db_dockroot["dockroot_path_selected"] = E("dockroot_path_selected").value;
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "dockroot_config.sh", "params":[], "fields": db_dockroot};
     $("#loading_block3").html("<b>正在提交数据！</b>等待后台运行完毕，请不要刷新本页面！")
@@ -213,7 +166,7 @@ function onSubmitCtrl() {
 }
 
 function menu_hook() {
-	tabtitle[tabtitle.length - 1] = new Array("", "dockroot 远程控制", "__INHERIT__");
+	tabtitle[tabtitle.length - 1] = new Array("", "轻量版Docker", "__INHERIT__");
 	tablink[tablink.length - 1] = new Array("", "Module_dockroot.asp", "NULL");
 }
 
@@ -311,13 +264,13 @@ function reload_Soft_Center() {
 								<tr>
 									<td bgcolor="#4D595D" colspan="3" valign="top" style="border-radius: 8px">
 										<div>&nbsp;</div>
-										<div class="formfonttitle">软件中心 - dockroot远程穿透控制</div>
+										<div class="formfonttitle">软件中心 - 轻量版Docker</div>
 										<div style="float:right; width:15px; height:25px;margin-top:-20px">
 											<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
-											<li>dockroot远程控制是koolshare小宝开发的，支持http2的远程穿透控制软件。</li>
+											<li>DockRoot可以在几乎所有带root的Linux版本下面运行部分Docker镜像。</li>
 										</div>
 										<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 											<thead>
@@ -325,98 +278,9 @@ function reload_Soft_Center() {
 													<td colspan="2">dockroot - 基础设置</td>
 												</tr>
 											</thead>
-											<tr id="switch_tr">
-												<th>
-													<label>开关</label>
-												</th>
-												<td colspan="2">
-													<div cladockroot="switch_field" style="display:table-cell;float: left;">
-														<label for="dockroot_enable">
-															<input id="dockroot_enable" class="switch" type="checkbox" style="display: none;">
-															<div class="switch_container">
-																<div class="switch_bar"></div>
-																<div class="switch_circle transition_style">
-																	<div></div>
-																</div>
-															</div>
-														</label>
-													</div>
-													<div id="dockroot_version_show" style="padding-top:5px;margin-left:30px;margin-top:0px;float: left;"></div>
-												</td>
-											</tr>
 											<tr id="dockroot_status">
 												<th>运行状态</th>
 												<td><span id="status">获取中...</span>
-												</td>
-											</tr>
-											<tr >
-												<th>设备ID</th>
-												<td><span id="dockroot_router_id">获取中...</span>
-												</td>
-											</tr>
-											<tr>
-												<th>令牌</th>
-												<td>
-													<input style="width:300px;" type="password" class="input_ss_table" id="dockroot_token" name="dockroot_token" maxlength="100" value="" autocomplete="new-password" autocorrect="off" autocapitalize="off" onBlur="switchType(this, false);" onFocus="switchType(this, true);">
-												</td>
-											</tr>
-											<tr id="rule_update_switch">
-												<th>管理/帮助</th>
-												<td> <a type="button" class="ks_btn" style="cursor:pointer" href="https://www.dockroot.com/app/#/devices" target="_blank">点击前往dockroot控制台</a>
-<a type="button" class="ks_btn" style="cursor:pointer" href="https://doc.linkease.com/zh/guide/dockroot/" target="_blank">如何获取令牌?</a>
-												</td>
-											</tr>
-											<thead>
-												<tr>
-													<td colspan="2">dockroot - 拓展功能</td>
-												</tr>
-											</thead>
-											<tr id="switch_tr1">
-												<th>
-													<label>启用</label>
-												</th>
-												<td colspan="2">
-													<div cladockroot="switch_field" style="display:table-cell;float: left;">
-														<label for="dockroot_feat_enabled">
-															<input id="dockroot_feat_enabled" class="switch" type="checkbox" style="display: none;">
-															<div class="switch_container">
-																<div class="switch_bar"></div>
-																<div class="switch_circle transition_style">
-																	<div></div>
-																</div>
-															</div>
-														</label>
-													</div>
-													<div id="dockroot_version_show" style="padding-top:5px;margin-left:30px;margin-top:0px;float: left;">启用后可支持控制台的“文件管理”及“远程开机”功能</div>
-												</td>
-											</tr>
-											<tr >
-												<th>Webdav服务</th>
-												<td><span id="dockroot_feat_status">获取中...</span>
-												</td>
-											</tr>
-											<tr >
-												<th>Webdav地址</th>
-												<td>
-													<a  type="button" class="ks_btn" id="dockroot_feat_path" target="_blank" rel="noopener noreferrer">获取中...</a>
-												</td>
-											</tr>
-											<tr>
-												<th>端口<span style="color: red;"> * </span></th>
-												<td>
-													<input style="width:300px;" type="number" class="input_ss_table" id="dockroot_feat_port" name="dockroot_feat_port" maxlength="100" value=""  autocorrect="off" autocapitalize="off">
-												</td>
-											</tr>
-											<tr>
-												<th>授权用户名<span style="color: red;"> * </span></th>
-												<td>
-													<input style="width:300px;" type="text" class="input_ss_table" id="dockroot_feat_username" name="dockroot_feat_username" maxlength="100" value=""  autocorrect="off" autocapitalize="off">
-												</td>
-											</tr>
-											<tr>
-												<th>授权用户密码<span style="color: red;"> * </span></th>
-												<td>
-													<input style="width:300px;" type="password" class="input_ss_table" id="dockroot_feat_password" name="dockroot_feat_password" maxlength="100" value="" autocomplete="new-password" autocorrect="off" autocapitalize="off" onBlur="switchType(this, false);" onFocus="switchType(this, true);">
 												</td>
 											</tr>
 											<tr id="swap_select">
@@ -424,8 +288,13 @@ function reload_Soft_Center() {
 													<label>共享磁盘<span style="color: red;"> * </span></label>
 												</th>
 												<td>
- 													<select name="dockroot_feat_disk_path_selected" id="dockroot_feat_disk_path_selected"  class="input_option" ></select>
+ 													<select name="dockroot_path_selected" id="dockroot_path_selected"  class="input_option" ></select>
 												</td>										
+											</tr>
+											<tr id="rule_update_switch">
+												<th>帮助</th>
+												<td> <a type="button" class="ks_btn" style="cursor:pointer" href="https://www.kspeeder.com/dockroot.html" target="_blank">前往更多帮助</a>
+												</td>
 											</tr>
 										</table>
 										<div id="warning" style="font-size:14px;margin:20px auto;"></div>
@@ -433,10 +302,6 @@ function reload_Soft_Center() {
 											<input class="button_gen" id="cmdBtn" onClick="onSubmitCtrl(this, ' Refresh ')" type="button" value="提交" />
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
-										<div id="NoteBox" style="display:none">
-											<li>dockroot远程控制目前处于测试阶段，仅提供给koolshare固件用户使用，提供路由界面的穿透，请勿用于反动、不健康等用途；</li>
-											<li>穿透教程：<a id="gfw_number" href="http://koolshare.cn/thread-116500-1-1.html" target="_blank"><i>dockroot远程控制使用教程</i></a></li>
-										</div>
 									</td>
 								</tr>
 							</table>
