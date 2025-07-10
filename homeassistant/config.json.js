@@ -1,0 +1,12 @@
+{
+"version":"1.1.4",
+"md5":"59c18ce23b515ddff295070d38430b60",
+"home_url":"Module_homeassistant.asp",
+"title":"HA智能家居",
+"description":"HomeAssistant智能家居，统一管理以及编排你的家庭智能设备，让生活更智慧。",
+"tags":"工具",
+"author":"xiaobao",
+"link":"https://www.home-assistant.io/",
+"changelog":"",
+"build_date":"2025-07-10_14:12:50"
+}
