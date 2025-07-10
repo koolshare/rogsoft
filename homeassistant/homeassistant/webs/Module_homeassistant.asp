@@ -147,6 +147,9 @@ function get_run_status() {
         case 4:
 				  E("status").innerHTML = "HomeAssistant 未运行，请安装运行";
           break;
+        case 5:
+				  E("status").innerHTML = "HomeAssistant 未运行，正在安装中...";
+          break;
         }
 			}
 			setTimeout("get_run_status();", 10000);

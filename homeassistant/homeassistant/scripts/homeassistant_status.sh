@@ -25,6 +25,9 @@ if [ "$DockRootRet" -eq 0 ]; then
   PIDS=`${DockRootBin} ps ${INST_NAME}|tr -d '[:space:]'`
   if [ -z "$PIDS" ]; then
     DockRootRet=4
+    if ps | grep -q "DockRoot pull homeassistant/home-assistant"; then
+      DockRootRet=5
+    fi
   fi
   RESP="{\\\"pids\\\":\\\"${PIDS}\\\",\\\"status\\\":${DockRootRet},\\\"port\\\":${PORT}}"
 else

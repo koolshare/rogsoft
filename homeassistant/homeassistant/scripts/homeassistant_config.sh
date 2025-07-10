@@ -75,6 +75,12 @@ start)
     start_homeassistant
     ;;
 *)
+    if ps | grep -q "DockRoot pull homeassistant/home-assistant"; then
+        echo "Already installing"
+        sleep 10
+        return 2;
+    fi
+
     # TODO: DockRoot stop ${INST_NAME}
     echo "HomeAssistant - 安装中..." > ${LOG_FILE}
     install_homeassistant
