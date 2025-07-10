@@ -7,7 +7,7 @@
 <meta HTTP-EQUIV="Expires" CONTENT="-1"/>
 <link rel="shortcut icon" href="images/favicon.png"/>
 <link rel="icon" href="images/favicon.png"/>
-<title>软件中心 - 轻量版Docker</title>
+<title>软件中心 - HA智能家居</title>
 <link rel="stylesheet" type="text/css" href="index_style.css"/>
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="usp_style.css"/>
@@ -66,7 +66,7 @@ function set_skin(){
 	}
 }
 
-var db_dockroot = {};
+var db_homeassistant = {};
 function formatDiskSize(bytes) {
     const units = ['B', 'KB', 'MB', 'GB', 'TB'];
     let size = bytes;
@@ -92,9 +92,9 @@ function get_disks(){
 				var used = totalsize + " GB" + " (" + usedpercent + ")" ;
 				var mount = '/tmp/mnt/' + usbDevicesList[i].partition[j].partName;
 				var txt = mount + "|"+ disk_format + "|" + used;
-				$("#dockroot_path_selected").append("<option value='" + mount + "'>" + txt + "</option>");
-        if (db_dockroot.dockroot_path_selected !== undefined) {
-	        E("dockroot_path_selected").value = db_dockroot.dockroot_path_selected;
+				$("#homeassistant_path_selected").append("<option value='" + mount + "'>" + txt + "</option>");
+        if (db_homeassistant.homeassistant_path_selected !== undefined) {
+	        E("homeassistant_path_selected").value = db_homeassistant.homeassistant_path_selected;
         }
 			}
 		}
@@ -104,12 +104,12 @@ function get_disks(){
 function get_dbus_data() {
 	$.ajax({
 		type: "GET",
-		url: "/_api/dockroot",
+		url: "/_api/homeassistant",
 		dataType: "json",
 		async: false,
 		success: function(data) {
-			db_dockroot = data.result[0];
-			console.log(db_dockroot)
+			db_homeassistant = data.result[0];
+			console.log(db_homeassistant)
 			conf_to_obj();
 			version_show();
 		}
@@ -118,7 +118,7 @@ function get_dbus_data() {
 
 function get_run_status() {
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "dockroot_status.sh", "params":[], "fields": ""};
+	var postData = {"id": id, "method": "homeassistant_status.sh", "params":[], "fields": ""};
 	$.ajax({
 		type: "POST",
 		cache: false,
@@ -137,10 +137,10 @@ function get_run_status() {
 				  E("status").innerHTML = "文件夹不存在，请重新安装";
           break;
         case 2:
-				  E("status").innerHTML = "DockRoot 没下载，请重新安装";
+				  E("status").innerHTML = "homeassistant 没下载，请重新安装";
           break;
         case 3:
-				  E("status").innerHTML = "DockRoot程序错误，请重新安装";
+				  E("status").innerHTML = "homeassistant程序错误，请重新安装";
           break;
         }
 			}
@@ -153,15 +153,15 @@ function get_run_status() {
 }
 
 function conf_to_obj() {
-	E("dockroot_path_selected").value = db_dockroot["dockroot_path_selected"] || "";
+	E("homeassistant_path_selected").value = db_homeassistant["homeassistant_path_selected"] || "";
 }
 
 function onSubmitCtrl() {
 	showSSLoadingBar();
 	// collect basic data
-	db_dockroot["dockroot_path_selected"] = E("dockroot_path_selected").value;
+	db_homeassistant["homeassistant_path_selected"] = E("homeassistant_path_selected").value;
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "dockroot_config.sh", "params":[], "fields": db_dockroot};
+	var postData = {"id": id, "method": "homeassistant_config.sh", "params":[], "fields": db_homeassistant};
 	get_log();
 	$.ajax({
 		url: "/_api/",
@@ -182,7 +182,7 @@ function onSubmitCtrl() {
 
 function get_log(){
 	$.ajax({
-		url: '/_temp/dockroot_log.txt',
+		url: '/_temp/homeassistant_log.txt',
 		type: 'GET',
 		cache:false,
 		dataType: 'text',
@@ -202,7 +202,7 @@ function get_log(){
 
 function menu_hook() {
 	tabtitle[tabtitle.length - 1] = new Array("", "轻量版Docker", "__INHERIT__");
-	tablink[tablink.length - 1] = new Array("", "Module_dockroot.asp", "NULL");
+	tablink[tablink.length - 1] = new Array("", "Module_homeassistant.asp", "NULL");
 }
 
 function showSSLoadingBar(seconds) {
@@ -251,15 +251,15 @@ function showSSLoadingBar(seconds) {
 
 function version_show() {
 	$.ajax({
-		url: 'https://rogsoft.dockroot.com/dockroot/config.json.js',
+		url: 'https://rogsoft.homeassistant.com/homeassistant/config.json.js',
 		type: 'GET',
 		dataType: 'jsonp',
 		success: function(res) {
 			if (typeof(res["version"]) != "undefined" && res["version"].length > 0) {
-				if (res["version"] == db_dockroot["dockroot_version"]) {
-					$("#dockroot_version_show").html("插件版本：" + res["version"]);
-				} else if (res["version"] > db_dockroot["dockroot_version"]) {
-					$("#dockroot_version_show").html("<font color=\"#66FF66\">有新版本：" + res.version + "</font>");
+				if (res["version"] == db_homeassistant["homeassistant_version"]) {
+					$("#homeassistant_version_show").html("插件版本：" + res["version"]);
+				} else if (res["version"] > db_homeassistant["homeassistant_version"]) {
+					$("#homeassistant_version_show").html("<font color=\"#66FF66\">有新版本：" + res.version + "</font>");
 				}
 			}
 		}
@@ -305,16 +305,16 @@ function reload_Soft_Center() {
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
-											<li>DockRoot可以在几乎所有带root的Linux版本下面运行部分Docker镜像。</li>
+											<li>homeassistant可以在几乎所有带root的Linux版本下面运行部分Docker镜像。</li>
 											<li>建议先安装 USB2JFFS 否则可能空间不足；内存小则建议安装虚拟内存</li>
 										</div>
 										<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 											<thead>
 												<tr>
-													<td colspan="2">dockroot - 基础设置</td>
+													<td colspan="2">homeassistant - 基础设置</td>
 												</tr>
 											</thead>
-											<tr id="dockroot_status">
+											<tr id="homeassistant_status">
 												<th>运行状态</th>
 												<td><span id="status">获取中...</span>
 												</td>
@@ -324,12 +324,12 @@ function reload_Soft_Center() {
 													<label>共享磁盘<span style="color: red;"> * </span></label>
 												</th>
 												<td>
- 													<select name="dockroot_path_selected" id="dockroot_path_selected"  class="input_option" ></select>
+ 													<select name="homeassistant_path_selected" id="homeassistant_path_selected"  class="input_option" ></select>
 												</td>										
 											</tr>
 											<tr id="rule_update_switch">
 												<th>帮助</th>
-												<td> <a type="button" class="ks_btn" style="cursor:pointer" href="https://www.kspeeder.com/dockroot.html" target="_blank">前往更多帮助</a>
+												<td> <a type="button" class="ks_btn" style="cursor:pointer" href="https://www.kspeeder.com/homeassistant.html" target="_blank">前往更多帮助</a>
 												</td>
 											</tr>
 										</table>

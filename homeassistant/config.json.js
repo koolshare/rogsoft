@@ -1,6 +1,6 @@
 {
 "version":"1.1.4",
-"md5":"7cffc07c22f0561188b9339c63722814",
+"md5":"0ec96587ed81b6aa022fd5d251c864c0",
 "home_url":"Module_homeassistant.asp",
 "title":"HA智能家居",
 "description":"HomeAssistant智能家居，统一管理以及编排你的家庭智能设备，让生活更智慧。",
@@ -8,5 +8,5 @@
 "author":"xiaobao",
 "link":"https://www.home-assistant.io/",
 "changelog":"",
-"build_date":"2025-07-10_15:44:13"
+"build_date":"2025-07-10_15:54:49"
 }

@@ -3,6 +3,8 @@
 export KSROOT=/koolshare
 source $KSROOT/scripts/base.sh
 eval $(dbus export dockroot)
+INST_NAME=homeassistant
+
 DockRootBin="${dockroot_path_selected}/DockRootBin/DockRoot"
 # 0:OK,1:DIR_NOT_FOUND,2:BIN_NOT_FOUND,3:BIN_ERROR
 DockRootRet=1
@@ -18,5 +20,13 @@ if [ -d ${dockroot_path_selected} ]; then
   fi
 fi
 
-RESP="{\\\"version\\\": \\\"$version_output\\\",\\\"status\\\":$DockRootRet}"
+if [ "$DockRootRet" -eq 0 ]; then
+  PORT=8123
+  PIDS=`${DockRootBin} ps ${INST_NAME}|tr -d '[:space:]'`
+  RESP="{\\\"pids\\\":\\\"${PIDS}\\\",\\\"status\\\":0,\\\"port\\\":${PORT}}"
+else
+  PIDS=
+  RESP="{\\\"pids\\\":\\\"${PIDS}\\\",\\\"status\\\":${DockRootRet}}"
+fi
+
 http_response "${RESP}"

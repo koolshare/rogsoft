@@ -72,7 +72,7 @@ start_homeassistant() {
 
 case $ACTION in
 start)
-    install_homeassistant
+    start_homeassistant
     ;;
 *)
     echo "HomeAssistant - 安装中..." > ${LOG_FILE}
