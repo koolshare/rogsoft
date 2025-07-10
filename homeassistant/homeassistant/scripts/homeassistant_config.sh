@@ -75,10 +75,12 @@ start)
     start_homeassistant
     ;;
 *)
+    # 如果安装中，则不要触碰日志文件
     if ps | grep -q "DockRoot pull homeassistant/home-assistant"; then
         echo "Already installing"
         sleep 10
-        return 2;
+        http_response "$1"
+        exit 2
     fi
 
     # TODO: DockRoot stop ${INST_NAME}
