@@ -91,8 +91,11 @@ function get_disks(){
 				var usedpercent = (usedsize/totalsize*100).toFixed(2) + " %";
 				var used = totalsize + " GB" + " (" + usedpercent + ")" ;
 				var mount = '/tmp/mnt/' + usbDevicesList[i].partition[j].partName;
-				var txt = usbDevicesList[i].partition[j].partName + "/"+ disk_format + "/" + used;
+				var txt = mount + "|"+ disk_format + "|" + used;
 				$("#dockroot_path_selected").append("<option value='" + mount + "'>" + txt + "</option>");
+        if (db_dockroot.dockroot_path_selected !== undefined) {
+	        E("dockroot_path_selected").value = db_dockroot.dockroot_path_selected;
+        }
 			}
 		}
 	});
@@ -126,7 +129,20 @@ function get_run_status() {
 			var result = JSON.parse(response.result) //对字符串进行JSON解析
 			if (result){
 				console.log(result)
-				E("status").innerHTML = result.status == 1 ? "已运行" + " PID:" + result.pid : "未运行";
+        switch(result.status){
+        case 0:
+				  E("status").innerHTML = "已安装，版本：" + result.version;
+          break;
+        case 1:
+				  E("status").innerHTML = "文件夹不存在，请重新安装";
+          break;
+        case 2:
+				  E("status").innerHTML = "DockRoot 没下载，请重新安装";
+          break;
+        case 3:
+				  E("status").innerHTML = "DockRoot程序错误，请重新安装";
+          break;
+        }
 			}
 			setTimeout("get_run_status();", 10000);
 		},
@@ -271,7 +287,7 @@ function reload_Soft_Center() {
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
 											<li>DockRoot可以在几乎所有带root的Linux版本下面运行部分Docker镜像。</li>
-											<li>建议先安装 USB2JFFS 否则可能空间不足；内存小则建议安装虚拟内存。</li>
+											<li>建议先安装 USB2JFFS 否则可能空间不足；内存小则建议安装虚拟内存</li>
 										</div>
 										<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 											<thead>
@@ -280,7 +296,7 @@ function reload_Soft_Center() {
 												</tr>
 											</thead>
 											<tr id="dockroot_status">
-												<th>状态</th>
+												<th>运行状态</th>
 												<td><span id="status">获取中...</span>
 												</td>
 											</tr>
