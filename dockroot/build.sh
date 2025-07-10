@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="dockroot"
-VERSION="1.0.9"
+VERSION="1.20.0"
 TITLE="dockroot"
 DESCRIPTION="轻量版Docker"
 HOME_URL="Module_dockroot.asp"

@@ -1,6 +1,6 @@
 {
 "version":"1.20.0",
-"md5":"d1b3eb8abd79621ae19477c874c092e6",
+"md5":"59c18ce23b515ddff295070d38430b60",
 "home_url":"Module_dockroot.asp",
 "title":"dockroot",
 "description":"轻量版Docker",
@@ -8,5 +8,5 @@
 "author":"xiaobao",
 "link":"https://www.asusgo.com",
 "changelog":"",
-"build_date":"2025-07-09_08:25:17"
+"build_date":"2025-07-10_14:12:50"
 }
