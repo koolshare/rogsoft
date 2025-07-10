@@ -131,8 +131,8 @@ install_ui(){
 
 install_now(){
 	# default value
-	local TITLE="ddnsto远程控制"
-	local DESCR="ddnsto内网穿透"
+	local TITLE="轻量版Docker"
+	local DESCR="轻量版Docker，无后台服务，更省内存"
 	local PLVER=$(cat ${DIR}/version)
 
 	# stop first
@@ -150,15 +150,6 @@ install_now(){
 	# isntall file
 	echo_date "安装插件相关文件..."
 	cd /tmp
-	local ARCH=$(uname -m)
-	if [ "${ARCH}" == "aarch64" ];then
-		cp -rf /tmp/${module}/bin/ddnsto_aarch64 /koolshare/bin/ddnsto
-		cp -rf /tmp/${module}/bin/ddwebdav_aarch64 /koolshare/bin/ddwebdav
-	fi
-	if [ "${ARCH}" == "armv7l" ];then
-		cp -rf /tmp/${module}/bin/ddnsto_arm /koolshare/bin/ddnsto
-		cp -rf /tmp/${module}/bin/ddwebdav_arm /koolshare/bin/ddwebdav
-	fi
 	cp -rf /tmp/${module}/res/* /koolshare/res/
 	cp -rf /tmp/${module}/scripts/* /koolshare/scripts/
 	cp -rf /tmp/${module}/webs/* /koolshare/webs/
@@ -178,8 +169,8 @@ install_now(){
 
 	# dbus value
 	echo_date "设置插件默认参数..."
-	dbus set ddnsto_client_version=$(/koolshare/bin/ddnsto -v)
-	dbus set ddnsto_title="$TITLE"
+	dbus set dockroot_client_version=1.20.0
+	dbus set dockroot_title="$TITLE"
 	dbus set ${module}_version="${PLVER}"
 	dbus set softcenter_module_${module}_version="${PLVER}"
 	dbus set softcenter_module_${module}_install="1"
@@ -187,12 +178,6 @@ install_now(){
 	dbus set softcenter_module_${module}_title="${TITLE}"
 	dbus set softcenter_module_${module}_description="${DESCR}"
 
-	# re-enable
-	if [ "${ENABLE}" == "1" -a -f "/koolshare/scripts/ddnsto_config.sh" ];then
-		echo_date "安装完毕，重新启用${TITLE}插件！"
-		sh /koolshare/scripts/ddnsto_config.sh start
-	fi
-	
 	# finish
 	echo_date "${TITLE}插件安装完毕！"
 	exit_install

@@ -162,7 +162,7 @@ function onSubmitCtrl() {
 	db_dockroot["dockroot_path_selected"] = E("dockroot_path_selected").value;
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "dockroot_config.sh", "params":[], "fields": db_dockroot};
-    $("#loading_block3").html("<b>正在提交数据！</b>等待后台运行完毕，请不要刷新本页面！")
+	get_log();
 	$.ajax({
 		url: "/_api/",
 		cache: false,
@@ -171,11 +171,30 @@ function onSubmitCtrl() {
 		data: JSON.stringify(postData),
 		success: function(response) {
 			if (response.result == id) {
-				$("#loading_block3").html("<b>提交成功！</b>")
-				setTimeout("refreshpage();", 500);
+				setTimeout("refreshpage();", 20000);
 			} else {
-				$("#loading_block3").html("<b>提交失败！</b>错误代码：" + response.result)
 				return false;
+			}
+		}
+	});
+}
+
+
+function get_log(){
+	$.ajax({
+		url: '/_temp/dockroot_log.txt',
+		type: 'GET',
+		cache:false,
+		dataType: 'text',
+		success: function(response) {
+			if (response.search("XU6J03M6") != -1) {
+				$("#loading_block3").html(response.replace("XU6J03M6", " "));
+				setTimeout("refreshpage();", 3000);
+				return false;
+			}else{
+				$("#loading_block3").html(response.replace("XU6J03M6", " "));
+				$("#loading_block3").scrollTop($("#loading_block3").prop("scrollHeight"));
+				setTimeout("get_log();", 1000);
 			}
 		}
 	});
@@ -259,7 +278,7 @@ function reload_Soft_Center() {
 		<table cellpadding="5" cellspacing="0" id="loadingBarBlock" class="loadingBarBlock" align="center">
 			<tr>
 				<td height="100">
-					<div id="loading_block3" style="margin:10px auto;width:85%; font-size:12pt;">数据提交中，请稍候...</div>
+					<div id="loading_block3" style="margin:10px auto;width:85%; font-size:12pt;white-space: pre-line">数据提交中，请稍候...</div>
 				</td>
 			</tr>
 		</table>
