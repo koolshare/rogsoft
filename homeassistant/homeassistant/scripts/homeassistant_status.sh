@@ -23,7 +23,10 @@ fi
 if [ "$DockRootRet" -eq 0 ]; then
   PORT=8123
   PIDS=`${DockRootBin} ps ${INST_NAME}|tr -d '[:space:]'`
-  RESP="{\\\"pids\\\":\\\"${PIDS}\\\",\\\"status\\\":0,\\\"port\\\":${PORT}}"
+  if [ -z "$PIDS" ]; then
+    DockRootRet=4
+  fi
+  RESP="{\\\"pids\\\":\\\"${PIDS}\\\",\\\"status\\\":${DockRootRet},\\\"port\\\":${PORT}}"
 else
   PIDS=
   RESP="{\\\"pids\\\":\\\"${PIDS}\\\",\\\"status\\\":${DockRootRet}}"

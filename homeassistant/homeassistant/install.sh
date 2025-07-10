@@ -131,8 +131,8 @@ install_ui(){
 
 install_now(){
 	# default value
-	local TITLE="轻量版Docker"
-	local DESCR="轻量版Docker，无后台服务，更省内存"
+	local TITLE="HA智能家居"
+	local DESCR="HomeAssistant智能家居，统一管理以及编排你的家庭智能设备，让生活更智慧。"
 	local PLVER=$(cat ${DIR}/version)
 
 	# stop first

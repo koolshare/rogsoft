@@ -128,19 +128,24 @@ function get_run_status() {
 		success: function(response) {
 			var result = JSON.parse(response.result) //对字符串进行JSON解析
 			if (result){
-				console.log(result)
+				//console.log(result)
         switch(result.status){
         case 0:
-				  E("status").innerHTML = "已安装，版本：" + result.version;
+				  E("status").innerHTML = "HomeAssistant 已运行";
+					var targetUrl = `http://${window.location.hostname}:`+result.port;
+					$('#port_link').attr('href', targetUrl).text("打开").show();
           break;
         case 1:
-				  E("status").innerHTML = "文件夹不存在，请重新安装";
+				  E("status").innerHTML = "Docker 文件夹不存在，请重新安装";
           break;
         case 2:
-				  E("status").innerHTML = "homeassistant 没下载，请重新安装";
+				  E("status").innerHTML = "Docker 没下载，请重新安装";
           break;
         case 3:
-				  E("status").innerHTML = "homeassistant程序错误，请重新安装";
+				  E("status").innerHTML = "Docker 程序错误，请重新安装 Docker";
+          break;
+        case 4:
+				  E("status").innerHTML = "HomeAssistant 未运行，请安装运行";
           break;
         }
 			}
@@ -201,7 +206,7 @@ function get_log(){
 }
 
 function menu_hook() {
-	tabtitle[tabtitle.length - 1] = new Array("", "轻量版Docker", "__INHERIT__");
+	tabtitle[tabtitle.length - 1] = new Array("", "HA智能家居", "__INHERIT__");
 	tablink[tablink.length - 1] = new Array("", "Module_homeassistant.asp", "NULL");
 }
 
@@ -299,13 +304,13 @@ function reload_Soft_Center() {
 								<tr>
 									<td bgcolor="#4D595D" colspan="3" valign="top" style="border-radius: 8px">
 										<div>&nbsp;</div>
-										<div class="formfonttitle">软件中心 - 轻量版Docker</div>
+										<div class="formfonttitle">软件中心 - HA智能家居</div>
 										<div style="float:right; width:15px; height:25px;margin-top:-20px">
 											<img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img>
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
-											<li>homeassistant可以在几乎所有带root的Linux版本下面运行部分Docker镜像。</li>
+											<li>需要先安装轻量版 Docker 才能运行 homeassistant。</li>
 											<li>建议先安装 USB2JFFS 否则可能空间不足；内存小则建议安装虚拟内存</li>
 										</div>
 										<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
@@ -319,9 +324,14 @@ function reload_Soft_Center() {
 												<td><span id="status">获取中...</span>
 												</td>
 											</tr>
+											<tr>
+												<th>访问路径</th>
+												<td><a id="port_link" type="button" class="ks_btn" style="cursor:pointer; display:none;" href="" target="_blank"></a>
+												</td>
+											</tr>
 											<tr id="swap_select">
 												<th>
-													<label>共享磁盘<span style="color: red;"> * </span></label>
+													<label>安装磁盘<span style="color: red;"> * </span></label>
 												</th>
 												<td>
  													<select name="homeassistant_path_selected" id="homeassistant_path_selected"  class="input_option" ></select>
@@ -335,7 +345,7 @@ function reload_Soft_Center() {
 										</table>
 										<div id="warning" style="font-size:14px;margin:20px auto;"></div>
 										<div class="apply_gen">
-											<input class="button_gen" id="cmdBtn" onClick="onSubmitCtrl(this, ' Refresh ')" type="button" value="提交" />
+											<input class="button_gen" id="cmdBtn" onClick="onSubmitCtrl(this, ' Refresh ')" type="button" value="安装" />
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 									</td>

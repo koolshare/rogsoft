@@ -75,9 +75,12 @@ start)
     start_homeassistant
     ;;
 *)
+    # TODO: DockRoot stop ${INST_NAME}
     echo "HomeAssistant - 安装中..." > ${LOG_FILE}
     install_homeassistant
     if [ "$?" -eq 0 ]; then
+       echo "HomeAssistant - 等待运行" >> ${LOG_FILE}
+       sleep 5
        echo "HomeAssistant - 安装成功" >> ${LOG_FILE}
     else
        echo "HomeAssistant - 安装失败" >> ${LOG_FILE}

@@ -321,7 +321,7 @@ function reload_Soft_Center() {
 											</tr>
 											<tr id="swap_select">
 												<th>
-													<label>共享磁盘<span style="color: red;"> * </span></label>
+													<label>安装磁盘<span style="color: red;"> * </span></label>
 												</th>
 												<td>
  													<select name="dockroot_path_selected" id="dockroot_path_selected"  class="input_option" ></select>
@@ -335,7 +335,7 @@ function reload_Soft_Center() {
 										</table>
 										<div id="warning" style="font-size:14px;margin:20px auto;"></div>
 										<div class="apply_gen">
-											<input class="button_gen" id="cmdBtn" onClick="onSubmitCtrl(this, ' Refresh ')" type="button" value="提交" />
+											<input class="button_gen" id="cmdBtn" onClick="onSubmitCtrl(this, ' Refresh ')" type="button" value="安装" />
 										</div>
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 									</td>
