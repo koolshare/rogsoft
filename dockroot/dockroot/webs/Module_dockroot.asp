@@ -271,6 +271,7 @@ function reload_Soft_Center() {
 										<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 										<div class="SimpleNote">
 											<li>DockRoot可以在几乎所有带root的Linux版本下面运行部分Docker镜像。</li>
+											<li>建议先安装 USB2JFFS 否则可能空间不足；内存小则建议安装虚拟内存。</li>
 										</div>
 										<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 											<thead>
@@ -279,7 +280,7 @@ function reload_Soft_Center() {
 												</tr>
 											</thead>
 											<tr id="dockroot_status">
-												<th>运行状态</th>
+												<th>状态</th>
 												<td><span id="status">获取中...</span>
 												</td>
 											</tr>
