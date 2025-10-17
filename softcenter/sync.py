@@ -1,17 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # _*_ coding:utf-8 _*_
 
 import os
-import urlparse
-import httplib
+import urllib.parse
+import http.client
 import json
 import hashlib
 import codecs
 from shutil import copyfile
 import sys
 import traceback
+
 from distutils.version import LooseVersion
 from string import Template 
+import tarfile
 
 #https://docs.python.org/2.4/lib/httplib-examples.html
 
@@ -21,23 +23,23 @@ git_bin = "git"
 
 def http_request(url, depth=0):
     if depth > 10:
-        raise Exception("Redirected "+depth+" times, giving up.")
-    o = urlparse.urlparse(url, allow_fragments=True)
+        raise Exception("Redirected {} times, giving up.".format(depth))
+    o = urllib.parse.urlparse(url, allow_fragments=True)
     if o.scheme == 'https':
-        conn = httplib.HTTPSConnection(o.netloc)
+        conn = http.client.HTTPSConnection(o.netloc)
     else:
-        conn = httplib.HTTPConnection(o.netloc)
+        conn = http.client.HTTPConnection(o.netloc)
     path = o.path
     if o.query:
         path +='?'+o.query
     conn.request("GET", path, "", {"Cache-Control": "max-age=0"})
     response = conn.getresponse()
-    #print response.status, response.reason
+    #print(response.status, response.reason)
 
     if response.status > 300 and response.status < 400:
         headers = dict(response.getheaders())
-        if headers.has_key('location') and headers['location'] != url:
-            #print headers['location']
+        if 'location' in headers and headers['location'] != url:
+            #print(headers['location'])
             return http_request(headers['location'], depth + 1)
 
     data = response.read()
@@ -55,9 +57,18 @@ def work_modules():
                         up = sync_module(m["module"], m["git_source"], m["branch"])
                         if not updated:
                             updated = up
-                    except Exception, e:
+                    except Exception as e:
                         traceback.print_exc()
     return updated
+
+def get_repo_path(git_path):
+    github_prefix = "https://github.com/"
+    if git_path.startswith(github_prefix):
+        path = git_path[len(github_prefix):]
+        if path.endswith(".git"):
+            path = path[:-4]
+        return f"git@github.com:{path}.git"
+    return git_path
 
 def sync_module(module, git_path, branch):
     module_path = os.path.join(parent_path, module)
@@ -67,27 +78,28 @@ def sync_module(module, git_path, branch):
     update = False
     if not rconf:
         return
-    print rconf
+    print(rconf)
     if not lconf:
         update = True
     else:
         if LooseVersion(rconf["version"]) > LooseVersion(lconf["version"]):
             update = True
     if update:
-        print "updating", git_path
+        print("updating", git_path)
         cmd = ""
-        tar_path = os.path.join(module_path, "%s.tar.gz" % module);
+        tar_path = os.path.join(module_path, "%s.tar.gz" % module)
+        repo_path = get_repo_path(git_path)
         if os.path.isdir(module_path):
             cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module" 
         else:
-            cmd = "cd $parent_path && $git_bin clone --depth 1 $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
+            cmd = "cd $parent_path && $git_bin clone $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
         t = Template(cmd)
-        params = {"parent_path": parent_path, "git_path": git_path, "module_path": module_path, "module": module, "git_bin": git_bin}
+        params = {"parent_path": parent_path, "git_path": repo_path, "module_path": module_path, "module": module, "git_bin": git_bin}
         s = t.substitute(params)
         os.system(s)
         rconf["md5"] = md5sum(tar_path)
         with codecs.open(conf_path, "w", "utf-8") as fw:
-            json.dump(rconf, fw, sort_keys = True, indent = 4, ensure_ascii=False, encoding='utf8')
+            json.dump(rconf, fw, sort_keys=True, indent=4, ensure_ascii=False)
         os.system("cd %s && chown -R www:www ." % module_path)
     return update
 
@@ -106,7 +118,7 @@ def get_config_js(git_path, branch):
 
 def get_remote_js(git_path, branch):
     data = http_request(get_config_js(git_path, branch))
-    conf = json.loads(data)
+    conf = json.loads(data.decode('utf-8'))
     return conf
 
 def get_local_js(conf_path):
@@ -146,7 +158,7 @@ def gen_modules(modules):
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
-        except:
+        except Exception as e:
             traceback.print_exc()
 
         if not m:
@@ -166,7 +178,7 @@ def refresh_gmodules():
         gmodules["md5"] = conf["md5"]
 
         with codecs.open(os.path.join(curr_path, "app.json.js"), "w", "utf-8") as fw:
-            json.dump(gmodules, fw, sort_keys = True, indent = 4, ensure_ascii=False, encoding='utf8')
+            json.dump(gmodules, fw, sort_keys=True, indent=4, ensure_ascii=False)
 
 updated = work_modules()
 if updated:
