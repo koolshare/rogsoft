@@ -23,26 +23,22 @@ def md5sum(full_path):
 
 def work_paths_by_walk():
     index = 0
-    for root,subdirs,files in os.walk(parent_path):
+    for root, subdirs, files in os.walk(parent_path):
         index += 1
         for filepath in files:
-            print os.path.join(root,filepath)
+            print(os.path.join(root, filepath))
         for sub in subdirs:
-            print os.path.join(root,sub)
+            print(os.path.join(root, sub))
 
 def work_parent():
     ignore_paths = frozenset(["koolcenter", "softcenter", "appledns", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "qiaodao", "uamas"])
     fnames = os.listdir(parent_path)
     fnames.sort()
     for fname in fnames:
-
         if fname[0] == "." or fname in ignore_paths:
             continue
-
         path = os.path.join(parent_path, fname)
         if os.path.isdir(path):
-            #print fname
-            #print path
             yield fname, path
 
 def work_parent_ext():
@@ -50,14 +46,12 @@ def work_parent_ext():
     fnames = os.listdir(parent_path)
     fnames.sort()
     for fname in fnames:
-
         if fname[0] == "." or fname not in contain_paths:
             continue
-
         path = os.path.join(parent_path, fname)
         if os.path.isdir(path):
-            print fname
-            print path
+            print(fname)
+            print(path)
             yield fname, path
 
 def work_files(parent, ext):
@@ -73,10 +67,10 @@ def check_subdir(module, path, name, ext, target_path):
     if os.path.isdir(script_path):
         for f in work_files(script_path, ext):
             target_file = os.path.join(target_path, os.path.basename(f))
-            #print "copy", f, "-->", target_file
+            # print("copy", f, "-->", target_file)
             copyfile(f, target_file)
             if not target_file.endswith(".png") and to_remove:
-                to_remove.write(target_file+"\n")
+                to_remove.write(target_file + "\n")
 
 def check_and_cp():
     for module, path in work_parent():
@@ -88,7 +82,6 @@ def check_and_cp():
 def gen_modules(modules):
     for module, path in work_parent():
         conf = os.path.join(path, "config.json.js")
-
         m = None
         try:
             with codecs.open(conf, "r", "utf-8") as fc:
@@ -99,17 +92,15 @@ def gen_modules(modules):
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
-        except:
+        except Exception:
             pass
-
         if not m:
-            m = {"name":module, "title":module, "tar_url": module + "/" + module + ".tar.gz"}
+            m = {"name": module, "title": module, "tar_url": module + "/" + module + ".tar.gz"}
         modules.append(m)
 
 def gen_modules_ext(modules):
     for module, path in work_parent_ext():
         conf = os.path.join(path, "config.json.js")
-
         m = None
         try:
             with codecs.open(conf, "r", "utf-8") as fc:
@@ -120,15 +111,14 @@ def gen_modules_ext(modules):
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
-        except:
+        except Exception:
             pass
-
         if not m:
-            m = {"name":module, "title":module, "tar_url": module + "/" + module + ".tar.gz"}
+            m = {"name": module, "title": module, "tar_url": module + "/" + module + ".tar.gz"}
         modules.append(m)
 
 if stage == "stage1":
-    to_remove = open(os.path.join(curr_path, "to_remove.txt"), "w")
+    to_remove = open(os.path.join(curr_path, "to_remove.txt"), "w", encoding="utf-8")
     check_and_cp()
     to_remove.close()
 elif stage == "stage2":
@@ -146,4 +136,4 @@ elif stage == "stage2":
         gmodules["md5"] = conf["md5"]
 
         with codecs.open(os.path.join(curr_path, "app.json.js"), "w", "utf-8") as fw:
-            json.dump(gmodules, fw, sort_keys = True, indent = 4, ensure_ascii=False, encoding='utf8')
+            json.dump(gmodules, fw, sort_keys=True, indent=4, ensure_ascii=False)
