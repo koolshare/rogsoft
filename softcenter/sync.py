@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # _*_ coding:utf-8 _*_
+
 
 import os
 import urllib.parse
@@ -10,12 +11,20 @@ import codecs
 from shutil import copyfile
 import sys
 import traceback
-
-from distutils.version import LooseVersion
-from string import Template 
+try:
+    from setuptools._distutils.version import LooseVersion
+except ImportError:
+    from distutils.version import LooseVersion
 import tarfile
+from string import Template
+
+try:
+    import requests
+except ImportError:
+    raise ImportError("The 'requests' library is required but not installed. Please install it before running this script.")
 
 #https://docs.python.org/2.4/lib/httplib-examples.html
+
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = os.path.realpath(os.path.join(curr_path, ".."))
@@ -24,26 +33,15 @@ git_bin = "git"
 def http_request(url, depth=0):
     if depth > 10:
         raise Exception("Redirected {} times, giving up.".format(depth))
-    o = urllib.parse.urlparse(url, allow_fragments=True)
-    if o.scheme == 'https':
-        conn = http.client.HTTPSConnection(o.netloc)
-    else:
-        conn = http.client.HTTPConnection(o.netloc)
-    path = o.path
-    if o.query:
-        path +='?'+o.query
-    conn.request("GET", path, "", {"Cache-Control": "max-age=0"})
-    response = conn.getresponse()
-    #print(response.status, response.reason)
-
-    if response.status > 300 and response.status < 400:
-        headers = dict(response.getheaders())
-        if 'location' in headers and headers['location'] != url:
-            #print(headers['location'])
-            return http_request(headers['location'], depth + 1)
-
-    data = response.read()
-    return data
+    try:
+        resp = requests.get(url, headers={"Cache-Control": "max-age=0"}, timeout=10, allow_redirects=False)
+        # 处理重定向
+        if 300 < resp.status_code < 400 and "location" in resp.headers and resp.headers["location"] != url:
+            return http_request(resp.headers["location"], depth + 1)
+        return resp.content
+    except Exception as e:
+        print(f"[http_request] requests error: {e}")
+        raise
 
 def work_modules():
     module_path = os.path.join(curr_path, "modules.json")
@@ -54,26 +52,17 @@ def work_modules():
             for m in modules:
                 if "module" in m:
                     try:
-                        up = sync_module(m["module"], m["git_source"], m["branch"])
+                        up = sync_module(m["module"], m["git_source"])
                         if not updated:
                             updated = up
                     except Exception as e:
                         traceback.print_exc()
     return updated
 
-def get_repo_path(git_path):
-    github_prefix = "https://github.com/"
-    if git_path.startswith(github_prefix):
-        path = git_path[len(github_prefix):]
-        if path.endswith(".git"):
-            path = path[:-4]
-        return f"git@github.com:{path}.git"
-    return git_path
-
-def sync_module(module, git_path, branch):
+def sync_module(module, git_path):
     module_path = os.path.join(parent_path, module)
     conf_path = os.path.join(module_path, "config.json.js")
-    rconf = get_remote_js(git_path, branch)
+    rconf = get_remote_js(git_path)
     lconf = get_local_js(conf_path)
     update = False
     if not rconf:
@@ -88,13 +77,12 @@ def sync_module(module, git_path, branch):
         print("updating", git_path)
         cmd = ""
         tar_path = os.path.join(module_path, "%s.tar.gz" % module)
-        repo_path = get_repo_path(git_path)
         if os.path.isdir(module_path):
-            cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module" 
+            cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module"
         else:
             cmd = "cd $parent_path && $git_bin clone $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
         t = Template(cmd)
-        params = {"parent_path": parent_path, "git_path": repo_path, "module_path": module_path, "module": module, "git_bin": git_bin}
+        params = {"parent_path": parent_path, "git_path": git_path, "module_path": module_path, "module": module, "git_bin": git_bin}
         s = t.substitute(params)
         os.system(s)
         rconf["md5"] = md5sum(tar_path)
@@ -103,22 +91,27 @@ def sync_module(module, git_path, branch):
         os.system("cd %s && chown -R www:www ." % module_path)
     return update
 
-def get_config_js(git_path, branch):
+def get_config_js(git_path):
     #https://github.com/koolshare/merlin_tunnel.git
     #git@github.com:koolshare/merlin_tunnel.git
 
-    if not branch:
-        branch = "master"
-
     if git_path.startswith("https://"):
-        return git_path[0:-4] + "/raw/" + branch + "/config.json.js"
+        return git_path[0:-4] + "/raw/master/config.json.js"
     else:
         index = git_path.find(":")
-        return "https://github.com/" + git_path[index+1:-4] + "/raw/"+branch+"/config.json.js"
+        return "https://github.com/" + git_path[index+1:-4] + "/raw/master/config.json.js"
 
-def get_remote_js(git_path, branch):
-    data = http_request(get_config_js(git_path, branch))
-    conf = json.loads(data.decode('utf-8'))
+def get_remote_js(git_path):
+    data = http_request(get_config_js(git_path))
+    if not data:
+        print("[sync.py] Warning: No data received from {}".format(get_config_js(git_path)))
+        return None
+    try:
+        conf = json.loads(data.decode('utf-8'))
+    except Exception as e:
+        print("[sync.py] Error decoding JSON from {}: {}".format(get_config_js(git_path), e))
+        print("[sync.py] Raw data: {}".format(data))
+        return None
     return conf
 
 def get_local_js(conf_path):
@@ -158,7 +151,7 @@ def gen_modules(modules):
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
-        except Exception as e:
+        except:
             traceback.print_exc()
 
         if not m:
