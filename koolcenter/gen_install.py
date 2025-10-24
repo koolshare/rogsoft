@@ -1,10 +1,9 @@
-#!/usr/bin/env python
-# _*_ coding:utf-8 _*_
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os
 import json
 import hashlib
-import codecs
 from shutil import copyfile
 import sys
 
@@ -26,12 +25,12 @@ def work_paths_by_walk():
     for root, subdirs, files in os.walk(parent_path):
         index += 1
         for filepath in files:
-            print(os.path.join(root, filepath))
+            print(os.path.join(root, filepath))  # 已添加括号
         for sub in subdirs:
-            print(os.path.join(root, sub))
+            print(os.path.join(root, sub))  # 已添加括号
 
 def work_parent():
-    ignore_paths = frozenset(["koolcenter", "softcenter", "appledns", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "qiaodao", "uamas"])
+    ignore_paths = frozenset(["koolcenter", "softcenter", "speedtest", "dualwan", "kcptun", "koolnet", "kuainiao", "shadowvpn", "tunnel", "ssid", "ssserver", "qiaodao", "uamas"])
     fnames = os.listdir(parent_path)
     fnames.sort()
     for fname in fnames:
@@ -50,12 +49,12 @@ def work_parent_ext():
             continue
         path = os.path.join(parent_path, fname)
         if os.path.isdir(path):
-            print(fname)
-            print(path)
+            print(fname)  # 已添加括号
+            print(path)   # 已添加括号
             yield fname, path
 
 def work_files(parent, ext):
-    fnames = os.listdir(parent_path)
+    fnames = os.listdir(parent)
     fnames.sort()
     for fname in fnames:
         path = os.path.join(parent, fname)
@@ -67,7 +66,6 @@ def check_subdir(module, path, name, ext, target_path):
     if os.path.isdir(script_path):
         for f in work_files(script_path, ext):
             target_file = os.path.join(target_path, os.path.basename(f))
-            # print("copy", f, "-->", target_file)
             copyfile(f, target_file)
             if not target_file.endswith(".png") and to_remove:
                 to_remove.write(target_file + "\n")
@@ -84,7 +82,7 @@ def gen_modules(modules):
         conf = os.path.join(path, "config.json.js")
         m = None
         try:
-            with codecs.open(conf, "r", "utf-8") as fc:
+            with open(conf, "r", encoding="utf-8") as fc:
                 m = json.loads(fc.read())
                 if m:
                     m["name"] = module
@@ -92,7 +90,7 @@ def gen_modules(modules):
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
-        except Exception:
+        except:
             pass
         if not m:
             m = {"name": module, "title": module, "tar_url": module + "/" + module + ".tar.gz"}
@@ -103,7 +101,7 @@ def gen_modules_ext(modules):
         conf = os.path.join(path, "config.json.js")
         m = None
         try:
-            with codecs.open(conf, "r", "utf-8") as fc:
+            with open(conf, "r", encoding="utf-8") as fc:
                 m = json.loads(fc.read())
                 if m:
                     m["name"] = module
@@ -111,7 +109,7 @@ def gen_modules_ext(modules):
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
-        except Exception:
+        except:
             pass
         if not m:
             m = {"name": module, "title": module, "tar_url": module + "/" + module + ".tar.gz"}
@@ -123,17 +121,17 @@ if stage == "stage1":
     to_remove.close()
 elif stage == "stage2":
     gmodules = None
-    with codecs.open(os.path.join(curr_path, "app.template.json.js"), "r", "utf-8") as fg:
+    with open(os.path.join(curr_path, "app.template.json.js"), "r", encoding="utf-8") as fg:
         gmodules = json.loads(fg.read())
         gmodules["apps"] = []
         #gmodules["apps1"] = []
     gen_modules(gmodules["apps"])
     #gen_modules_ext(gmodules["apps1"])
 
-    with codecs.open(os.path.join(curr_path, "config.json.js"), "r", "utf-8") as fc:
+    with open(os.path.join(curr_path, "config.json.js"), "r", encoding="utf-8") as fc:
         conf = json.loads(fc.read())
         gmodules["version"] = conf["version"]
         gmodules["md5"] = conf["md5"]
 
-        with codecs.open(os.path.join(curr_path, "app.json.js"), "w", "utf-8") as fw:
+        with open(os.path.join(curr_path, "app.json.js"), "w", encoding="utf-8") as fw:
             json.dump(gmodules, fw, sort_keys=True, indent=4, ensure_ascii=False)

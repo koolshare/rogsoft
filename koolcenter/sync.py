@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # _*_ coding:utf-8 _*_
+
 
 import os
 import urllib.parse
@@ -10,12 +11,18 @@ import codecs
 from shutil import copyfile
 import sys
 import traceback
-
-from distutils.version import LooseVersion
-from string import Template 
+import re  # 用于正则解析 git_path 和 JS 预处理
+from packaging import version  # 新增：用于版本比较（替换 LooseVersion）
 import tarfile
+from string import Template
+
+try:
+    import requests
+except ImportError:
+    raise ImportError("The 'requests' library is required but not installed. Please install it before running this script.")
 
 #https://docs.python.org/2.4/lib/httplib-examples.html
+
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = os.path.realpath(os.path.join(curr_path, ".."))
@@ -24,26 +31,15 @@ git_bin = "git"
 def http_request(url, depth=0):
     if depth > 10:
         raise Exception("Redirected {} times, giving up.".format(depth))
-    o = urllib.parse.urlparse(url, allow_fragments=True)
-    if o.scheme == 'https':
-        conn = http.client.HTTPSConnection(o.netloc)
-    else:
-        conn = http.client.HTTPConnection(o.netloc)
-    path = o.path
-    if o.query:
-        path +='?'+o.query
-    conn.request("GET", path, "", {"Cache-Control": "max-age=0"})
-    response = conn.getresponse()
-    #print(response.status, response.reason)
-
-    if response.status > 300 and response.status < 400:
-        headers = dict(response.getheaders())
-        if 'location' in headers and headers['location'] != url:
-            #print(headers['location'])
-            return http_request(headers['location'], depth + 1)
-
-    data = response.read()
-    return data
+    try:
+        resp = requests.get(url, headers={"Cache-Control": "max-age=0"}, timeout=10, allow_redirects=False)
+        # 处理重定向
+        if 300 < resp.status_code < 400 and "location" in resp.headers and resp.headers["location"] != url:
+            return http_request(resp.headers["location"], depth + 1)
+        return resp.content
+    except Exception as e:
+        print(f"[http_request] requests error: {e}")
+        raise
 
 def work_modules():
     module_path = os.path.join(curr_path, "modules.json")
@@ -61,64 +57,94 @@ def work_modules():
                         traceback.print_exc()
     return updated
 
-def get_repo_path(git_path):
-    github_prefix = "https://github.com/"
-    if git_path.startswith(github_prefix):
-        path = git_path[len(github_prefix):]
-        if path.endswith(".git"):
-            path = path[:-4]
-        return f"git@github.com:{path}.git"
-    return git_path
-
 def sync_module(module, git_path, branch):
     module_path = os.path.join(parent_path, module)
     conf_path = os.path.join(module_path, "config.json.js")
     rconf = get_remote_js(git_path, branch)
+    if rconf is None:
+        print(f"[sync_module] Skipping module '{module}' due to invalid config URL.")
+        return False  # 不更新，返回 False
     lconf = get_local_js(conf_path)
     update = False
     if not rconf:
-        return
+        return False  # 修改：如果 rconf 无效，也返回 False
     print(rconf)
     if not lconf:
         update = True
     else:
-        if LooseVersion(rconf["version"]) > LooseVersion(lconf["version"]):
+        # 修改：使用 packaging.version.parse 替换 LooseVersion
+        if version.parse(rconf["version"]) > version.parse(lconf["version"]):
             update = True
     if update:
         print("updating", git_path)
         cmd = ""
         tar_path = os.path.join(module_path, "%s.tar.gz" % module)
-        repo_path = get_repo_path(git_path)
         if os.path.isdir(module_path):
-            cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module" 
+            #cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module"
+            cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin fetch --depth 1 && rm -f $module.tar.gz"
         else:
-            cmd = "cd $parent_path && $git_bin clone $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
+            # 修改：添加 --depth 1 和 --branch $branch 以实现浅克隆指定分支
+            cmd = "cd $parent_path && $git_bin clone --depth 1 --branch $branch $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
         t = Template(cmd)
-        params = {"parent_path": parent_path, "git_path": repo_path, "module_path": module_path, "module": module, "git_bin": git_bin}
+        params = {"parent_path": parent_path, "git_path": git_path, "module_path": module_path, "module": module, "git_bin": git_bin, "branch": branch}
         s = t.substitute(params)
         os.system(s)
         rconf["md5"] = md5sum(tar_path)
         with codecs.open(conf_path, "w", "utf-8") as fw:
             json.dump(rconf, fw, sort_keys=True, indent=4, ensure_ascii=False)
-        os.system("cd %s && chown -R www:www ." % module_path)
+        #os.system("cd %s && chown -R www:www ." % module_path)
     return update
 
 def get_config_js(git_path, branch):
-    #https://github.com/koolshare/merlin_tunnel.git
-    #git@github.com:koolshare/merlin_tunnel.git
+    if not git_path:
+        print("[get_config_js] Warning: git_source is empty for this module.")
+        return None
 
-    if not branch:
-        branch = "master"
+    # 解析 git_path 以提取 owner 和 repo
+    # 支持格式：
+    # - https://github.com/owner/repo.git
+    # - git@github.com:owner/repo.git
+    # - owner/repo.git 或 owner/repo
+    owner = None
+    repo = None
 
-    if git_path.startswith("https://"):
-        return git_path[0:-4] + "/raw/" + branch + "/config.json.js"
+    # 去除可能的 .git 后缀
+    if git_path.endswith(".git"):
+        git_path = git_path[:-4]
+
+    # 正则匹配常见格式
+    match_https = re.match(r"https?://github\.com/([^/]+)/([^/]+)", git_path)
+    match_ssh = re.match(r"git@github\.com:([^/]+)/([^/]+)", git_path)
+    match_short = re.match(r"([^/]+)/([^/]+)", git_path)
+
+    if match_https:
+        owner, repo = match_https.groups()
+    elif match_ssh:
+        owner, repo = match_ssh.groups()
+    elif match_short:
+        owner, repo = match_short.groups()
     else:
-        index = git_path.find(":")
-        return "https://github.com/" + git_path[index+1:-4] + "/raw/"+branch+"/config.json.js"
+        print(f"[get_config_js] Error: Invalid git_source format: {git_path}")
+        return None
+
+    # 构建正确的 GitHub raw URL
+    raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/config.json.js"
+    return raw_url
 
 def get_remote_js(git_path, branch):
-    data = http_request(get_config_js(git_path, branch))
-    conf = json.loads(data.decode('utf-8'))
+    url = get_config_js(git_path, branch)
+    if not url:
+        return None
+    data = http_request(url)
+    if not data:
+        print(f"[get_remote_js] Warning: No data received from {url}")
+        return None
+    try:
+        conf = json.loads(data.decode('utf-8'))
+    except Exception as e:
+        print(f"[get_remote_js] Error decoding JSON from {url}: {e}")
+        print(f"[get_remote_js] Raw data: {data}")
+        return None
     return conf
 
 def get_local_js(conf_path):
@@ -145,19 +171,38 @@ def work_parent():
         if os.path.isdir(path):
             yield fname, path
 
+def parse_js_config(content):
+    # """辅助函数：预处理 .js 文件内容，提取纯 JSON 部分"""
+    # 去除注释（单行 // 和多行 /* */）
+    content = re.sub(r'//.*?$|/\*.*?\*/', '', content, flags=re.MULTILINE | re.DOTALL)
+    # 去除 var ... = 和结尾 ;
+    content = re.sub(r'^\s*(var\s+\w+\s*=\s*)?\{', '{', content)
+    content = re.sub(r';\s*$', '', content)
+    # 如果键没有引号，添加（简单正则替换，假设键是字母数字）
+    content = re.sub(r'(\s*)([a-zA-Z0-9_]+)\s*:', r'\1"\2":', content)
+    return content.strip()
+
 def gen_modules(modules):
     for module, path in work_parent():
         conf = os.path.join(path, "config.json.js")
         m = None
         try:
             with codecs.open(conf, "r", "utf-8") as fc:
-                m = json.loads(fc.read())
+                raw_content = fc.read()
+                # 预处理为纯 JSON
+                json_content = parse_js_config(raw_content)
+                m = json.loads(json_content)
                 if m:
                     m["name"] = module
                     if "tar_url" not in m:
                         m["tar_url"] = module + "/" + module + ".tar.gz"
                     if "home_url" not in m:
                         m["home_url"] = "Module_" + module + ".asp"
+        except json.JSONDecodeError as e:
+            print(f"[gen_modules] JSON decode error in {conf}: {e}")
+            print(f"[gen_modules] Raw content: {raw_content}")
+            # 跳过无效模块，使用默认值
+            m = None
         except Exception as e:
             traceback.print_exc()
 
@@ -183,4 +228,4 @@ def refresh_gmodules():
 updated = work_modules()
 if updated:
     refresh_gmodules()
-    os.system("chown -R www:www %s/softcenter/app.json.js" % parent_path)
+    #os.system("chown -R www:www %s/softcenter/app.json.js" % parent_path)
