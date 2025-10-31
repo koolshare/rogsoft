@@ -272,7 +272,7 @@ get_tmp_pwr_ipq(){
 get_tmp_pwr(){
 	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
 		get_tmp_pwr_mtk
-	elif [ "$(nvram get odmpid)" == "GS7" ];then
+	elif [ "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" ];then
 		get_tmp_pwr_MT7988X
 	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
 		get_tmp_pwr_ipq
