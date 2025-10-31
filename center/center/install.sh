@@ -120,7 +120,7 @@ set_url(){
 		local SC_URL=https://armsoft.ddnsto.com
 	fi
 	local RO_MODEL=$(nvram get odmpid)
-	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" -o "${RO_MODEL}" == "GS7" ];then
+	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" -o "${RO_MODEL}" == "GS7" -o "${RO_MODEL}" == "ZenWiFi_BT8P" ];then
 		local SC_URL=https://mtksoft.ddnsto.com
 	fi
 	if [ "${RO_MODEL}" == "ZenWiFi_BD4" ];then

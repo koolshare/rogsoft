@@ -1,5 +1,5 @@
 {
-"version":"1.7",
+"version":"1.9",
 "md5":"b65663c35bcb17ca0d96b9bf52ce9d28",
 "home_url":"Module_center.asp",
 "title":"软件中心一键切换",

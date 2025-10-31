@@ -265,6 +265,7 @@
             "name": "qiandao", 
             "tags": "签到", 
             "tar_url": "qiandao/qiandao.tar.gz", 
+            "cdn_url": "qiandao/v/1/6/qiandao.tar.gz", 
             "title": "自动签到", 
             "version": "1.5"
         }, 

@@ -1,5 +1,9 @@
 Koolshare Asuswrt-Merlin USB2JFFS Changelog for HND/AXHND platform
 ===========================================
+2.1.6
+   - fix	新增MTK机型 BT8P的支持
+
+
 2.1.3
    - fix	新增MTK机型 TUF-AX4200Q（小旋风Pro）的支持
 
