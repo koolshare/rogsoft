@@ -72,7 +72,7 @@ get_jffs_original_mount_device(){
 			GT-AX6000|XT12)
 				mtd_disk="ubi:jffs2"
 				;;
-			TX-AX6000|TUF-AX4200Q|ZenWiFi_BD4|TUF_6500)
+			TX-AX6000|TUF-AX4200Q|ZenWiFi_BD4|TUF_6500|RT-AX89X)
 				mtd_disk="/dev/ubi0_5"
 				;;
 			GS7|ZenWiFi_BT8P)
