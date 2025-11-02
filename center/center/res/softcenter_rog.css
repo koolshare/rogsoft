@@ -5,7 +5,7 @@
 .KoolshareBottom {
 	width: 205px;
 	height: 100px;
-	background: url(/res/koolshare.png) 0px 3px no-repeat;
+	/*background: url(/res/koolshare.png) 0px 3px no-repeat;*/
 	text-align: left;
 	padding-left:150px;
 	padding-top:7px;
@@ -139,39 +139,10 @@
 [bgcolor="#444f53"]{
 	background: rgba(0, 0, 0, 0.5);
 }
-/* fix system tab */
 .submenuBlock{
 	width:735px;
 	margin-top:-140px;
 	margin-bottom: -3px;
-}
-.tab{
-	cursor:pointer;
-	background: #530412;
-	color: White;
-	float: left;
-	height: 30px;
-	margin-left: -3px;
-	margin-right: 2px;
-	text-align:center;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-	border-radius: 5px 5px 0px 0px;
-}
-.tabClicked{
-	cursor:pointer;
-	background: rgba(0, 0, 0, 0.5);
-	color: White;
-	float: left;
-	height: 30px;
-	margin-left: -3px;
-	margin-right: 2px;
-	text-align:center;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-	border-radius: 5px 5px 0px 0px;
 }
 /*ASUSWRT*/
 #app[skin=ASUSWRT] .input_ss_table{
@@ -355,39 +326,10 @@
 #app[skin=ROG] [bgcolor="#444f53"]{
 	background: rgba(0, 0, 0, 0.5);
 }
-/* fix system tab */
 #app[skin=ROG] .submenuBlock{
 	width:735px;
 	margin-top:-140px;
 	margin-bottom: -3px;
-}
-#app[skin=ROG] .tab{
-	cursor:pointer;
-	background: #530412;
-	color: White;
-	float: left;
-	height: 30px;
-	margin-left: -3px;
-	margin-right: 2px;
-	text-align:center;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-	border-radius: 5px 5px 0px 0px;
-}
-#app[skin=ROG] .tabClicked{
-	cursor:pointer;
-	background: rgba(0, 0, 0, 0.5);
-	color: White;
-	float: left;
-	height: 30px;
-	margin-left: -3px;
-	margin-right: 2px;
-	text-align:center;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-	border-radius: 5px 5px 0px 0px;
 }
 /*TUF*/
 #app[skin=TUF] .input_ss_table{
@@ -399,8 +341,8 @@
 	font-size:13px;
 	font-family: Lucida Console;
 	background-image:none;
-	background-color: #3e2902;
-	border:1px solid #92650F;
+	border: 1px solid #4c4c4c;
+	background-color: #373737;
 	color:#FFFFFF;
 }
 #app[skin=TUF] .splitLine{
@@ -484,37 +426,108 @@
 #app[skin=TUF] [bgcolor="#444f53"]{
 	background: rgba(0, 0, 0, 0.5);
 }
-/* fix system tab */
 #app[skin=TUF] .submenuBlock{
 	width:735px;
 	margin-top:-140px;
 	margin-bottom: -3px;
 }
-#app[skin=TUF] .tab{
-	cursor:pointer;
-	background: #92650F;
-	color: White;
-	float: left;
-	height: 30px;
-	margin-left: -3px;
-	margin-right: 2px;
-	text-align:center;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
+/*TS*/
+#app[skin=TS] .input_ss_table{
+	margin-left:2px;
+	padding-left:0.4em;
+	height:21px;
+	width:158.2px;
+	line-height:23px \9;	/*IE*/
+	font-size:13px;
+	font-family: Lucida Console;
+	background-image:none;
+	border: 1px solid #4c4c4c;
+	background-color: #373737;
+	color:#FFFFFF;
+}
+#app[skin=TS] .splitLine{
+	background: #CEC1C7;
+	background: -webkit-linear-gradient(#CEC1C7 0%, #CEC1C7 20%, #766D71 80%, #766D71 100%);
+	background: -o-linear-gradient(#CEC1C7 0%, #CEC1C7 20%, #766D71 80%, #766D71 100%);
+	background: linear-gradient(#CEC1C7 0%, #CEC1C7 20%, #766D71 80%,#766D71 100%);
+	height: 2px;
+	width: 740px;
+	margin: 1px 0;
+}
+#app[skin=TS] .show-install-btn, #app[skin=TS] .show-uninstall-btn {
+	border: 1px solid #2ed9c3;
+	background: none;
+	color: #fff;
+	padding: 10px 20px;
 	border-radius: 5px 5px 0px 0px;
 }
-#app[skin=TUF] .tabClicked{
-	cursor:pointer;
+#app[skin=TS] .active {
+	background: #2ed9c3;
+	border: 1px solid #2ed9c3;
+}
+#app[skin=TS] #soft_log {
+	width:99%;
+	font-family:'Lucida Console';
+	font-size:12px;
+	background:transparent;
+	border:1px solid #2ed9c3;
+	color:#FFFFFF;
+}
+#app[skin=TS] #IconContainer {
+	border: 1px solid #2ed9c3;
+}
+#app[skin=TS] .ks_btn {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #2ed9c3  0%, #0a7264 100%);
+}
+#app[skin=TS] .ks_btn:hover {
+	border: 1px solid #222;
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+	vertical-align: middle;
+	background: linear-gradient(to bottom, #2ed9c3  0%, #22c0bf 100%);
+}
+#app[skin=TS] .soft_setting_log{
+	margin-top:10px;
+	display:block;
+	overflow:hidden;
+	outline: 1px solid #222;
+	outline: 1px solid #2ed9c3;
+}
+#app[skin=TS] .soft_setting_log1{
+	width:97%;
+	padding-top:4px;
+	padding-bottom:4px;
+	padding-left:4px;
+	padding-right:37px;
+	font-family:'Lucida Console';
+	font-size:11px;
+	line-height:1.5;
+	color:#FFFFFF;
+	outline:none;
+	overflow-x:hidden;
+	margin-top:1px;
+	border:0px solid #222;
+	background:#475A5F;
+	background:transparent;
+}
+#app[skin=TS] [bgcolor="#4D595D"]{
+	background: rgba(0, 0, 0, 0.3);
+}
+#app[skin=TS] [bgcolor="#444f53"]{
 	background: rgba(0, 0, 0, 0.5);
-	color: White;
-	float: left;
-	height: 30px;
-	margin-left: -3px;
-	margin-right: 2px;
-	text-align:center;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-	border-radius: 5px 5px 0px 0px;
+}
+#app[skin=TS] .submenuBlock{
+	width:735px;
+	margin-top:-140px;
+	margin-bottom: -3px;
 }

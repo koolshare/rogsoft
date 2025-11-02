@@ -21,7 +21,7 @@ fi
 
 if [ "${PLATFORM}" = "mtk" -o "${PLATFORM}" = "ipq64" ];then
 	ARCH=64
-elif [ "${PLATFORM}" = "hnd" -o "${PLATFORM}" = "ipq32" ];then
+elif [ "${PLATFORM}" = "hnd" -o "${PLATFORM}" = "ipq32" -o "${PLATFORM}" = "qca" ];then
 	ARCH=32
 fi
 

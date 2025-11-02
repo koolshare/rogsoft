@@ -158,6 +158,9 @@ set_url(){
 	if [ "${RO_MODEL}" == "TUF_6500" ];then
 		local SC_URL=https://ipq64soft.ddnsto.com
 	fi
+	if [ "${RO_MODEL}" == "RT-AX89X" ];then
+		local SC_URL=https://qcasoft.ddnsto.com
+	fi
 	local SC_URL_NVRAM=$(nvram get sc_url)
 	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
 		nvram set sc_url=${SC_URL}

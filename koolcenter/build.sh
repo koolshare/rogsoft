@@ -1,6 +1,6 @@
 #!/bin/sh
 # build script for rogsoft project
-VERSION=1.9.48
+VERSION=1.9.49
 
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
 ME=$(basename "$0")

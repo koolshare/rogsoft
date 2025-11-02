@@ -157,7 +157,7 @@ install_now(){
 	rm -rf /koolshare/share/misc/magic >/dev/null 2>&1
 	
 
-	# isntall file
+	# install file
 	echo_date "安装插件相关文件..."
 	local ARCH=$(uname -m)
 	cd /tmp

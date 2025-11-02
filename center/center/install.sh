@@ -129,6 +129,9 @@ set_url(){
 	if [ "${RO_MODEL}" == "TUF_6500" ];then
 		local SC_URL=https://ipq64soft.ddnsto.com
 	fi
+	if [ "${RO_MODEL}" == "RT-AX89X" ];then
+		local SC_URL=https://qcasoft.ddnsto.com
+	fi
 	local SC_URL_NVRAM=$(nvram get sc_url)
 	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
 		nvram set sc_url=${SC_URL}
@@ -165,6 +168,7 @@ install_now(){
 		cp -rf /tmp/${module}/webs/Module_Softcenter_old.asp /koolshare/webs/
 		cp -rf /tmp/${module}/webs/Module_Softsetting.asp /koolshare/webs/
 		cp -rf /tmp/${module}/res/softcenter_*.css /koolshare/res/
+		cp -rf /tmp/${module}/init.d/* /koolshare/init.d/
 		cp -rf /tmp/${module}/.soft_ver_old /koolshare/
 	else
 		# softcenter is use, install koolcenter
@@ -173,6 +177,7 @@ install_now(){
 		cp -rf /tmp/${module}/webs/Module_Softcenter_new.asp /koolshare/webs/
 		cp -rf $soft_folder /koolshare/res/
 		cp -rf /tmp/${module}/scripts/ks_home_status.sh /koolshare/scripts/
+		cp -rf /tmp/${module}/init.d/* /koolshare/init.d/
 		cp -rf /tmp/${module}/.soft_ver_new /koolshare/
 	fi
 	

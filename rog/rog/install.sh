@@ -93,7 +93,7 @@ install_now(){
 	local DESCR="一些小功能的插件"
 	local PLVER=$(cat ${DIR}/version)
 
-	# install file
+	# isntall file
 	echo_date "安装插件相关文件..."
 	cd /tmp
 	cp -rf /tmp/${module}/res/* /koolshare/res/

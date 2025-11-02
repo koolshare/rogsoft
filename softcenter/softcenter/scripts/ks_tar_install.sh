@@ -232,6 +232,8 @@ install_tar(){
 		VALID_STRING="ipq32"
 	elif [ "${RO_MODEL}" == "TUF_6500" ];then
 		VALID_STRING="ipq64"
+	elif [ "${RO_MODEL}" == "RT-AX89X" ];then
+		VALID_STRING="qca"
 	else
 		VALID_STRING="hnd"
 	fi

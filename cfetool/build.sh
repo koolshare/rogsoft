@@ -14,27 +14,41 @@ AUTHOR="sadog"
 
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
+ME=$(basename "$0")
+PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
 
-# change to module directory
-cd $DIR
+if [ "${ME}" = "build.sh" ];then
+	echo "build error!"
+	exit 1
+fi
 
-# do something here
-do_build_result() {
-	rm -rf ${MODULE}/.DS_Store
-	rm -rf ${MODULE}/*/.DS_Store
-	rm -rf ${MODULE}.tar.gz
-
-	if [ -z "$TAG" ];then
-		TAG="其它"
+do_build() {
+	#-----------------------------------------------------------------------
+	# prepare to build
+	rm -rf ${DIR}/${MODULE}.tar.gz
+	rm -rf ${DIR}/build && mkdir -p ${DIR}/build
+	cp -rf ${DIR}/${MODULE} ${DIR}/build/ && cd ${DIR}/build
+	echo "build ${MODULE} for ${PLATFORM}"
+	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
+	# different architecture of binary/script go to coresponding folder
+	cp -rf ${DIR}/build/${MODULE}/bin-${PLATFORM} ${DIR}/build/${MODULE}/bin
+	cp -rf ${DIR}/build/${MODULE}/scripts-${PLATFORM} ${DIR}/build/${MODULE}/scripts
+	cp -rf ${DIR}/build/${MODULE}/webs-${PLATFORM} ${DIR}/build/${MODULE}/webs
+	# remove extra folder
+	rm -rf ${DIR}/build/${MODULE}/bin-*
+	rm -rf ${DIR}/build/${MODULE}/scripts-*
+	rm -rf ${DIR}/build/${MODULE}/webs-*
+	# make tar
+	tar -zcf ${MODULE}.tar.gz ${MODULE}
+	if [ "$?" = "0" ];then
+		echo "build success!"
+		mv ${DIR}/build/${MODULE}.tar.gz ${DIR}
 	fi
-	
+	cd ${DIR} && rm -rf ${DIR}/build
+	#-----------------------------------------------------------------------
 	# add version to the package
-	cat > ${MODULE}/version <<-EOF
-	${VERSION}
-	EOF
-	
-	tar -zcvf ${MODULE}.tar.gz $MODULE
-	local md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)
+	echo ${VERSION} >${MODULE}/version
+	md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)
 	cat > ./version <<-EOF
 	${VERSION}
 	${md5value}
@@ -49,17 +63,22 @@ do_build_result() {
 	"home_url":"$HOME_URL",
 	"title":"$TITLE",
 	"description":"$DESCRIPTION",
-	"changelog":"$CHANGELOG",
 	"tags":"$TAGS",
 	"author":"$AUTHOR",
 	"link":"$LINK",
+	"changelog":"$CHANGELOG",
 	"build_date":"$DATE",
 	"server":"$SERVER",
 	"port":"$PORT"
 	}
 	EOF
+	
 	#update md5
 	python ../softcenter/gen_install.py stage2
 }
 
-do_build_result
+
+# do build
+cd ${DIR}
+do_build
+
