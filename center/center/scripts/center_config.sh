@@ -89,6 +89,58 @@ switch_center(){
 	fi
 }
 
+set_skin(){
+	# new nethod: use nvram value to set skin
+	local UI_TYPE=ASUSWRT
+	local SC_SKIN=$(nvram get sc_skin)
+	local TS_FLAG=$(grep -o "2ED9C3" /www/css/difference.css 2>/dev/null|head -n1)
+	local ROG_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "2071044")
+	local TUF_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "D0982C")
+	local WRT_FLAG=$(cat /www/form_style.css|grep -A1 ".tab_NW:hover{"|grep "background"|sed 's/,//g'|grep -o "4F5B5F")
+
+	if [ -n "${TS_FLAG}" ];then
+		UI_TYPE="TS"
+	else
+		if [ -n "${TUF_FLAG}" ];then
+			UI_TYPE="TUF"
+		fi
+		if [ -n "${ROG_FLAG}" ];then
+			UI_TYPE="ROG"
+		fi
+		if [ -n "${WRT_FLAG}" ];then
+			UI_TYPE="ASUSWRT"
+		fi
+	fi
+	if [ -z "${SC_SKIN}" -o "${SC_SKIN}" != "${UI_TYPE}" ];then
+		nvram set sc_skin="${UI_TYPE}"
+		nvram commit
+	fi
+
+	# compatibile
+	if [ -f "/koolshare/res/softcenter_asus.css" -a -f "/koolshare/res/softcenter_rog.css" -a -f "/koolshare/res/softcenter_tuf.css" -a -f "/koolshare/res/softcenter_ts.css" ];then
+		local MD5_CSS=$(md5sum /koolshare/res/softcenter.css 2>/dev/null|awk '{print $1}')
+		local MD5_WRT=$(md5sum /koolshare/res/softcenter_asus.css 2>/dev/null|awk '{print $1}')
+		local MD5_ROG=$(md5sum /koolshare/res/softcenter_rog.css 2>/dev/null|awk '{print $1}')
+		local MD5_TUF=$(md5sum /koolshare/res/softcenter_tuf.css 2>/dev/null|awk '{print $1}')
+		local MD5_TS=$(md5sum /koolshare/res/softcenter_ts.css 2>/dev/null|awk '{print $1}')
+		if [ "${UI_TYPE}" == "ASUSWRT" -a "${MD5_CSS}" != "${MD5_WRT}" ];then
+			cp -rf /koolshare/res/softcenter_asus.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "ROG" -a "${MD5_CSS}" != "${MD5_ROG}" ];then
+			cp -rf /koolshare/res/softcenter_rog.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "TUF" -a "${MD5_CSS}" != "${MD5_TUF}" ];then
+			cp -rf /koolshare/res/softcenter_tuf.css /koolshare/res/softcenter.css
+		fi
+
+		if [ "${UI_TYPE}" == "TS" -a "${MD5_CSS}" != "${MD5_TS}" ];then
+			cp -rf /koolshare/res/softcenter_ts.css /koolshare/res/softcenter.css
+		fi
+	fi
+}
+
 if [ $# == 2 -a $(number_test $1) == 0 ];then
 	switch_center
 	if [ "$?" == "0" ];then
@@ -101,6 +153,7 @@ if [ $# == 2 -a $(number_test $1) == 0 ];then
 			http_response "错误：没有检测到koolcenter，不切换！"
 		fi
 	fi
+	set_skin
 	exit 0
 fi
 

@@ -1,6 +1,6 @@
 {
 "version":"2.0",
-"md5":"fdd82fba966ca54f4f524cbad663c75b",
+"md5":"0c092b679cb8f4ad7da357b709b84686",
 "home_url":"Module_center.asp",
 "title":"软件中心一键切换",
 "description":"koolcenter/softcenter 一键来回切换！",
@@ -8,5 +8,5 @@
 "author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2025-11-02_18:37:30"
+"build_date":"2025-11-03_00:07:36"
 }
