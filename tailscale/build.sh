@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="tailscale"
-VERSION="2.0.3"
+VERSION="2.0.4"
 TITLE="Tailscale"
 DESCRIPTION="基于wiregurad协议的零配置内网穿透安全组网工具！"
 HOME_URL="Module_tailscale.asp"
@@ -21,7 +21,7 @@ fi
 
 if [ "${PLATFORM}" = "mtk" -o "${PLATFORM}" = "ipq64" ];then
 	ARCH=64
-elif [ "${PLATFORM}" = "hnd" -o "${PLATFORM}" = "ipq32" ];then
+elif [ "${PLATFORM}" = "hnd" -o "${PLATFORM}" = "ipq32" -o "${PLATFORM}" = "qca" ];then
 	ARCH=32
 fi
 
