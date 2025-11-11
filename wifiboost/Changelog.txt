@@ -1,6 +1,6 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
-4.9.9
+4.9.9 - 4.9.10
    - add	添加TUF-BE3600和TUF-BE3600_V2的支持
    - fix	修复在梅林改版固件102.5中，BE88U和BE86U最大功率显示不正确的问题
    

@@ -261,10 +261,12 @@ body .layui-layer-lan .layui-layer-btn {text-align:center}
 <script>
 var MODEL = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
 var BUILD = '<% nvram_get("buildno"); %>'
+var FSVER = '<% nvram_get("firmver"); %>'
 var FWVER = '<% nvram_get("extendno"); %>';
 var RC_SUPPORT = '<% nvram_get("rc_support"); %>';
 var orig_region = '<% nvram_get("location_code"); %>';
 var odm = '<% nvram_get("productid"); %>'
+var _fwver = FSVER.replace(/\./g, '') + BUILD.replace(/\./g, '');
 var params_chk = ['wifiboost_boost_24', 'wifiboost_boost_52', 'wifiboost_boost_58'];
 var params_inp = ['wifiboost_key'];
 var max_dbm_24 = '28.50';
@@ -312,6 +314,7 @@ function init() {
 	show_menu(menu_hook);
 	detect_brower();
 }
+
 function detect_brower() {
 	var info = new Browser();
 	console.log("您使用的浏览器为：", info.browser);
@@ -399,7 +402,7 @@ function register_event(){
 		// two wifi router new format
 		current_maxp24 = '<% nvram_get("sb/0/maxp2ga0"); %>';
 		current_maxp52 = '<% nvram_get("sb/1/maxp5gb0a0"); %>';
-	}else if(odm == "RT-BE82M"){
+	}else if(odm == "RT-BE82M" || odm == "TUF-BE3600" || odm == "TUF-BE3600_V2"){
 		current_maxp24 = '<% nvram_get("sb/1/maxp2ga0"); %>';
 		current_maxp52 = '<% nvram_get("sb/0/maxp5gb0a0"); %>';
 	}else{
@@ -419,15 +422,17 @@ function register_event(){
 
 	// define max dbm
 	current_dec_24 = parseInt(current_maxp24);
-	if(MODEL == "RT-BE88U"){
-		current_dbm_24 = (current_dec_24/4).toFixed(2);
-		current_pwr_24 = Math.pow(10,current_dec_24/4/10).toFixed(2);
+	current_dbm_24 = ((current_dec_24 - 6)/4).toFixed(2);
+	current_pwr_24 = Math.pow(10,(current_dec_24 - 6)/4/10).toFixed(2);
+	if(MODEL == "RT-BE88U" || MODEL == "RT-BE86U"){
+		if (BUILD.indexOf(".") != -1 && RC_SUPPORT.indexOf("koolsoft") != -1 && _fwver < 30061025){
+			// 当BE88U和BE86U梅林改版固件版本号小于102.5时，需要用到不同的计算方法去获取理论最大功率
+			current_dbm_24 = (current_dec_24/4).toFixed(2);
+			current_pwr_24 = Math.pow(10,current_dec_24/4/10).toFixed(2);
+		}
 	}else if(MODEL == "GT-BE96"){
 		current_dbm_24 = ((current_dec_24 - 4)/4).toFixed(2);
 		current_pwr_24 = Math.pow(10,(current_dec_24 - 4)/4/10).toFixed(2);
-	}else{
-		current_dbm_24 = ((current_dec_24 - 6)/4).toFixed(2);
-		current_pwr_24 = Math.pow(10,(current_dec_24 - 6)/4/10).toFixed(2);
 	}
 	boost_dbm_24 = current_dbm_24;
 	$(function() {
@@ -451,15 +456,16 @@ function register_event(){
 	document.getElementById('tx_power_desc_24').innerHTML = current_dbm_24 + " dBm / " + current_pwr_24 + " mw";
 
 	current_dec_52 = parseInt(current_maxp52);
-	if(MODEL == "RT-BE88U"){
-		current_dbm_52 = (current_dec_52/4).toFixed(2);
-		current_pwr_52 = Math.pow(10,current_dec_52/4/10).toFixed(2);
+	current_dbm_52 = ((current_dec_52 - 6)/4).toFixed(2);
+	current_pwr_52 = Math.pow(10,(current_dec_52 - 6)/4/10).toFixed(2);
+	if(MODEL == "RT-BE88U" || MODEL == "RT-BE86U"){
+		if (BUILD.indexOf(".") != -1 && RC_SUPPORT.indexOf("koolsoft") != -1 && _fwver < 30061025){
+			current_dbm_52 = (current_dec_52/4).toFixed(2);
+			current_pwr_52 = Math.pow(10,current_dec_52/4/10).toFixed(2);
+		}
 	}else if(MODEL == "GT-BE96"){
 		current_dbm_52 = ((current_dec_52 - 4)/4).toFixed(2);
 		current_pwr_52 = Math.pow(10,(current_dec_52 - 4)/4/10).toFixed(2);
-	}else{
-		current_dbm_52 = ((current_dec_52 - 6)/4).toFixed(2);
-		current_pwr_52 = Math.pow(10,(current_dec_52 - 6)/4/10).toFixed(2);
 	}
 
 	boost_dbm_52 = current_dbm_52;
