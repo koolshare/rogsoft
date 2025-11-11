@@ -27,62 +27,69 @@ get_cpu_temp(){
 }
 
 get_sta_info(){
-	# 对于华硕路由器，其2.4G的mac地址和br0相等，5G-1 mac地址需要加4，5G-2mac地址需要需要加8
-	# 如 br0 mac：A0:36:BC:70:33:C0
-	# 2.4G mac：A0:36:BC:70:33:C0
-	# 5.2G mac：A0:36:BC:70:33:C4
-	# 5.8G mac：A0:36:BC:70:33:D8
-	local raido_type=$1
+	local ifnames=$(nvram get sta_ifnames)
+	if [ -n "${ifnames}" ];then
+		interface_24g=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '1p')
+		interface_52g=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '2p')
+		interface_58g=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '3p')
+	else
+		# 对于华硕路由器，其2.4G的mac地址和br0相等，5G-1 mac地址需要加4，5G-2mac地址需要需要加8
+		# 如 br0 mac：A0:36:BC:70:33:C0
+		# 2.4G mac：A0:36:BC:70:33:C0
+		# 5.2G mac：A0:36:BC:70:33:C4
+		# 5.8G mac：A0:36:BC:70:33:D8
+		local raido_type=$1
 
-	local ifname_0=$(nvram get wl0_ifname)
-	local ifname_1=$(nvram get wl1_ifname)
-	local ifname_2=$(nvram get wl2_ifname)
-	local ifname_3=$(nvram get wl3_ifname)
-	
-	[ -n "${ifname_0}" ] && local mac_tail_if0=$(ifconfig ${ifname_0} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	[ -n "${ifname_1}" ] && local mac_tail_if1=$(ifconfig ${ifname_1} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	[ -n "${ifname_2}" ] && local mac_tail_if2=$(ifconfig ${ifname_2} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	[ -n "${ifname_3}" ] && local mac_tail_if3=$(ifconfig ${ifname_3} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	
-	[ -n "${ifname_0}" ] && local mac_tail_band0=$(ifconfig br0 | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
-	[ -n "${ifname_1}" ] && local mac_tail_band1=$(awk -v x=${mac_tail_band0} 'BEGIN { printf "%02X\n", x + 4}' | grep -o . | tail -n1)
-	[ -n "${ifname_2}" ] && local mac_tail_band2=$(awk -v x=${mac_tail_band0} 'BEGIN { printf "%02X\n", x + 8}' | grep -o . | tail -n1)
-	[ -n "${ifname_3}" ] && local mac_tail_band3=$(awk -v x=${mac_tail_band0} 'BEGIN { printf "%02X\n", x + 8}' | grep -o . | tail -n1)
+		local ifname_0=$(nvram get wl0_ifname)
+		local ifname_1=$(nvram get wl1_ifname)
+		local ifname_2=$(nvram get wl2_ifname)
+		local ifname_3=$(nvram get wl3_ifname)
+		
+		[ -n "${ifname_0}" ] && local mac_tail_if0=$(ifconfig ${ifname_0} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+		[ -n "${ifname_1}" ] && local mac_tail_if1=$(ifconfig ${ifname_1} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+		[ -n "${ifname_2}" ] && local mac_tail_if2=$(ifconfig ${ifname_2} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+		[ -n "${ifname_3}" ] && local mac_tail_if3=$(ifconfig ${ifname_3} | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+		
+		[ -n "${ifname_0}" ] && local mac_tail_band0=$(ifconfig br0 | grep HWaddr | awk '{print $5}' | awk -F":" '{print $NF}' | grep -o . | tail -n1)
+		[ -n "${ifname_1}" ] && local mac_tail_band1=$(awk -v x=${mac_tail_band0} 'BEGIN { printf "%02X\n", x + 4}' | grep -o . | tail -n1)
+		[ -n "${ifname_2}" ] && local mac_tail_band2=$(awk -v x=${mac_tail_band0} 'BEGIN { printf "%02X\n", x + 8}' | grep -o . | tail -n1)
+		[ -n "${ifname_3}" ] && local mac_tail_band3=$(awk -v x=${mac_tail_band0} 'BEGIN { printf "%02X\n", x + 8}' | grep -o . | tail -n1)
 
-	### [ -n "${ifname_0}" ] && echo mac_tail_if0 $mac_tail_if0
-	### [ -n "${ifname_1}" ] && echo mac_tail_if1 $mac_tail_if1
-	### [ -n "${ifname_2}" ] && echo mac_tail_if2 $mac_tail_if2
-	### [ -n "${ifname_3}" ] && echo mac_tail_if3 $mac_tail_if3
+		### [ -n "${ifname_0}" ] && echo mac_tail_if0 $mac_tail_if0
+		### [ -n "${ifname_1}" ] && echo mac_tail_if1 $mac_tail_if1
+		### [ -n "${ifname_2}" ] && echo mac_tail_if2 $mac_tail_if2
+		### [ -n "${ifname_3}" ] && echo mac_tail_if3 $mac_tail_if3
 
-	### [ -n "${ifname_0}" ] && echo mac_tail_band0 $mac_tail_band0
-	### [ -n "${ifname_1}" ] && echo mac_tail_band1 $mac_tail_band1
-	### [ -n "${ifname_2}" ] && echo mac_tail_band2 $mac_tail_band2
-	### [ -n "${ifname_3}" ] && echo mac_tail_band3 $mac_tail_band3
+		### [ -n "${ifname_0}" ] && echo mac_tail_band0 $mac_tail_band0
+		### [ -n "${ifname_1}" ] && echo mac_tail_band1 $mac_tail_band1
+		### [ -n "${ifname_2}" ] && echo mac_tail_band2 $mac_tail_band2
+		### [ -n "${ifname_3}" ] && echo mac_tail_band3 $mac_tail_band3
 
-	if [ -n "${ifname_0}" ];then
-		[ "${mac_tail_if0}" == "${mac_tail_band0}" ] && interface_band0=${ifname_0}
-		[ "${mac_tail_if1}" == "${mac_tail_band0}" ] && interface_band0=${ifname_1}
-		[ "${mac_tail_if2}" == "${mac_tail_band0}" ] && interface_band0=${ifname_2}
-		[ "${mac_tail_if3}" == "${mac_tail_band0}" ] && interface_band0=${ifname_3}
+		if [ -n "${ifname_0}" ];then
+			[ "${mac_tail_if0}" == "${mac_tail_band0}" ] && interface_band0=${ifname_0}
+			[ "${mac_tail_if1}" == "${mac_tail_band0}" ] && interface_band0=${ifname_1}
+			[ "${mac_tail_if2}" == "${mac_tail_band0}" ] && interface_band0=${ifname_2}
+			[ "${mac_tail_if3}" == "${mac_tail_band0}" ] && interface_band0=${ifname_3}
+		fi
+		if [ -n "${ifname_1}" ];then
+			[ "${mac_tail_if0}" == "${mac_tail_band1}" ] && interface_band1=${ifname_0}
+			[ "${mac_tail_if1}" == "${mac_tail_band1}" ] && interface_band1=${ifname_1}
+			[ "${mac_tail_if2}" == "${mac_tail_band1}" ] && interface_band1=${ifname_2}
+			[ "${mac_tail_if3}" == "${mac_tail_band1}" ] && interface_band1=${ifname_3}
+		fi
+		if [ -n "${ifname_2}" ];then
+			[ "${mac_tail_if0}" == "${mac_tail_band2}" ] && interface_band2=${ifname_0}
+			[ "${mac_tail_if1}" == "${mac_tail_band2}" ] && interface_band2=${ifname_1}
+			[ "${mac_tail_if2}" == "${mac_tail_band2}" ] && interface_band2=${ifname_2}
+			[ "${mac_tail_if3}" == "${mac_tail_band2}" ] && interface_band2=${ifname_3}
+		fi
+		if [ -n "${ifname_3}" ];then
+			[ "${mac_tail_if0}" == "${mac_tail_band3}" ] && interface_band3=${ifname_0}
+			[ "${mac_tail_if1}" == "${mac_tail_band3}" ] && interface_band3=${ifname_1}
+			[ "${mac_tail_if2}" == "${mac_tail_band3}" ] && interface_band3=${ifname_2}
+			[ "${mac_tail_if3}" == "${mac_tail_band3}" ] && interface_band3=${ifname_3}
+		fi
 	fi
-	if [ -n "${ifname_1}" ];then
-		[ "${mac_tail_if0}" == "${mac_tail_band1}" ] && interface_band1=${ifname_0}
-		[ "${mac_tail_if1}" == "${mac_tail_band1}" ] && interface_band1=${ifname_1}
-		[ "${mac_tail_if2}" == "${mac_tail_band1}" ] && interface_band1=${ifname_2}
-		[ "${mac_tail_if3}" == "${mac_tail_band1}" ] && interface_band1=${ifname_3}
-	fi
-	if [ -n "${ifname_2}" ];then
-		[ "${mac_tail_if0}" == "${mac_tail_band2}" ] && interface_band2=${ifname_0}
-		[ "${mac_tail_if1}" == "${mac_tail_band2}" ] && interface_band2=${ifname_1}
-		[ "${mac_tail_if2}" == "${mac_tail_band2}" ] && interface_band2=${ifname_2}
-		[ "${mac_tail_if3}" == "${mac_tail_band2}" ] && interface_band2=${ifname_3}
-	fi
-	if [ -n "${ifname_3}" ];then
-		[ "${mac_tail_if0}" == "${mac_tail_band3}" ] && interface_band3=${ifname_0}
-		[ "${mac_tail_if1}" == "${mac_tail_band3}" ] && interface_band3=${ifname_1}
-		[ "${mac_tail_if2}" == "${mac_tail_band3}" ] && interface_band3=${ifname_2}
-		[ "${mac_tail_if3}" == "${mac_tail_band3}" ] && interface_band3=${ifname_3}
-	fi	
 }
 
 get_tmp_pwr_hnd(){
