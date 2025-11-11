@@ -29,9 +29,10 @@ get_cpu_temp(){
 get_sta_info(){
 	local ifnames=$(nvram get sta_ifnames)
 	if [ -n "${ifnames}" ];then
-		interface_24g=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '1p')
-		interface_52g=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '2p')
-		interface_58g=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '3p')
+		interface_band0=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '1p')
+		interface_band1=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '2p')
+		interface_band2=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '3p')
+		interface_band3=$(echo "${ifnames}" | sed 's/[[:space:]]/\n/g' | sed -n '4p')
 	else
 		# 对于华硕路由器，其2.4G的mac地址和br0相等，5G-1 mac地址需要加4，5G-2mac地址需要需要加8
 		# 如 br0 mac：A0:36:BC:70:33:C0
