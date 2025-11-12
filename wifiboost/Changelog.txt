@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin wifiboost Changelog for HND/AXHND platform
 ===========================================
+4.9.12
+   - update	BE86U和BE88U现在最高功率只能到28.5，因此对功率条上限进行相应修改。
+
 4.9.11
    - fix	修复RT-AX58U, RT-AX68U, RT-AX88U等机型wifi状态显示离线的问题
 

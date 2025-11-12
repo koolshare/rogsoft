@@ -275,15 +275,6 @@ var max_dbm_58 = '28.50';
 if(odm == "GT10"){
 	var max_dbm_24 = '29.00';
 }
-if(odm == "RT-BE88U"){
-	var max_dbm_24 = '30.00';
-	var max_dbm_52 = '30.00';
-}
-if(odm == "GT-BE96"){
-	var max_dbm_24 = '29.00';
-	var max_dbm_52 = '29.00';
-	var max_dbm_58 = '29.00';
-}
 var boost_dbm_24;
 var boost_dbm_52;
 var boost_dbm_58;
