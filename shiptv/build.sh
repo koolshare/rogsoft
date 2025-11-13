@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="shiptv"
-VERSION="1.3"
+VERSION="1.4"
 TITLE="上海电信IPTV"
 DESCRIPTION="上海电信IPTV，4K IPTV 一键开启"
 HOME_URL="Module_shiptv.asp"
