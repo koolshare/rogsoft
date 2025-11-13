@@ -45,49 +45,75 @@ unload_dhcp(){
 load_vlan(){
 	echo_date "┌ 设置 VLAN 穿透..."
 	
+	# 动态检测 WAN 口
+	echo_date "├ 检测 WAN 口..."
+	local wan_port=""
+	for iface in $(ip addr | grep -o 'eth[0-9]\+' | sort -u); do
+		if ! ip addr show $iface | grep -q "master br0"; then
+			wan_port=$iface
+			break
+		fi
+	done
+	
+	if [ -z "$wan_port" ]; then
+		echo_date "├ 未找到 WAN 口，使用默认 eth0"
+		wan_port="eth0"
+	else
+		echo_date "├ 检测到 WAN 口: $wan_port"
+	fi
+	
 	echo_date "├ 添加虚拟网卡接口..."
 	vconfig set_name_type DEV_PLUS_VID_NO_PAD
-	vconfig add eth0 85
+	vconfig add $wan_port 85
 	vconfig add br0 85
 	
 	echo_date "├ 添加网桥并绑定虚拟网卡..."
 	brctl addbr vlan85
-	brctl addif vlan85 eth0.85
+	brctl addif vlan85 ${wan_port}.85
 	brctl addif vlan85 br0.85
 
 	echo_date "├ 设定嗅探模式协议为igmp，模式为标准..."
 	bcmmcastctl mode -i vlan85 -p 1 -m 1
 	
 	echo_date "├ 启动虚拟网卡和网桥..."
-	ifconfig eth0.85 up
+	ifconfig ${wan_port}.85 up
 	ifconfig br0.85 up
 	ifconfig vlan85 up
 	echo_date "└ 完成！"
 }
 
 unload_vlan(){
-	if [ -n "$(ip addr show br0.85)" -o -n "$(ip addr show eth0.85)" -o -n "$(brctl show|grep vlan85)" ];then
+	# 检测现有的 VLAN 接口而不是重新检测 WAN 口
+	local existing_eth_vlan=$(ip addr 2>/dev/null | grep -o 'eth[0-9]\+\.85' | head -1)
+	local existing_br_vlan=$(ip addr show br0.85 2>/dev/null)
+	local existing_vlan_bridge=$(brctl show 2>/dev/null | grep vlan85)
+	
+	if [ -n "$existing_br_vlan" -o -n "$existing_eth_vlan" -o -n "$existing_vlan_bridge" ];then
 		echo_date "┌ 移除 VLAN 穿透..."
-		local val_1=$(ip addr show vlan85|grep -o "state UP")
-		local val_2=$(ip addr show br0.85|grep -o "state UP")
-		local val_3=$(ip addr show eth0.85|grep -o "state UP")
-		[ -n "$val_1" -o -n "$val_2" -o -n "$val_2" ] && echo_date "├ 关闭虚拟网卡和网桥..."
+		
+		# 检查哪些接口处于UP状态
+		local val_1=$(ip addr show vlan85 2>/dev/null | grep -o "state UP")
+		local val_2=$(ip addr show br0.85 2>/dev/null | grep -o "state UP")
+		local val_3=""
+		if [ -n "$existing_eth_vlan" ]; then
+			val_3=$(ip addr show $existing_eth_vlan 2>/dev/null | grep -o "state UP")
+		fi
+		
+		[ -n "$val_1" -o -n "$val_2" -o -n "$val_3" ] && echo_date "├ 关闭虚拟网卡和网桥..."
 		[ -n "$val_1" ] && ifconfig vlan85 down >/dev/null 2>&1
 		[ -n "$val_2" ] && ifconfig br0.85 down >/dev/null 2>&1
-		[ -n "$val_3" ] && ifconfig eth0.85 down >/dev/null 2>&1
+		[ -n "$val_3" -a -n "$existing_eth_vlan" ] && ifconfig $existing_eth_vlan down >/dev/null 2>&1
 
-		# 删除vlan
-		if [ -n "$(brctl show|grep vlan85)" ];then
+		# 删除vlan网桥
+		if [ -n "$existing_vlan_bridge" ];then
 			echo_date "├ 删除虚拟网桥..."
 			brctl delbr vlan85 >/dev/null 2>&1
 		fi
 		
 		# 删除虚拟接口
-		local val_4=$(ip addr show br0.85)
-		local val_5=$(ip addr show eth0.85)
-		[ -n "$val_4" -o -n "$val_5" ] && echo_date "├ 删除虚拟网卡接口..."
-		[ -n "$val_4" ] && vconfig rem br0.85 >/dev/null 2>&1
-		[ -n "$val_5" ] && vconfig rem eth0.85 >/dev/null 2>&1
+		[ -n "$existing_br_vlan" -o -n "$existing_eth_vlan" ] && echo_date "├ 删除虚拟网卡接口..."
+		[ -n "$existing_br_vlan" ] && vconfig rem br0.85 >/dev/null 2>&1
+		[ -n "$existing_eth_vlan" ] && vconfig rem $existing_eth_vlan >/dev/null 2>&1
 		echo_date "└ 完成！"
 	else
 		[ "$shiptv_vlan" == "0" ] && echo_date "VLAN穿透未开启！"
