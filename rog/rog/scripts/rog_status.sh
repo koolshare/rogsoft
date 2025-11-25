@@ -168,20 +168,20 @@ get_tmp_pwr_hnd(){
 		# 四频路由器
 		if [ "${model}" == "GT-BE98" ];then
 			# 2 + 5 + 5 + 6
-			wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G-1：&nbsp;${interface_band1_temp_c} ${__spilt__} 5G-2：&nbsp;${interface_band2_temp_c} ${__spilt__} 6G1： &nbsp;${interface_band2_temp_c}"
+			wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G-1：&nbsp;${interface_band1_temp_c} ${__spilt__} 5G-2：&nbsp;${interface_band2_temp_c} ${__spilt__} 6G1： &nbsp;${interface_band3_temp_c}"
 		fi
 		if [ "${model}" == "GT-BE98_PRO" ];then
 			# 2 + 5 + 6 + 6
-			wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G：&nbsp;${interface_band1_temp_c} ${__spilt__} 6G-1：&nbsp;${interface_band2_temp_c} ${__spilt__} 6G-2：&nbsp;${interface_band2_temp_c}"
+			wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G：&nbsp;${interface_band1_temp_c} ${__spilt__} 6G-1：&nbsp;${interface_band2_temp_c} ${__spilt__} 6G-2：&nbsp;${interface_band3_temp_c}"
 		fi
 		
 		if [ -n "${interface_band0_pwer_o}" -o -n "${interface_band1_pwer_o}" -o -n "${interface_band2_pwer_o}" -o -n "${interface_band2_pwer_o}" ];then
 			if [ "${model}" == "GT-BE98" ];then
 				# 2 + 5 + 5 + 6
-				wl_txpwr="2.4G：&nbsp;${interface_band0_pwer_d} / ${interface_band0_pwer_p} <br /> 5G-1：&nbsp;${interface_band1_pwer_d} / ${interface_band1_pwer_p} <br /> 5G-2：&nbsp;${interface_band2_pwer_d} / ${interface_band2_pwer_p} <br /> 6G：&nbsp;&nbsp;&nbsp;&nbsp;${interface_band2_pwer_d} / ${interface_band2_pwer_p}"
+				wl_txpwr="2.4G：&nbsp;${interface_band0_pwer_d} / ${interface_band0_pwer_p} <br /> 5G-1：&nbsp;${interface_band1_pwer_d} / ${interface_band1_pwer_p} <br /> 5G-2：&nbsp;${interface_band2_pwer_d} / ${interface_band2_pwer_p} <br /> 6G：&nbsp;&nbsp;&nbsp;&nbsp;${interface_band3_pwer_d} / ${interface_band3_pwer_p}"
 			elif [ "${model}" == "GT-BE98_PRO" ];then
 				# 2 + 5 + 6 + 6
-				wl_txpwr="2.4G：&nbsp;${interface_band0_pwer_d} / ${interface_band0_pwer_p} <br /> 5G：&nbsp;&nbsp;&nbsp;&nbsp;${interface_band1_pwer_d} / ${interface_band1_pwer_p} <br /> 6G-1：&nbsp;${interface_band2_pwer_d} / ${interface_band2_pwer_p} <br /> 6G-2：&nbsp;${interface_band2_pwer_d} / ${interface_band2_pwer_p}"
+				wl_txpwr="2.4G：&nbsp;${interface_band0_pwer_d} / ${interface_band0_pwer_p} <br /> 5G：&nbsp;&nbsp;&nbsp;&nbsp;${interface_band1_pwer_d} / ${interface_band1_pwer_p} <br /> 6G-1：&nbsp;${interface_band2_pwer_d} / ${interface_band2_pwer_p} <br /> 6G-2：&nbsp;${interface_band3_pwer_d} / ${interface_band3_pwer_p}"
 			fi
 		else
 			wl_txpwr=""
@@ -209,7 +209,7 @@ get_tmp_pwr_hnd(){
 		# 双频路由器
 		wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G： ${interface_band1_temp_c}"
 
-		if [ -n "${interface_band0_power}" -o -n "${interface_band1_pwer_o}" ];then
+		if [ -n "${interface_band0_pwer_o}" -o -n "${interface_band1_pwer_o}" ];then
 			wl_txpwr="2.4G：${interface_band0_pwer_d} / ${interface_band0_pwer_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_band1_pwer_d} / ${interface_band1_pwer_p}"
 		fi
 	fi
@@ -307,7 +307,7 @@ get_tmp_pwr(){
 	elif [ "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" ];then
 		get_tmp_pwr_MT7988X
 	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
-		get_tmp_pwr_ipCq
+		get_tmp_pwr_ipq
 	elif [ "$(nvram get odmpid)" == "RT-AX89X" ];then
 		get_tmp_pwr_qca
 	else

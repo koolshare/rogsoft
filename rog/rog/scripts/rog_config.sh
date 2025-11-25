@@ -1,6 +1,8 @@
 #!/bin/sh
 source /koolshare/scripts/base.sh
 eval $(dbus export rog)
+# define model for logging
+model="$(nvram get odmpid)"
 
 fan_control(){
 	local RFL=$rog_fan_level
