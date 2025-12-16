@@ -1053,7 +1053,7 @@ function open_buy() {
             { id: 'buy_2y', name: '2年', price: '17.99' },
             { id: 'buy_3y', name: '3年', price: '25.99' },
             { id: 'buy_4y', name: '4年', price: '33.99' },
-            { id: '5y',   name: '终身', price: '39.99' }
+            { id: 'buy_life', name: '终身', price: '39.99' }
     ];
       var html = "<div class='fcx-modal'><div class='fcx-wrap'>"+
             "<div class='fcx-header'><div style='font-size:18px;font-weight:700'>FULLCONE NAT 授权购买</div></div>"+
@@ -1074,10 +1074,10 @@ function open_buy() {
       var idx = layer.open({ type:1, skin:'layui-layer-lan', shade:0.8, title:'选择购买方案与支付方式', time:0, area:'840px', offset:'230px', btnAlign:'c', resize:false, closeBtn:1, shadeClose:true, content:html,
           success: function(layero, index){
             // 购买预览：遵循试用/赠送覆盖规则
-            function labelPlan(p){ if(!p) return ''; if(p==='trial3')return '试用3天'; if(p.indexOf('gift_')===0){ var x=p.substr(5); if(x==='30d')return '赠送30天'; if(x==='1y')return '赠送1年'; if(x==='2y')return '赠送2年'; if(x==='3y')return '赠送3年'; if(x==='4y')return '赠送4年'; return '赠送'+x; } if(p.indexOf('buy_')===0){ var x=p.substr(4); if(x==='1y')return '购买1年'; if(x==='2y')return '购买2年'; if(x==='3y')return '购买3年'; if(x==='4y')return '购买4年'; return '购买'+x; } var map={'1y':'购买1年','2y':'购买2年','3y':'购买3年','4y':'购买4年','5y':'购买5年'}; return map[p]||p; }
-            // 购买预览：不再显示“升级到某档位”，改为剩余天数/到期/反激活次数
-            function baseDays(p){ var m={'buy_1y':365,'buy_2y':730,'buy_3y':1095,'buy_4y':1460,'5y':1825,'1y':365,'2y':730,'3y':1095,'4y':1460,'5y':1825}; return m[p]||0; }
-            function baseRL(p){ var m={'buy_1y':1,'buy_2y':2,'buy_3y':3,'buy_4y':4,'5y':4,'1y':1,'2y':2,'3y':3,'4y':4,'5y':4}; return m[p]||0; }
+            function labelPlan(p){ if(!p) return ''; if(p==='trial3')return '试用3天'; if(p.indexOf('gift_')===0){ var x=p.substr(5); if(x==='30d')return '赠送30天'; if(x==='1y')return '赠送1年'; if(x==='2y')return '赠送2年'; if(x==='3y')return '赠送3年'; if(x==='4y')return '赠送4年'; return '赠送'+x; } if(p.indexOf('buy_')===0){ var x=p.substr(4); if(x==='1y')return '购买1年'; if(x==='2y')return '购买2年'; if(x==='3y')return '购买3年'; if(x==='4y')return '购买4年'; if(x==='life')return '购买终身'; return '购买'+x; } var map={'1y':'购买1年','2y':'购买2年','3y':'购买3年','4y':'购买4年','5y':'购买5年'}; return map[p]||p; }
+            // 购买预览：不再显示"升级到某档位"，改为剩余天数/到期/反激活次数
+            function baseDays(p){ var m={'buy_1y':365,'buy_2y':730,'buy_3y':1095,'buy_4y':1460,'buy_life':1825,'1y':365,'2y':730,'3y':1095,'4y':1460,'5y':1825}; return m[p]||0; }
+            function baseRL(p){ var m={'buy_1y':1,'buy_2y':2,'buy_3y':3,'buy_4y':4,'buy_life':4,'1y':1,'2y':2,'3y':3,'4y':4,'5y':4}; return m[p]||0; }
             function fmtDate(ts){ if(!ts) return ''; var d=new Date(ts*1000); var y=d.getFullYear(),m=('0'+(d.getMonth()+1)).slice(-2),dd=('0'+d.getDate()).slice(-2); return y+'-'+m+'-'+dd; }
             function updatePreviewBuy(lo){
                  var cur = dbus['fullcone_ticket']?parseTicket(dbus['fullcone_ticket']):null;
@@ -1107,9 +1107,9 @@ function open_buy() {
                    if (!becomeLife && total < LIFE_THRESH){ newRemainDays = total; newExpTs = nowTs + total*86400; newExpStr = fmtDate(newExpTs); }
                    else { newRemainDays = '无限期'; newExpStr = '<span class=\"life-badge\">永不过期</span>'; }
                  }
-                 var buyBaseRL = (function(pp){ if(pp==='5y') return 4; if(pp==='buy_4y'||pp==='4y') return 3; if(pp==='buy_3y'||pp==='3y') return 2; if(pp==='buy_2y'||pp==='2y') return 1; return 0; })(pSel);
+                 var buyBaseRL = (function(pp){ if(pp==='buy_life') return 4; if(pp==='buy_4y'||pp==='4y') return 3; if(pp==='buy_3y'||pp==='3y') return 2; if(pp==='buy_2y'||pp==='2y') return 1; return 0; })(pSel);
                  var newRL = buyBaseRL;
-                 var shortCn=(function(pp){ if(!pp) return ''; if(pp==='5y') return '<span class="life-badge">终身</span>'; if(pp==='buy_4y'||pp==='4y') return '4年'; if(pp==='buy_3y'||pp==='3y') return '3年'; if(pp==='buy_2y'||pp==='2y') return '2年'; if(pp==='buy_1y'||pp==='1y') return '1年'; return pp; })(pSel);
+                 var shortCn=(function(pp){ if(!pp) return ''; if(pp==='buy_life') return '<span class="life-badge">终身</span>'; if(pp==='buy_4y'||pp==='4y') return '4年'; if(pp==='buy_3y'||pp==='3y') return '3年'; if(pp==='buy_2y'||pp==='2y') return '2年'; if(pp==='buy_1y'||pp==='1y') return '1年'; return pp; })(pSel);
                  // 统一为"变化对比"一行文案：购买[x年]后，预计授权变化：授权剩余天数 A → B，到期日：a → b，反激活次数：x → y
                  var beforeDaysTxt = isLife ? '<span class="life-badge">终身</span>' : (curRemainDays!=null?curRemainDays:0);
                  var afterDaysTxt  = (newRemainDays==='无限期') ? '<span class="life-badge">终身</span>' : newRemainDays;
@@ -1126,7 +1126,7 @@ function open_buy() {
               $(layero).find('.fcx-card').removeClass('active2'); $(this).addClass('active2');
               var p=$(this).data('plan'); $('#fc_plan_hidden').val(p).prop('checked', true);
               var desc;
-              if(p==='5y') desc='终身授权，初始反激活次数 4 次。';
+              if(p==='buy_life') desc='终身授权，初始反激活次数 4 次。';
               else if(p==='buy_4y') desc='4年授权，初始反激活次数 3 次。';
               else if(p==='buy_3y') desc='3年授权，初始反激活次数 2 次。';
               else if(p==='buy_2y') desc='2年授权，初始反激活次数 1 次。';
@@ -1134,7 +1134,7 @@ function open_buy() {
               $(layero).find('#fcx-plan-desc').text(desc);
               updatePreviewBuy(layero);
               // 点击终身卡片时启动庆祝特效，点击其它卡片时关闭
-              if(p==='5y'){ try{ fcxCelebrate(0); }catch(e){} }
+              if(p==='buy_life'){ try{ fcxCelebrate(0); }catch(e){} }
               else { try{ fcxStopCelebrate(); }catch(e){} }
             });
             // trial-expired actions: buy/deactivate
@@ -1152,7 +1152,7 @@ function open_buy() {
             });
         // 支付方式：支持两种逻辑（保留旧跳转；或内联二维码+轮询）
         function open_inline_pay(plan, paytype){
-          var titleTxt = (plan==='5y'?'终身':(plan==='buy_3y'?'3年':(plan==='buy_2y'?'2年':'1年')));
+          var titleTxt = (plan==='buy_life'?'终身':(plan==='buy_4y'?'4年':(plan==='buy_3y'?'3年':(plan==='buy_2y'?'2年':'1年'))));
           var req = { action:'order_create', plan:plan, paytype:paytype, router: net_address, mac: router_mac, model: router_model };
           try{ var cur = dbus['fullcone_ticket']?parseTicket(dbus['fullcone_ticket']):null; var ctype = (cur&&cur.type)?cur.type:(cur&&cur.plan?cur.plan:''); var codeLocal = dbus['fullcone_key']||''; if (ctype==='trial' && codeLocal){ req.op='extend'; req.code=codeLocal; } }catch(e){}
           $.ajax({ type:'POST', url:'http://'+pay_server+':'+pay_port+'/api_fullcone.php', data: req, dataType:'json', timeout: 10000,
