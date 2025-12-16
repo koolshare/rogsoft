@@ -4,7 +4,7 @@
 
 MODULE="fullcone"
 VERSION="1.0.2"
-TITLE="wifi boost"
+TITLE="Fullcone NAT"
 DESCRIPTION="使用此插件可以让你的网络轻松变为Full Cone（全锥形）即NAT1"
 HOME_URL="Module_fullcone.asp"
 SERVER="42.192.18.234"
