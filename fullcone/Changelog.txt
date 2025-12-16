@@ -1,0 +1,7 @@
+Koolshare Asuswrt-Merlin fullcone Changelog
+===========================================
+1.0.1
+   - add	添加FULLCONE NAT插件，让你的网络轻松变为Full Cone（全锥形），即NAT1
+
+1.0.0
+   - add	内测版本
