@@ -630,7 +630,7 @@ function show_usage_notes(){
 <h3 style="margin:16px 0 10px 0;color:#1f2937;font-size:16px;font-weight:700;border-bottom:2px solid #3b82f6;padding-bottom:6px;">购买规则</h3>
 
 <ul style="margin:0 0 14px 0;padding-left:24px;">
-<li>套餐售价：1年/9.99元；2年/17.99元；3年/25.99元；4年/33.99.99元；终身/39.99元；</li>
+<li>套餐售价：1年/9.99元；2年/17.99元；3年/25.99元；4年/33.99元；终身/39.99元；</li>
 <li>反激活次数：1年/0次；2年/1次；3年/2次；4年/3次；终身/4次；</li>
 <li>购买授权将覆盖试用/赠送授权，这意味着试用/赠送授权剩余天数将不会叠加。</li>
 </ul>
@@ -677,11 +677,9 @@ function show_usage_notes(){
 <h3 style="margin:16px 0 10px 0;color:#1f2937;font-size:16px;font-weight:700;border-bottom:2px solid #3b82f6;padding-bottom:6px;">其它说明</h3>
 
 <ul style="margin:0 0 14px 0;padding-left:24px;">
-<li>RT-AC86U等机型已经自带fullcone支持，使用本插件前需要关闭系统的fullcone；</li>
-<li>兑换码格式：fx_xxx，使用后会兑换为格式：fc_xxx的授权码；</li>
-<li>赠送/购买类型兑换码可以兑换相应授权类型的授权码（fc_xxx）；</li>
-<li>赠送授权可以覆盖试用授权，赠送授权会被购买授权覆盖；</li>
-<li>授权天数多的兑换码会覆盖授权天数低的赠送授权，反之不会。</li>
+<li>RT-AC86U等机型已经自带Fullcone NAT支持，本插件功能重复，不建议购买本插件；</li>
+<li>RT-AC86U等机型使用本插件实现Fullcone NAT，请先关闭固件自带Fullcone NAT功能！</li>
+<li>关闭方法：<code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;color:#be123c;">外部网络(WAN)</code> - <code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;color:#be123c;">互联网连接</code>，<code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;color:#be123c;">NAT类型</code>设置为对称型(Symmetric)；</li>
 </ul>
 </div>
   `;

@@ -1,7 +1,14 @@
 Koolshare Asuswrt-Merlin fullcone Changelog
 ===========================================
-1.0.1
-   - add	添加FULLCONE NAT插件，让你的网络轻松变为Full Cone（全锥形），即NAT1
+1.0.4
+   - add	修复一些文案错误问题
 
-1.0.0
+1.0.3
+   - add	修复购买终身发放5年授权的问题
+
+1.0.2
+   - add	添加FULLCONE NAT插件，让你的网络轻松变为Full Cone（全锥形），即NAT1
+			支持hnd，qca，mtk三大平台，支持RT-AC86U以后的所有华硕路由器（带软件中心的）
+
+1.0.0 - 1.0.1
    - add	内测版本
