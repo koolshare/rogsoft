@@ -1064,8 +1064,39 @@ function fcx_open_jump_pay(params){
         qs.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
     }
     var url = 'http://'+pay_server+':'+pay_port+'/fullcone_purchase.php?' + qs.join('&');
-    try{ window.open(url, '_blank'); }catch(e){ location.href = url; }
-    try{ layer.msg('已为你打开支付页面，请在新窗口完成支付'); }catch(e){}
+    var w = null;
+    try{ w = window.open(url, '_blank'); }catch(e){ w = null; }
+    if (!w){
+      try{
+        layer.confirm('无法自动打开支付页面（可能被浏览器拦截或开启了 HTTPS-Only）。是否在当前页面打开支付页面？', { btn:['打开','取消'], shade:0.6 }, function(idx){
+          try{ layer.close(idx); }catch(ex){}
+          try{ location.href = url; }catch(ex2){}
+        });
+      }catch(e2){
+        try{ location.href = url; }catch(ex3){}
+      }
+    }else{
+      try{ layer.msg('已为你打开支付页面，请在新窗口完成支付'); }catch(e3){}
+    }
+    return url;
+}
+
+// 当内联支付创建订单失败（网络/HTTPS-Only/拦截不安全请求）时，自动降级到跳转支付
+function fcx_fallback_to_jump_pay(req, msg){
+  try{
+    if (!req) return;
+    var p = {};
+    for (var k in req){
+      if (!req.hasOwnProperty(k)) continue;
+      p[k] = req[k];
+    }
+    delete p.action;
+    fcLog('[PAY] inline failed, fallback to jump:', msg, p);
+    try{ layer.msg(msg || '创建订单失败，已尝试切换到跳转支付…'); }catch(e){}
+    fcx_open_jump_pay(p);
+  }catch(e2){
+    fcLog('[PAY] fallback failed:', e2);
+  }
 }
 // Purchase entry: choose plan and payment provider, then redirect to server
 function open_buy() {
@@ -1272,7 +1303,10 @@ function open_buy() {
                   });
                   $(lo).on('remove', function(){ if(tmr){ clearInterval(tmr); tmr=null; } });
               }});
-            }, error:function(){ layer.msg('创建订单失败：网络异常'); }
+            }, error:function(){
+              // http 页面 + 浏览器 HTTPS-Only / 安全策略可能导致 XHR 被拦截
+              try{ fcx_fallback_to_jump_pay(req, '创建订单失败：网络异常，已尝试切换到跳转支付…'); }catch(e){}
+            }
           });
         }
         $(layero).find('#fcx-wechat').on('click', function(){
@@ -1575,7 +1609,9 @@ function open_extend_unified(sourceCode){
               }
             });
           },
-          error:function(){ layer.msg('创建订单失败：网络异常'); }
+          error:function(){
+            try{ fcx_fallback_to_jump_pay(req, '创建订单失败：网络异常，已尝试切换到跳转支付…'); }catch(e){}
+          }
         });
       }
 
