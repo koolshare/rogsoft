@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="fullcone"
-VERSION="1.0.5"
+VERSION="1.0.6"
 TITLE="Fullcone NAT"
 DESCRIPTION="使用此插件可以让你的网络轻松变为Full Cone（全锥形）即NAT1"
 HOME_URL="Module_fullcone.asp"

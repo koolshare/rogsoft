@@ -321,7 +321,7 @@ function fcLog(){
 	}catch(e){}
 }
 
-// Decode local RSA ticket payload (code|mac|model|exp_ts|type|nonce[|react_left|activation_date|first_purchase_date])
+// Decode local RSA ticket payload (code|mac|model|exp_ts|type|nonce[|react_left|activation_date|first_purchase_date|react_used])
 function parseTicket(tk){
 	try{
 		if(!tk) return null; var sp=tk.split('.'); if(sp.length<2) return null;
@@ -334,7 +334,8 @@ function parseTicket(tk){
 		if (ps.length>=7) { var rl=parseInt(ps[6],10); if(!isNaN(rl)) obj.react_left = rl; }
 		if (ps.length>=8) { obj.activation_date = ps[7]; if (/^\d{4}-\d{2}-\d{2}$/.test(obj.activation_date||'')) obj.activated_at = obj.activation_date; }
 		if (ps.length>=9) { obj.first_purchase_date = ps[8]; if (/^\d{4}-\d{2}-\d{2}$/.test(obj.first_purchase_date||'')) obj.first_purchase_at = obj.first_purchase_date; }
-		fcLog('[FULLCONE DEBUG] parseTicket成功, activated_at:', obj.activated_at, ', first_purchase_at:', obj.first_purchase_at, ', ticket对象:', obj);
+		if (ps.length>=10) { var ru=parseInt(ps[9],10); obj.react_used = isNaN(ru) ? 0 : ru; } else { obj.react_used = 0; }
+		fcLog('[FULLCONE DEBUG] parseTicket成功, activated_at:', obj.activated_at, ', first_purchase_at:', obj.first_purchase_at, ', react_used:', obj.react_used, ', ticket对象:', obj);
 		return obj;
 	}catch(e){
 		fcLog('[FULLCONE DEBUG] parseTicket失败:', e);
@@ -653,7 +654,7 @@ function show_usage_notes(){
 <li>购买类型的授权，在有效期内可以继续购买延长授权，延长授权可以和购买授权叠加；</li>
 <li>延长规则1：购买延长套餐叠加当前购买套餐的剩余使用天数和剩余反激活次数；</li>
 <li>延长规则2：延长后天数叠加超过1795天（4年11个月），授权自动转为终身授权；</li>
-<li>延长规则3：首购30天内购买延长授权至终身，优惠3.99元(补差价)，并增发1枚反激活。</li>
+<li>延长规则3：首次购买激活后30天内购买延长授权至终身，优惠3.99元(补差价)。</li>
 </ul>
 
 <h3 style="margin:16px 0 10px 0;color:#1f2937;font-size:16px;font-weight:700;border-bottom:2px solid #3b82f6;padding-bottom:6px;">试用规则</h3>
@@ -1042,6 +1043,30 @@ function mOut(obj){
 	});
 	E("overDiv").style.visibility = "hidden";
 }
+// Determine whether to use jump-pay (avoid https page embedding http pay server)
+function fcx_use_jump_pay(){
+    var m = '';
+    try{ m = (dbus && dbus['fullcone_pay_mode']) ? String(dbus['fullcone_pay_mode']).toLowerCase() : ''; }catch(e){ m = ''; }
+    var isHttps = (location && location.protocol === 'https:');
+    if (isHttps) return true;
+    if (m === 'jump' || m === 'redirect') return true;
+    if (m === 'inline') return false;
+    return false;
+}
+function fcx_open_jump_pay(params){
+    var qs = [];
+    params = params || {};
+    // 明确告知服务端当前为跳转支付场景
+    params['pay_scene'] = 'jump';
+    for (var k in params){
+        if (!params.hasOwnProperty(k)) continue;
+        if (params[k] === undefined || params[k] === null) continue;
+        qs.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
+    }
+    var url = 'http://'+pay_server+':'+pay_port+'/fullcone_purchase.php?' + qs.join('&');
+    try{ window.open(url, '_blank'); }catch(e){ location.href = url; }
+    try{ layer.msg('已为你打开支付页面，请在新窗口完成支付'); }catch(e){}
+}
 // Purchase entry: choose plan and payment provider, then redirect to server
 function open_buy() {
 	var current_url = window.location.href;
@@ -1149,10 +1174,19 @@ function open_buy() {
               $.ajax({ type:'POST', url:'/_api/', data: JSON.stringify(postData), dataType:'json', success:function(){ get_log(2); }, error:function(){ get_log(2); } });
             });
         // 支付方式：支持两种逻辑（保留旧跳转；或内联二维码+轮询）
+        function fcx_build_buy_req(plan, paytype){
+          var req = { action:'order_create', plan:plan, paytype:paytype, router: net_address, mac: router_mac, model: router_model };
+          try{
+            var cur = dbus['fullcone_ticket']?parseTicket(dbus['fullcone_ticket']):null;
+            var ctype = (cur&&cur.type)?cur.type:(cur&&cur.plan?cur.plan:'');
+            var codeLocal = dbus['fullcone_key']||'';
+            if (ctype==='trial' && codeLocal){ req.op='extend'; req.code=codeLocal; }
+          }catch(e){}
+          return req;
+        }
         function open_inline_pay(plan, paytype){
           var titleTxt = (plan==='buy_life'?'终身':(plan==='buy_4y'?'4年':(plan==='buy_3y'?'3年':(plan==='buy_2y'?'2年':'1年'))));
-          var req = { action:'order_create', plan:plan, paytype:paytype, router: net_address, mac: router_mac, model: router_model };
-          try{ var cur = dbus['fullcone_ticket']?parseTicket(dbus['fullcone_ticket']):null; var ctype = (cur&&cur.type)?cur.type:(cur&&cur.plan?cur.plan:''); var codeLocal = dbus['fullcone_key']||''; if (ctype==='trial' && codeLocal){ req.op='extend'; req.code=codeLocal; } }catch(e){}
+          var req = fcx_build_buy_req(plan, paytype);
           $.ajax({ type:'POST', url:'http://'+pay_server+':'+pay_port+'/api_fullcone.php', data: req, dataType:'json', timeout: 10000,
             success: function(r){
               if (!r || r.status!=='ok'){ layer.msg(r && r.message ? r.message : '创建订单失败'); return; }
@@ -1244,12 +1278,22 @@ function open_buy() {
         $(layero).find('#fcx-wechat').on('click', function(){
           try{ fcxStopCelebrate(); }catch(e){} // 关闭庆祝特效
           var plan=$("input[name='fc_plan']:checked").val();
-          open_inline_pay(plan, 1);
+          if (fcx_use_jump_pay()){
+            var req = fcx_build_buy_req(plan, 1); delete req.action;
+            fcx_open_jump_pay(req);
+          } else {
+            open_inline_pay(plan, 1);
+          }
         });
         $(layero).find('#fcx-alipay').on('click', function(){
           try{ fcxStopCelebrate(); }catch(e){} // 关闭庆祝特效
           var plan=$("input[name='fc_plan']:checked").val();
-          open_inline_pay(plan, 2);
+          if (fcx_use_jump_pay()){
+            var req2 = fcx_build_buy_req(plan, 2); delete req2.action;
+            fcx_open_jump_pay(req2);
+          } else {
+            open_inline_pay(plan, 2);
+          }
         });
             // 移除重复绑定，试用事件已通过委托绑定在上方
 	  }
@@ -1353,12 +1397,12 @@ function open_extend_unified(sourceCode){
         var afterDaysTxt = afterLife ? '<span class="life-badge">终身</span>' : (newRemainDays+'天');
         var curDateTxt = isLife ? '<span class="life-badge">永不过期</span>' : (curExp?fmtDate(curExp):'');
         var newDateTxt = afterLife ? '<span class="life-badge">永不过期</span>' : (newExpTs?fmtDate(newExpTs): (typeof newExpStr==='string'?newExpStr:''));
-        // 若符合“30天内补差价直升终身”权益，且当前选择为推荐档位，并且本次延长后将成为终身，则预览额外 +1 枚反激活次数
+        // 若符合"30天内补差价直升终身"权益，且当前选择为推荐档位，并且本次延长后将成为终身，则反激活次数为：4 - react_used
         try{
           if (window._fcx_upgrade30_eligible && window._fcx_rec_ext_plan){
             var sel = (p||'').replace(/^buy_/,'');
             var rec = (window._fcx_rec_ext_plan||'').replace(/^buy_/,'');
-            if (sel === rec && afterLife){ newRL = newRL + 1; }
+            if (sel === rec && afterLife){ newRL = 4 - (cur.react_used || 0); }
           }
         }catch(e){}
         var beforeRLTxt = shouldResetBase ? '0次(过期/试用/赠送不计入)' : (Math.max(0,curRL)+'次');
@@ -1421,10 +1465,10 @@ function open_extend_unified(sourceCode){
             var priceNode = $(lo).find('.fcx-card[data-plan="'+pick+'"]').find('.fcx-price');
             var txt = priceNode.text().replace(/[^0-9.]/g,''); var pr = parseFloat(txt||'0');
             if (!isNaN(pr) && pr>0){
-              var d=(pr-3.99).toFixed(2);
+              var d=(Math.round((pr - 3.99) * 100) / 100).toFixed(2);
               priceNode.html('<span style="text-decoration:line-through;color:#888;margin-right:6px;">￥'+pr.toFixed(2)+'</span><span style="color:#d93025;font-weight:700">￥'+d+'</span>');
             }
-            var tip = "首次购买激活后30天内购买延长授权至终身，优惠3.99元(补升级差价)，并增发1枚反激活次数";
+            var tip = "首次购买激活后30天内购买延长授权至终身，优惠3.99元(补升级差价)";
             if ($(lo).find('#fcx-upgrade30-tip').length===0){
               $('<div id="fcx-upgrade30-tip" class="fcx-tip" style="color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;padding:6px 8px;border-radius:6px;margin-bottom:6px;"></div>').insertBefore($(lo).find('.fcx-grid')).text(tip);
             }
@@ -1442,6 +1486,16 @@ function open_extend_unified(sourceCode){
         else { try{ fcxStopCelebrate(); }catch(e){} }
       });
 
+      function fcx_build_extend_req(plan, paytype, sourceCode){
+        var req = { action:'order_create', plan:plan, paytype:paytype, router: net_address, op:'extend', code: sourceCode, mac: router_mac, model: router_model };
+        try{
+          if (window._fcx_rec_ext_plan && (plan===window._fcx_rec_ext_plan || plan===('buy_'+window._fcx_rec_ext_plan)) && window._fcx_upgrade30_eligible){
+            req.upgrade = 1;
+            fcLog('[30天补差价-统一] 设置upgrade=1');
+          }
+        }catch(ex){ fcLog('[30天补差价-统一] upgrade判断异常:', ex); }
+        return req;
+      }
       function open_inline_extend_unified(plan, paytype){
         var titleTxt = (function(pp){
           if(pp==='5y'||pp==='buy_5y') return '5年';
@@ -1450,13 +1504,7 @@ function open_extend_unified(sourceCode){
           if(pp==='2y'||pp==='buy_2y') return '2年';
           return '1年';
         })(plan);
-        var req = { action:'order_create', plan:plan, paytype:paytype, router: net_address, op:'extend', code: sourceCode, mac: router_mac, model: router_model };
-        try{
-          if (window._fcx_rec_ext_plan && (plan===window._fcx_rec_ext_plan || plan===('buy_'+window._fcx_rec_ext_plan)) && window._fcx_upgrade30_eligible){
-            req.upgrade = 1;
-            fcLog('[30天补差价-统一] 设置upgrade=1');
-          }
-        }catch(ex){ fcLog('[30天补差价-统一] upgrade判断异常:', ex); }
+        var req = fcx_build_extend_req(plan, paytype, sourceCode);
         fcLog('[30天补差价-统一] 发送请求:', req);
 
         $.ajax({ type:'POST', url:'http://'+pay_server+':'+pay_port+'/api_fullcone.php', data: req, dataType:'json', timeout: 10000,
@@ -1531,8 +1579,26 @@ function open_extend_unified(sourceCode){
         });
       }
 
-      $(lo).find('#fcx-ext-wechat-unified').on('click', function(){ try{ fcxStopCelebrate(); }catch(e){} var p=$("input[name='fc_plan']:checked").val(); open_inline_extend_unified(p,1); });
-      $(lo).find('#fcx-ext-alipay-unified').on('click', function(){ try{ fcxStopCelebrate(); }catch(e){} var p=$("input[name='fc_plan']:checked").val(); open_inline_extend_unified(p,2); });
+      $(lo).find('#fcx-ext-wechat-unified').on('click', function(){
+        try{ fcxStopCelebrate(); }catch(e){}
+        var p=$("input[name='fc_plan']:checked").val();
+        if (fcx_use_jump_pay()){
+          var reqJ = fcx_build_extend_req(p,1,sourceCode); delete reqJ.action;
+          fcx_open_jump_pay(reqJ);
+        } else {
+          open_inline_extend_unified(p,1);
+        }
+      });
+      $(lo).find('#fcx-ext-alipay-unified').on('click', function(){
+        try{ fcxStopCelebrate(); }catch(e){}
+        var p=$("input[name='fc_plan']:checked").val();
+        if (fcx_use_jump_pay()){
+          var reqJ2 = fcx_build_extend_req(p,2,sourceCode); delete reqJ2.action;
+          fcx_open_jump_pay(reqJ2);
+        } else {
+          open_inline_extend_unified(p,2);
+        }
+      });
     }
   });
 }
@@ -2009,7 +2075,7 @@ function fcxStopCelebrate(){
 													<td>
 <input type="text" maxlength="100" id="fullcone_key" class="input_ss_table fcx-mask" title="此处输入FULLCONE NAT插件激活码或者兑换码！" style="width:340px;font-size:95%;" readonly onfocus="this.removeAttribute('readonly');toggleKeyMask(true);" onblur="toggleKeyMask(false);" data-lpignore="true" data-1p-ignore="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" >
 														<button id="fullcone_active_btn" onclick="boost_now(3);" class="ks_btn" style="width:50px;cursor:pointer;vertical-align: middle;">激活</button>
-														<button id="fullcone_buy_btn" onclick="open_buy();" class="ks_btn" style="width:80px;cursor:pointer;vertical-align: middle;">购买授权</button>
+														<button id="fullcone_buy_btn" onclick="open_buy();" class="ks_btn" style="width:80px;cursor:pointer;vertical-align: middle;">试用 / 购买</button>
 														<button id="fullcone_authorized_btn" onclick="open_info();" class="ks_btn" style="width:80px;cursor:pointer;vertical-align: middle;">已激活</button>
 													</td>
 												</tr>
