@@ -1,6 +1,6 @@
 #!/bin/sh
 source /koolshare/scripts/base.sh
-alias echo_date='echo [$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)]:'
+alias echo_date='echo [$(TZ=UTC-8 date "+%Y年%m月%d日 %H:%M:%S")]:'
 
 eval "$(dbus export gostun_)"
 
@@ -53,16 +53,25 @@ run_detect() {
 			exit 0
 		fi
 
+		if [ -z "${gostun_server}" ] || [ "${gostun_server}" = "null" ]; then
+			gostun_server="auto"
+			dbus set gostun_server="${gostun_server}"
+		fi
+		if [ -z "${gostun_custom}" ] || [ "${gostun_custom}" = "null" ]; then
+			gostun_custom=""
+			dbus set gostun_custom=""
+		fi
+
 		dbus set gostun_last_run="$(date +%Y-%m-%d_%H:%M:%S)"
 
-		if iptables -t filter -S 2>/dev/null | grep -q -- "-A INPUT -j DROP"; then
+		if iptables -t filter -S 2>/dev/null | grep -q -e "-A INPUT -j DROP"; then
 			if iptables -t filter -D INPUT -j DROP >/dev/null 2>&1; then
 				REMOVED_INPUT_DROP="1"
 				FW_ADJUSTED="1"
 			fi
 		fi
 
-		if iptables -t filter -S 2>/dev/null | grep -q -- "-A FORWARD -j DROP"; then
+		if iptables -t filter -S 2>/dev/null | grep -q -e "-A FORWARD -j DROP"; then
 			if iptables -t filter -D FORWARD -j DROP >/dev/null 2>&1; then
 				REMOVED_FORWARD_DROP="1"
 				FW_ADJUSTED="1"
@@ -86,7 +95,7 @@ run_detect() {
 		}
 
 		if [ -z "${gostun_server}" ] || [ "${gostun_server}" = "auto" ]; then
-			echo_date "STUN服务器：自动（默认 stun.voipgate.com:3478）"
+			echo_date "STUN服务器：gostun自动选择"
 			run_gostun -type ipv4 -timeout 3
 			server="auto"
 		elif [ "${gostun_server}" = "custom" ]; then

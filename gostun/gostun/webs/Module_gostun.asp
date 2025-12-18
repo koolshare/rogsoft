@@ -20,50 +20,14 @@
 <script language="JavaScript" type="text/javascript" src="/res/softcenter.js"></script>
 <style>
 	input:focus { outline: none; }
-	.ks_row { margin: 8px 0 12px 0; }
-	.ks_label { display:inline-block; width: 150px; }
-	select.ks_select {
-		height: 28px;
-		min-width: 360px;
-		border-radius: 4px;
-		border: 1px solid #2f3a3e;
-		background: #475A5F;
-		background: transparent; /* W3C rogcss */
-		color: #fff;
-	}
-	.ks_btn {
-		border: 1px solid #222;
-		font-size:10pt;
-		color: #fff;
-		padding: 5px 12px;
-		border-radius: 5px;
-		background: linear-gradient(to bottom, #003333  0%, #000000 100%);
-		background: linear-gradient(to bottom, #91071f  0%, #700618 100%); /* W3C rogcss */
-	}
-	.ks_btn:hover {
-		background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%);
-		background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%); /* W3C rogcss */
-	}
-	.button_gen:disabled, .ks_btn:disabled {
+	.button_gen:disabled {
 		opacity: 0.35;
 		cursor: not-allowed;
 	}
-	.soft_setting_log1 {
-	    width: 97%;
-	    padding-top: 4px;
-	    padding-bottom: 4px;
-	    padding-left: 4px;
-	    padding-right: 37px;
-	    font-family: 'Lucida Console';
-	    font-size: 11px;
-	    line-height: 1.5;
-	    color: #FFFFFF;
-	    outline: none;
-	    overflow-x: scroll;
-	    margin-top: 1px;
-	    border: 0px solid #222;
-	    background: #475A5F;
-	    white-space: nowrap;
+	#head_note a {
+		color: #00c6ff;
+		font-weight: 600;
+		text-decoration: underline;
 	}
 </style>
 <script>
@@ -75,7 +39,6 @@ String.prototype.myReplace = function(f, e){
 function init() {
 	show_menu(menu_hook);
 	get_dbus_data();
-	load_ao_stun();
 	get_log();
 	$("#gostun_server").change(function(){ toggle_custom(); });
 }
@@ -92,14 +55,21 @@ function get_dbus_data() {
 		cache: false,
 		success: function(data) {
 			dbus = data.result[0] || {};
-			if (!dbus["gostun_server"]) {
-				dbus["gostun_server"] = "stun.miwifi.com:3478";
+			if (!dbus["gostun_server"] || dbus["gostun_server"] == "null") {
+				dbus["gostun_server"] = "auto";
+			} else if (dbus["gostun_server"] != "auto" && dbus["gostun_server"] != "custom") {
+				if (!dbus["gostun_custom"] || dbus["gostun_custom"] == "null") {
+					dbus["gostun_custom"] = dbus["gostun_server"];
+				}
+				dbus["gostun_server"] = "custom";
 			}
 			if (dbus["gostun_server"]) {
 				$("#gostun_server").val(dbus["gostun_server"]);
 			}
-			if (dbus["gostun_custom"]) {
+			if (dbus["gostun_custom"] && dbus["gostun_custom"] != "null") {
 				$("#gostun_custom").val(dbus["gostun_custom"]);
+			} else {
+				$("#gostun_custom").val("");
 			}
 			toggle_custom();
 			if (dbus["gostun_running"] == "1") {
@@ -182,7 +152,7 @@ function gostun_run(){
 			get_log(1);
 		},
 		error: function() {
-			E("gostun_apply").disabled = false;
+			set_buttons(false);
 		}
 	});
 }
@@ -193,42 +163,6 @@ function toggle_custom(){
 	} else {
 		$("#custom_row").hide();
 	}
-}
-function load_ao_stun(){
-	$.ajax({
-		url: '/res/gostun_stun_servers.json.js',
-		type: 'GET',
-		cache: false,
-		dataType: 'script',
-		success: function(){
-			var cur = $("#gostun_server").val();
-			var list = window.gostun_stun_servers || [];
-			var uniq = {};
-			var hosts = [];
-			for (var i = 0; i < list.length; i++) {
-				var s = $.trim(list[i]);
-				if (!s) continue;
-				if (s.indexOf(':') < 1) continue;
-				if (!uniq[s]) {
-					uniq[s] = 1;
-					hosts.push(s);
-				}
-			}
-			hosts.sort();
-			var group = $("#ao_stun_group");
-			group.empty();
-			for (var j = 0; j < hosts.length; j++) {
-				var v = hosts[j].replace(/'/g, "&#39;");
-				group.append("<option value='" + v + "'>" + v + "</option>");
-			}
-			$("#gostun_server").val(cur);
-		},
-		error: function(){
-			var group = $("#ao_stun_group");
-			group.empty();
-			group.append("<option value='auto'>（列表加载失败，使用其它选项）</option>");
-		}
-	});
 }
 function gostun_clear(){
 	var id = parseInt(Math.random() * 100000000);
@@ -271,36 +205,31 @@ function gostun_clear(){
 											</div>
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 
-											<div class="ks_row">
-												<span class="ks_label">STUN 服务器：</span>
-												<select id="gostun_server" class="ks_select">
-													<option value="auto">自动（默认 stun.voipgate.com:3478）</option>
-													<optgroup label="国内（可能受网络影响）">
-														<option value="stun.qq.com:3478">stun.qq.com:3478</option>
-														<option value="stun.miwifi.com:3478" selected="selected">stun.miwifi.com:3478</option>
-													</optgroup>
-													<optgroup label="国外/通用（可能受GFW/代理软件的影响）">
-														<option value="stun.l.google.com:19302">stun.l.google.com:19302</option>
-														<option value="stun1.l.google.com:19302">stun1.l.google.com:19302</option>
-														<option value="stun2.l.google.com:19302">stun2.l.google.com:19302</option>
-														<option value="global.stun.twilio.com:3478">global.stun.twilio.com:3478</option>
-														<option value="stun.stunprotocol.org:3478">stun.stunprotocol.org:3478</option>
-														<option value="stun.sipgate.net:3478">stun.sipgate.net:3478</option>
-													</optgroup>
-													<optgroup id="ao_stun_group" label="always-online-stun（在线列表）"></optgroup>
-													<optgroup label="自定义">
-														<option value="custom">自定义（手动填写 host:port）</option>
-													</optgroup>
-												</select>
+											<div id="head_note" class="SimpleNote">
+												<span>1. 本插件可以检测你的wan侧（未经路由器nat）网络的NAT类型，建议使用自动检测，可以自动切换stun服务器。</span><br/>
+												<span>2. 检测结果代表了你路由器网络NAT类型上限，如果你局域网中测试是更低类型（通常是NAT3），说明存在优化空间</span><br/>
+												<span>3. 局域网中检测建议手机连Wi-Fi后访问：<a href="https://ai.koolcenter.com/nat" target="_blank" rel="noreferrer">https://ai.koolcenter.com/nat</a>，或者 <a href="https://mao.fan/mynat" target="_blank" rel="noreferrer">https://mao.fan/mynat</a> 进行检测</span>
 											</div>
-											<div class="ks_row" id="custom_row" style="display:none;">
-												<span class="ks_label">自定义地址：</span>
-												<input id="gostun_custom" class="input_15_table" style="width: 360px;" value="" placeholder="例如：stun.example.com:3478" onkeyup="this.value=this.value.replace(/\\s+/g,'')" />
-											</div>
-
 											<div id="log_content" class="soft_setting_log">
 												<textarea cols="63" rows="26" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
+											<table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
+												<tr>
+													<th>STUN 服务器</th>
+													<td>
+														<select id="gostun_server" class="input_option" style="width:360px;">
+															<option value="auto">自动检测</option>
+															<option value="custom">自定义（手动填写 host:port）</option>
+														</select>
+													</td>
+												</tr>
+												<tr id="custom_row" style="display:none;">
+													<th>自定义地址</th>
+													<td>
+														<input id="gostun_custom" class="input_ss_table" style="width:360px;" value="" placeholder="例如：stun.example.com:3478" onkeyup="this.value=this.value.replace(/\\s+/g,'')" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+													</td>
+												</tr>
+											</table>
 											<div class="apply_gen">
 												<input class="button_gen" id="gostun_apply" onClick="gostun_run()" type="button" value="开始检测" />
 												<input class="button_gen" id="gostun_clear" style="margin-left:10px;" onClick="gostun_clear()" type="button" value="清空日志" />
