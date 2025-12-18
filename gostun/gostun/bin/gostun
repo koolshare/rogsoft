@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+ARCH="$(uname -m 2>/dev/null || echo unknown)"
+
+case "${ARCH}" in
+	aarch64*|arm64*)
+		REAL_BIN="${BIN_DIR}/gostun-arm64"
+		;;
+	armv6*|armv7*|armv8*|arm*)
+		REAL_BIN="${BIN_DIR}/gostun-arm"
+		;;
+	*)
+		REAL_BIN="${BIN_DIR}/gostun-arm"
+		;;
+esac
+
+exec "${REAL_BIN}" "$@"
+
