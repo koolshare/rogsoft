@@ -27,6 +27,7 @@ run_detect() {
 		REMOVED_FORWARD_DROP="0"
 		REMOVED_INPUT_DROP="0"
 		FW_ADJUSTED="0"
+		FULL_CONE="0"
 		restore_fw_rules() {
 			if [ "${REMOVED_INPUT_DROP}" = "1" ]; then
 				iptables -t filter -A INPUT -j DROP >/dev/null 2>&1
@@ -38,6 +39,11 @@ run_detect() {
 				echo_date "检测结束，恢复防火墙规则"
 			else
 				echo_date "检测结束"
+			fi
+			if [ "${FULL_CONE}" = "1" ]; then
+				echo_date "🎉 恭喜，检测到你的WAN侧网络类型是NAT1！"
+				echo_date "💻 建议尽快检测局域网中的NAT类型，看是否存在优化空间！"
+				echo_date "📱 建议手机访问 https://ai.koolcenter.com/nat，或者 https://mao.fan/mynat 进行检测"
 			fi
 			echo "XU6J03M6"
 			dbus set gostun_running="0"
@@ -88,6 +94,9 @@ run_detect() {
 			echo_date "-------------------- gostun 输出开始 --------------------"
 			/koolshare/bin/gostun "$@" >"${TMP_GOSTUN_OUT}" 2>&1
 			GOSTUN_RET=$?
+			if grep -q "NAT Type: Full Cone" "${TMP_GOSTUN_OUT}" 2>/dev/null; then
+				FULL_CONE="1"
+			fi
 			sed 's/^/[gostun] /' "${TMP_GOSTUN_OUT}"
 			rm -f "${TMP_GOSTUN_OUT}"
 			echo_date "-------------------- gostun 输出结束（exit=${GOSTUN_RET}） --------------------"
