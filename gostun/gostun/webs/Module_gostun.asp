@@ -206,12 +206,11 @@ function gostun_clear(){
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 
 											<div id="head_note" class="SimpleNote">
-												<span>1. 本插件可以检测你的wan侧（未经路由器nat）网络的NAT类型，建议使用自动检测，可以自动切换stun服务器。</span><br/>
-												<span>2. 检测结果代表了你路由器网络NAT类型上限，如果你局域网中测试是更低类型（通常是NAT3），说明存在优化空间</span><br/>
-												<span>3. 局域网中检测建议手机连Wi-Fi后访问：<a href="https://ai.koolcenter.com/nat" target="_blank" rel="noreferrer">https://ai.koolcenter.com/nat</a>，或者 <a href="https://mao.fan/mynat" target="_blank" rel="noreferrer">https://mao.fan/mynat</a> 进行检测</span>
+												<span>1. 本插件可以检测你的WAN侧（NAT前）和LAN侧（NAT后）网络的NAT类型，检测采用gostun工具，内置多个stun服务器。</span><br/>
+												<span>2. 检测采用udp包和公共stun服务器通讯来判断NAT类型，注意在高峰期可能存在udp丢包/限流/QoS等导致检测不准，请不同时间多次检测。</span><br/>
 											</div>
 											<div id="log_content" class="soft_setting_log">
-												<textarea cols="63" rows="18" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+												<textarea cols="63" rows="30" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
 											<table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>
