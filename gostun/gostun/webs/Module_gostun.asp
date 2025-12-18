@@ -206,8 +206,8 @@ function gostun_clear(){
 											<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
 
 											<div id="head_note" class="SimpleNote">
-												<span>1. 本插件可以检测你的WAN侧（NAT前）和LAN侧（NAT后）网络的NAT类型，检测采用gostun工具，内置多个stun服务器。</span><br/>
-												<span>2. 检测采用udp包和公共stun服务器通讯来判断NAT类型，注意在高峰期可能存在udp丢包/限流/QoS等导致检测不准，请不同时间多次检测。</span><br/>
+												<span>1. 本插件可以检测你的WAN侧（NAT前）和LAN侧（NAT后）网络的NAT类型，检测采用魔改的gostun工具，内置多个stun服务器。</span><br/>
+												<span>2. 采用udp包和公共stun服务器通讯来判断NAT类型，高峰期可能存在udp丢包/限流/QoS等导致检测不准，请多次检测以保证准确性。</span><br/>
 											</div>
 											<div id="log_content" class="soft_setting_log">
 												<textarea cols="63" rows="30" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
