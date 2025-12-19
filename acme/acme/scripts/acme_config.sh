@@ -54,7 +54,7 @@ start_issue(){
 	sleep 1
 	cd ${acme_root}
 	#./acme.sh --home "$acme_root" --issue --dns $dnsapi -d $acme_domain -d $acme_subdomain.$acme_domain --use-wget --log-level 2 --debug
-	./acme.sh --home "${acme_root}" --issue --dns ${dnsapi} -d ${acme_subdomain}.${acme_domain} --use-wget --insecure
+	./acme.sh --home "${acme_root}" --issue --dns ${dnsapi} -d ${acme_subdomain}.${acme_domain} --use-wget --insecure -k 2048
 }
 
 install_cert(){
@@ -70,10 +70,10 @@ install_cert(){
 	rm -rf /cifs2/etc/key.pem /cifs2/etc/cert.pem >/dev/null 2>&1
 
 	# install into multi path
-	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /tmp/etc/key.pem --cert-file /tmp/etc/cert.pem
-	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/ssl/key.pem --cert-file /jffs/ssl/cert.pem
-	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/etc/key.pem --cert-file /jffs/etc/cert.pem
-
+	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /tmp/etc/key.pem --fullchain-file /tmp/etc/cert.pem
+	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/ssl/key.pem --fullchain-file /jffs/ssl/cert.pem
+	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/etc/key.pem --fullchain-file /jffs/etc/cert.pem
+	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/.cert/key.pem --fullchain-file /jffs/.cert/cert.pem
 	# some thing else
 	cat /tmp/etc/key.pem /tmp/etc/cert.pem > /tmp/etc/server.pem
 	cp /tmp/etc/cert.pem /tmp/etc/cert.crt
@@ -82,6 +82,13 @@ install_cert(){
 	# important, 386 fw use cert.tgz
 	tar -C / -czf /jffs/cert.tgz etc/cert.pem etc/key.pem
 
+	# set nvram
+	nvram set le_enable=2
+	nvram set https_crt_gen=0
+	nvram set https_crt_save=1
+	nvram set httpds_reload_cert=1
+	nvram commit
+	
 	# restart httpd
 	service restart_httpd
 
