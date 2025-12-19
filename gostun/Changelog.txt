@@ -1,0 +1,12 @@
+1.1
+   - add	新增dmz检测
+   - add	新增一个国内stun服务器
+   - update	优化日志显示
+
+1.0
+   - add	支持测试wan侧和lan侧网络NAT类型
+			gotun程序支持端口绑定
+			gotun程序支持多倍发包，默认2倍
+
+0.1 - 0.5
+   - add	内测版本

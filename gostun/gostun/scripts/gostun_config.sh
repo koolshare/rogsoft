@@ -41,9 +41,9 @@ run_detect() {
 				iptables -t filter -A FORWARD -j DROP >/dev/null 2>&1
 			fi
 			if [ "${FW_ADJUSTED}" = "1" ]; then
-				echo_date "🔚 检测结束，恢复防火墙规则"
+				echo_date "🔚 检测结束，恢复防火墙规则！"
 			else
-				echo_date "🔚 检测结束"
+				echo_date "🔚 检测结束！"
 			fi
 			# if [ "${WAN_CONE_LEVEL}" = "1" ]; then
 			# 	echo_date "🎉 恭喜，检测到你的WAN侧网络类型是Full Cone，即NAT1！"
@@ -66,10 +66,10 @@ run_detect() {
 					echo_date "⚠️ 可以反馈给网络运营商，看是否存在isp局端限制。"
 				fi
 			elif [ "${LAN_NEED_HINT}" = "4" ]; then
-				echo_date "😭 哦豁，检测到你的 WAN 侧网络类型是：Symmetric，即NAT4，最严格在糟糕的那种网络。"
+				echo_date "😭 哦豁，检测到你的 WAN 侧网络类型是：Symmetric，即NAT4，最严格最糟糕的那种网络。"
 				if [ -z ${ppp_if} ];then
-					echo_date "⚠️ 如果你是企事业单位/高校等内网环境，那也别想优化了，。"
-					echo_date "⚠️ 如果是家庭带宽，请检查下是否在多层NAT之下，。"
+					echo_date "⚠️ 如果你是企事业单位/高校等内网环境，那也别想优化了。"
+					echo_date "⚠️ 如果是家庭带宽，请检查下是否在多层NAT之下，尝试将本路由作为主路由拨号使用。"
 				else
 					echo_date "⚠️ 作为家庭带宽，基本就告别主机游戏联机，迅雷下载了，微信在你这里都可能经常转圈，甚至刷抖音都会间歇性卡顿。"
 					echo_date "⚠️ 也许运营商给你做了限制，建议及时联系运营商，甚至前往工信部投诉，以期改善。"

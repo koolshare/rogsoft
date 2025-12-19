@@ -4,7 +4,7 @@ set -e
 # build script for rogsoft project
 
 MODULE="gostun"
-VERSION="1.0"
+VERSION="1.1"
 TITLE="Gostun NAT检测"
 DESCRIPTION="本机NAT类型检测工具，测得你路由网络的NAT类型上限"
 HOME_URL="Module_gostun.asp"

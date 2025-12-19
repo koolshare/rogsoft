@@ -210,7 +210,7 @@ function gostun_clear(){
 												<span>2. 采用udp包和公共stun服务器通讯来判断NAT类型，高峰期可能存在udp丢包/限流/QoS等导致检测不准，请多次检测以保证准确性。</span><br/>
 											</div>
 											<div id="log_content" class="soft_setting_log">
-												<textarea cols="63" rows="30" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+												<textarea cols="63" rows="31" wrap="on" readonly="readonly" id="log_content_text" class="soft_setting_log1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 											</div>
 											<table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<tr>

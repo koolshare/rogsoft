@@ -1,6 +1,6 @@
 {
-"version":"0.3",
-"md5":"58d24700800bcfc75788450c499e0f42",
+"version":"1.0",
+"md5":"28524e1b06f73ac640bd47b629f598d2",
 "home_url":"Module_gostun.asp",
 "title":"Gostun NAT检测",
 "description":"本机NAT类型检测工具，测得你路由网络的NAT类型上限",
@@ -8,5 +8,5 @@
 "author":"sadog",
 "link":"https://github.com/oneclickvirt/gostun",
 "changelog":"",
-"build_date":"2025-12-18_20:49:02"
+"build_date":"2025-12-18_22:59:28"
 }
