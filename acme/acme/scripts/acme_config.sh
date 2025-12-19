@@ -7,6 +7,7 @@ LOGFILE=/tmp/upload/acme_log.txt
 mkdir -p /tmp/etc
 mkdir -p /tmp/upload
 mkdir -p /jffs/ssl
+mkdir -p /jffs/.cert
 
 normalize_ca(){
 	# 默认 Let's Encrypt
