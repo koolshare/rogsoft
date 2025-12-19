@@ -12,15 +12,14 @@
 <link rel="stylesheet" type="text/css" href="form_style.css"/>
 <link rel="stylesheet" type="text/css" href="css/element.css">
 <link rel="stylesheet" type="text/css" href="res/softcenter.css">
+<script language="JavaScript" type="text/javascript" src="/js/jquery.js"></script>
 <script language="JavaScript" type="text/javascript" src="/state.js"></script>
 <script language="JavaScript" type="text/javascript" src="/help.js"></script>
 <script language="JavaScript" type="text/javascript" src="/general.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
-<script language="JavaScript" type="text/javascript" src="/client_function.js"></script>
 <script language="JavaScript" type="text/javascript" src="/validator.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
-<script type="text/javascript" src="/res/softcenter.js"></script>
+<script language="JavaScript" type="text/javascript" src="/switcherplugin/jquery.iphone-switch.js"></script>
+<script language="JavaScript" type="text/javascript" src="/res/softcenter.js"></script>
 <style> 
 .Bar_container {
 	width:85%;
@@ -46,6 +45,7 @@
 .acme_btn {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333 0%, #000000 100%);
+	/* background: linear-gradient(to bottom, #91071f  0%, #700618 100%); */
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -55,6 +55,7 @@
 .acme_btn:hover {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #27c9c9 0%, #279fd9 100%);
+	/*background: linear-gradient(to bottom, #cf0a2c  0%, #91071f 100%);*/
 	font-size:10pt;
 	color: #fff;
 	padding: 5px 5px;
@@ -456,7 +457,7 @@ function show_log(){
 											<div style="margin:30px 0 10px 5px;" class="splitLine"></div>
 											<div class="SimpleNote">
 												<li>Let's Encrypt是2015年三季度成立的数字证书认证机构，旨在推广互联网无所不在的加密连接，为安全网站提供免费的SSL/TLS证书。
-												<li>本插件使用acme.sh，通过dns_api申请ssl证书，目前支持aliyun、Dnspod、CloudXNS、CloudFlare、Godaddy。 <a type="button" style="cursor:pointer" href="https://github.com/koolshare/armsoft/blob/master/acme/Changelog.txt" target="_blank"><em>【<u>插件更新日志</u>】</em></a></li>
+												<li>本插件使用acme.sh，通过dns_api申请ssl证书，目前支持aliyun、Dnspod、CloudXNS、CloudFlare、Godaddy。 <a type="button" style="cursor:pointer" href="https://github.com/koolshare/rogsoft/blob/master/acme/Changelog.txt" target="_blank"><em>【<u>插件更新日志</u>】</em></a></li>
 											</div>
 											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 												<thead>
