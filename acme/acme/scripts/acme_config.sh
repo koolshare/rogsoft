@@ -8,6 +8,48 @@ mkdir -p /tmp/etc
 mkdir -p /tmp/upload
 mkdir -p /jffs/ssl
 
+normalize_ca(){
+	# 默认 Let's Encrypt
+	if [ -z "${acme_ca}" ];then
+		acme_ca="letsencrypt"
+	fi
+	case "${acme_ca}" in
+	letsencrypt|zerossl)
+		;;
+	*)
+		acme_ca="letsencrypt"
+		;;
+	esac
+	if [ "${acme_ca}" = "zerossl" ];then
+		acme_zerossl_email="$(echo "${acme_zerossl_email}" | tr -d ' \t\r\n')"
+		if [ -z "${acme_zerossl_email}" ];then
+			echo_date "已选择ZeroSSL，但未填写ZeroSSL邮箱！"
+			return 1
+		fi
+	fi
+	return 0
+}
+
+ensure_ca_ready(){
+	cd ${acme_root}
+	normalize_ca || return 1
+	if [ "${acme_ca}" = "zerossl" ];then
+		echo_date "使用ZeroSSL，尝试注册/确认账号（邮箱：${acme_zerossl_email}）..."
+		./acme.sh --home "${acme_root}" --register-account -m "${acme_zerossl_email}" --server zerossl
+		if [ "$?" != "0" ];then
+			echo_date "ZeroSSL账号注册/确认失败！"
+			return 1
+		fi
+	fi
+	echo_date "设置默认CA：${acme_ca}"
+	./acme.sh --home "${acme_root}" --set-default-ca --server "${acme_ca}"
+	if [ "$?" != "0" ];then
+		echo_date "设置默认CA失败：${acme_ca}"
+		return 1
+	fi
+	return 0
+}
+
 start_issue(){
 	case "${acme_provider}" in
 	1)
@@ -52,15 +94,14 @@ start_issue(){
 		;;
 	esac
 	sleep 1
-	cd ${acme_root}
-	./acme.sh --set-default-ca --server letsencrypt
+	ensure_ca_ready || return 1
 	#./acme.sh --home "$acme_root" --issue --dns $dnsapi -d $acme_domain -d $acme_subdomain.$acme_domain --use-wget --log-level 2 --debug
-	./acme.sh --home "${acme_root}" --issue --dns ${dnsapi} -d ${acme_subdomain}.${acme_domain} --use-wget --insecure -k 2048
+	./acme.sh --home "${acme_root}" --issue --server "${acme_ca}" --dns ${dnsapi} -d ${acme_subdomain}.${acme_domain} -k 2048
+
 }
 
 install_cert(){
 	cd ${acme_root}
-	
 	# delete first
 	rm -rf /jffs/cert.tgz >/dev/null 2>&1
 	rm -rf /tmp/etc/cert.pem /tmp/etc/key.pem /tmp/etc/cert.crt /tmp/etc/server.pem >/dev/null 2>&1
@@ -69,12 +110,14 @@ install_cert(){
 	rm -rf /cifs2/cert.tgz >/dev/null 2>&1
 	rm -rf /cifs2/ssl/key.pem /cifs2/ssl/cert.pem >/dev/null 2>&1
 	rm -rf /cifs2/etc/key.pem /cifs2/etc/cert.pem >/dev/null 2>&1
-
-	# install into multi path
+	rm -rf /jffs/.cert/key.pem /jffs/.cert/cert.pem >/dev/null 2>&1
+	# # install into multi path
 	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /tmp/etc/key.pem --fullchain-file /tmp/etc/cert.pem
-	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/ssl/key.pem --fullchain-file /jffs/ssl/cert.pem
-	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/etc/key.pem --fullchain-file /jffs/etc/cert.pem
+	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /etc/key.pem --fullchain-file /etc/cert.pem
 	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/.cert/key.pem --fullchain-file /jffs/.cert/cert.pem
+	./acme.sh --home "${acme_root}" --installcert -d ${acme_subdomain}.${acme_domain} --key-file /jffs/etc/key.pem --fullchain-file /jffs/etc/cert.pem
+
+
 	# some thing else
 	cat /tmp/etc/key.pem /tmp/etc/cert.pem > /tmp/etc/server.pem
 	cp /tmp/etc/cert.pem /tmp/etc/cert.crt
@@ -83,15 +126,13 @@ install_cert(){
 	# important, 386 fw use cert.tgz
 	tar -C / -czf /jffs/cert.tgz etc/cert.pem etc/key.pem
 
-	# set nvram
 	nvram set le_enable=2
 	nvram set https_crt_gen=0
 	nvram set https_crt_save=1
 	nvram set httpds_reload_cert=1
 	nvram commit
-	
-	# restart httpd
-	service restart_httpd
+	service restart_httpd 
+
 
 	# restart webdav
 	local aicloud_enable=$(nvram get aicloud_enable)
@@ -114,16 +155,18 @@ force_renew(){
 del_all_cert(){
 	cd ${acme_root}
 	find . -name "fullchain.cer*"|sed 's/\/fullchain.cer//g'|xargs rm -rf
-	rm -rf /tmp/etc/key.pem /tmp/etc/cert.pem >/dev/null 2>&1
+	rm -rf /tmp/etc/key.pem /tmp/etc/cert.pem /tmp/etc/server.pem >/dev/null 2>&1
 	rm -rf /jffs/cert.tgz >/dev/null 2>&1
 	rm -rf /jffs/ssl/key.pem /jffs/ssl/cert.pem >/dev/null 2>&1
 	rm -rf /jffs/etc/key.pem /jffs/etc/cert.pem >/dev/null 2>&1
 	rm -rf /cifs2/cert.tgz >/dev/null 2>&1
 	rm -rf /cifs2/ssl/key.pem /cifs2/ssl/cert.pem >/dev/null 2>&1
 	rm -rf /cifs2/etc/key.pem /cifs2/etc/cert.pem >/dev/null 2>&1
+	rm -rf /jffs/.cert/key.pem /jffs/.cert/cert.pem >/dev/null 2>&1
 	rm -rf /koolshare/acme/${acme_domain} > /dev/null 2>&1
 	rm -rf /koolshare/acme/*${acme_domain} > /dev/null 2>&1
 	rm -rf /koolshare/acme/http.header > /dev/null 2>&1
+	service restart_httpd 
 }
 
 add_cron(){
