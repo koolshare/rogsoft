@@ -232,6 +232,17 @@ run_detect() {
 			LAN_CONE_LEVEL="4"
 		fi
 
+		if [ -n "${WAN_CONE_LEVEL}" ]; then
+			dbus set fullcone_wan_nattype="NAT${WAN_CONE_LEVEL}"
+		else
+			dbus remove fullcone_wan_nattype >/dev/null 2>&1
+		fi
+		if [ -n "${LAN_CONE_LEVEL}" ]; then
+			dbus set fullcone_lan_nattype="NAT${LAN_CONE_LEVEL}"
+		else
+			dbus remove fullcone_lan_nattype >/dev/null 2>&1
+		fi
+
 		if [ "${WAN_NAT_TYPE}" = "Full Cone" ] && { [ "${LAN_NAT_TYPE}" = "Restricted Cone" ] || [ "${LAN_NAT_TYPE}" = "Port Restricted Cone" ] || [ "${LAN_NAT_TYPE}" = "Symmetric" ]; }; then
 			LAN_NEED_HINT="1"
 		fi

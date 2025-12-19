@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin fullcone Changelog
 ===========================================
+1.0.8
+   - add	新增nat检测功能，可以从本机发起NAT类型测试，需要安装gostun插件
+
 1.0.7
    - fix	修复某些场景无法创建支付订单的问题
    - fix	修复防火墙重启无法触发插件重新写入规则的问题

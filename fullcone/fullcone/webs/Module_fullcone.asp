@@ -103,6 +103,9 @@ body .layui-layer-lan .layui-layer-btn {text-align:center}
 .loading_block_spilt {
 	/* below are custom styles for fc modals */
 }
+/*.layui-layer-content{
+	border: 1px solid #1678ff;
+}*/
 /* ========== FULLCONE custom modal styles ========== */
 .fc-modal{font-size:13px;line-height:1.6;color:#e6e6e6}
 .fc-modal .fc-wrap{background:#1f252b;border:1px solid #2b323a;border-radius:10px;padding:14px}
@@ -523,12 +526,157 @@ function conf2obj(){
 		E("fullcone_active_btn").style.display = "none";
 		E("fullcone_authorized_btn").style.display = "none";
 	}
+	try{ fcx_render_nat_state(); }catch(e){}
+}
+
+function fcx_render_nat_state(){
+	var wan = (dbus && dbus["fullcone_wan_nattype"]) ? String(dbus["fullcone_wan_nattype"]) : "";
+	var lan = (dbus && dbus["fullcone_lan_nattype"]) ? String(dbus["fullcone_lan_nattype"]) : "";
+	if (wan == "null") wan = "";
+	if (lan == "null") lan = "";
+
+	var html = "";
+	if (wan || lan) {
+		if (wan) html += "WAN：<em>" + wan + "</em>&nbsp;&nbsp;";
+		if (lan) html += (html ? "" : "") + "LAN：<em>" + lan + "</em>&nbsp;&nbsp;";
+	}
+	if (E("fullcone_nat_state")) {
+		E("fullcone_nat_state").innerHTML = html;
+	}
+}
+
+function fcx_open_nat_detect(force){
+	force = (force == 1 || force === true) ? 1 : 0;
+	try{ layer.closeAll(); }catch(e){}
+
+	var box = ""
+		+ "<div style='padding:12px 14px;background:#000000;'>"
+		+   "<div style='margin:0 0 8px 0;color:#fff;font-size:13px;line-height:1.6'>"
+		+     "此功能会调用软件中心的 gostun 插件，检测 WAN 侧（NAT前）与 LAN 侧（NAT后）的 NAT 类型，并写入到本页 NAT 状态栏。<br/>"
+		+     "此检测在路由器内部进行，结果可靠，如在线 NAT 检测结果和 LAN 侧不一致，以此处为准，并请检查PC/手机的代理/防火墙是否关闭。<br/>"
+		+   "</div>"
+		+   "<textarea id='fcx_nat_log' cols='50' rows='18' wrap='off' readonly='readonly' "
+		+     "style='width:98%;height:520px;border:1px solid #585858;border-radius:6px;outline:none;"
+		+            "font-family:Lucida Console,monospace;font-size:12px;line-height:1.35;padding:8px;"
+		+            "background:#000000;color:#e6e6e6;white-space:break-spaces;'></textarea>"
+		+   "<div style='margin-top:10px;text-align:center;'>"
+		+     "<button id='fcx_nat_redetect' class='fcx-btn primary' style='display:none;'>重新检测</button>"
+		+     "<button id='fcx_nat_close' class='fcx-btn' style='margin-left:10px;'>关闭</button>"
+		+   "</div>"
+		+ "</div>";
+
+	var stopped = false;
+	var idx = layer.open({
+		type: 1,
+		skin: 'layui-layer-lan',
+		title: 'NAT 状态检测',
+		area: '820px',
+		offset: 'auto',
+		shade: 0.8,
+		resize: false,
+		content: box,
+		end: function(){ stopped = true; }
+	});
+
+	function poll_log(){
+		if (stopped) return;
+		$.ajax({
+			url: '/_temp/fullcone_detect_log.txt',
+			type: 'GET',
+			cache: false,
+			dataType: 'text',
+			success: function(resp){
+				var done = (resp.search("XU6J03M6") != -1);
+				var out = resp.myReplace("XU6J03M6", " ");
+				var ta = document.getElementById("fcx_nat_log");
+				if (ta) {
+					ta.value = out;
+					ta.scrollTop = ta.scrollHeight;
+				}
+				if (done) {
+					if (out.indexOf("需要使用软件中心的gostun插件") == -1) {
+						$("#fcx_nat_redetect").show();
+					}
+					try{ get_dbus_data(); }catch(e){}
+				} else {
+					setTimeout(poll_log, 500);
+				}
+			},
+			error: function(){
+				setTimeout(poll_log, 1000);
+			}
+		});
+	}
+
+	function run_detect(action){
+		$("#fcx_nat_redetect").hide();
+		var id = parseInt(Math.random() * 100000000);
+		var postData = {"id": id, "method": "fullcone_detect.sh", "params": [action], "fields": {}};
+		$.ajax({
+			type: "POST",
+			url: "/_api/",
+			data: JSON.stringify(postData),
+			dataType: "json",
+			complete: function(){ poll_log(); }
+		});
+	}
+
+	$(document).off('click.fcx_nat_close').on('click.fcx_nat_close', '#fcx_nat_close', function(){
+		stopped = true;
+		try{ layer.close(idx); }catch(e){}
+	});
+	$(document).off('click.fcx_nat_redetect').on('click.fcx_nat_redetect', '#fcx_nat_redetect', function(){
+		run_detect(2);
+		return false;
+	});
+
+	run_detect(force ? 2 : 1);
+}
+
+function fcx_open_nat_iframe(){
+	try{ layer.closeAll(); }catch(e){}
+	var tip = "<div class='fcx-nat-tip' style=\"padding:10px 12px 6px;color:red;font-size:13px;line-height:1.6;background:#f9fbff;border-bottom:1px solid #e5eaf0\">"
+			+   "<ol style=\"margin:0 0 6px 18px;padding:0\">"
+			+     "<li>为检测准确，请确保浏览器所在网络由本路由器提供，通过远程访问的检测结果无法反应出本路由网络NAT后的类型</li>"
+			+     "<li>检测前需要关闭手机/PC/浏览器的代理程序，如果使用windows电脑检测，需要关闭防火墙才能检测准确</li>"
+			+     "<li>此检测结果仅供参考，你可以使用<a href='https://github.com/HMBSbige/NatTypeTester' target='_blank' rel='noopener noreferrer' style='color:#001bdd'>NatTypeTester</a>、<a href='https://github.com/oneclickvirt/gostun' target='_blank' rel='noopener noreferrer' style='color:#001bdd'>gostun</a>等检测工具，在本路由器下局域网中的客户端机器中进行检测</li>"
+			+   "</ol>"
+			+ "</div>";
+	var iframe = "<div class='fcx-nat-iframe' style=\"width:760px;height:620px;margin:0 auto;overflow:hidden;\">"
+			+   "<iframe src=\"https://ai.koolcenter.com/nat/?from=asusgo\" style=\"width:760px;height:620px;border:0;\" scrolling=\"yes\" referrerpolicy=\"no-referrer\"></iframe>"
+			+ "</div>";
+	var box = "<div class='fcx-nat-wrap' style=\"background:#fff;overflow:hidden\">" + tip + iframe + "</div>";
+	layer.open({ type:1, skin:'layui-layer-lan', title:'NAT 类型检测', area:'744px', offset:'auto', shade:0.8, resize:false, content:box,
+		success:function(layero, idx){
+			try{
+				var $layer = $(layero);
+				var dbg = (window.FCX_DEBUG === true);
+				var applySize = function(){
+					var w = $layer.find('.fcx-nat-iframe').outerWidth(true) || $layer.find('.fcx-nat-wrap').outerWidth(true) || 0;
+					if (dbg) console.log('[fcx-nat] idx=', idx, 'wrap_w=', w, 'layer_w(before)=', $layer.width());
+					if (w && w > 360){
+						$layer.css({ width: w + 'px', maxWidth: 'none' });
+					} else {
+						$layer[0].style.width = '';
+						$layer.css({ width: '', maxWidth: 'none' });
+					}
+					$layer.find('.layui-layer-content').css({ overflow: 'hidden', width: 'auto' });
+					if (dbg) console.log('[fcx-nat] layer_w(after)=', $layer.width());
+				};
+				applySize();
+				setTimeout(applySize, 60);
+			}catch(e){}
+		}
+	});
 }
 
 function show_hide_element(){
 	// 授权信息在未开启插件时也应显示
 	E("fullcone_status_tr").style.display = "";
 	E("fullcone_authinfo_tr").style.display = "";
+	if (E("fullcone_nat_tr")) {
+		E("fullcone_nat_tr").style.display = "";
+	}
 	if(dbus["fullcone_enable"] == "1"){
 		E("fullcone_apply_btn_1").style.display = "none";
 		E("fullcone_apply_btn_2").style.display = "";
@@ -555,45 +703,12 @@ function menu_hook(title, tab) {
 $(function(){
   // NAT 类型检测按钮
   $(document).on('click', '#fcx-nat-test', function(){
-    try{ layer.closeAll(); }catch(e){}
-    var tip = "<div class='fcx-nat-tip' style=\"padding:10px 12px 6px;color:red;font-size:13px;line-height:1.6;background:#f9fbff;border-bottom:1px solid #e5eaf0\">"
-            //+   "<div style=\"margin-bottom:4px;font-weight:600\">检测提示：</div>"
-            +   "<ol style=\"margin:0 0 6px 18px;padding:0\">"
-            +     "<li>为检测准确，请确保浏览器所在网络由本路由器提供，通过远程访问的检测结果无法反应出本路由网络NAT后的类型</li>"
-            +     "<li>检测前需要关闭手机/PC/浏览器的代理程序，如果使用windows电脑检测，需要关闭防火墙才能检测准确</li>"
-            +     "<li>此检测结果仅供参考，你可以使用<a href='https://github.com/HMBSbige/NatTypeTester' target='_blank' rel='noopener noreferrer' style='color:#001bdd'>NatTypeTester</a>、<a href='https://github.com/oneclickvirt/gostun' target='_blank' rel='noopener noreferrer' style='color:#001bdd'>gostun</a>等检测工具，在本路由器下局域网中的客户端机器中进行检测</li>"
-            +   "</ol>"
-            + "</div>";
-    // Hide iframe vertical scrollbar by clipping the right-side scrollbar area (cross-origin page; cannot style inside iframe)
-    var iframe = "<div class='fcx-nat-iframe' style=\"width:760px;height:620px;margin:0 auto;overflow:hidden;\">"
-               +   "<iframe src=\"https://ai.koolcenter.com/nat/?from=asusgo\" style=\"width:760px;height:620px;border:0;\" scrolling=\"yes\" referrerpolicy=\"no-referrer\"></iframe>"
-               + "</div>";
-    var box = "<div class='fcx-nat-wrap' style=\"background:#fff;overflow:hidden\">" + tip + iframe + "</div>";
-    layer.open({ type:1, skin:'layui-layer-lan', title:'NAT 类型检测', area:'744px', offset:'auto', shade:0.8, resize:false, content:box,
-      success:function(layero, idx){
-        try{
-          var $layer = $(layero);
-          var dbg = (window.FCX_DEBUG === true);
-          var applySize = function(){
-            // Prefer explicit iframe wrapper width (cross-origin iframe may delay layout)
-            var w = $layer.find('.fcx-nat-iframe').outerWidth(true) || $layer.find('.fcx-nat-wrap').outerWidth(true) || 0;
-            if (dbg) console.log('[fcx-nat] idx=', idx, 'wrap_w=', w, 'layer_w(before)=', $layer.width());
-            // Layer 默认会给 .layui-layer 写入 width:360px；这里强制覆盖为内容宽度
-            if (w && w > 360){
-              $layer.css({ width: w + 'px', maxWidth: 'none' });
-            } else {
-              // 兜底：移除 width，让其按内容自适应（部分 layer 版本对 auto 支持不一致）
-              $layer[0].style.width = '';
-              $layer.css({ width: '', maxWidth: 'none' });
-            }
-            $layer.find('.layui-layer-content').css({ overflow: 'hidden', width: 'auto' });
-            if (dbg) console.log('[fcx-nat] layer_w(after)=', $layer.width());
-          };
-          applySize();
-          setTimeout(applySize, 60);
-        }catch(e){}
-      }
-    });
+    fcx_open_nat_iframe();
+    return false;
+  });
+  $(document).on('click', '#fcx-nat-detect', function(){
+    fcx_open_nat_detect(0);
+    return false;
   });
 
   // 使用说明按钮
@@ -614,7 +729,7 @@ function show_usage_notes(){
 <ul style="margin:0 0 14px 0;padding-left:24px;">
 <li>本插件能实现最高的NAT等级取决于你路由器所在的网络环境（wan网络环境）；</li>
 <li>插件为付费授权，建议试用期间测试NAT类型，确定能实现NAT1后再付费购买</li>
-<li>插件提供了免费NAT类型测试工具，测试方法：点击顶部的<code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;color:#be123c;">NAT类型检测按钮</code>；</li>
+<li>插件提供NAT测试工具：NAT类型栏的<code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;color:#be123c;">检测</code>按钮，或者顶部的<code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;color:#be123c;">在线NAT检测</code>；</li>
 <li>Full Cone有助于改善游戏联机、P2P下载、视频通话、远程访问、直播串流等场景；</li>
 <li>Full Cone意味着更开放的网络，改善网络环境的同时也意味着更多的网络风险。</li>
 </ul>
@@ -2046,7 +2161,7 @@ function fcxStopCelebrate(){
 											<span><a type="button" href="https://github.com/koolshare/rogsoft/blob/master/fullcone/Changelog.txt" target="_blank" class="ks_btn" style="margin-left:5px;" >更新日志</a></span>
 											<span><a type="button" class="ks_btn" href="javascript:void(0);" onclick="get_log(1)" style="margin-left:5px;">插件日志</a></span>
 											<span><a type="button" class="ks_btn" href="javascript:void(0);" id="note2user" style="margin-left:5px;">使用说明</a></span>
-											<span><a type="button" class="ks_btn" href="javascript:void(0);" id="fcx-nat-test" style="margin-left:5px;">NAT类型检测</a></span>
+											<span><a type="button" class="ks_btn" href="javascript:void(0);" id="fcx-nat-test" style="margin-left:5px;">在线NAT检测</a></span>
 										</div>
 										<div id="fullcone_status_pannel">
 											<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
@@ -2066,6 +2181,13 @@ function fcxStopCelebrate(){
 													<td>
 														<span style="margin-left:4px" id="fullcone_auth_info"></span>
 														<!--<span style="margin-left:4px" id="fullcone_webver"></span>-->
+													</td>
+												</tr>
+												<tr id="fullcone_nat_tr" style="display: none;">
+													<th>NAT类型</th>
+													<td>
+														<span style="margin-left:4px" id="fullcone_nat_state"></span>
+														<span><a type="button" class="ks_btn" href="javascript:void(0);" id="fcx-nat-detect">检测</a></span>
 													</td>
 												</tr>
 
