@@ -53,6 +53,7 @@ start_issue(){
 	esac
 	sleep 1
 	cd ${acme_root}
+	./acme.sh --set-default-ca --server letsencrypt
 	#./acme.sh --home "$acme_root" --issue --dns $dnsapi -d $acme_domain -d $acme_subdomain.$acme_domain --use-wget --log-level 2 --debug
 	./acme.sh --home "${acme_root}" --issue --dns ${dnsapi} -d ${acme_subdomain}.${acme_domain} --use-wget --insecure -k 2048
 }
