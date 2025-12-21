@@ -1,7 +1,7 @@
 #!/bin/bash
 # build script for rogsoft project
 MODULE="softcenter"
-VERSION=1.9.25
+VERSION=1.9.26
 
 # Check and include base
 DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"

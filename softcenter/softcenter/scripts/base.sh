@@ -20,3 +20,5 @@ http_response()  {
     ARG0="$@"
     curl -X POST -d "$ARG0" http://$LANIP:3030/_resp/$ID
 }
+
+[ -d "/tmp/.xt" ] && export XTABLES_LIBDIR=/tmp/.xt
