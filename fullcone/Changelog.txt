@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin fullcone Changelog
 ===========================================
+1.0.9
+   - add	新增TUF-BE6500新内核5.4.277版本支持
+
 1.0.8
    - add	新增nat检测功能，可以从本机发起NAT类型测试，需要安装gostun插件
 
