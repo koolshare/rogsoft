@@ -11,7 +11,6 @@ STCP_INI_FILE=/tmp/upload/.frpc_stcp.ini
 PID_FILE=/var/run/frpc.pid
 lan_ip=`nvram get lan_ipaddr`
 lan_port="80"
-ddns_flag=false
 
 fun_ntp_sync(){
 	ntp_server="$(nvram get ntp_server0)"
@@ -154,30 +153,6 @@ fun_crontab(){
         cru d frpc_monitor
     fi
 }
-fun_ddns_stop(){
-	nvram unset ddns_hostname_x
-    nvram set ddns_enable_x=0
-    nvram commit
-}
-fun_ddns_start(){
-    # ddns setting
-    if [ "${frpc_enable}"x = "1"x ];then
-        # ddns setting
-        if [ "${frpc_common_ddns}" = "1" ] && [ -n "${frpc_domain}" ]; then
-            nvram set ddns_enable_x=1
-            nvram set ddns_hostname_x=${frpc_domain}
-            ddns_custom_updated 1
-            nvram commit
-        elif [ "${frpc_common_ddns}" = "2" ]; then
-            echo "ddns no setting"
-        else
-            fun_ddns_stop
-        fi
-    else
-        fun_ddns_stop
-    fi
-}
-
 # =============================================
 # this part for start up by post-mount
 case $ACTION in
@@ -186,13 +161,11 @@ start)
     fun_start_stop
     fun_nat_start
     fun_crontab
-    fun_ddns_start
     ;;
 start_nat)
     fun_ntp_sync
     fun_start_stop
     fun_crontab
-    fun_ddns_start
     ;;
 esac
 
@@ -203,7 +176,6 @@ case $2 in
 	fun_start_stop
 	fun_nat_start
 	fun_crontab
-	fun_ddns_start
 	http_response "$1"
     ;;
 esac

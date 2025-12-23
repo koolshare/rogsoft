@@ -126,7 +126,7 @@ input[type=button]:focus {
 var myid;
 var db_frpc = {};
 var node_max = 0;
-var params_input = ["frpc_common_ddns", "frpc_domain", "frpc_common_cron_time", "frpc_common_cron_hour_min", "frpc_common_server_addr", "frpc_common_server_port", "frpc_common_protocol", "frpc_common_tcp_mux", "frpc_common_login_fail_exit", "frpc_common_privilege_token", "frpc_common_vhost_http_port", "frpc_common_vhost_https_port", "frpc_common_user", "frpc_common_log_file", "frpc_common_log_level", "frpc_common_log_max_days"]
+var params_input = ["frpc_common_cron_time", "frpc_common_cron_hour_min", "frpc_common_server_addr", "frpc_common_server_port", "frpc_common_protocol", "frpc_common_tcp_mux", "frpc_common_login_fail_exit", "frpc_common_privilege_token", "frpc_common_vhost_http_port", "frpc_common_vhost_https_port", "frpc_common_user", "frpc_common_log_file", "frpc_common_log_level", "frpc_common_log_max_days"]
 var params_check = ["frpc_enable", "frpc_customize_conf"]
 var params_base64 = ["frpc_config"]
 
@@ -732,9 +732,6 @@ function openssHint(itemNum) {
 	} else if (itemNum == 17) {
 		statusmenu = "定时到Frp服务器上重新注册服务，以便Frp提供持续的服务。</br><font color='#F46'>注意：</font>填写内容为0时关闭该功能！";
 		_caption = "定时注册服务";
-	} else if (itemNum == 18) {
-		statusmenu = "如果穿透服务配置中内网主机地址是路由器管理地址，并且内网主机端口为80时，在网络地图DDNS处显示相应的域名配置。</br><font color='#F46'>注意：</font>此功能与路由系统自带的DDNS功能冲突，frp的DDNS显示设置会覆盖系统自带的DDNS设置！";
-		_caption = "DDNS显示设置";
 	} else if (itemNum == 19) {
 		statusmenu = "穿透服务的用户名称，如AC68U 配置结果为 {用户名称}.{代理名称}";
 		_caption = "Frpc用户名称";
@@ -805,7 +802,6 @@ function openssHint(itemNum) {
                                     <div style="float:left;" class="formfonttitle">软件中心 - Frpc内网穿透</div>
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
-                                    <div class="formfontdesc"><i>* 为了Frpc稳定运行，请开启虚拟内存功能！！！</i>&nbsp;&nbsp;&nbsp;&nbsp;【<a href="http://koolshare.cn/thread-65379-1-1.html"  target="_blank"><i>服务器搭建教程</i></a>】</div>
                                     <div id="frpc_switch_show">
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
@@ -833,18 +829,6 @@ function openssHint(itemNum) {
                                         <tr id="frpc_status">
                                             <th width="20%">运行状态</th>
                                             <td><span id="status">获取中...</span>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(18)">DDNS显示设置</a></th>
-                                            <td>
-                                                <select id="frpc_common_ddns" name="frpc_common_ddns" style="margin:0px 0px 0px 2px;" class="input_option">
-                                                    <option value="2" selected="selected">不做更改</option>
-                                                    <option value="1">开启</option>
-                                                    <option value="0">关闭</option>
-                                                </select>
-                                                <input type="text" class="input_ss_table" id="frpc_domain" name="frpc_domain" maxlength="255" value="" placeholder="填入要显示的域名，如:router.xxx.com" style="width:330px;margin-top: 3px;" />
                                             </td>
                                         </tr>
 
@@ -1089,11 +1073,8 @@ function openssHint(itemNum) {
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                     <div class="formbottomdesc" id="cmdDesc">
                                         <i>* 注意事项：</i><br>
-                                        <i>1. 请使用虚拟内存！请使用虚拟内存！请使用虚拟内存！重要的事说三遍</i><br>
-                                        <i>2. DDNS显示设置功能与系统自带的DDNS设置冲突，frp的DDNS显示设置会覆盖系统自带的DDNS设置！</i><br>
-                                        <i>3. 上面所有内容都为必填项，请认真填写，不然无法穿透。</i><br>
-                                        <i>4. 每一个文字都可以点击查看相应的帮助信息。</i><br>
-                                        <i>5. 穿透设置中添加删除为本地实时生效，请谨慎操作，修改后请提交以便服务器端生效。</i><br>
+                                        <i>1. 上面所有内容都为必填项，请认真填写，不然无法穿透。</i><br>
+                                        <i>2. 穿透设置中添加删除为本地实时生效，请谨慎操作，修改后请提交以便服务器端生效。</i><br>
                                     </div>
                                     <div class="apply_gen">
                                         <span><input class="button_gen_long" id="cmdBtn" onclick="save()" type="button" value="提交"/></span>
