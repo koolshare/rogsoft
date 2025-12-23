@@ -4,7 +4,7 @@ set -e
 # build script for rogsoft project
 
 MODULE="fakehttp"
-VERSION="0.4"
+VERSION="1.1"
 TITLE="FakeHTTP 伪装"
 DESCRIPTION="将 TCP 连接伪装为 HTTP/HTTPS 协议（NFQUEUE），用于网络流量混淆"
 HOME_URL="Module_fakehttp.asp"
