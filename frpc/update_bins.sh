@@ -4,7 +4,7 @@ set -e
 DIR="$(cd "$(dirname "$0")" && pwd)"
 BIN_DIR="${DIR}/frpc/bin"
 
-UPX_BIN="${UPX_BIN:-/home/sadog/project/upx/upx-5.0.2/upx}"
+UPX_BIN="${UPX_BIN:-/home/sadog/project/upx/upx-5.0.2}"
 UPX_ARGS="--lzma --ultra-brute"
 
 if [ ! -x "${UPX_BIN}" ]; then

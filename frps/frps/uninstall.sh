@@ -1,11 +1,11 @@
 #!/bin/sh
 export KSROOT=/koolshare
-source $KSROOT/scripts/base.sh
+. $KSROOT/scripts/base.sh
 
 sh /koolshare/scripts/frps_config.sh stop >/dev/null 2>&1
 
 rm -f /koolshare/bin/frps
-find /koolshare/init.d/ -name "*frps*" | xargs rm -rf
+find /koolshare/init.d/ -name "*frps*" -exec rm -rf {} \; >/dev/null 2>&1
 rm -rf /koolshare/res/icon-frps.png
 rm -rf /koolshare/scripts/frps_*.sh
 rm -rf /koolshare/webs/Module_frps.asp

@@ -1,12 +1,12 @@
 #!/bin/sh
 
-source /koolshare/scripts/base.sh
-eval $(dbus export frps_)
+. /koolshare/scripts/base.sh
+eval `dbus export frps_`
 INI_FILE=/koolshare/configs/frps.ini
 LOG_FILE=/tmp/upload/frps_log.txt
 LOCK_FILE=/var/lock/frps.lock
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
-true > $LOG_FILE
+true > "${LOG_FILE}"
 
 set_lock() {
 	exec 1000>"$LOCK_FILE"
@@ -31,7 +31,7 @@ sync_ntp(){
 	fi
 }
 fun_nat_start(){
-	if [ "${frps_enable}" == "1" ];then
+	if [ "${frps_enable}" = "1" ];then
 		if [ ! -L "/koolshare/init.d/N95Frps.sh" ];then
 			echo_date "添加nat-start触发..."
 			ln -sf /koolshare/scripts/frps_config.sh /koolshare/init.d/N95Frps.sh
@@ -45,7 +45,7 @@ fun_nat_start(){
 }
 onstart() {
 	# 插件开启的时候同步一次时间
-	if [ "${frps_enable}" == "1" -a -n "$(which ntpclient)" ];then
+	if [ "${frps_enable}" = "1" ] && command -v ntpclient >/dev/null 2>&1; then
 		sync_ntp
 	fi
 
@@ -98,13 +98,13 @@ onstart() {
 	EOF
 
 	# 定时任务
-	if [ "${frps_common_cron_time}" == "0" ]; then
+	if [ "${frps_common_cron_time}" = "0" ]; then
 		cru d frps_monitor >/dev/null 2>&1
 	else
-		if [ "${frps_common_cron_hour_min}" == "min" ]; then
+		if [ "${frps_common_cron_hour_min}" = "min" ]; then
 			echo_date "设置定时任务：每隔${frps_common_cron_time}分钟注册一次frps服务..."
 			cru a frps_monitor "*/"${frps_common_cron_time}" * * * * /bin/sh /koolshare/scripts/frps_config.sh"
-		elif [ "${frps_common_cron_hour_min}" == "hour" ]; then
+		elif [ "${frps_common_cron_hour_min}" = "hour" ]; then
 			echo_date "设置定时任务：每隔${frps_common_cron_time}小时注册一次frps服务..."
 			cru a frps_monitor "0 */"${frps_common_cron_time}" * * * /bin/sh /koolshare/scripts/frps_config.sh"
 		fi
@@ -112,7 +112,7 @@ onstart() {
 	fi
 
 	# 开启frps
-	if [ "$frps_enable" == "1" ]; then
+	if [ "$frps_enable" = "1" ]; then
 		echo_date "启动frps主程序..."
 		export GOGC=40
 		start-stop-daemon -S -q -b -m -p /var/run/frps.pid -x /koolshare/bin/frps -- -c ${INI_FILE}
@@ -140,7 +140,7 @@ onstart() {
 check_port(){
 	local prot=$1
 	local port=$2
-	local open=$(iptables -S -t filter | grep INPUT | grep dport | grep ${prot} | grep ${port})
+	local open="$(iptables -t filter -S | grep INPUT | grep dport | grep "${prot}" | grep "${port}")"
 	if [ -n "${open}" ];then
 		echo 0
 	else
@@ -150,28 +150,28 @@ check_port(){
 open_port(){
 	local t_port
 	local u_port
-	[ "$(check_port tcp ${frps_common_vhost_http_port})" == "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_vhost_http_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${frps_common_vhost_http_port}"
-	[ "$(check_port tcp ${frps_common_vhost_https_port})" == "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_vhost_https_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frps_common_vhost_https_port}"
-	[ "$(check_port tcp ${frps_common_bind_port})" == "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_bind_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frps_common_bind_port}"
-	[ "$(check_port tcp ${frps_common_dashboard_port})" == "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_dashboard_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frps_common_dashboard_port}"
-	[ "$(check_port udp ${frps_common_vhost_http_port})" == "1" ] && iptables -I INPUT -p udp --dport ${frps_common_vhost_http_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${frps_common_vhost_http_port}"
-	[ "$(check_port udp ${frps_common_vhost_https_port})" == "1" ] && iptables -I INPUT -p udp --dport ${frps_common_vhost_https_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frps_common_vhost_https_port}"
-	[ "$(check_port udp ${frps_common_bind_port})" == "1" ] && iptables -I INPUT -p udp --dport ${frps_common_bind_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frps_common_bind_port}"
-	[ "$(check_port udp ${frps_common_dashboard_port})" == "1" ] && iptables -I INPUT -p udp --dport ${frps_common_dashboard_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frps_common_dashboard_port}"
+	[ "$(check_port tcp ${frps_common_vhost_http_port})" = "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_vhost_http_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${frps_common_vhost_http_port}"
+	[ "$(check_port tcp ${frps_common_vhost_https_port})" = "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_vhost_https_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frps_common_vhost_https_port}"
+	[ "$(check_port tcp ${frps_common_bind_port})" = "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_bind_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frps_common_bind_port}"
+	[ "$(check_port tcp ${frps_common_dashboard_port})" = "1" ] && iptables -I INPUT -p tcp --dport ${frps_common_dashboard_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && t_port="${t_port} ${frps_common_dashboard_port}"
+	[ "$(check_port udp ${frps_common_vhost_http_port})" = "1" ] && iptables -I INPUT -p udp --dport ${frps_common_vhost_http_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${frps_common_vhost_http_port}"
+	[ "$(check_port udp ${frps_common_vhost_https_port})" = "1" ] && iptables -I INPUT -p udp --dport ${frps_common_vhost_https_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frps_common_vhost_https_port}"
+	[ "$(check_port udp ${frps_common_bind_port})" = "1" ] && iptables -I INPUT -p udp --dport ${frps_common_bind_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frps_common_bind_port}"
+	[ "$(check_port udp ${frps_common_dashboard_port})" = "1" ] && iptables -I INPUT -p udp --dport ${frps_common_dashboard_port} -j ACCEPT >/tmp/ali_ntp.txt 2>&1 && u_port="${u_port} ${frps_common_dashboard_port}"
 	[ -n "${t_port}" ] && echo_date "开启TCP端口：${t_port}"
 	[ -n "${u_port}" ] && echo_date "开启UDP端口：${u_port}"
 }
 close_port(){
 	local t_port
 	local u_port
-	[ "$(check_port tcp ${frps_common_vhost_http_port})" == "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_vhost_http_port} -j ACCEPT >/dev/null 2>&1 && t_port="${frps_common_vhost_http_port}"
-	[ "$(check_port tcp ${frps_common_vhost_https_port})" == "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_vhost_https_port} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frps_common_vhost_https_port}"
-	[ "$(check_port tcp ${frps_common_bind_port})" == "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_bind_port} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frps_common_bind_port}"
-	[ "$(check_port tcp ${frps_common_dashboard_port})" == "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_dashboard_port} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frps_common_dashboard_port}"
-	[ "$(check_port udp ${frps_common_vhost_http_port})" == "0" ] && iptables -D INPUT -p udp --dport ${frps_common_vhost_http_port} -j ACCEPT >/dev/null 2>&1 && u_port="${frps_common_vhost_http_port}"
-	[ "$(check_port udp ${frps_common_vhost_https_port})" == "0" ] && iptables -D INPUT -p udp --dport ${frps_common_vhost_https_port} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frps_common_vhost_https_port}"
-	[ "$(check_port udp ${frps_common_bind_port})" == "0" ] && iptables -D INPUT -p udp --dport ${frps_common_bind_port} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frps_common_bind_port}"
-	[ "$(check_port udp ${frps_common_dashboard_port})" == "0" ] && iptables -D INPUT -p udp --dport ${frps_common_dashboard_port} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frps_common_dashboard_port}"
+	[ "$(check_port tcp ${frps_common_vhost_http_port})" = "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_vhost_http_port} -j ACCEPT >/dev/null 2>&1 && t_port="${frps_common_vhost_http_port}"
+	[ "$(check_port tcp ${frps_common_vhost_https_port})" = "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_vhost_https_port} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frps_common_vhost_https_port}"
+	[ "$(check_port tcp ${frps_common_bind_port})" = "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_bind_port} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frps_common_bind_port}"
+	[ "$(check_port tcp ${frps_common_dashboard_port})" = "0" ] && iptables -D INPUT -p tcp --dport ${frps_common_dashboard_port} -j ACCEPT >/dev/null 2>&1 && t_port="${t_port} ${frps_common_dashboard_port}"
+	[ "$(check_port udp ${frps_common_vhost_http_port})" = "0" ] && iptables -D INPUT -p udp --dport ${frps_common_vhost_http_port} -j ACCEPT >/dev/null 2>&1 && u_port="${frps_common_vhost_http_port}"
+	[ "$(check_port udp ${frps_common_vhost_https_port})" = "0" ] && iptables -D INPUT -p udp --dport ${frps_common_vhost_https_port} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frps_common_vhost_https_port}"
+	[ "$(check_port udp ${frps_common_bind_port})" = "0" ] && iptables -D INPUT -p udp --dport ${frps_common_bind_port} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frps_common_bind_port}"
+	[ "$(check_port udp ${frps_common_dashboard_port})" = "0" ] && iptables -D INPUT -p udp --dport ${frps_common_dashboard_port} -j ACCEPT >/dev/null 2>&1 && u_port="${u_port} ${frps_common_dashboard_port}"
 	[ -n "${t_port}" ] && echo_date "关闭TCP端口：${t_port}"
 	[ -n "${u_port}" ] && echo_date "关闭UDP端口：${u_port}"
 }
@@ -183,8 +183,8 @@ close_in_five() {
 		echo_date $i
 		let i--
 	done
-	dbus set ss_basic_enable="0"
-	disable_ss >/dev/null
+	dbus set frps_enable="0"
+	stop >/dev/null 2>&1
 	echo_date "插件已关闭！！"
 	unset_lock
 	exit
@@ -212,7 +212,7 @@ stop() {
 case $1 in
 start)
 	set_lock
-	if [ "${frps_enable}" == "1" ]; then
+	if [ "${frps_enable}" = "1" ]; then
 		logger "[软件中心]: 启动frps！"
 		onstart
 	fi
@@ -220,7 +220,7 @@ start)
 	;;
 restart)
 	set_lock
-	if [ "${frps_enable}" == "1" ]; then
+	if [ "${frps_enable}" = "1" ]; then
 		stop
 		onstart
 	fi
@@ -233,7 +233,7 @@ stop)
 	;;
 start_nat)
 	set_lock
-	if [ "${frps_enable}" == "1" ]; then
+	if [ "${frps_enable}" = "1" ]; then
 		onstart
 	fi
 	unset_lock
@@ -244,13 +244,13 @@ case $2 in
 web_submit)
 	set_lock
 	http_response "$1"
-	if [ "${frps_enable}" == "1" ]; then
-		stop | tee -a $LOG_FILE
-		onstart | tee -a $LOG_FILE
+	if [ "${frps_enable}" = "1" ]; then
+		stop | tee -a "${LOG_FILE}"
+		onstart | tee -a "${LOG_FILE}"
 	else
-		stop | tee -a $LOG_FILE
+		stop | tee -a "${LOG_FILE}"
 	fi
-	echo XU6J03M6 | tee -a $LOG_FILE
+	echo XU6J03M6 | tee -a "${LOG_FILE}"
 	unset_lock
 	;;
 esac
