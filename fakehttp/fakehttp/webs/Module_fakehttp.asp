@@ -186,7 +186,8 @@ function apply_config(enable){
 
 	set_buttons(true);
 	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "fakehttp_config.sh", "params": [1], "fields": fields};
+	var action = (enable == "1") ? 2 : 3;
+	var postData = {"id": id, "method": "fakehttp_config.sh", "params": [action], "fields": fields};
 	$.ajax({
 		type: "POST",
 		url: "/_api/",
