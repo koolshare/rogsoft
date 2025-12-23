@@ -86,32 +86,6 @@ nat_start_link() {
 	fi
 }
 
-ipt4_cleanup() {
-	while iptables -t mangle -D PREROUTING -j FAKESIP_S >/dev/null 2>&1; do :; done
-	while iptables -t mangle -D POSTROUTING -j FAKESIP_D >/dev/null 2>&1; do :; done
-
-	iptables -t mangle -F FAKESIP_R >/dev/null 2>&1
-	iptables -t mangle -F FAKESIP_S >/dev/null 2>&1
-	iptables -t mangle -F FAKESIP_D >/dev/null 2>&1
-
-	iptables -t mangle -X FAKESIP_R >/dev/null 2>&1
-	iptables -t mangle -X FAKESIP_S >/dev/null 2>&1
-	iptables -t mangle -X FAKESIP_D >/dev/null 2>&1
-}
-
-ipt6_cleanup() {
-	while ip6tables -t mangle -D PREROUTING -j FAKESIP_S >/dev/null 2>&1; do :; done
-	while ip6tables -t mangle -D POSTROUTING -j FAKESIP_D >/dev/null 2>&1; do :; done
-
-	ip6tables -t mangle -F FAKESIP_R >/dev/null 2>&1
-	ip6tables -t mangle -F FAKESIP_S >/dev/null 2>&1
-	ip6tables -t mangle -F FAKESIP_D >/dev/null 2>&1
-
-	ip6tables -t mangle -X FAKESIP_R >/dev/null 2>&1
-	ip6tables -t mangle -X FAKESIP_S >/dev/null 2>&1
-	ip6tables -t mangle -X FAKESIP_D >/dev/null 2>&1
-}
-
 normalize_ifaces() {
 	echo "$1" | tr ',' ' ' | tr -s ' ' | sed 's/^ *//;s/ *$//'
 }
@@ -119,115 +93,6 @@ normalize_ifaces() {
 normalize_list() {
 	# normalize_list "<string>" => space-separated tokens
 	echo "$1" | tr ',\r\n\t' ' ' | tr -s ' ' | sed 's/^ *//;s/ *$//'
-}
-
-ipt4_setup() {
-	inbound="$1"
-	outbound="$2"
-	alliface="$3"
-	ifaces="$4"
-	nfqnum="$5"
-	xmark="$6"
-
-	iptables -t mangle -N FAKESIP_S >/dev/null 2>&1
-	iptables -t mangle -N FAKESIP_D >/dev/null 2>&1
-	iptables -t mangle -N FAKESIP_R >/dev/null 2>&1
-
-	[ "${inbound}" = "1" ] && iptables -t mangle -I PREROUTING -j FAKESIP_S >/dev/null 2>&1
-	[ "${outbound}" = "1" ] && iptables -t mangle -I POSTROUTING -j FAKESIP_D >/dev/null 2>&1
-
-	# drop ICMP time-exceeded packets (best-effort)
-	[ "${inbound}" = "1" ] && iptables -t mangle -A FAKESIP_S -p icmp --icmp-type 11 -j DROP >/dev/null 2>&1
-
-	# exclude local IPs (from source)
-	if [ "${inbound}" = "1" ]; then
-		for cidr in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/3; do
-			iptables -t mangle -A FAKESIP_S -s "${cidr}" -j RETURN >/dev/null 2>&1
-		done
-	fi
-
-	# exclude local IPs (to destination)
-	if [ "${outbound}" = "1" ]; then
-		for cidr in 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 224.0.0.0/3; do
-			iptables -t mangle -A FAKESIP_D -d "${cidr}" -j RETURN >/dev/null 2>&1
-		done
-	fi
-
-	iptables -t mangle -A FAKESIP_R -m mark --mark "${xmark}" -j RETURN >/dev/null 2>&1
-	iptables -t mangle -A FAKESIP_R -p udp -m connbytes --connbytes 1:5 --connbytes-dir both --connbytes-mode packets -j NFQUEUE --queue-bypass --queue-num "${nfqnum}" >/dev/null 2>&1
-
-	if [ "${alliface}" = "1" ]; then
-		[ "${inbound}" = "1" ] && iptables -t mangle -A FAKESIP_S -j FAKESIP_R >/dev/null 2>&1
-		[ "${outbound}" = "1" ] && iptables -t mangle -A FAKESIP_D -j FAKESIP_R >/dev/null 2>&1
-	else
-		for i in ${ifaces}; do
-			[ "${inbound}" = "1" ] && iptables -t mangle -A FAKESIP_S -i "${i}" -j FAKESIP_R >/dev/null 2>&1
-			[ "${outbound}" = "1" ] && iptables -t mangle -A FAKESIP_D -o "${i}" -j FAKESIP_R >/dev/null 2>&1
-		done
-	fi
-}
-
-ipt6_setup() {
-	inbound="$1"
-	outbound="$2"
-	alliface="$3"
-	ifaces="$4"
-	nfqnum="$5"
-	xmark="$6"
-
-	ip6tables -t mangle -N FAKESIP_S >/dev/null 2>&1
-	ip6tables -t mangle -N FAKESIP_D >/dev/null 2>&1
-	ip6tables -t mangle -N FAKESIP_R >/dev/null 2>&1
-
-	[ "${inbound}" = "1" ] && ip6tables -t mangle -I PREROUTING -j FAKESIP_S >/dev/null 2>&1
-	[ "${outbound}" = "1" ] && ip6tables -t mangle -I POSTROUTING -j FAKESIP_D >/dev/null 2>&1
-
-	# drop ICMPv6 time-exceeded packets (best-effort)
-	[ "${inbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_S -p icmpv6 --icmpv6-type time-exceeded -j DROP >/dev/null 2>&1
-
-	# exclude non-GUA IPv6 addresses (match upstream behavior)
-	[ "${inbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_S ! -s 2000::/3 -j RETURN >/dev/null 2>&1
-	[ "${outbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_D ! -d 2000::/3 -j RETURN >/dev/null 2>&1
-
-	ip6tables -t mangle -A FAKESIP_R -m mark --mark "${xmark}" -j RETURN >/dev/null 2>&1
-	ip6tables -t mangle -A FAKESIP_R -p udp -m connbytes --connbytes 1:5 --connbytes-dir both --connbytes-mode packets -j NFQUEUE --queue-bypass --queue-num "${nfqnum}" >/dev/null 2>&1
-
-	if [ "${alliface}" = "1" ]; then
-		[ "${inbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_S -j FAKESIP_R >/dev/null 2>&1
-		[ "${outbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_D -j FAKESIP_R >/dev/null 2>&1
-	else
-		for i in ${ifaces}; do
-			[ "${inbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_S -i "${i}" -j FAKESIP_R >/dev/null 2>&1
-			[ "${outbound}" = "1" ] && ip6tables -t mangle -A FAKESIP_D -o "${i}" -j FAKESIP_R >/dev/null 2>&1
-		done
-	fi
-}
-
-apply_firewall_rules() {
-	inbound="${fakesip_inbound}"
-	outbound="${fakesip_outbound}"
-	[ -z "${inbound}" ] && inbound="0"
-	[ -z "${outbound}" ] && outbound="1"
-	[ "${inbound}" != "1" ] && [ "${outbound}" != "1" ] && outbound="1"
-
-	alliface="${fakesip_alliface}"
-	[ -z "${alliface}" ] && alliface="0"
-	ifaces="$(normalize_ifaces "${fakesip_iface}")"
-
-	nfqnum="${fakesip_nfqnum}"
-	[ -z "${nfqnum}" ] && nfqnum="513"
-
-	fwmark="${fakesip_fwmark}"
-	[ -z "${fwmark}" ] && fwmark="0x10000"
-	fwmask="${fakesip_fwmask}"
-	[ -z "${fwmask}" ] && fwmask="${fwmark}"
-	xmark="${fwmark}/${fwmask}"
-
-	[ "${fakesip_ipv4}" = "1" ] && ipt4_cleanup
-	[ "${fakesip_ipv6}" = "1" ] && ipt6_cleanup
-
-	[ "${fakesip_ipv4}" = "1" ] && ipt4_setup "${inbound}" "${outbound}" "${alliface}" "${ifaces}" "${nfqnum}" "${xmark}"
-	[ "${fakesip_ipv6}" = "1" ] && ipt6_setup "${inbound}" "${outbound}" "${alliface}" "${ifaces}" "${nfqnum}" "${xmark}"
 }
 
 clear_log() {
@@ -270,7 +135,6 @@ start_fakesip() {
 		return 1
 	fi
 
-	apply_firewall_rules
 	stop_proc
 
 	sip_uris="$(normalize_list "${fakesip_sip_uri}")"
@@ -306,8 +170,6 @@ start_fakesip() {
 	[ -n "${fakesip_ttl}" ] && args="${args} -t ${fakesip_ttl}"
 	[ -n "${fakesip_dynamic_pct}" ] && args="${args} -y ${fakesip_dynamic_pct}"
 
-	# IMPORTANT: -f skips FakeSIP firewall rules (workaround for Asus iptables lacking -w)
-	args="${args} -f"
 	args="${args} -w ${LOG_FILE}"
 
 	echo_date "启动 FakeSIP..." >>"${LOG_FILE}"
@@ -330,8 +192,6 @@ start_fakesip() {
 
 stop_fakesip() {
 	stop_proc
-	ipt4_cleanup
-	ipt6_cleanup
 	nat_start_link
 	echo_date "FakeSIP 已停止。" >>"${LOG_FILE}"
 }
@@ -340,7 +200,6 @@ start_nat() {
 	ensure_defaults
 	eval "$(dbus export fakesip_)"
 	[ "${fakesip_enable}" != "1" ] && return 0
-	apply_firewall_rules
 	if ! is_running; then
 		start_fakesip
 	fi

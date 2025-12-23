@@ -31,10 +31,10 @@
 		padding: 6px 8px;
 		border-radius: 4px;
 		background: rgba(0,0,0,.22);
-		color: #fff;
+		color: #fff !important;
 		border: 1px solid rgba(255,255,255,.18);
 	}
-	#app[skin="ASUSWRT"] .payload_area { background: rgba(0,0,0,.06); color: #000; border-color: #999; }
+	#app[skin="ASUSWRT"] .payload_area { background: rgba(0,0,0,.12); border-color: #999; }
 	#app[skin="ROG"] .payload_area { border-color: rgba(145,7,31,.85); }
 	#app[skin="TUF"] .payload_area { border-color: rgba(208,152,44,.85); }
 	#app[skin="TS"] .payload_area { border-color: rgba(46,217,195,.85); }
