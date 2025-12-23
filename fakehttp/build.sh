@@ -4,7 +4,7 @@ set -e
 # build script for rogsoft project
 
 MODULE="fakehttp"
-VERSION="1.2"
+VERSION="1.3"
 TITLE="FakeHTTP 伪装"
 DESCRIPTION="将 TCP 连接伪装为 HTTP/HTTPS 协议（NFQUEUE），用于网络流量混淆"
 HOME_URL="Module_fakehttp.asp"
@@ -16,58 +16,14 @@ CHANGELOG=""
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
 do_update_bins() {
-	UPX_BIN="${HOME}/project/upx/upx-5.0.2"
-	if [ ! -x "${UPX_BIN}" ]; then
-		echo "upx not found or not executable: ${UPX_BIN}"
+	FORK_BUILDER="${DIR}/${MODULE}-fork/build_asus.sh"
+	if [ ! -x "${FORK_BUILDER}" ]; then
+		echo "missing fork build script: ${FORK_BUILDER}"
+		echo "please clone fork to: ${DIR}/${MODULE}-fork and run build_asus.sh"
 		exit 1
 	fi
-
-	TMPDIR="$(mktemp -d /tmp/fakehttp_update_XXXXXX)"
-	trap 'rm -rf "${TMPDIR}" >/dev/null 2>&1' EXIT
-
-	API="https://api.github.com/repos/MikeWang000000/FakeHTTP/releases/latest"
-	echo "fetch: ${API}"
-
-	python3 - <<'PY' "${API}" "${TMPDIR}"
-import json, sys, urllib.request, os
-api=sys.argv[1]
-tmpdir=sys.argv[2]
-data=json.load(urllib.request.urlopen(api, timeout=30))
-tag=data.get("tag_name") or ""
-assets={a["name"]:a["browser_download_url"] for a in data.get("assets", []) if "name" in a and "browser_download_url" in a}
-need=[
-    ("fakehttp-linux-arm32v7hf.tar.gz", "arm32"),
-    ("fakehttp-linux-arm64.tar.gz", "arm64"),
-]
-print("tag:", tag)
-for name, key in need:
-    url=assets.get(name)
-    if not url:
-        raise SystemExit(f"missing asset: {name}")
-    print("asset:", name, url)
-    out=os.path.join(tmpdir, name)
-    urllib.request.urlretrieve(url, out)
-PY
-
-	mkdir -p "${TMPDIR}/arm32" "${TMPDIR}/arm64"
-	tar -zxf "${TMPDIR}/fakehttp-linux-arm32v7hf.tar.gz" -C "${TMPDIR}/arm32"
-	tar -zxf "${TMPDIR}/fakehttp-linux-arm64.tar.gz" -C "${TMPDIR}/arm64"
-
-	ARM32_BIN="$(find "${TMPDIR}/arm32" -maxdepth 3 -type f -name fakehttp | head -n 1)"
-	ARM64_BIN="$(find "${TMPDIR}/arm64" -maxdepth 3 -type f -name fakehttp | head -n 1)"
-	if [ -z "${ARM32_BIN}" ] || [ -z "${ARM64_BIN}" ]; then
-		echo "fakehttp binary not found in release archives"
-		exit 1
-	fi
-
-	install -m 0755 "${ARM32_BIN}" "${DIR}/${MODULE}/bin/fakehttp-arm"
-	install -m 0755 "${ARM64_BIN}" "${DIR}/${MODULE}/bin/fakehttp-arm64"
-
-	"${UPX_BIN}" --best "${DIR}/${MODULE}/bin/fakehttp-arm" >/dev/null 2>&1 || true
-	"${UPX_BIN}" --best "${DIR}/${MODULE}/bin/fakehttp-arm64" >/dev/null 2>&1 || true
-
-	echo "updated:"
-	file "${DIR}/${MODULE}/bin/fakehttp-arm" "${DIR}/${MODULE}/bin/fakehttp-arm64"
+	echo "build from fork: ${FORK_BUILDER}"
+	bash "${FORK_BUILDER}"
 }
 
 PLATFORM="$1"

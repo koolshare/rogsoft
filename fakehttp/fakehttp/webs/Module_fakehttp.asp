@@ -347,7 +347,7 @@ function check_status(){
 
 										<div class="SimpleNote">
 											<div>1. FakeHTTP 通过 NFQUEUE 将 TCP 流量伪装为 HTTP/HTTPS 协议，用于网络流量混淆。</div>
-											<div>2. 由于华硕/梅林系统 iptables 不支持 <span style="color:#00c6ff;font-weight:600;">-w</span> 参数，插件使用 FakeHTTP 的 <span style="color:#00c6ff;font-weight:600;">-f</span> 跳过内置防火墙规则，并由插件脚本自动创建 mangle/NFQUEUE 规则。</div>
+											<div>2. 已针对华硕/梅林系统定制编译，移除了 iptables 的 <span style="color:#00c6ff;font-weight:600;">-w</span> 依赖，FakeHTTP 将自动创建所需的防火墙/NFQUEUE 规则。</div>
 										</div>
 
 										<div style="margin:10px 0 10px 5px;" class="splitLine"></div>
