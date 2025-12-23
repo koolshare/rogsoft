@@ -1,5 +1,6 @@
 [
 {"module": "alist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_alist.git"},
+{"module": "openlist", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_openlist.git"},
 {"module": "rustdesk", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_rustdesk.git"},
 {"module": "onehub", "branch":"master", "git_source": "https://github.com/everstu/Koolcenter_onehub.git"},
 {"module": "querydns", "branch":"main", "git_source": "https://github.com/vj23456/QueryDNS.git"},
@@ -18,3 +19,4 @@
 {"module": "mfun", "branch":"main", "git_source": "https://github.com/Carseason/rogsoft_mfun.git"},
 {"module": "routerdog", "branch":"master", "git_source": "https://github.com/koolshare/router_dog.git"}
 ]
+

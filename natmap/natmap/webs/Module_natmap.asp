@@ -25,9 +25,16 @@
 		.natmap_table { table-layout: fixed; width: 100%; }
 		.natmap_table td, .natmap_table th { padding: 6px 6px; }
 		.natmap_table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		.natmap_table thead th { background: rgba(0,0,0,.22); color: #fff; border-bottom: 1px solid rgba(255,255,255,.14); }
+		#app[skin="ASUSWRT"] .natmap_table thead th { background: #4D595D; color: #fff; border-bottom-color: #222; }
+		#app[skin="ROG"] .natmap_table thead th { background: rgba(145,7,31,.22); border-bottom-color: #91071f; }
+		#app[skin="TUF"] .natmap_table thead th { background: rgba(208,152,44,.18); border-bottom-color: #D0982C; }
+		#app[skin="TS"] .natmap_table thead th { background: rgba(46,217,195,.16); border-bottom-color: #2ed9c3; }
 		.natmap_table tbody tr { cursor: pointer; }
 		.natmap_table tbody tr:hover { background: rgba(255,255,255,.06); }
-		.natmap_table tbody tr.selected { background: rgba(0,198,255,.16); }
+		.natmap_table tbody tr.selected { background: rgba(0,198,255,.12); box-shadow: inset 0 0 0 1px rgba(0,198,255,.45); }
+		#app[skin="ASUSWRT"] .natmap_table tbody tr:hover { background: rgba(0,0,0,.05); }
+		#app[skin="ASUSWRT"] .natmap_table tbody tr.selected { background: rgba(0,0,0,.08); box-shadow: inset 0 0 0 1px rgba(22,120,255,.45); }
 		.natmap_table th.sel, .natmap_table td.sel { width: 26px; padding-left: 2px; padding-right: 2px; text-align: center; }
 		.natmap_table th.name, .natmap_table td.name { width: 120px; text-align: center; }
 		.natmap_table th:nth-child(5), .natmap_table td:nth-child(5) { text-align: center; }
@@ -42,21 +49,26 @@
 	.natmap_ops .button_gen { min-width: 68px; }
 	.natmap_mapped { font-family: 'Lucida Console', Monaco, monospace; font-size: 12px; }
 
-		/* popup editor */
-		.natmap_mask { display:none; z-index: 9998; }
-		.natmap_popup {
-			position: fixed;
-			z-index: 9999;
-			top: 80px;
-			left: 50%;
-			transform: translateX(-50%);
-			width: 740px;
-			background: rgba(0,0,0,0.88);
-			border-radius: 10px;
-			box-shadow: 3px 3px 10px #000;
-			display: none;
-		}
-		#natmap_editor { top: 275px; left: calc(50% + 97px); }
+			/* popup editor */
+			.natmap_mask { display:none; z-index: 9998; position: absolute; top: 0; left: 0; width: 100%; }
+			.natmap_popup {
+				position: absolute;
+				z-index: 9999;
+				top: 80px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 740px;
+				background: rgba(0,0,0,0.88);
+				border: 1px solid rgba(255,255,255,.18);
+				border-radius: 10px;
+				box-shadow: 3px 3px 10px #000;
+				display: none;
+			}
+			#app[skin="ROG"] .natmap_popup { border-color: #91071f; }
+			#app[skin="TUF"] .natmap_popup { border-color: #D0982C; }
+			#app[skin="TS"] .natmap_popup { border-color: #2ed9c3; }
+			#app[skin="ASUSWRT"] .natmap_popup { border-color: #222; }
+			#natmap_editor { top: 150px; left: calc(50%); }
 	.natmap_popup_head{
 		padding: 10px 12px;
 		font-size: 16px;
@@ -86,17 +98,17 @@
 		#natmap_log textarea::-webkit-scrollbar { width: 0; height: 0; }
 		#natmap_log .log_actions { background: #000 !important; opacity: 1 !important; padding: 8px 0 0 0; }
 		#natmap_log .apply_gen { background: #000 !important; }
-	#natmap_log_mask {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 9998;
-		display: none;
-		background: rgba(0,0,0,0.55);
-	}
-</style>
+		#natmap_log_mask {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 9998;
+			display: none;
+			background: rgba(0,0,0,0.55);
+		}
+	</style>
 	<script>
 	var dbus = {};
 	var editId = "";
@@ -344,6 +356,25 @@ function validate_rule(obj){
 		update_ops_state();
 	}
 
+	function get_scroll_top(){
+		return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+	}
+
+	function get_doc_height(){
+		var b = document.body;
+		var e = document.documentElement;
+		return Math.max(b.scrollHeight, e.scrollHeight, b.offsetHeight, e.offsetHeight, b.clientHeight, e.clientHeight);
+	}
+
+	function position_popups(){
+		var st = get_scroll_top();
+		$("#natmap_editor").css("top", (st + 150) + "px");
+		$("#natmap_log").css("top", (st + 260) + "px");
+		var h = get_doc_height();
+		$("#natmap_mask").css("height", h + "px");
+		$("#natmap_log_mask").css("height", h + "px");
+	}
+
 function update_ops_state(){
 	var has = !!selectedId;
 	E("op_edit").disabled = !has;
@@ -364,12 +395,13 @@ function update_ops_visibility(){
 	}
 }
 
-function open_editor(){
-	// close log popup if open
-	close_log_popup(true);
-	$("#natmap_mask").fadeIn(100);
-	$("#natmap_editor").fadeIn(150);
-}
+	function open_editor(){
+		// close log popup if open
+		close_log_popup(true);
+		position_popups();
+		$("#natmap_mask").fadeIn(100);
+		$("#natmap_editor").fadeIn(150);
+	}
 
 function close_editor(){
 	$("#natmap_editor").fadeOut(120);
@@ -387,12 +419,13 @@ function op_stop(){ if (selectedId) stop_rule(selectedId); }
 function op_log(){ if (selectedId) show_log(selectedId); }
 function op_del(){ if (selectedId) delete_rule(selectedId); }
 
-	function open_log_popup(){
-		// close editor popup if open
-		$("#natmap_editor").hide();
-		$("#natmap_log_mask").fadeIn(100);
-		$("#natmap_log").fadeIn(150);
-	}
+		function open_log_popup(){
+			// close editor popup if open
+			$("#natmap_editor").hide();
+			position_popups();
+			$("#natmap_log_mask").fadeIn(100);
+			$("#natmap_log").fadeIn(150);
+		}
 
 function close_log_popup(silent){
 	stop_log_poll();
@@ -570,7 +603,7 @@ function stop_log_poll(){
 }
 	</script>
 	</head>
-<body onload="init();">
+<body id="app" skin="<% nvram_get(\"sc_skin\"); %>" onload="init();">
 	<div id="TopBanner"></div>
 	<div id="Loading" class="popup_bg"></div>
 	<iframe name="hidden_frame" id="hidden_frame" src="" width="0" height="0" frameborder="0"></iframe>
