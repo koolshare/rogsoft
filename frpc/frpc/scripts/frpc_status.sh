@@ -1,7 +1,7 @@
 #! /bin/sh
 
 export KSROOT=/koolshare
-source $KSROOT/scripts/base.sh
+. $KSROOT/scripts/base.sh
 frpc_version=`/koolshare/bin/frpc -v`
 frpc_pid=`pidof frpc`
 

@@ -1,12 +1,12 @@
 {
-"version":"1.7",
-"md5":"f61034661635103fb49bd9c96f11eb95",
+"version":"2.0",
+"md5":"69a4ca3216d85e9a3aa818d2418a4a08",
 "home_url":"Module_frpc.asp",
 "title":"frpc内网穿透",
 "description":"支持多种协议的内网穿透软件",
 "tags":"网络 穿透",
 "author":"clang",
-"link":"",
+"link":"https://github.com/fatedier/frp",
 "changelog":"",
-"build_date":"2021-08-20_22:31:27"
+"build_date":"2025-12-24_00:19:14"
 }

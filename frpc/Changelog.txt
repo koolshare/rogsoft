@@ -1,5 +1,10 @@
 Koolshare Frpc for hnd router Changelog
 ===========================================
+2.0 ( 2025-12-24 )
+   - Update	更新frpc二进制到0.65.0（官方release），并使用UPX极限压缩
+   - Fix	补齐vhost_http_port/vhost_https_port生成，修复stcp visitor示例拼写
+   - Build	按平台打包，仅保留对应架构二进制
+
 1.4 ( 2018-06-04 20:18 )
    - Update	更新frpc二进制到0.20.0（盲改版）
 

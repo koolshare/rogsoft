@@ -1,9 +1,9 @@
 #!/bin/sh
 export KSROOT=/koolshare
-source $KSROOT/scripts/base.sh
+. $KSROOT/scripts/base.sh
 
-killall frpc
-find /koolshare/init.d/ -name "*frpc*" | xargs rm -rf
+killall frpc >/dev/null 2>&1
+find /koolshare/init.d/ -name "*frpc*" -exec rm -rf {} \; >/dev/null 2>&1
 rm -rf /koolshare/res/icon-frpc.png
 rm -rf /koolshare/bin/frpc
 rm -rf /koolshare/scripts/frpc*.sh
