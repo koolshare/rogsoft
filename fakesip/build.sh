@@ -4,7 +4,7 @@ set -e
 # build script for rogsoft project
 
 MODULE="fakesip"
-VERSION="1.1"
+VERSION="1.2"
 TITLE="FakeSIP 伪装"
 DESCRIPTION="将 UDP 流量伪装为 SIP 协议（NFQUEUE），用于网络流量混淆"
 HOME_URL="Module_fakesip.asp"

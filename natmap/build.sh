@@ -4,7 +4,7 @@ set -e
 # build script for rogsoft project
 
 MODULE="natmap"
-VERSION="0.3"
+VERSION="0.4"
 TITLE="NATMap 端口映射"
 DESCRIPTION="NAT1 打洞端口映射工具，支持TCP/UDP，多任务管理"
 HOME_URL="Module_natmap.asp"
