@@ -1,5 +1,5 @@
 #!/bin/sh
-source /koolshare/scripts/base.sh
+. /koolshare/scripts/base.sh
 
 alias echo_date='echo [$(TZ=UTC-8 date "+%Y-%m-%d %H:%M:%S")]:'
 
@@ -45,6 +45,7 @@ ensure_defaults() {
 	[ -z "${fakehttp_iface}" ] && dbus set fakehttp_iface="ppp0"
 	[ -z "${fakehttp_http_host}" ] && dbus set fakehttp_http_host="www.example.com"
 	[ -z "${fakehttp_https_host}" ] && dbus set fakehttp_https_host=""
+	[ -z "${fakehttp_payload}" ] && dbus set fakehttp_payload=""
 
 	[ -z "${fakehttp_inbound}" ] && dbus set fakehttp_inbound="0"
 	[ -z "${fakehttp_outbound}" ] && dbus set fakehttp_outbound="1"
@@ -115,7 +116,13 @@ trim_log() {
 
 normalize_hosts() {
 	# normalize_hosts "<string>" => space-separated tokens
-	echo "$1" | tr ',\r\n\t' ' ' | tr -s ' ' | sed 's/^ *//;s/ *$//'
+	# Supports:
+	# - real newlines in textarea value
+	# - literal "\n" sequences (some httpdb/json paths store as two chars)
+	# - comma-separated hosts
+	printf '%s' "$1" \
+		| sed 's/\\\\n/ /g; s/\\n/ /g; s/\\\\r/ /g; s/\\r/ /g; s/\\\\t/ /g; s/\\t/ /g; s/,/ /g' \
+		| awk 'BEGIN{out=""} {gsub(/\r/,""); for(i=1;i<=NF;i++){out = out (out==""?$i:" "$i)}} END{print out}'
 }
 
 start_fakehttp() {
@@ -136,6 +143,7 @@ start_fakehttp() {
 
 	http_hosts="$(normalize_hosts "${fakehttp_http_host}")"
 	https_hosts="$(normalize_hosts "${fakehttp_https_host}")"
+	payloads="$(normalize_hosts "${fakehttp_payload}")"
 
 	if [ -z "${http_hosts}" ]; then
 		echo_date "配置错误：HTTP Host 不能为空（-h）" >>"${LOG_FILE}"
@@ -173,6 +181,13 @@ start_fakehttp() {
 	done
 	for h in ${https_hosts}; do
 		args="${args} -e ${h}"
+	done
+	for p in ${payloads}; do
+		if [ ! -f "${p}" ]; then
+			echo_date "配置错误：Payload 文件不存在（-b）：${p}" >>"${LOG_FILE}"
+			return 1
+		fi
+		args="${args} -b ${p}"
 	done
 
 	# advanced

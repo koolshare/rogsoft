@@ -105,6 +105,7 @@ function fill_form(){
 	E("fakehttp_iface").value = (dbus["fakehttp_iface"] && dbus["fakehttp_iface"] != "null") ? dbus["fakehttp_iface"] : "ppp0";
 	E("fakehttp_http_host").value = (dbus["fakehttp_http_host"] && dbus["fakehttp_http_host"] != "null") ? dbus["fakehttp_http_host"] : "www.example.com";
 	E("fakehttp_https_host").value = (dbus["fakehttp_https_host"] && dbus["fakehttp_https_host"] != "null") ? dbus["fakehttp_https_host"] : "";
+	E("fakehttp_payload").value = (dbus["fakehttp_payload"] && dbus["fakehttp_payload"] != "null") ? dbus["fakehttp_payload"] : "";
 
 	E("fakehttp_outbound").checked = (dbus["fakehttp_outbound"] != "0");
 	E("fakehttp_inbound").checked = (dbus["fakehttp_inbound"] == "1");
@@ -143,6 +144,7 @@ function apply_config(enable){
 	var iface = $.trim(E("fakehttp_iface").value || "");
 	var httpHost = $.trim(E("fakehttp_http_host").value || "");
 	var httpsHost = $.trim(E("fakehttp_https_host").value || "");
+	var payload = $.trim(E("fakehttp_payload").value || "");
 
 	if (!httpHost) {
 		alert("HTTP Host 不能为空（-h）！");
@@ -169,6 +171,7 @@ function apply_config(enable){
 	fields["fakehttp_iface"] = iface;
 	fields["fakehttp_http_host"] = httpHost;
 	fields["fakehttp_https_host"] = httpsHost;
+	fields["fakehttp_payload"] = payload;
 
 	fields["fakehttp_inbound"] = E("fakehttp_inbound").checked ? "1" : "0";
 	fields["fakehttp_outbound"] = E("fakehttp_outbound").checked ? "1" : "0";
@@ -366,6 +369,10 @@ function check_status(){
 											<tr>
 												<th>HTTPS Host（可选）</th>
 												<td><textarea id="fakehttp_https_host" class="input_ss_table host_area" placeholder="每行一个 host，等价于多次 -e 参数（可留空）" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></td>
+											</tr>
+											<tr>
+												<th>Payload（可选）</th>
+												<td><textarea id="fakehttp_payload" class="input_ss_table host_area" placeholder="每行一个文件路径，等价于多次 -b 参数（可留空），例如：\n/koolshare/res/payload.bin" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></td>
 											</tr>
 											<tr>
 												<th>全接口</th>

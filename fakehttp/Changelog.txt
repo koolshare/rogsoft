@@ -1,3 +1,7 @@
+1.3
+- 修复多hostname运行命令错误的问题
+- 前端添加payload支持
+
 0.3
 - 增加运行状态显示与 fakehttp_status.sh
 - 日志改为弹窗，点击后才刷新
