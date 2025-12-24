@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin USB2JFFS Changelog for HND/AXHND platform
 ===========================================
+2.1.8
+   - fix	修复挂载dokcer镜像后，usb2jffs挂载状态检测错误
+
 2.1.7
    - fix	新增rt-ax89x机型支持
 

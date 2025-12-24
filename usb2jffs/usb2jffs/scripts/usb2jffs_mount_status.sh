@@ -28,9 +28,9 @@ get_current_jffs_device(){
 
 start(){
 	get_current_jffs_device
-	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
+	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs" | /bin/grep -v "DockRootData" | /bin/grep -c "/dev/s")
 	if [ "${mounted_nu}" -eq "2" ]; then
-		local usb_path=$(mount | /bin/grep "${jffs_device}" | /bin/grep "/tmp/mnt/" | awk '{print $3}')
+		local usb_path=$(mount | /bin/grep "${jffs_device}" | /bin/grep "/tmp/mnt/" | /bin/grep -v "DockRootData" | awk '{print $3}')
 		http_response "$(get_current_jffs_status)@@jffs挂载路径：<em>${usb_path}/.koolshare_jffs → /jffs</em>@@1"
 	else
 		if [ -d "${usb2jffs_mount_path}/.koolshare_jffs" ];then
