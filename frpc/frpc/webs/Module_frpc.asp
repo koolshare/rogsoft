@@ -110,7 +110,10 @@
 	color:#FFFFFF;
 	text-transform:none;
 	margin-top:5px;
-	overflow:scroll;
+	overflow:hidden;
+	resize:none;
+	white-space:pre-wrap;
+	word-break:break-word;
 	background:transparent; /* W3C rogcss*/
 	border:1px solid #91071f; /* W3C rogcss*/
 }
@@ -126,7 +129,7 @@ input[type=button]:focus {
 var myid;
 var db_frpc = {};
 var node_max = 0;
-var params_input = ["frpc_common_cron_time", "frpc_common_cron_hour_min", "frpc_common_server_addr", "frpc_common_server_port", "frpc_common_protocol", "frpc_common_tcp_mux", "frpc_common_login_fail_exit", "frpc_common_privilege_token", "frpc_common_vhost_http_port", "frpc_common_vhost_https_port", "frpc_common_user", "frpc_common_log_file", "frpc_common_log_level", "frpc_common_log_max_days"]
+var params_input = ["frpc_common_cron_time", "frpc_common_cron_hour_min", "frpc_common_server_addr", "frpc_common_server_port", "frpc_common_protocol", "frpc_common_tcp_mux", "frpc_common_privilege_token", "frpc_common_vhost_http_port", "frpc_common_vhost_https_port", "frpc_common_user", "frpc_common_log_file", "frpc_common_log_level", "frpc_common_log_max_days"]
 var params_check = ["frpc_enable", "frpc_customize_conf"]
 var params_base64 = ["frpc_config"]
 
@@ -137,6 +140,13 @@ function initial() {
 	toggle_func();
 	conf2obj();
 	buildswitch();
+	$("#frpc_common_log_file").change(function() {
+		update_log_rows();
+	});
+	$("#frpc_config").on("input", function() {
+		autosize_frpc_config();
+	});
+	autosize_frpc_config();
 }
 
 function get_dbus_data() {
@@ -175,6 +185,53 @@ function conf2obj() {
 	//dfnamic table data
 	$("#conf_table").find("tr:gt(2)").remove();
 	$('#conf_table tr:last').after(refresh_html());
+	update_log_rows();
+	autosize_frpc_config();
+}
+
+function update_log_rows() {
+	try {
+		var logFile = (E("frpc_common_log_file").value || "");
+		if (logFile == "/dev/null") {
+			$("#frpc_log_level_tr").hide();
+			$("#frpc_log_days_tr").hide();
+		} else {
+			$("#frpc_log_level_tr").show();
+			$("#frpc_log_days_tr").show();
+		}
+	} catch (e) {
+	}
+}
+
+function autosize_frpc_config() {
+	try {
+		var el = E("frpc_config");
+		if (!el) return;
+
+		// no horizontal scrollbar, wrap long lines
+		el.setAttribute("wrap", "soft");
+		el.style.overflowX = "hidden";
+
+		var minHeight = 200;
+		var maxHeight = 480;
+
+		el.style.height = "auto";
+		var text = (el.value || "").replace(/\r/g, "");
+		var need = el.scrollHeight;
+		if (!text.trim()) {
+			el.style.height = minHeight + "px";
+			el.style.overflowY = "hidden";
+			return;
+		}
+		if (need < minHeight) need = minHeight;
+		if (need > maxHeight) {
+			el.style.height = maxHeight + "px";
+			el.style.overflowY = "auto";
+		} else {
+			el.style.height = need + "px";
+			el.style.overflowY = "hidden";
+		}
+	} catch (e) {}
 }
 
 function get_status() {
@@ -218,7 +275,7 @@ function save() {
 			return false;
 		}
 	} else {
-		if (trim(E("frpc_common_server_addr").value) == "" || trim(E("frpc_common_server_port").value) == "" || trim(E("frpc_common_privilege_token").value) == "" || trim(E("frpc_common_vhost_http_port").value) == "" || trim(E("frpc_common_vhost_https_port").value) == "" || trim(E("frpc_common_user").value) == "" || trim(E("frpc_common_cron_time").value) == "") {
+		if (trim(E("frpc_common_server_addr").value) == "" || trim(E("frpc_common_server_port").value) == "" || trim(E("frpc_common_privilege_token").value) == "" || trim(E("frpc_common_cron_time").value) == "") {
 			alert("提交的表单不能为空!");
 			return false;
 		}
@@ -295,11 +352,19 @@ function addTr(o) {
 	var params = ["proto_node", "subname_node", "subdomain_node", "localhost_node", "localport_node", "remoteport_node", "encryption_node", "gzip_node"];
 	if (!myid) {
 		for (var i = 0; i < params.length; i++) {
-			ns[p + "_" + params[i] + "_" + node_max] = $('#' + params[i]).val();
+			if (params[i] == "encryption_node" || params[i] == "gzip_node") {
+				ns[p + "_" + params[i] + "_" + node_max] = E(params[i]).checked ? "true" : "false";
+			} else {
+				ns[p + "_" + params[i] + "_" + node_max] = $('#' + params[i]).val();
+			}
 		}
 	} else {
 		for (var i = 0; i < params.length; i++) {
-			ns[p + "_" + params[i] + "_" + myid] = $('#' + params[i]).val();
+			if (params[i] == "encryption_node" || params[i] == "gzip_node") {
+				ns[p + "_" + params[i] + "_" + myid] = E(params[i]).checked ? "true" : "false";
+			} else {
+				ns[p + "_" + params[i] + "_" + myid] = $('#' + params[i]).val();
+			}
 		}
 	}
 	var postData = {"id": parseInt(Math.random() * 100000000), "method": "dummy_script.sh", "params":[], "fields": ns };
@@ -319,8 +384,8 @@ function addTr(o) {
 			document.form.localhost_node.value = "";
 			document.form.localport_node.value = "";
 			document.form.remoteport_node.value = "";
-			document.form.encryption_node.value = "true";
-			document.form.gzip_node.value = "true";
+			E("encryption_node").checked = true;
+			E("gzip_node").checked = true;
 			E('remoteport_node').disabled = false;
 			E('subdomain_node').disabled = true;
 		}
@@ -416,8 +481,8 @@ function editlTr(o) { //编辑节点功能，显示编辑面板
 		E('subdomain_node').value = "none";
 	}
 	document.form.remoteport_node.value = c["remoteport_node"];
-	document.form.encryption_node.value = c["encryption_node"];
-	document.form.gzip_node.value = c["gzip_node"];
+	E("encryption_node").checked = (c["encryption_node"] == "true");
+	E("gzip_node").checked = (c["gzip_node"] == "true");
 	myid = id;
 }
 
@@ -481,11 +546,13 @@ function refresh_html() {
 			html = html + '<td>' + c["remoteport_node"] + '</td>';
 		}
 		if (c["proto_node"] == "stcp") {
-			html = html + '<td>' + "-" + '</td>';
-			html = html + '<td>' + "-" + '</td>';
+			html = html + "<td style='text-align:center;'><input type='checkbox' disabled='disabled'></td>";
+			html = html + "<td style='text-align:center;'><input type='checkbox' disabled='disabled'></td>";
 		} else {
-			html = html + '<td>' + c["encryption_node"] + '</td>';
-			html = html + '<td>' + c["gzip_node"] + '</td>';
+			var encChecked = (c["encryption_node"] == "true") ? " checked='checked'" : "";
+			var gzipChecked = (c["gzip_node"] == "true") ? " checked='checked'" : "";
+			html = html + "<td style='text-align:center;'><input type='checkbox' disabled='disabled'" + encChecked + "></td>";
+			html = html + "<td style='text-align:center;'><input type='checkbox' disabled='disabled'" + gzipChecked + "></td>";
 		}
 		html = html + '<td>';
 		html = html + '<input style="margin-left:-3px;" id="dd_node_' + c["node"] + '" class="edit_btn" type="button" onclick="editlTr(this);" value="">'
@@ -556,10 +623,20 @@ function close_conf(close_conf) {
 }
 
 function toggle_func() {
-	E("simple_table").style.display = "";
-	E("conf_table").style.display = "";
-	E("customize_conf_table").style.display = "none";
-	$('.show-btn1').addClass('active');
+	var use_custom = (E("frpc_customize_conf") && E("frpc_customize_conf").checked);
+	if (use_custom) {
+		$('.show-btn1').removeClass('active');
+		$('.show-btn2').addClass('active');
+		E("simple_table").style.display = "none";
+		E("conf_table").style.display = "none";
+		E("customize_conf_table").style.display = "";
+	} else {
+		$('.show-btn1').addClass('active');
+		$('.show-btn2').removeClass('active');
+		E("simple_table").style.display = "";
+		E("conf_table").style.display = "";
+		E("customize_conf_table").style.display = "none";
+	}
 	$(".show-btn1").click(
 		function() {
 			$('.show-btn1').addClass('active');
@@ -672,98 +749,78 @@ function proto_onchange() {
 }
 
 function openssHint(itemNum) {
-	statusmenu = "";
-	width = "350px";
+	var statusmenu = "";
+	var _caption = "";
 
 	if (itemNum == 0) {
-		statusmenu = "如果发现开关不能开启，那么请检查<a href='Advanced_System_Content.asp'><u><font color='#00F'>系统管理 -- 系统设置</font></u></a>页面内Enable JFFS custom scripts and configs是否开启。";
-		_caption = "服务器说明";
+		_caption = "开启 Frpc";
+		statusmenu = "开启/关闭 frpc 客户端。<br>若无法启用，请先在 <a href='Advanced_System_Content.asp'><u><font color='#00F'>系统管理 - 系统设置</font></u></a> 开启 Enable JFFS custom scripts and configs。";
 	} else if (itemNum == 1) {
-		statusmenu = "此处填入你的frp服务器的地址。</br>建议优先填入<font color='#F46'>IP地址</font>。填入域名，特别是一些服务商给的复杂域名，有时遇到无法解析会导致无法连接!";
-		_caption = "服务器";
+		_caption = "服务器地址";
+		statusmenu = "填写 frps 服务器地址。<br>建议优先填写 <font color='#F46'>IP 地址</font>；填写域名时需确保路由器 DNS 解析正常。";
 	} else if (itemNum == 2) {
-		statusmenu = "此处填入你的frp服务器的端口，对应服务器配置文件中的节[common]下的bind_port字段";
 		_caption = "服务器端口";
+		statusmenu = "填写 frps 的 <b>bind_port</b>（服务端监听端口）。";
 	} else if (itemNum == 3) {
-		statusmenu = "此处填入你的frp服务器的特权授权码。对应服务器配置文件中的节[common]下的token字段。</br><font color='#F46'>注意：</font>使用带有特殊字符的密码，可能会导致frpc链接不上服务器。";
 		_caption = "Token";
+		statusmenu = "填写 frps 的 <b>token</b>，需与服务端配置一致。<br>部分特殊字符可能引起解析问题，建议使用字母数字组合。";
 	} else if (itemNum == 4) {
-		statusmenu = "此处填入你的frp服务器HTTP穿透服务的端口，对应服务器配置文件中的节[common]下的vhost_http_port字段";
-		_caption = "HTTP穿透服务端口";
+		_caption = "HTTP vhost 端口";
+		statusmenu = "填写 frps 的 <b>vhost_http_port</b>。<br><b>可留空</b>：仅在使用 http/router-http 类型时用于自动填充远程端口。";
 	} else if (itemNum == 5) {
-		statusmenu = "此处填入你的frp服务器HTTPS穿透服务的端口，对应服务器配置文件中的节[common]下的vhost_https_port字段";
-		_caption = "HTTPS穿透服务端口";
+		_caption = "HTTPS vhost 端口";
+		statusmenu = "填写 frps 的 <b>vhost_https_port</b>。<br><b>可留空</b>：仅在使用 https/router-https 类型时用于自动填充远程端口。";
 	} else if (itemNum == 6) {
-		statusmenu = "此处是否开启frpc客户端日志。</br><font color='#F46'>注意：</font>默认不开启，开启后日志路径为/tmp/frpc.log";
 		_caption = "日志记录";
+		statusmenu = "是否开启 frpc 日志。<br>开启后写入 <b>/tmp/frpc.log</b>（重启会清空）。";
 	} else if (itemNum == 7) {
-		statusmenu = "此处选择日志记录等级。</br>可选内容：info、warn、error、debug。";
 		_caption = "日志等级";
+		statusmenu = "设置日志输出等级：info / warn / error / debug。<br>debug 最详细。";
 	} else if (itemNum == 8) {
-		statusmenu = "此处选择要保留的日志天数。";
-		_caption = "日志记录天数";
+		_caption = "日志保留天数";
+		statusmenu = "设置日志最多保留的天数（需开启日志）。";
 	} else if (itemNum == 9) {
-		statusmenu = "要穿透的协议类型，目前有http和tcp两种方式。";
-		_caption = "协议类型";
+		_caption = "协议";
+		statusmenu = "本条穿透规则类型：tcp / udp / http / https / stcp。";
 	} else if (itemNum == 10) {
-		statusmenu = "此处输入穿透内容的命名（描述），如：ac68u-web或ac68u-webshell，对应客户端配置文件中的节名称。</br><font color='#F46'>注意：</font>frp服务器上的所有命名不能重复！";
 		_caption = "代理名称";
+		statusmenu = "本条规则的名称（对应 frpc 配置段名/名称）。<br><font color='#F46'>要求：</font>在同一台 frps 上必须唯一。";
 	} else if (itemNum == 11) {
-		statusmenu = "此处输入穿透内容的域名，如：ac68u.frp.com，对应客户端配置文件中节下的custom_domains字段。</br><font color='#F46'>注意：</font>frp上运行的域名不能重复！";
-		_caption = "域名配置";
+		_caption = "域名/SK";
+		statusmenu = "<b>http/https</b>：填写域名（custom_domains）。<br><b>stcp</b>：填写访问密钥（sk）。<br><b>tcp/udp</b>：保持为 none 即可。";
 	} else if (itemNum == 12) {
-		statusmenu = "此处输入要穿透的内部主机IP地址，如：192.168.1.1";
 		_caption = "内网主机地址";
+		statusmenu = "内网服务 IP（local_ip）。<br>穿透路由器自身服务可使用 127.0.0.1 或路由器 LAN IP。";
 	} else if (itemNum == 13) {
-		statusmenu = "此处输入要穿透的内部主机的端口，如：80或22";
 		_caption = "内网主机端口";
+		statusmenu = "内网服务端口（local_port），例如 80 / 22。";
 	} else if (itemNum == 14) {
-		statusmenu = "此处输入服务器端端口用来映射内部主机端口，如：80或8080</br><font color='#F46'>注意：</font>";
-		statusmenu += "</br><b><font color='#669900'>http协议：</font></b>选择http协议时，远程主机端口对应服务器配置文件中的节[common]下的vhost_http_port字段值。";
-		statusmenu += "</br><b><font color='#669900'>https协议：</font></b>选择https协议时，远程主机端口对应服务器配置文件中的节[common]下的vhost_https_port字段值。https协议只能对应穿透内网https协议。";
-		statusmenu += "</br><b><font color='#669900'>tcp协议：</font></b>选择tcp协议时，远程主机端口应在服务器配置文件中的节[common]下的privilege_allow_ports字段值范围内。";
-		_caption = "远程主机端口";
+		_caption = "远程端口";
+		statusmenu = "<b>tcp/udp</b>：服务端映射端口（remote_port）。<br><b>http/https</b>：使用 vhost_http/https_port（页面会自动填充）。<br><b>stcp</b>：无需远程端口。";
 	} else if (itemNum == 15) {
-		statusmenu = "如果公司内网防火墙对外网访问进行了流量识别与屏蔽，例如禁止了 ssh 协议等，通过设置加密，将 frpc 与 frps 之间的通信内容加密传输，将会有效防止流量被拦截。";
 		_caption = "加密";
+		statusmenu = "是否启用传输加密（use_encryption）。<br>可能有助于绕过部分流量识别，但会增加 CPU 开销。";
 	} else if (itemNum == 16) {
-		statusmenu = "如果传输的报文长度较长，通过设置对传输内容进行压缩，可以有效减小 frpc 与 frps 之间的网络流量，加快流量转发速度，但是会额外消耗一些 cpu 资源。";
 		_caption = "压缩";
+		statusmenu = "是否启用传输压缩（use_compression）。<br>可降低带宽占用，但会增加 CPU 开销。";
 	} else if (itemNum == 17) {
-		statusmenu = "定时到Frp服务器上重新注册服务，以便Frp提供持续的服务。</br><font color='#F46'>注意：</font>填写内容为0时关闭该功能！";
 		_caption = "定时注册服务";
+		statusmenu = "定时重新连接/注册服务，提升长期稳定性。<br>填写 0 表示关闭。";
 	} else if (itemNum == 19) {
-		statusmenu = "穿透服务的用户名称，如AC68U 配置结果为 {用户名称}.{代理名称}";
-		_caption = "Frpc用户名称";
+		_caption = "Frpc 用户名";
+		statusmenu = "frpc 的 user 字段，用于区分用户/生成 stcp 访问名等。<br><b>可留空</b>：后端会自动使用路由器型号。";
 	} else if (itemNum == 20) {
-		statusmenu = "从 v0.12.0 版本开始，底层通信协议支持选择 kcp 协议，在弱网环境下传输效率提升明显，但是会有一些额外的流量消耗";
 		_caption = "底层通信协议";
+		statusmenu = "客户端与服务端之间的传输协议（protocol）：tcp / kcp / quic / websocket / wss。<br>弱网可尝试 kcp/quic，但流量消耗可能增加。";
 	} else if (itemNum == 21) {
-		statusmenu = "从 v0.10.0 版本开始，客户端和服务器端之间的连接支持多路复用，不再需要为每一个用户请求创建一个连接，使连接建立的延迟降低，并且避免了大量文件描述符的占用，使 frp 可以承载更高的并发数。</br>该功能默认启用，如需关闭，可以在 frps.ini 和 frpc.ini 中配置，该配置项在服务端和客户端必须一致.";
 		_caption = "TCP 多路复用";
-	} else if (itemNum == 22) {
-		statusmenu = "当客户端连接服务器失败后的动作：</br>失败后重复连接</br>失败后退出客户端";
-		_caption = "连接设置";
+		statusmenu = "tcp_mux 多路复用：降低连接数、提升并发能力。<br>服务端与客户端需保持一致。";
 	} else if (itemNum == 23) {
-		statusmenu = "按照官方教程自己编写配置文件";
 		_caption = "自定义配置";
+		statusmenu = "勾选后使用自定义 frpc 配置内容，完全覆盖简单设置生成的配置。";
 	}
-	return overlib(statusmenu, OFFSETX, -160, LEFT, STICKY, WIDTH, 'width', CAPTION, _caption, CLOSETITLE, '');
 
-	var tag_name = document.getElementsByTagName('a');
-	for (var i = 0; i < tag_name.length; i++)
-		tag_name[i].onmouseout = nd;
-
-	if (helpcontent == [] || helpcontent == "" || hint_array_id > helpcontent.length)
-		return overlib('<#defaultHint#>', HAUTO, VAUTO);
-	else if (hint_array_id == 0 && hint_show_id > 21 && hint_show_id < 24)
-		return overlib(helpcontent[hint_array_id][hint_show_id], FIXX, 270, FIXY, 30);
-	else {
-		if (hint_show_id > helpcontent[hint_array_id].length)
-			return overlib('<#defaultHint#>', HAUTO, VAUTO);
-		else
-			return overlib(helpcontent[hint_array_id][hint_show_id], HAUTO, VAUTO);
-	}
+	return overlib(statusmenu, OFFSETX, -160, LEFT, WIDTH, 360, CAPTION, _caption);
 }
 </script>
 </head>
@@ -802,11 +859,14 @@ function openssHint(itemNum) {
                                     <div style="float:left;" class="formfonttitle">软件中心 - Frpc内网穿透</div>
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
+                                    <div class="formfontdesc" style="margin-left:10px;">
+                                        <i>广告：不会搭建frp服务器？搞不定域名？试试国内frp隧道服务：</i><a href="https://dashboard.passnat.com/reg?aff=mhGZMu" target="_blank" style="color:#00c6ff;font-weight:600;">PassNAT</a><i>，月付低至6元享BGP高速节点</i>
+                                    </div>
                                     <div id="frpc_switch_show">
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
                                             <th>
-                                                <label><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(0)">开启Frpc</a></label>
+                                                <label><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(0);" onmouseout="nd();">开启Frpc</a></label>
                                             </th>
                                             <td colspan="2">
                                                 <div class="switch_field" style="display:table-cell;float: left;">
@@ -833,7 +893,7 @@ function openssHint(itemNum) {
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(17)">定时注册服务</a>(<i>0为关闭</i>)</th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(17);" onmouseout="nd();">定时注册服务</a>(<i>0为关闭</i>)</th>
                                             <td>
                                                 每 <input type="text" id="frpc_common_cron_time" name="frpc_common_cron_time" class="input_3_table" maxlength="2" value="30" placeholder="" />
                                                 <select id="frpc_common_cron_hour_min" name="frpc_common_cron_hour_min" style="width:60px;margin:3px 2px 0px 2px;" class="input_option">
@@ -864,38 +924,36 @@ function openssHint(itemNum) {
                                     </div>
 
                                     <div id="simple_table">
-                                    <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="box-shadow: 3px 3px 10px #000;margin-top: 0px;">
-                                        <thead>
-                                            <tr>
-                                            <td colspan="2">Frpc 简单设置</td>
-                                            </tr>
-                                        </thead>
+                                    <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable" style="margin-top: 0px;">
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(1)">服务器</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(1);" onmouseout="nd();">服务器</a></th>
                                             <td>
                                                 <input type="text" class="input_ss_table" value="" id="frpc_common_server_addr" name="frpc_common_server_addr" maxlength="20" value="" placeholder=""/>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(2)">端口</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(2);" onmouseout="nd();">端口</a></th>
                                             <td>
                                         <input type="text" class="input_ss_table" id="frpc_common_server_port" name="frpc_common_server_port" maxlength="10" value="" />
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(20)">底层通信协议</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(20);" onmouseout="nd();">底层通信协议</a></th>
                                             <td>
-                                                <select id="frpc_common_protocol" name="frpc_common_protocol" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
-                                                    <option value="tcp">tcp</option>
-                                                    <option value="kcp">kcp</option>
-                                                </select>
+												<select id="frpc_common_protocol" name="frpc_common_protocol" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
+													<option value="tcp">tcp</option>
+													<option value="kcp">kcp</option>
+													<option value="quic">quic</option>
+													<option value="websocket">websocket</option>
+													<option value="wss">wss</option>
+												</select>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(21)">TCP 多路复用</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(21);" onmouseout="nd();">TCP 多路复用</a></th>
                                             <td>
                                                 <select id="frpc_common_tcp_mux" name="frpc_common_tcp_mux" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
                                                     <option value="true">开启</option>
@@ -905,45 +963,35 @@ function openssHint(itemNum) {
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(22)">连接设置</a></th>
-                                            <td>
-                                                <select id="frpc_common_login_fail_exit" name="frpc_common_login_fail_exit" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
-                                                    <option value="true">失败后退出程序</option>
-                                                    <option value="false">失败后重复连接</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(3)">Token</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(3);" onmouseout="nd();">Token</a></th>
                                             <td>
                                                 <input type="password" name="frpc_common_privilege_token" id="frpc_common_privilege_token" class="input_ss_table" autocomplete="new-password" autocorrect="off" autocapitalize="off" maxlength="256" value="" onBlur="switchType(this, false);" onFocus="switchType(this, true);"/>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(4)">HTTP穿透服务端口</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(4);" onmouseout="nd();">HTTP穿透服务端口</a></th>
                                             <td>
-                                                <input type="text" class="input_ss_table" id="frpc_common_vhost_http_port" name="frpc_common_vhost_http_port" maxlength="6" value="" />
+                                                <input type="text" class="input_ss_table" id="frpc_common_vhost_http_port" name="frpc_common_vhost_http_port" maxlength="6" value="" placeholder="可留空"/>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(5)">HTTPS穿透服务端口</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(5);" onmouseout="nd();">HTTPS穿透服务端口</a></th>
                                             <td>
-                                                <input type="text" class="input_ss_table" id="frpc_common_vhost_https_port" name="frpc_common_vhost_https_port" maxlength="6" value="" />
+                                                <input type="text" class="input_ss_table" id="frpc_common_vhost_https_port" name="frpc_common_vhost_https_port" maxlength="6" value="" placeholder="可留空"/>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(19)">Frpc用户名称</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(19);" onmouseout="nd();">Frpc用户名称</a></th>
                                             <td>
-                                                <input type="text" class="input_ss_table" id="frpc_common_user" name="frpc_common_user" maxlength="50" value="" />
+                                                <input type="text" class="input_ss_table" id="frpc_common_user" name="frpc_common_user" maxlength="50" value="" placeholder="留空=自动使用路由器型号"/>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(6)">日志记录</a></th>
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(6);" onmouseout="nd();">日志记录</a></th>
                                             <td>
                                                 <select id="frpc_common_log_file" name="frpc_common_log_file" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
                                                     <option value="/dev/null">关闭</option>
@@ -952,8 +1000,8 @@ function openssHint(itemNum) {
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(7)">日志等级</a></th>
+                                        <tr id="frpc_log_level_tr">
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(7);" onmouseout="nd();">日志等级</a></th>
                                             <td>
                                                 <select id="frpc_common_log_level" name="frpc_common_log_level" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
                                                     <option value="info">info</option>
@@ -964,8 +1012,8 @@ function openssHint(itemNum) {
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(8)">日志记录天数</a></th>
+                                        <tr id="frpc_log_days_tr">
+                                            <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(8);" onmouseout="nd();">日志记录天数</a></th>
                                             <td>
                                                 <select id="frpc_common_log_max_days" name="frpc_common_log_max_days" style="width:165px;margin:0px 0px 0px 2px;" class="input_option" >
                                                     <option value="1">1</option>
@@ -979,7 +1027,7 @@ function openssHint(itemNum) {
                                             </td>
                                         </tr>
                                     </table>
-                                    <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="box-shadow: 3px 3px 10px #000;margin-top: 10px;">
+                                    <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top: 10px;">
                                           <thead>
                                               <tr>
                                                 <td colspan="10">穿透服务配置</td>
@@ -987,16 +1035,16 @@ function openssHint(itemNum) {
                                           </thead>
 
                                           <tr>
-                                            <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(9)">协议类型</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(10)">代理名称</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(11)">域名配置/SK</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(12)">内网主机地址</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(13)">内网主机端口</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(14)">远程主机端口</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(15)">加密</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(16)">压缩</a></th>
+                                            <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(9);" onmouseout="nd();">协议</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(10);" onmouseout="nd();">代理名称</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(11);" onmouseout="nd();">域名配置/SK</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(12);" onmouseout="nd();">内网主机地址</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(13);" onmouseout="nd();">内网主机端口</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(14);" onmouseout="nd();">远程主机端口</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(15);" onmouseout="nd();">加密</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(16);" onmouseout="nd();">压缩</a></th>
                                           <th>修改</th>
-                                          <th>添加/删除</th>
+                                          <th>增/删</th>
                                           </tr>
                                           <tr>
                                         <td>
@@ -1029,16 +1077,10 @@ function openssHint(itemNum) {
                                             <input type="text" id="remoteport_node" name="remoteport_node" class="input_6_table" maxlength="6" placeholder=""/>
                                         </td>
                                         <td>
-                                            <select id="encryption_node" name="encryption_node" style="width:50px;margin:0px 0px 0px 2px;" class="input_option" >
-                                                <option value="true">是</option>
-                                                <option value="false">否</option>
-                                            </select>
+                                            <input type="checkbox" id="encryption_node" name="encryption_node" checked="checked">
                                         </td>
                                         <td>
-                                            <select id="gzip_node" name="gzip_node" style="width:50px;margin:0px 0px 0px 2px;" class="input_option" >
-                                                <option value="true">是</option>
-                                                <option value="false">否</option>
-                                            </select>
+                                            <input type="checkbox" id="gzip_node" name="gzip_node" checked="checked">
                                         </td>
                                         <td width="7%">
                                             <div>
@@ -1054,12 +1096,7 @@ function openssHint(itemNum) {
                                     </div>
 
                                     <div id="customize_conf_table">
-                                    <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="box-shadow: 3px 3px 10px #000;margin-top: 0px;">
-                                        <thead>
-                                            <tr>
-                                                <td colspan="2"><a class="hintstyle" href="javascript:void(0);" onclick="openssHint(23)">Frpc 高级配置</a></td>
-                                            </tr>
-                                        </thead>
+                                    <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top: 0px;">
                                             <tr>
                                                 <th style="width:20%;">
                                                     <label><input type="checkbox" id="frpc_customize_conf" name="frpc_customize_conf"><i>自定义配置</i>
@@ -1070,15 +1107,12 @@ function openssHint(itemNum) {
                                             </tr>
                                     </table>
                                     </div>
-                                    <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
-                                    <div class="formbottomdesc" id="cmdDesc">
-                                        <i>* 注意事项：</i><br>
-                                        <i>1. 上面所有内容都为必填项，请认真填写，不然无法穿透。</i><br>
-                                        <i>2. 穿透设置中添加删除为本地实时生效，请谨慎操作，修改后请提交以便服务器端生效。</i><br>
-                                    </div>
+
                                     <div class="apply_gen">
-                                        <span><input class="button_gen_long" id="cmdBtn" onclick="save()" type="button" value="提交"/></span>
+                                        <input class="button_gen" id="cmdBtn" onclick="save()" type="button" value="提交"/>
                                     </div>
+
+                                    <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                 </td>
                             </tr>
                         </table>

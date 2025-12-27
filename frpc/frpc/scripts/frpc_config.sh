@@ -12,6 +12,9 @@ PID_FILE=/var/run/frpc.pid
 lan_ip=`nvram get lan_ipaddr`
 lan_port="80"
 
+router_model="$(nvram get odmpid 2>/dev/null)"
+[ -z "${router_model}" ] && router_model="$(nvram get productid 2>/dev/null)"
+
 fun_ntp_sync(){
 	ntp_server="$(nvram get ntp_server0)"
 	start_time="$(date +%Y%m%d)"
@@ -34,6 +37,10 @@ fun_start_stop(){
 			EOF
 		else
 			stcp_en="$(dbus list frpc_proto_node | grep stcp)"
+			common_user="${frpc_common_user}"
+			if [ -z "${common_user}" ]; then
+				common_user="${router_model}"
+			fi
 			cat >"${INI_FILE}" <<-EOF
 				# frpc configuration
 				[common]
@@ -45,8 +52,7 @@ fun_start_stop(){
 				log_max_days = ${frpc_common_log_max_days}
 				tcp_mux = ${frpc_common_tcp_mux}
 				protocol = ${frpc_common_protocol}
-				login_fail_exit = ${frpc_common_login_fail_exit}
-				user = ${frpc_common_user}
+				user = ${common_user}
 			EOF
 
 			if [ -n "${frpc_common_vhost_http_port}" ]; then
@@ -102,7 +108,7 @@ fun_start_stop(){
 							role = visitor
 							type = stcp
 							# the server name you want to visit
-							server_name = ${frpc_common_user}.${array_subname}
+							server_name = ${common_user}.${array_subname}
 							sk = ${array_custom_domains}
 							# connect this address to visitor stcp server
 							bind_addr = 127.0.0.1
