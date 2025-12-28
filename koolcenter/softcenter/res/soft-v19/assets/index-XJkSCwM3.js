@@ -1,4 +1,4 @@
-import{_ as w,r as u,c as m,b as t,e as v,v as U,x as F,a as g,s as S,o as f,B as O,d as C,y as k,t as A,f as x,F as y,h,u as L,C as E,E as T}from"./index-BNvwGskN.js";const B={props:{close:Function},setup(r){const e=u(""),a=u(null),s=u(!0),n=5,i=p=>{e.value=p,S(()=>{a.value&&(a.value.scrollTop=a.value.scrollHeight)})},d=(p=0)=>{g.getUploadLog().then(o=>{let l=o;l.includes("XU6J03M6")?(s.value=!1,l=l.replace(/XU6J03M6/g,""),i(l)):(i(l),setTimeout(()=>d(0),300))}).catch(o=>{p<n?setTimeout(()=>d(p+1),1e3):i(`错误: ${o}
+import{_ as w,r as u,c as m,b as t,e as v,v as U,x as F,a as g,s as S,o as f,B as O,d as C,y as k,t as A,f as x,F as y,h,u as L,C as E,E as T}from"./index-BgPNegIV.js";const B={props:{close:Function},setup(r){const e=u(""),a=u(null),s=u(!0),n=5,i=p=>{e.value=p,S(()=>{a.value&&(a.value.scrollTop=a.value.scrollHeight)})},d=(p=0)=>{g.getUploadLog().then(o=>{let l=o;l.includes("XU6J03M6")?(s.value=!1,l=l.replace(/XU6J03M6/g,""),i(l)):(i(l),setTimeout(()=>d(0),300))}).catch(o=>{p<n?setTimeout(()=>d(p+1),1e3):i(`错误: ${o}
 
 发生此错误是因为前端和后端通讯失联，页面无法获取到插件安装日志文件导致，可能是多种原因造成，请尝试以下：
 1. 使用快捷键F5刷新页面，观察软件中心是否加载正常，插件是否安装成功，如果加载正常且安装成功，就不用理会该错误！
