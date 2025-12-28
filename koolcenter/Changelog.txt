@@ -3,6 +3,9 @@ Koolshare Asuswrt-Merlin koolcenter center Changelog
 1.9.52
    - update	移除教程功能（tutorials），避免请求超时导致软件中心加载变慢
    - fix	修复安装/卸载弹窗日志与设置页日志不自动滚动到最新行的问题
+   - perf	路由懒加载（拆分chunk），提升首屏加载速度
+   - perf	优化插件列表的筛选/搜索/排序性能
+   - fix	修复已安装页面首次进入时，下载/点赞数据不显示的问题
    - add	新增 ASUSGO 用户协议记忆（dbus: softcenter_asusgo_eula_ver），支持协议版本升级后重新弹出
 
 1.9.1.9
