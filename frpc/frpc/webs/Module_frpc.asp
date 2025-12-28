@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- plugin version: 2.0 | frpc: 0.65.0 -->
+<!-- plugin version: 2.4 | frpc: 0.65.0 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache"/>
@@ -129,6 +129,9 @@ input[type=button]:focus {
 var myid;
 var db_frpc = {};
 var node_max = 0;
+var frpc_refresh_flag = 0;
+var frpc_count_down = 0;
+var frpc_log_poll_tries = 0;
 var params_input = ["frpc_common_cron_time", "frpc_common_cron_hour_min", "frpc_common_server_addr", "frpc_common_server_port", "frpc_common_protocol", "frpc_common_tcp_mux", "frpc_common_privilege_token", "frpc_common_vhost_http_port", "frpc_common_vhost_https_port", "frpc_common_user", "frpc_common_log_file", "frpc_common_log_level", "frpc_common_log_max_days"]
 var params_check = ["frpc_enable", "frpc_customize_conf"]
 var params_base64 = ["frpc_config"]
@@ -142,6 +145,9 @@ function initial() {
 	buildswitch();
 	$("#frpc_common_log_file").change(function() {
 		update_log_rows();
+	});
+	$("#frpc_customize_conf").change(function() {
+		toggle_func();
 	});
 	$("#frpc_config").on("input", function() {
 		autosize_frpc_config();
@@ -213,7 +219,7 @@ function autosize_frpc_config() {
 		el.style.overflowX = "hidden";
 
 		var minHeight = 200;
-		var maxHeight = 480;
+		var maxHeight = 460;
 
 		el.style.height = "auto";
 		var text = (el.value || "").replace(/\r/g, "");
@@ -268,19 +274,18 @@ function buildswitch() {
 	});
 }
 
-function save() {
+function frpc_submit() {
 	if (E("frpc_customize_conf").checked) {
 		if (trim(E("frpc_config").value) == "") {
 			alert("提交的表单不能为空!");
 			return false;
 		}
 	} else {
-		if (trim(E("frpc_common_server_addr").value) == "" || trim(E("frpc_common_server_port").value) == "" || trim(E("frpc_common_privilege_token").value) == "" || trim(E("frpc_common_cron_time").value) == "") {
+		if (trim(E("frpc_common_server_addr").value) == "" || trim(E("frpc_common_server_port").value) == "" || trim(E("frpc_common_cron_time").value) == "") {
 			alert("提交的表单不能为空!");
 			return false;
 		}
 	}
-	showLoading();
 	//input
 	for (var i = 0; i < params_input.length; i++) {
 		if (E(params_input[i]).value) {
@@ -309,6 +314,11 @@ function save() {
 	// post data
 	var uid = parseInt(Math.random() * 100000000);
 	var postData = {"id": uid, "method": "frpc_config.sh", "params": [1], "fields": db_frpc };
+	frpc_refresh_flag = 0;
+	E("frpc_ok_button").style.visibility = "hidden";
+	E("frpc_log_content").value = "";
+	frpc_log_poll_tries = 0;
+	showFRPCLoadingBar();
 	$.ajax({
 		url: "/_api/",
 		cache: false,
@@ -317,8 +327,176 @@ function save() {
 		data: JSON.stringify(postData),
 		success: function(response) {
 			if (response.result == uid){
-				refreshpage();
+				get_frpc_submit_log();
 			}
+		},
+		error: function() {
+			E("frpc_loading_block_title").innerHTML = "提交失败 ...";
+			E("frpc_log_content").value = "提交请求失败，请重试！";
+			E("frpc_ok_button").style.visibility = "visible";
+			frpc_refresh_flag = 0;
+			frpc_count_down = -1;
+		}
+	});
+}
+
+function showFRPCLoadingBar(){
+	try {
+		if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+	} catch(e){}
+	try {
+		document.documentElement.scrollTop = 0;
+		document.body.scrollTop = 0;
+	} catch(e){}
+	E("frpc_loading_block_title").innerHTML = "&nbsp;&nbsp;Frpc 提交日志";
+	try {
+		var lb = E("frpc_LoadingBar");
+		if (lb && lb.style && lb.style.setProperty) {
+			lb.style.setProperty("display", "block", "important");
+			lb.style.setProperty("visibility", "visible", "important");
+		} else {
+			lb.style.display = "block";
+			lb.style.visibility = "visible";
+		}
+	} catch(e){}
+	var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	var page_w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	var log_h = E("frpc_loadingBarBlock").clientHeight;
+	var log_w = E("frpc_loadingBarBlock").clientWidth;
+	var log_h_offset = (page_h - log_h) / 2;
+	var log_w_offset = (page_w - log_w) / 2 + 90;
+	$('#frpc_loadingBarBlock').offset({top: log_h_offset, left: log_w_offset});
+}
+
+function hideFRPCLoadingBar(){
+	try {
+		var lb = E("frpc_LoadingBar");
+		if (lb && lb.style && lb.style.setProperty) {
+			lb.style.setProperty("visibility", "hidden", "important");
+			lb.style.setProperty("display", "none", "important");
+		} else {
+			lb.style.visibility = "hidden";
+			lb.style.display = "none";
+		}
+	} catch(e){}
+	E("frpc_ok_button").style.visibility = "hidden";
+	if (frpc_refresh_flag == 1){
+		refreshpage();
+	}
+}
+
+function frpc_count_down_close() {
+	if (frpc_count_down == 0) {
+		hideFRPCLoadingBar();
+	}
+	if (frpc_count_down < 0) {
+		E("frpc_ok_button1").value = "手动关闭"
+		return;
+	}
+	E("frpc_ok_button1").value = frpc_count_down + " 秒后关闭"
+	--frpc_count_down;
+	setTimeout("frpc_count_down_close();", 1000);
+}
+
+function frpc_log_clean(s){
+	if (!s) return "";
+	// drop internal markers and keep human-readable logs only
+	return s
+		.replace(/\\r/g, "")
+		.replace(/^.*FRPC_RESULT=.*$/gm, "")
+		.replace(/^.*XU6J03M16.*$/gm, "")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim() + "\n";
+}
+
+function get_frpc_submit_log(){
+	$.ajax({
+		url: '/_temp/frpc_submit_log.txt',
+		type: 'GET',
+		cache:false,
+		dataType: 'text',
+		success: function(response) {
+			var retArea = E("frpc_log_content");
+			var done = (response.indexOf("XU6J03M16") != -1);
+			var ok = (response.indexOf("FRPC_RESULT=OK") != -1);
+			retArea.value = frpc_log_clean(response);
+			retArea.scrollTop = retArea.scrollHeight;
+			if (done) {
+				E("frpc_ok_button").style.visibility = "visible";
+				if (ok) {
+					frpc_refresh_flag = 1;
+					frpc_count_down = 6;
+				} else {
+					frpc_refresh_flag = 0;
+					frpc_count_down = -1;
+				}
+				frpc_count_down_close();
+				return;
+			}
+			setTimeout("get_frpc_submit_log();", 500);
+		},
+		error: function(xhr) {
+			frpc_log_poll_tries++;
+			if (frpc_log_poll_tries <= 20) {
+				setTimeout("get_frpc_submit_log();", 500);
+				return;
+			}
+			E("frpc_loading_block_title").innerHTML = "暂无日志信息 ...";
+			E("frpc_log_content").value = "日志文件为空，请关闭本窗口！";
+			E("frpc_ok_button").style.visibility = "visible";
+			frpc_refresh_flag = 0;
+			frpc_count_down = -1;
+		}
+	});
+}
+
+function frpc_copy_submit_log(){
+	try {
+		var ta = E("frpc_log_content");
+		ta.focus();
+		ta.select();
+		document.execCommand("copy");
+	} catch(e){}
+}
+
+function frpc_download_submit_log(){
+	try {
+		var content = (E("frpc_log_content").value || "");
+		var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+		var url = URL.createObjectURL(blob);
+		var a = document.createElement("a");
+		a.href = url;
+		a.download = "frpc_submit_log.txt";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} }, 1000);
+	} catch(e){}
+}
+
+function view_frpc_submit_log(){
+	frpc_refresh_flag = 0;
+	frpc_count_down = -1;
+	frpc_log_poll_tries = 999;
+	E("frpc_ok_button").style.visibility = "visible";
+	E("frpc_ok_button1").value = "关闭";
+	showFRPCLoadingBar();
+	E("frpc_loading_block_title").innerHTML = "&nbsp;&nbsp;Frpc 上次提交日志";
+	$.ajax({
+		url: '/_temp/frpc_submit_log.txt',
+		type: 'GET',
+		cache:false,
+		dataType: 'text',
+		success: function(response) {
+			var retArea = E("frpc_log_content");
+			retArea.value = frpc_log_clean(response);
+			retArea.scrollTop = retArea.scrollHeight;
+			E("frpc_ok_button").style.visibility = "visible";
+		},
+		error: function() {
+			E("frpc_loading_block_title").innerHTML = "暂无日志信息 ...";
+			E("frpc_log_content").value = "暂无上次提交日志，请先点击提交后再查看。";
+			E("frpc_ok_button").style.visibility = "visible";
 		}
 	});
 }
@@ -554,12 +732,10 @@ function refresh_html() {
 			html = html + "<td style='text-align:center;'><input type='checkbox' disabled='disabled'" + encChecked + "></td>";
 			html = html + "<td style='text-align:center;'><input type='checkbox' disabled='disabled'" + gzipChecked + "></td>";
 		}
-		html = html + '<td>';
-		html = html + '<input style="margin-left:-3px;" id="dd_node_' + c["node"] + '" class="edit_btn" type="button" onclick="editlTr(this);" value="">'
-		html = html + '</td>';
-		html = html + '<td>';
-		html = html + '<input style="margin-top: 4px;margin-left:-3px;" id="td_node_' + c["node"] + '" class="remove_btn" type="button" onclick="delTr(this);" value="">'
-		html = html + '</td>';
+		html = html + "<td style='text-align:center;white-space:nowrap;'>";
+		html = html + "<input style='margin-left:-3px;' id='dd_node_" + c['node'] + "' class='edit_btn' type='button' onclick='editlTr(this);' value=''>";
+		html = html + "<input style='margin-top: 4px;margin-left:8px;' id='td_node_" + c['node'] + "' class='remove_btn' type='button' onclick='delTr(this);' value=''>";
+		html = html + "</td>";
 		html = html + '</tr>';
 	}
 	return html;
@@ -630,6 +806,7 @@ function toggle_func() {
 		E("simple_table").style.display = "none";
 		E("conf_table").style.display = "none";
 		E("customize_conf_table").style.display = "";
+		setTimeout(function(){ autosize_frpc_config(); }, 50);
 	} else {
 		$('.show-btn1').addClass('active');
 		$('.show-btn2').removeClass('active');
@@ -637,7 +814,7 @@ function toggle_func() {
 		E("conf_table").style.display = "";
 		E("customize_conf_table").style.display = "none";
 	}
-	$(".show-btn1").click(
+	$(".show-btn1").off("click").click(
 		function() {
 			$('.show-btn1').addClass('active');
 			$('.show-btn2').removeClass('active');
@@ -646,13 +823,14 @@ function toggle_func() {
 			E("customize_conf_table").style.display = "none";
 		}
 	);
-	$(".show-btn2").click(
+	$(".show-btn2").off("click").click(
 		function() {
 			$('.show-btn1').removeClass('active');
 			$('.show-btn2').addClass('active');
 			E("simple_table").style.display = "none";
 			E("conf_table").style.display = "none";
 			E("customize_conf_table").style.display = "";
+			setTimeout(function(){ autosize_frpc_config(); }, 50);
 		}
 	);
 }
@@ -763,7 +941,7 @@ function openssHint(itemNum) {
 		statusmenu = "填写 frps 的 <b>bind_port</b>（服务端监听端口）。";
 	} else if (itemNum == 3) {
 		_caption = "Token";
-		statusmenu = "填写 frps 的 <b>token</b>，需与服务端配置一致。<br>部分特殊字符可能引起解析问题，建议使用字母数字组合。";
+		statusmenu = "填写 frps 的 <b>token</b>（可留空）。<br>服务端启用 token 时需保持一致。<br>部分特殊字符可能引起解析问题，建议使用字母数字组合。";
 	} else if (itemNum == 4) {
 		_caption = "HTTP vhost 端口";
 		statusmenu = "填写 frps 的 <b>vhost_http_port</b>。<br><b>可留空</b>：仅在使用 http/router-http 类型时用于自动填充远程端口。";
@@ -783,16 +961,16 @@ function openssHint(itemNum) {
 		_caption = "协议";
 		statusmenu = "本条穿透规则类型：tcp / udp / http / https / stcp。";
 	} else if (itemNum == 10) {
-		_caption = "代理名称";
-		statusmenu = "本条规则的名称（对应 frpc 配置段名/名称）。<br><font color='#F46'>要求：</font>在同一台 frps 上必须唯一。";
+		_caption = "名称";
+		statusmenu = "本条规则的名称（对应 frpc 配置段名）。<br><font color='#F46'>要求：</font>在同一台 frps 上必须唯一。";
 	} else if (itemNum == 11) {
 		_caption = "域名/SK";
 		statusmenu = "<b>http/https</b>：填写域名（custom_domains）。<br><b>stcp</b>：填写访问密钥（sk）。<br><b>tcp/udp</b>：保持为 none 即可。";
 	} else if (itemNum == 12) {
-		_caption = "内网主机地址";
+		_caption = "内网IP";
 		statusmenu = "内网服务 IP（local_ip）。<br>穿透路由器自身服务可使用 127.0.0.1 或路由器 LAN IP。";
 	} else if (itemNum == 13) {
-		_caption = "内网主机端口";
+		_caption = "内网端口";
 		statusmenu = "内网服务端口（local_port），例如 80 / 22。";
 	} else if (itemNum == 14) {
 		_caption = "远程端口";
@@ -827,6 +1005,24 @@ function openssHint(itemNum) {
 <body onload="initial();">
 <div id="TopBanner"></div>
 <div id="Loading" class="popup_bg"></div>
+<div id="frpc_LoadingBar" class="popup_bar_bg_ks" style="position:fixed;margin:auto;top:0;left:0;width:100%;height:100%;z-index:9999;display:none;visibility:hidden;overflow:hidden;background:rgba(68,79,83,0.94) none repeat scroll 0 0;opacity:.94;" >
+	<table cellpadding="5" cellspacing="0" id="frpc_loadingBarBlock" class="loadingBarBlock" style="width:740px;" align="center">
+		<tr>
+			<td height="100">
+				<div id="frpc_loading_block_title" style="margin:10px auto;width:100%; font-size:12pt;text-align:center;"></div>
+				<div style="margin-left:15px;margin-top:5px"><i>此处显示 frpc 上次/本次提交日志</i></div>
+				<div style="margin-left:15px;margin-right:15px;margin-top:10px;outline: 1px solid #3c3c3c;overflow:hidden">
+					<textarea cols="50" rows="25" wrap="off" readonly="readonly" id="frpc_log_content" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="border:1px solid #000;width:99%; font-family:'Lucida Console'; font-size:11px;background:transparent;color:#FFFFFF;outline: none;padding-left:5px;padding-right:22px;overflow-x:hidden;white-space:break-spaces;"></textarea>
+				</div>
+				<div id="frpc_ok_button" class="apply_gen" style="background:#000;visibility:hidden;">
+					<input class="button_gen" type="button" onclick="frpc_copy_submit_log();" value="复制日志">
+					<input style="margin-left:10px" class="button_gen" type="button" onclick="frpc_download_submit_log();" value="下载日志">
+					<input style="margin-left:10px" id="frpc_ok_button1" class="button_gen" type="button" onclick="hideFRPCLoadingBar()" value="确定">
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
 <iframe name="hidden_frame" id="hidden_frame" src="" width="0" height="0" frameborder="0"></iframe>
 <form method="POST" name="form" action="/applydb.cgi?p=frpc" target="hidden_frame">
 <input type="hidden" name="current_page" value="Module_frpc.asp"/>
@@ -882,7 +1078,8 @@ function openssHint(itemNum) {
                                                 </div>
                                                 <div id="frpc_version_show" style="padding-top:5px;margin-left:30px;margin-top:0px;float: left;"></div>
                                                 <div id="frpc_changelog_show" style="padding-top:5px;margin-right:10px;margin-top:0px;float: right;">
-                                                    <a type="button" class="frpc_btn" style="cursor:pointer" href="https://raw.githubusercontent.com/koolshare/rogsoft/master/frpc/Changelog.txt" target="_blank">更新日志</a> <a type="button" class="frpc_btn" style="cursor:pointer" target="_blank" href="https://github.com/fatedier/frp/blob/master/README_zh.md">自定义配置帮助</a>
+                                                    <a type="button" class="frpc_btn" style="cursor:pointer" href="https://raw.githubusercontent.com/koolshare/rogsoft/master/frpc/Changelog.txt" target="_blank">更新日志</a>
+                                                    <a type="button" class="frpc_btn" style="cursor:pointer" href="javascript:void(0);" onclick="view_frpc_submit_log();">查看日志</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -928,7 +1125,7 @@ function openssHint(itemNum) {
                                         <tr>
                                             <th width="20%"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(1);" onmouseout="nd();">服务器</a></th>
                                             <td>
-                                                <input type="text" class="input_ss_table" value="" id="frpc_common_server_addr" name="frpc_common_server_addr" maxlength="20" value="" placeholder=""/>
+                                                <input type="text" class="input_ss_table" value="" id="frpc_common_server_addr" name="frpc_common_server_addr" maxlength="128" value="" placeholder=""/>
                                             </td>
                                         </tr>
 
@@ -1030,21 +1227,20 @@ function openssHint(itemNum) {
                                     <table id="conf_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable_table" style="margin-top: 10px;">
                                           <thead>
                                               <tr>
-                                                <td colspan="10">穿透服务配置</td>
+                                                <td colspan="9">穿透服务配置</td>
                                               </tr>
                                           </thead>
 
                                           <tr>
                                             <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(9);" onmouseout="nd();">协议</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(10);" onmouseout="nd();">代理名称</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(11);" onmouseout="nd();">域名配置/SK</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(12);" onmouseout="nd();">内网主机地址</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(13);" onmouseout="nd();">内网主机端口</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(14);" onmouseout="nd();">远程主机端口</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(15);" onmouseout="nd();">加密</a></th>
-                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(16);" onmouseout="nd();">压缩</a></th>
-                                          <th>修改</th>
-                                          <th>增/删</th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(10);" onmouseout="nd();">名称</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(11);" onmouseout="nd();">域名/SK</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(12);" onmouseout="nd();">内网IP</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(13);" onmouseout="nd();">内网端口</a></th>
+                                          <th><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(14);" onmouseout="nd();">远程端口</a></th>
+                                          <th style="text-align:center;"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(15);" onmouseout="nd();">加密</a></th>
+                                          <th style="text-align:center;"><a class="hintstyle" href="javascript:void(0);" onmouseover="return openssHint(16);" onmouseout="nd();">压缩</a></th>
+                                          <th>操作</th>
                                           </tr>
                                           <tr>
                                         <td>
@@ -1077,17 +1273,13 @@ function openssHint(itemNum) {
                                             <input type="text" id="remoteport_node" name="remoteport_node" class="input_6_table" maxlength="6" placeholder=""/>
                                         </td>
                                         <td>
-                                            <input type="checkbox" id="encryption_node" name="encryption_node" checked="checked">
+                                            <div style="text-align:center;"><input type="checkbox" id="encryption_node" name="encryption_node" checked="checked"></div>
                                         </td>
                                         <td>
-                                            <input type="checkbox" id="gzip_node" name="gzip_node" checked="checked">
-                                        </td>
-                                        <td width="7%">
-                                            <div>
-                                            </div>
+                                            <div style="text-align:center;"><input type="checkbox" id="gzip_node" name="gzip_node" checked="checked"></div>
                                         </td>
                                         <td width="10%">
-                                            <div>
+                                            <div style="text-align:center;">
                                                 <input type="button" class="add_btn" onclick="addTr()" value=""/>
                                             </div>
                                         </td>
@@ -1109,7 +1301,7 @@ function openssHint(itemNum) {
                                     </div>
 
                                     <div class="apply_gen">
-                                        <input class="button_gen" id="cmdBtn" onclick="save()" type="button" value="提交"/>
+                                        <input class="button_gen" id="cmdBtn" onclick="frpc_submit()" type="button" value="提交"/>
                                     </div>
 
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>

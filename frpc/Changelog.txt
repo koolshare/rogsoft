@@ -1,5 +1,12 @@
 Koolshare Frpc for hnd router Changelog
 ===========================================
+2.4 ( 2025-12-28 )
+   - Update	新增提交日志弹窗，提交后展示启动/停止结果
+   - Update	底层通信协议新增 quic/websocket/wss，Token 允许留空
+   - Update	穿透规则“加密/压缩”改为复选框显示/配置
+   - Update	移除连接设置（login_fail_exit 参数已不再使用）
+   - Update	优化提示文案与页面布局（hover 提示）
+
 2.1 ( 2025-12-24 )
    - Update	移除显示ddns功能，优化文案显示
    

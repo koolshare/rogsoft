@@ -9,11 +9,24 @@ BIN=/koolshare/bin/frpc
 INI_FILE=/tmp/upload/.frpc.ini
 STCP_INI_FILE=/tmp/upload/.frpc_stcp.ini
 PID_FILE=/var/run/frpc.pid
+SUBMIT_LOG_FILE=/tmp/upload/frpc_submit_log.txt
 lan_ip=`nvram get lan_ipaddr`
 lan_port="80"
 
 router_model="$(nvram get odmpid 2>/dev/null)"
 [ -z "${router_model}" ] && router_model="$(nvram get productid 2>/dev/null)"
+
+submit_log(){
+	[ "${FRPC_SUBMIT}" = "1" ] && echo_date "$@"
+}
+
+check_ini_file(){
+	[ -s "${INI_FILE}" ] || return 1
+	grep -q "\[common\]" "${INI_FILE}" || return 1
+	grep -q "server_addr" "${INI_FILE}" || return 1
+	grep -q "server_port" "${INI_FILE}" || return 1
+	return 0
+}
 
 fun_ntp_sync(){
 	ntp_server="$(nvram get ntp_server0)"
@@ -26,7 +39,9 @@ fun_ntp_sync(){
 fun_start_stop(){
 	dbus set frpc_client_version="$(${BIN} --version 2>/dev/null)"
 	if [ "${frpc_enable}" = "1" ]; then
-		if [ "$(dbus get frpc_customize_conf)" = "1" ]; then
+		is_custom="$(dbus get frpc_customize_conf 2>/dev/null)"
+		submit_log "生成配置文件到 ${INI_FILE}"
+		if [ "${is_custom}" = "1" ]; then
 			_frpc_customize_conf="$(dbus get frpc_config | base64_decode 2>/dev/null)"
 			if [ -z "${_frpc_customize_conf}" ]; then
 				_frpc_customize_conf="# empty custom config"
@@ -46,7 +61,6 @@ fun_start_stop(){
 				[common]
 				server_addr = ${frpc_common_server_addr}
 				server_port = ${frpc_common_server_port}
-				token = ${frpc_common_privilege_token}
 				log_file = ${frpc_common_log_file}
 				log_level = ${frpc_common_log_level}
 				log_max_days = ${frpc_common_log_max_days}
@@ -54,6 +68,9 @@ fun_start_stop(){
 				protocol = ${frpc_common_protocol}
 				user = ${common_user}
 			EOF
+			if [ -n "${frpc_common_privilege_token}" ]; then
+				echo "token = ${frpc_common_privilege_token}" >>"${INI_FILE}"
+			fi
 
 			if [ -n "${frpc_common_vhost_http_port}" ]; then
 				echo "vhost_http_port = ${frpc_common_vhost_http_port}" >>"${INI_FILE}"
@@ -68,8 +85,10 @@ fun_start_stop(){
 					[common]
 					server_addr = ${frpc_common_server_addr}
 					server_port = ${frpc_common_server_port}
-					token = ${frpc_common_privilege_token}
 				EOF
+				if [ -n "${frpc_common_privilege_token}" ]; then
+					echo "token = ${frpc_common_privilege_token}" >>"${STCP_INI_FILE}"
+				fi
 			fi
 
 			server_nu="$(dbus list frpc_localhost_node | sort -n -t "_" -k 4 | cut -d "=" -f 1 | cut -d "_" -f 4)"
@@ -129,11 +148,29 @@ fun_start_stop(){
 				fi
 			done
 		fi
+		submit_log "配置文件生成成功！"
+		submit_log "检查配置文件..."
+		if [ "${is_custom}" = "1" ]; then
+			if [ -s "${INI_FILE}" ]; then
+				submit_log "配置文件检查ok（自定义配置未做完整校验），准备运行..."
+			else
+				submit_log "配置文件检查失败，请检查配置内容！"
+				return 1
+			fi
+		else
+			if check_ini_file; then
+				submit_log "配置文件检查ok，准备运行..."
+			else
+				submit_log "配置文件检查失败，请检查配置内容！"
+				return 1
+			fi
+		fi
 		killall frpc >/dev/null 2>&1 || true
 		sleep 1
 		export GOGC=40
 		start-stop-daemon -S -q -b -m -p "${PID_FILE}" -x "${BIN}" -- -c "${INI_FILE}"
 	else
+		submit_log "准备停止 frpc 服务..."
 		killall frpc >/dev/null 2>&1 || true
 	fi
 }
@@ -178,10 +215,42 @@ esac
 # for web submit
 case $2 in
 1)
-	fun_ntp_sync
-	fun_start_stop
-	fun_nat_start
-	fun_crontab
+	(
+		FRPC_SUBMIT=1
+		export FRPC_SUBMIT
+		echo_date "开始提交配置..."
+		fun_ntp_sync
+		if [ "${frpc_enable}" = "1" ]; then
+			echo_date "启动 frpc 服务..."
+		else
+			echo_date "停止 frpc 服务..."
+		fi
+		fun_start_stop
+		fun_nat_start
+		fun_crontab
+		if [ "${frpc_enable}" = "1" ]; then
+			sleep 1
+			pid=""
+			[ -f "${PID_FILE}" ] && pid="$(cat "${PID_FILE}" 2>/dev/null)"
+			if [ -n "${pid}" ] && kill -0 "${pid}" 2>/dev/null; then
+				echo_date "frpc 程序启动成功，PID: ${pid}"
+				echo "FRPC_RESULT=OK"
+			else
+				echo_date "frpc 程序启动失败，请检查配置！"
+				echo "FRPC_RESULT=FAIL"
+			fi
+		else
+			sleep 1
+			if pidof frpc >/dev/null 2>&1; then
+				echo_date "frpc 程序停止失败，请稍后重试！"
+				echo "FRPC_RESULT=FAIL"
+			else
+				echo_date "frpc 程序已停止"
+				echo "FRPC_RESULT=OK"
+			fi
+		fi
+		echo "XU6J03M16"
+	) >"${SUBMIT_LOG_FILE}" 2>&1 &
 	http_response "$1"
     ;;
 esac
