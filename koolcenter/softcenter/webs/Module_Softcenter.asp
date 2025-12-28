@@ -45,8 +45,8 @@
 		}
 	</script>
 	<!--  -->
-	<script type="module" crossorigin src="/res/soft-v19/assets/index-Bgv_0qwd.js"></script>
-	<link rel="stylesheet" crossorigin href="/res/soft-v19/assets/style-CaDURS9T.css">
+	<script type="module" crossorigin src="/res/soft-v19/assets/index-C9vd2_Dq.js"></script>
+	<link rel="stylesheet" crossorigin href="/res/soft-v19/assets/style-DNnvfU8g.css">
 	<!--  -->
 </head>
 
