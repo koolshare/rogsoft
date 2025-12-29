@@ -356,12 +356,12 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-12-29_09:43:12",
+            "build_date": "2025-12-29_13:32:38",
             "changelog": "",
             "description": "nps 客户端（npc），用于内网穿透",
             "home_url": "Module_npc.asp",
             "link": "https://github.com/ehang-io/nps",
-            "md5": "82698c7932c9d313f50c8f2f4274efa9",
+            "md5": "38f68cbc87ceb07ae7577b7774a2fb3e",
             "name": "npc",
             "tags": "网络 穿透",
             "tar_url": "npc/npc.tar.gz",
@@ -610,7 +610,7 @@
         }
     ],
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master",
-    "md5": "e2b4fc6df489563681ec93fb3d19bada",
+    "md5": "3b62c771542a9c5793bc91c1aadc2573",
     "tar_url": "koolcenter/softcenter.tar.gz",
     "version": "1.9.52"
 }
