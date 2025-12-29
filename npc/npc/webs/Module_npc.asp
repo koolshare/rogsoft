@@ -40,6 +40,13 @@ input:focus { outline: none; }
 #app[skin="TS"] .npc_btn { background: linear-gradient(to bottom, #2ed9c3 0%, #158b7c 100%); border-color: #2ed9c3; }
 #app[skin="TS"] .npc_btn:hover { background: linear-gradient(to bottom, #66ffeb 0%, #2ed9c3 100%); }
 
+.npc_submit_btn{
+	width: 260px;
+	height: 40px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
 #npc_config {
 	width: 99%;
 	font-family: 'Lucida Console';
@@ -328,7 +335,7 @@ function npc_submit(){
 <div id="Loading" class="popup_bg"></div>
 
 <div id="npc_LoadingBar" class="popup_bar_bg_ks" style="position:fixed;margin:auto;top:0;left:0;width:100%;height:100%;z-index:9999;display:none;visibility:hidden;overflow:hidden;background:rgba(68,79,83,0.94) none repeat scroll 0 0;opacity:.94;" >
-	<table cellpadding="5" cellspacing="0" id="npc_loadingBarBlock" class="loadingBarBlock" style="width:740px;" align="center">
+	<table cellpadding="5" cellspacing="0" id="npc_loadingBarBlock" class="loadingBarBlock" style="width:740px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);" align="center">
 		<tr>
 			<td height="100">
 				<div id="npc_loading_block_title" style="margin:10px auto;width:100%; font-size:12pt;text-align:center;"></div>
@@ -403,7 +410,6 @@ function npc_submit(){
 												<div style="padding-top:3px;margin-right:10px;float:right;">
 													<a class="npc_btn" href="https://raw.githubusercontent.com/koolshare/rogsoft/master/npc/Changelog.txt" target="_blank">更新日志</a>
 													<a class="npc_btn" href="javascript:void(0);" onclick="view_npc_submit_log();" style="margin-left:10px;">查看日志</a>
-													<a class="npc_btn" href="javascript:void(0);" onclick="npc_submit();" style="margin-left:10px;">提交</a>
 												</div>
 											</td>
 										</tr>
@@ -498,6 +504,11 @@ function npc_submit(){
 											</td>
 										</tr>
 									</table>
+
+									<div class="apply_gen" style="text-align:center;">
+										<input class="button_gen npc_submit_btn" type="button" onclick="npc_submit();" value="提交">
+									</div>
+
 								</td>
 							</tr>
 						</table>
