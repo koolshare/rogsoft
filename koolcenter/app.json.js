@@ -356,6 +356,20 @@
         },
         {
             "author": "sadog",
+            "build_date": "2025-12-29_09:43:12",
+            "changelog": "",
+            "description": "nps 客户端（npc），用于内网穿透",
+            "home_url": "Module_npc.asp",
+            "link": "https://github.com/ehang-io/nps",
+            "md5": "82698c7932c9d313f50c8f2f4274efa9",
+            "name": "npc",
+            "tags": "网络 穿透",
+            "tar_url": "npc/npc.tar.gz",
+            "title": "Npc 内网穿透",
+            "version": "0.1"
+        },
+        {
+            "author": "sadog",
             "build_date": "2025-06-12_16:22:18",
             "changelog": "",
             "description": "让AX86U实现160MHz频宽",
