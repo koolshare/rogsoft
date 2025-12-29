@@ -1,0 +1,5 @@
+npc plugin changelog
+====================
+0.1
+- init: first release
+
