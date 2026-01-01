@@ -115,7 +115,7 @@ install_tar(){
 	fi
 
 	# 3. detect package name for special characters
-	local S_MATCH=$(echo "${TAR_NAME}"|grep -Eo "\s|\%|\@|\#|\￥|\$|\#|\&|\*|\!")
+	local S_MATCH=$(echo "${TAR_NAME}"|grep -Eo "[[:space:]]|\%|\@|\#|\￥|\$|\#|\&|\*|\!")
 	if [ -n "${S_MATCH}" ];then
 		echo_date "检测到你的离线安装包名：${TAR_NAME}含有特殊字符！"
 		echo_date "建议将离线安装名更改为全英文，且不要有空格等特殊字符！"
