@@ -566,11 +566,11 @@ function version_show() {
                                     <div style="float:right; width:15px; height:25px;margin-top:10px"><img id="return_btn" onclick="reload_Soft_Center();" align="right" style="cursor:pointer;position:absolute;margin-left:-30px;margin-top:-25px;" title="返回软件中心" src="/images/backprev.png" onMouseOver="this.src='/images/backprevclick.png'" onMouseOut="this.src='/images/backprev.png'"></img></div>
                                     <div style="margin:30px 0 10px 5px;" class="splitLine"></div>
                                     <div class="formfontdesc" id="cmdDesc">
-                                        * 「<a href="http://sc.ftqq.com" target=_blank><i>Server酱</i></a>」，英文名「ServerChan」，是一款「程序员」和「服务器」之间的通信软件。说人话？就是从服务器推报警和日志到手机的工具。<br><br>
+                                        * 「<a href="https://sct.ftqq.com" target=_blank><i>Server酱</i></a>」，英文名「ServerChan」，是一款「程序员」和「服务器」之间的通信软件。说人话？就是从服务器推报警和日志到手机的工具。<br><br>
                                         开通并使用上它，只需要一分钟：<br>
-                                        <i>1. 登录：</i>用GitHub账号<a href="http://sc.ftqq.com/?c=github&a=login" target="_blank"><i>登入网站</i></a>，就能获得一个<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>SCKEY</i></a>（在「<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>发送消息</i></a>」页面）<br>
-                                        <i>2. 绑定：</i>点击「<a href="http://sc.ftqq.com/?c=wechat&a=bind" target="_blank"><i>微信推送</i></a>」，扫码关注同时即可完成绑定<br>
-                                        <i>3. 发消息：</i>将获得到的<a href="http://sc.ftqq.com/?c=code" target="_blank"><i>SCKEY</i></a>填入插件中并勾选相应选项提交即可。<br>
+                                        <i>1. 登录：</i>用微信<a href="https://sct.ftqq.com" target="_blank"><i>登入网站</i></a>，就能获得一个<a href="https://sct.ftqq.com/sendkey" target="_blank"><i>SendKey</i></a>（在「<a href="https://sct.ftqq.com/sendkey" target="_blank"><i>Key&API</i></a>」页面）<br>
+                                        <i>2. 设置消息通道：</i>默认开通服务号通道，其他通道可点击「<a href="https://sct.ftqq.com/forward" target="_blank"><i>通道配置</i></a>」<br>
+                                        <i>3. 发消息：</i>将获得到的<a href="https://sct.ftqq.com/sendkey" target="_blank"><i>SendKey</i></a>填入插件中并勾选相应选项提交即可。<br>
                                     </div>
                                     <table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
                                         <tr id="switch_tr">
