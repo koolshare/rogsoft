@@ -13,6 +13,7 @@ rm -f /koolshare/scripts/uninstall_fakehttp.sh
 rm -f /koolshare/bin/fakehttp
 rm -f /koolshare/res/icon-fakehttp.png
 rm -f /koolshare/init.d/N97FakeHTTP.sh >/dev/null 2>&1
+cru d fakehttp_logtrim >/dev/null 2>&1
 rm -f /tmp/upload/fakehttp.log >/dev/null 2>&1
 rm -f /tmp/fakehttp.pid >/dev/null 2>&1
 
@@ -22,4 +23,3 @@ for value in $values; do
 done
 
 exit 0
-

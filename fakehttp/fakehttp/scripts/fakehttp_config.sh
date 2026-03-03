@@ -12,6 +12,10 @@ BIN="/koolshare/bin/fakehttp"
 PID_FILE="/tmp/fakehttp.pid"
 LOG_FILE="/tmp/upload/fakehttp.log"
 LOCK_DIR="/tmp/fakehttp_lock"
+LOG_TRIM_CRON="fakehttp_logtrim"
+DEFAULT_LOG_MAX_KB="512"
+DEFAULT_LOG_KEEP_KB="128"
+DEFAULT_LOG_TRIM_INTERVAL="5"
 
 acquire_lock() {
 	if mkdir "${LOCK_DIR}" >/dev/null 2>&1; then
@@ -60,6 +64,9 @@ ensure_defaults() {
 	[ -z "${fakehttp_dynamic_pct}" ] && dbus set fakehttp_dynamic_pct=""
 	[ -z "${fakehttp_nohopest}" ] && dbus set fakehttp_nohopest="0"
 	[ -z "${fakehttp_silent}" ] && dbus set fakehttp_silent="0"
+	[ -z "${fakehttp_log_max_kb}" ] && dbus set fakehttp_log_max_kb="${DEFAULT_LOG_MAX_KB}"
+	[ -z "${fakehttp_log_keep_kb}" ] && dbus set fakehttp_log_keep_kb="${DEFAULT_LOG_KEEP_KB}"
+	[ -z "${fakehttp_log_trim_interval}" ] && dbus set fakehttp_log_trim_interval="${DEFAULT_LOG_TRIM_INTERVAL}"
 }
 
 is_running() {
@@ -85,6 +92,7 @@ nat_start_link() {
 	else
 		[ -L "/koolshare/init.d/N97FakeHTTP.sh" ] && rm -f /koolshare/init.d/N97FakeHTTP.sh >/dev/null 2>&1
 	fi
+	update_log_trim_cron
 }
 
 normalize_ifaces() {
@@ -96,7 +104,56 @@ clear_log() {
 	http_response "{\"ok\":1}"
 }
 
+is_uint() {
+	case "$1" in
+		''|*[!0-9]*)
+			return 1
+			;;
+		*)
+			return 0
+			;;
+	esac
+}
+
+get_log_limits() {
+	max_kb="$(dbus get fakehttp_log_max_kb 2>/dev/null)"
+	keep_kb="$(dbus get fakehttp_log_keep_kb 2>/dev/null)"
+
+	is_uint "${max_kb}" || max_kb="${DEFAULT_LOG_MAX_KB}"
+	is_uint "${keep_kb}" || keep_kb="${DEFAULT_LOG_KEEP_KB}"
+
+	[ "${max_kb}" -lt 64 ] && max_kb=64
+	[ "${max_kb}" -gt 4096 ] && max_kb=4096
+	[ "${keep_kb}" -lt 16 ] && keep_kb=16
+	[ "${keep_kb}" -gt "${max_kb}" ] && keep_kb=$((max_kb / 2))
+	[ "${keep_kb}" -lt 16 ] && keep_kb=16
+
+	LOG_MAX_KB="${max_kb}"
+	LOG_KEEP_KB="${keep_kb}"
+	LOG_MAX_BYTES=$((LOG_MAX_KB * 1024))
+	LOG_KEEP_BYTES=$((LOG_KEEP_KB * 1024))
+}
+
+trim_log_size() {
+	[ ! -f "${LOG_FILE}" ] && return 0
+	get_log_limits
+
+	size="$(wc -c < "${LOG_FILE}" 2>/dev/null)"
+	is_uint "${size}" || return 0
+
+	[ "${size}" -le "${LOG_MAX_BYTES}" ] && return 0
+
+	tmp="${LOG_FILE}.tmp"
+	tail -c "${LOG_KEEP_BYTES}" "${LOG_FILE}" >"${tmp}" 2>/dev/null || {
+		rm -f "${tmp}" >/dev/null 2>&1
+		return 0
+	}
+	cat "${tmp}" >"${LOG_FILE}" 2>/dev/null
+	rm -f "${tmp}" >/dev/null 2>&1
+}
+
 trim_log() {
+	# legacy line-based trim, used by frontend action=5
 	[ ! -f "${LOG_FILE}" ] && http_response "{\"ok\":1}" && return 0
 	lines="$(wc -l < "${LOG_FILE}" 2>/dev/null)"
 	case "${lines}" in
@@ -111,7 +168,21 @@ trim_log() {
 		cat "${tmp}" >"${LOG_FILE}" 2>/dev/null
 		rm -f "${tmp}" >/dev/null 2>&1
 	fi
+	trim_log_size
 	http_response "{\"ok\":1}"
+}
+
+update_log_trim_cron() {
+	enable="$(dbus get fakehttp_enable 2>/dev/null)"
+	interval="$(dbus get fakehttp_log_trim_interval 2>/dev/null)"
+	is_uint "${interval}" || interval="${DEFAULT_LOG_TRIM_INTERVAL}"
+	[ "${interval}" -lt 1 ] && interval=1
+	[ "${interval}" -gt 30 ] && interval=30
+
+	cru d "${LOG_TRIM_CRON}" >/dev/null 2>&1
+	if [ "${enable}" = "1" ]; then
+		cru a "${LOG_TRIM_CRON}" "*/${interval} * * * * /bin/sh /koolshare/scripts/fakehttp_config.sh trim_by_size"
+	fi
 }
 
 normalize_hosts() {
@@ -129,6 +200,7 @@ start_fakehttp() {
 	ensure_defaults
 	eval "$(dbus export fakehttp_)"
 	mkdir -p /tmp/upload >/dev/null 2>&1
+	trim_log_size
 
 	if [ "${fakehttp_enable}" != "1" ]; then
 		stop_proc
@@ -248,6 +320,9 @@ case "$ACTION" in
 		;;
 	start_nat)
 		start_nat
+		;;
+	trim_by_size)
+		trim_log_size
 		;;
 esac
 

@@ -35,6 +35,9 @@ install_now() {
 
 	# init defaults without overwriting existing user config
 	[ -z "$(dbus get ${module}_enable 2>/dev/null)" ] && dbus set ${module}_enable="0"
+	[ -z "$(dbus get ${module}_log_max_kb 2>/dev/null)" ] && dbus set ${module}_log_max_kb="512"
+	[ -z "$(dbus get ${module}_log_keep_kb 2>/dev/null)" ] && dbus set ${module}_log_keep_kb="128"
+	[ -z "$(dbus get ${module}_log_trim_interval 2>/dev/null)" ] && dbus set ${module}_log_trim_interval="5"
 
 	echo_date "安装完毕！"
 
@@ -48,4 +51,3 @@ install_now() {
 install_now
 rm -rf "/tmp/${module}"* >/dev/null 2>&1
 exit 0
-
