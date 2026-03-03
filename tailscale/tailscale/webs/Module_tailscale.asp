@@ -808,6 +808,7 @@ function mOut(obj){
 												</tr>
 											</table>
 										</div>
+										<div class="formfontdesc" style="margin-left:5px;"><i>广告：搭建国内DERP服务器，搞不定域名/备案？试试</i><a href="https://www.vx.link/?tmpui_page=/signup.html&rel=IP4OV65KIA" target="_blank" style="color:#00c6ff;font-weight:600;">vx.link</a><i>，轻松配置国内DERP服务器，支持Peer Relay，支持api一键配置！</i></div>
 										<div id="tailscale_jion_btn_div" class="apply_gen" style="display:none;">
 											<input class="button_gen" id="tailscale_jion_btn" onClick="save()" type="button" value="重启插件" />
 										</div>
