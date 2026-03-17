@@ -225,7 +225,7 @@ get_system_info(){
 	kernel_ver=$(uname -r 2>/dev/null)
 	hardware_type=$(uname -m 2>/dev/null)
 
-	if [ "$(nvram get odmpid)" == "RT-AX89X" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" -o "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" ];then
+	if [ "$(nvram get odmpid)" == "RT-AX89X" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" -o "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" -o "$(nvram get odmpid)" == "GS7_Air" ];then
 		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
 		build_date=$(date -D "%a %b %d %H:%M:%S %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
 	else
@@ -304,7 +304,7 @@ get_tmp_pwr_qca(){
 get_tmp_pwr(){
 	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
 		get_tmp_pwr_mtk
-	elif [ "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" ];then
+	elif [ "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" -o "$(nvram get odmpid)" == "GS7_Air" ];then
 		get_tmp_pwr_MT7988X
 	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
 		get_tmp_pwr_ipq

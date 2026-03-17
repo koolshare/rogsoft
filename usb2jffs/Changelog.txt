@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin USB2JFFS Changelog for HND/AXHND platform
 ===========================================
+2.1.9
+   - add	添加魔盒Air支持
+
 2.1.8
    - fix	修复挂载dokcer镜像后，usb2jffs挂载状态检测错误
 
