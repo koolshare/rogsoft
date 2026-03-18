@@ -264,13 +264,13 @@ input[type=button]:focus {
 	width:740px;
 	border:1px solid #2ED9C3
 }
-#app[skin=ROG] #zerotier_main, #app[skin=ROG] #zerotier_peers_status_div, #app[skin=ROG] #zt_moons_settings, #app[skin=ROG] #zerotier_ztnets, #app[skin=ROG] #zerotier_route_div_2, #app[skin=ROG] #zt_moons_settings_div, #app[skin=ROG] #zerotier_interface_div_0, #app[skin=ROG] #zerotier_interface_div_1, #app[skin=ROG] #zerotier_interface_div_2, #app[skin=ROG] #zerotier_interface_div_3, #app[skin=ROG] #zerotier_interface_div_4, #app[skin=ROG] #zerotier_interface_div_5 {
+#app[skin=ROG] #zerotier_main, #app[skin=ROG] #zerotier_peers_status_div, #app[skin=ROG] #zt_moons_settings, #app[skin=ROG] #zt_planet_settings, #app[skin=ROG] #zerotier_ztnets, #app[skin=ROG] #zerotier_route_div_2, #app[skin=ROG] #zt_moons_settings_div, #app[skin=ROG] #zt_planet_settings_div, #app[skin=ROG] #zerotier_interface_div_0, #app[skin=ROG] #zerotier_interface_div_1, #app[skin=ROG] #zerotier_interface_div_2, #app[skin=ROG] #zerotier_interface_div_3, #app[skin=ROG] #zerotier_interface_div_4, #app[skin=ROG] #zerotier_interface_div_5 {
 	border: 1px solid #91071f;
 }
-#app[skin=TUF] #zerotier_main, #app[skin=TUF] #zerotier_peers_status_div, #app[skin=TUF] #zt_moons_settings, #app[skin=TUF] #zerotier_ztnets, #app[skin=TUF] #zerotier_route_div_2, #app[skin=TUF] #zt_moons_settings_div, #app[skin=TUF] #zerotier_interface_div_0, #app[skin=TUF] #zerotier_interface_div_1, #app[skin=TUF] #zerotier_interface_div_2, #app[skin=TUF] #zerotier_interface_div_3, #app[skin=TUF] #zerotier_interface_div_4, #app[skin=TUF] #zerotier_interface_div_5 {
+#app[skin=TUF] #zerotier_main, #app[skin=TUF] #zerotier_peers_status_div, #app[skin=TUF] #zt_moons_settings, #app[skin=TUF] #zt_planet_settings, #app[skin=TUF] #zerotier_ztnets, #app[skin=TUF] #zerotier_route_div_2, #app[skin=TUF] #zt_moons_settings_div, #app[skin=TUF] #zt_planet_settings_div, #app[skin=TUF] #zerotier_interface_div_0, #app[skin=TUF] #zerotier_interface_div_1, #app[skin=TUF] #zerotier_interface_div_2, #app[skin=TUF] #zerotier_interface_div_3, #app[skin=TUF] #zerotier_interface_div_4, #app[skin=TUF] #zerotier_interface_div_5 {
 	border: 1px solid #92650F;
 }
-#app[skin=TS] #zerotier_main, #app[skin=TS] #zerotier_peers_status_div, #app[skin=TS] #zt_moons_settings, #app[skin=TS] #zerotier_ztnets, #app[skin=TS] #zerotier_route_div_2, #app[skin=TS] #zt_moons_settings_div, #app[skin=TS] #zerotier_interface_div_0, #app[skin=TS] #zerotier_interface_div_1, #app[skin=TS] #zerotier_interface_div_2, #app[skin=TS] #zerotier_interface_div_3, #app[skin=TS] #zerotier_interface_div_4, #app[skin=TS] #zerotier_interface_div_5 {
+#app[skin=TS] #zerotier_main, #app[skin=TS] #zerotier_peers_status_div, #app[skin=TS] #zt_moons_settings, #app[skin=TS] #zt_planet_settings, #app[skin=TS] #zerotier_ztnets, #app[skin=TS] #zerotier_route_div_2, #app[skin=TS] #zt_moons_settings_div, #app[skin=TS] #zt_planet_settings_div, #app[skin=TS] #zerotier_interface_div_0, #app[skin=TS] #zerotier_interface_div_1, #app[skin=TS] #zerotier_interface_div_2, #app[skin=TS] #zerotier_interface_div_3, #app[skin=TS] #zerotier_interface_div_4, #app[skin=TS] #zerotier_interface_div_5 {
 	border: 1px solid #2ED9C3;
 }
 </style>
@@ -386,6 +386,17 @@ function register_event(){
 				moon_h_offset = 10;
 			}
 			$('#zt_moons_settings').offset({top: moon_h_offset, left: moon_w_offset});
+		}
+		if($('#zt_planet_settings').css("visibility") == "visible"){
+			document.scrollingElement.scrollTop = 0;
+			var planet_h = E("zt_planet_settings").clientHeight;
+			var planet_w = E("zt_planet_settings").clientWidth;
+			var planet_h_offset = (page_h - planet_h) / 2 - 90;
+			var planet_w_offset = (page_w - planet_w) / 2 + 90;
+			if(planet_h_offset < 0){
+				planet_h_offset = 10;
+			}
+			$('#zt_planet_settings').offset({top: planet_h_offset, left: planet_w_offset});
 		}
 	});
 
@@ -1118,6 +1129,103 @@ function apply_uppoaded_moon(Info) {
 		}
 	});
 }
+function open_planet_sett() {
+	$('body').prepend(tableApi.genFullScreen());
+	$('.fullScreen').show();
+	check_planet_status();
+	document.scrollingElement.scrollTop = 0;
+	E("zt_planet_settings").style.visibility = "visible";
+	var page_h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	var page_w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	var planet_h = E("zt_planet_settings").clientHeight;
+	var planet_w = E("zt_planet_settings").clientWidth;
+	var planet_h_offset = (page_h - planet_h) / 2 - 90;
+	var planet_w_offset = (page_w - planet_w) / 2 + 90;
+	if(planet_h_offset < 0){
+		planet_h_offset = 10;
+	}
+	$('#zt_planet_settings').offset({top: planet_h_offset, left: planet_w_offset});
+}
+function close_planet_sett() {
+	E("zt_planet_settings").style.visibility = "hidden";
+	$("body").find(".fullScreen").fadeOut(0, function() { tableApi.removeElement("fullScreen"); });
+}
+function check_planet_status() {
+	var custom_planet = dbus["zerotier_custom_planet"];
+	if (custom_planet == "1") {
+		E("zerotier_planet_status").innerHTML = '<span style="color:#00FF00;">使用自定义planet</span>';
+	} else {
+		E("zerotier_planet_status").innerHTML = '<span style="color:#FFCC00;">使用默认planet</span>';
+	}
+}
+function upload_planet() {
+	var file_name = $("#planet_file").val();
+	if(!file_name){
+		alert('文件为空，请选择planet文件！');
+		return false;
+	}
+	file_name = file_name.split('\\');
+	file_name = file_name[file_name.length - 1];
+	document.getElementById('planet_file_info').style.display = "none";
+	var formData = new FormData();
+	formData.append(file_name, $('#planet_file')[0].files[0]);
+	$.ajax({
+		url: '/_upload',
+		type: 'POST',
+		cache: false,
+		data: formData,
+		processData: false,
+		contentType: false,
+		complete: function(res) {
+			if (res.status == 200) {
+				var Info = {
+					"zerotier_planet_name": file_name,
+				};
+				document.getElementById('planet_file_info').style.display = "block";
+				apply_uploaded_planet(Info);
+			}
+		}
+	});
+}
+function apply_uploaded_planet(Info) {
+	var id = parseInt(Math.random() * 100000000);
+	var postData = {"id": id, "method": "zerotier_planet", "params": ["upload_planet"], "fields": Info };
+	$.ajax({
+		type: "POST",
+		url: "/_api/",
+		data: JSON.stringify(postData),
+		dataType: "json",
+		success: function(response) {
+			if(response.result == id){
+				E("zt_planet_settings").style.visibility = "hidden";
+				$("body").find(".fullScreen").fadeOut(0, function() { tableApi.removeElement("fullScreen"); });
+				dbus["zerotier_custom_planet"] = "1";
+				get_log();
+			}
+		}
+	});
+}
+function delete_planet() {
+	if (!confirm("确定要恢复默认planet文件吗？")) {
+		return false;
+	}
+	var id = parseInt(Math.random() * 100000000);
+	var postData = {"id": id, "method": "zerotier_planet", "params": ["delete_planet"], "fields": {} };
+	$.ajax({
+		type: "POST",
+		url: "/_api/",
+		data: JSON.stringify(postData),
+		dataType: "json",
+		success: function(response) {
+			if(response.result == id){
+				E("zt_planet_settings").style.visibility = "hidden";
+				$("body").find(".fullScreen").fadeOut(0, function() { tableApi.removeElement("fullScreen"); });
+				dbus["zerotier_custom_planet"] = "0";
+				get_log();
+			}
+		}
+	});
+}
 </script>
 </head>
 <body id="app" skin="ASUSWRT" onload="init();">
@@ -1199,6 +1307,51 @@ function apply_uppoaded_moon(Info) {
 		</div>
 	</div>
 	<!--===================================Ending of zerotier moons settings===========================================-->
+	<!--============================this is the popup area for zerotier planet========================================-->
+	<div id="zt_planet_settings" class="contentM_qis pop_div_bg">
+		<table class="QISform_wireless" border="0" align="center" cellpadding="5" cellspacing="0">
+			<tr>
+				<td>
+					<div class="user_title">zerotier planet 配置</div>
+					<div id="zt_planet_settings_div">
+						<table style="margin:-1px 0px 0px 0px;" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable">
+							<thead>
+								<tr>
+									<td colspan="2">zerotier - 自定义 planet</td>
+								</tr>
+							</thead>
+							<tr>
+								<th>当前状态</th>
+								<td>
+									<span id="zerotier_planet_status">检测中...</span>
+								</td>
+							</tr>
+							<tr>
+								<th>上传自定义planet文件</th>
+								<td>
+									&nbsp;<a class="ks_btn bt3" href="javascript:void(0);" onclick="upload_planet()" style="display: inline;">上传planet文件</a>
+									<input style="color:#FFCC00;*color:#000;width: 260px;vertical-align: middle;" id="planet_file" type="file" name="planet_file">
+									<img id="planet_loadingicon" style="margin-left:5px;margin-right:5px;display:none;" src="/images/InternetScan.gif">
+									<span id="planet_file_info" style="display:none;">完成</span>
+								</td>
+							</tr>
+							<tr>
+								<th>恢复默认planet</th>
+								<td>
+									&nbsp;<a type="button" class="ks_btn" style="cursor: pointer; display: inline;" onclick="delete_planet()">恢复默认planet</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<span style="margin-left:30px">自定义planet文件用于连接私有ZeroTier根服务器。上传后将自动替换默认planet并重启zerotier。</span>
+		<div style="padding-top:10px;padding-bottom:10px;width:100%;text-align:center;">
+			<input class="button_gen" type="button" onclick="close_planet_sett();" id="planet_cancelBtn" value="返回">
+		</div>
+	</div>
+	<!--===================================Ending of zerotier planet settings===========================================-->
 	<table class="content" align="center" cellpadding="0" cellspacing="0">
 		<tr>
 			<td width="17">&nbsp;</td>
@@ -1280,6 +1433,7 @@ function apply_uppoaded_moon(Info) {
 													<td>
 														<a type="button" id="zerotier_website" class="ks_btn" onclick="open_peers_info();" target="_blank" style="margin-left:2px">zerotier peers</a>
 														<a type="button" id="zerotier_website" class="ks_btn" onclick="open_moons_sett();" target="_blank" style="margin-left:2px">zerotier moons</a>
+														<a type="button" class="ks_btn" onclick="open_planet_sett();" style="margin-left:2px">zerotier planet</a>
 													</td>
 												</tr>
 											</table>
