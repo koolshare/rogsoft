@@ -1,0 +1,113 @@
+#!/bin/sh
+
+source /koolshare/scripts/base.sh
+alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
+
+LOG_FILE=/tmp/upload/zerotier_log.txt
+ZT_HOME=/koolshare/configs/zerotier-one
+
+restart_zt() {
+	if pidof zerotier-one >/dev/null 2>&1; then
+		echo_date "停止zerotier-one进程..."
+		killall zerotier-one 2>/dev/null
+		sleep 2
+	fi
+	echo_date "启动zerotier-one进程..."
+	/koolshare/bin/zerotier-one -d "${ZT_HOME}" >/dev/null 2>&1
+	sleep 1
+	if pidof zerotier-one >/dev/null 2>&1; then
+		echo_date "zerotier-one已成功重启。"
+	else
+		echo_date "警告：zerotier-one启动失败，请尝试在主页面重启插件。"
+	fi
+}
+
+case $2 in
+upload_planet)
+	http_response "$1"
+	echo " " > ${LOG_FILE}
+	{
+		echo_date "开始应用自定义planet文件..."
+		PLANET_NAME=$(dbus get zerotier_planet_name)
+		if [ -z "${PLANET_NAME}" ]; then
+			echo_date "错误：未找到上传的planet文件名！"
+			echo_date "XU6J03M6"
+			exit 1
+		fi
+
+		UPLOAD_FILE="/tmp/upload/${PLANET_NAME}"
+		if [ ! -f "${UPLOAD_FILE}" ]; then
+			echo_date "错误：上传文件 ${PLANET_NAME} 不存在！"
+			echo_date "XU6J03M6"
+			exit 1
+		fi
+
+		if [ ! -s "${UPLOAD_FILE}" ]; then
+			echo_date "错误：上传文件为空！"
+			rm -f "${UPLOAD_FILE}"
+			echo_date "XU6J03M6"
+			exit 1
+		fi
+
+		mkdir -p "${ZT_HOME}"
+
+		# Backup original planet file if not yet backed up
+		if [ -f "${ZT_HOME}/planet" ] && [ ! -f "${ZT_HOME}/planet.bak" ]; then
+			echo_date "备份原始planet文件..."
+			cp -f "${ZT_HOME}/planet" "${ZT_HOME}/planet.bak"
+		fi
+
+		# Apply custom planet file
+		echo_date "应用自定义planet文件: ${PLANET_NAME}"
+		cp -f "${UPLOAD_FILE}" "${ZT_HOME}/planet"
+		rm -f "${UPLOAD_FILE}"
+
+		# Record custom planet status
+		dbus set zerotier_custom_planet=1
+
+		# Restart zerotier if enabled
+		ENABLE=$(dbus get zerotier_enable)
+		if [ "${ENABLE}" = "1" ]; then
+			echo_date "重启zerotier以应用新的planet文件..."
+			restart_zt
+		else
+			echo_date "zerotier未启用，planet文件将在下次启动时生效。"
+		fi
+
+		echo_date "自定义planet文件应用成功！"
+		echo_date "XU6J03M6"
+	} >> ${LOG_FILE} 2>&1
+	;;
+delete_planet)
+	http_response "$1"
+	echo " " > ${LOG_FILE}
+	{
+		echo_date "开始恢复默认planet文件..."
+
+		if [ -f "${ZT_HOME}/planet.bak" ]; then
+			echo_date "从备份恢复默认planet文件..."
+			cp -f "${ZT_HOME}/planet.bak" "${ZT_HOME}/planet"
+			rm -f "${ZT_HOME}/planet.bak"
+			echo_date "默认planet文件已恢复。"
+		else
+			echo_date "未找到planet备份文件，无法恢复。"
+			echo_date "XU6J03M6"
+			exit 1
+		fi
+
+		dbus remove zerotier_custom_planet
+
+		# Restart zerotier if enabled
+		ENABLE=$(dbus get zerotier_enable)
+		if [ "${ENABLE}" = "1" ]; then
+			echo_date "重启zerotier以恢复默认planet..."
+			restart_zt
+		else
+			echo_date "zerotier未启用，将在下次启动时使用默认planet。"
+		fi
+
+		echo_date "已恢复默认planet文件！"
+		echo_date "XU6J03M6"
+	} >> ${LOG_FILE} 2>&1
+	;;
+esac
