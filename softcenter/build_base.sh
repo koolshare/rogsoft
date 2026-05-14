@@ -22,7 +22,7 @@ get_md5() {
     elif [ "$(uname)" = "Darwin" ]; then
         # macOS: md5 输出格式 "MD5 (filename) = hash"，取第 4 列
         md5_cmd="md5"
-		md5_value=$($md5_cmd "$file" | awk '{print $1}')
+		md5_value=$($md5_cmd "$file" | awk '{print $4}')
     else
         echo "Error: Unsupported OS: $(uname)" >&2
         return 1
