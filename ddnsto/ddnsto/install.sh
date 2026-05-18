@@ -153,9 +153,11 @@ install_now(){
 	local ARCH=$(uname -m)
 	if [ "${ARCH}" == "aarch64" ];then
 		cp -rf /tmp/${module}/bin/ddnsto_aarch64 /koolshare/bin/ddnsto
+		cp -rf /tmp/${module}/bin/ddwebdav_aarch64 /koolshare/bin/ddwebdav
 	fi
 	if [ "${ARCH}" == "armv7l" ];then
 		cp -rf /tmp/${module}/bin/ddnsto_arm /koolshare/bin/ddnsto
+		cp -rf /tmp/${module}/bin/ddwebdav_arm /koolshare/bin/ddwebdav
 	fi
 	cp -rf /tmp/${module}/res/* /koolshare/res/
 	cp -rf /tmp/${module}/scripts/* /koolshare/scripts/

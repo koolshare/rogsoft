@@ -21,6 +21,7 @@ start)
 *)
     if [ "${ddnsto_enable}" == "1" ];then
         killall ddnsto
+        killall ddwebdav
         if [ "${ddnsto_feat_enabled}" == "1" ] && [ -n "${ddnsto_feat_username}" ] && [ -n "${ddnsto_feat_port}" ] && [ -n "${ddnsto_feat_password}" ];then
             ddnsto -u $ddnsto_token  -n $ddnsto_feat_username -k $ddnsto_feat_password -p ${ddnsto_feat_port} -s $disk_path -d
         else
@@ -28,6 +29,7 @@ start)
         fi 
     else
         killall ddnsto
+        killall ddwebdav
     fi
     http_response "$1"
     ;;
