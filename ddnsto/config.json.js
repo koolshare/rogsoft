@@ -1,6 +1,6 @@
 {
-"version":"3.1.7",
-"md5":"364ab5b85c57a0f8bba61cfe6117357a",
+"version":"3.1.10",
+"md5":"e928565798ca0495206edfb5663ba506",
 "home_url":"Module_ddnsto.asp",
 "title":"ddnsto",
 "description":"ddnsto内网穿透",
@@ -8,5 +8,5 @@
 "author":"xiaobao",
 "link":"https://www.ddnsto.com",
 "changelog":"",
-"build_date":"2026-04-26_20:32:47"
+"build_date":"2026-05-18_11:08:05"
 }
