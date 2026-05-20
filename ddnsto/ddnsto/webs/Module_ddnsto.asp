@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
@@ -281,15 +281,18 @@ function showSSLoadingBar(seconds) {
 }
 
 function version_show() {
+	// 先显示本地版本
+	if (typeof(db_ddnsto["ddnsto_version"]) != "undefined" && db_ddnsto["ddnsto_version"].length > 0) {
+		$("#ddnsto_version_show").html("插件版本：" + db_ddnsto["ddnsto_version"]);
+	}
+	// 再检查远程版本更新
 	$.ajax({
 		url: 'https://rogsoft.ddnsto.com/ddnsto/config.json.js',
 		type: 'GET',
 		dataType: 'jsonp',
 		success: function(res) {
 			if (typeof(res["version"]) != "undefined" && res["version"].length > 0) {
-				if (res["version"] == db_ddnsto["ddnsto_version"]) {
-					$("#ddnsto_version_show").html("插件版本：" + res["version"]);
-				} else if (res["version"] > db_ddnsto["ddnsto_version"]) {
+				if (res["version"] > db_ddnsto["ddnsto_version"]) {
 					$("#ddnsto_version_show").html("<font color=\"#66FF66\">有新版本：" + res.version + "</font>");
 				}
 			}
