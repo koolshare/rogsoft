@@ -5,3 +5,42 @@ tunnel
 gostun/gostun-repo/
 fakehttp/fakehttp-fork
 
+# External modules synced during rogsoft development/build.
+# Keep this list explicit so new first-party modules are still visible to git.
+alist/
+aria2/
+clouddrive/
+ddnsgo/
+filebrowser/
+linkease/
+lookcat/
+lucky/
+mfun/
+onehub/
+openlist/
+phddns/
+querydns/
+qyacc/
+routerdog/
+rustdesk/
+signdog/
+wangxinyun/
+xunyou/
+
+# Build-generated center metadata.
+softcenter/app.json.js.bak
+softcenter/app_nousb.json.js
+softcenter/push_message.json.js
+koolcenter/app.json.js.bak
+koolcenter/app_nousb.json.js
+koolcenter/push_message.json.js
+
+# Build-generated verification files.
+softcenter/verify/
+koolcenter/verify/
+
+# Icons copied into softcenter during aggregation.
+softcenter/softcenter/res/icon-*.png
+
+# Platform marker files generated while rebuilding modules.
+*/*/.valid
