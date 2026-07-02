@@ -16,5 +16,6 @@
 {"module": "filebrowser", "branch":"master", "git_source": "https://github.com/flyhigherpi/filebrowser.git"},
 {"module": "signdog", "branch":"master", "git_source": "https://github.com/koolshare/signdog_hnd.git"},
 {"module": "mfun", "branch":"main", "git_source": "https://github.com/Carseason/rogsoft_mfun.git"},
+{"module": "betterapps", "branch":"main", "git_source": "https://github.com/linkease/rogsoft-BetterApps.git"},
 {"module": "routerdog", "branch":"master", "git_source": "https://github.com/koolshare/router_dog.git"}
 ]
