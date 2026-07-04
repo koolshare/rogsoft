@@ -1,118 +1,85 @@
 #!/usr/bin/env python
 # _*_ coding:utf-8 _*_
 
-
 import os
-import urllib.parse
-import http.client
 import json
-import hashlib
 import codecs
-from shutil import copyfile
-import sys
 import traceback
-import re  # 用于正则解析 git_path 和 JS 预处理
-from packaging import version  # 新增：用于版本比较（替换 LooseVersion）
-import tarfile
-from string import Template
+import re
+from packaging import version
 
+# Check dependencies
 try:
     import requests
 except ImportError:
-    raise ImportError("The 'requests' library is required but not installed. Please install it before running this script.")
+    raise ImportError("The 'requests' library is required. Please install it: pip install requests")
 
-#https://docs.python.org/2.4/lib/httplib-examples.html
-
-
+# Path definitions
 curr_path = os.path.dirname(os.path.realpath(__file__))
 parent_path = os.path.realpath(os.path.join(curr_path, ".."))
 git_bin = "git"
 
 def http_request(url, depth=0):
+    """Send HTTP request to get content"""
     if depth > 10:
         raise Exception("Redirected {} times, giving up.".format(depth))
     try:
-        resp = requests.get(url, headers={"Cache-Control": "max-age=0"}, timeout=10, allow_redirects=False)
-        # 处理重定向
-        if 300 < resp.status_code < 400 and "location" in resp.headers and resp.headers["location"] != url:
+        headers = {
+            "Cache-Control": "max-age=0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+        resp = requests.get(url, headers=headers, timeout=15, allow_redirects=False)
+        if 300 < resp.status_code < 400 and "location" in resp.headers:
             return http_request(resp.headers["location"], depth + 1)
         return resp.content
     except Exception as e:
-        print(f"[http_request] requests error: {e}")
-        raise
+        print(f"[http_request] Error requesting {url}: {e}")
+        return None
 
-def work_modules():
-    module_path = os.path.join(curr_path, "modules.json")
-    updated = False
-    with codecs.open(module_path, "r", "utf-8") as fc:
-        modules = json.loads(fc.read())
-        if modules:
-            for m in modules:
-                if "module" in m:
-                    try:
-                        up = sync_module(m["module"], m["git_source"], m["branch"])
-                        if not updated:
-                            updated = up
-                    except Exception as e:
-                        traceback.print_exc()
-    return updated
+def parse_js_config(content):
+    """
+    Robust JS config to JSON parser.
+    FIXED: Now correctly handles URLs with // (e.g. https://) without treating them as comments.
+    """
+    # 1. Remove multi-line comments /* ... */
+    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+    
+    # 2. Remove single-line comments // ... 
+    # CRITICAL FIX: Use negative lookbehind (?<!:) to ignore // preceded by : (like https://)
+    content = re.sub(r'(?<!:)\/\/.*$', '', content, flags=re.MULTILINE)
+    
+    # 3. Remove variable declaration var x = { ... }; keep only { ... }
+    match = re.search(r'(\{.*\})', content, re.DOTALL)
+    if match:
+        content = match.group(1)
+    
+    # 4. Remove trailing semicolon
+    content = content.strip().rstrip(';')
+    
+    # 5. Attempt to add quotes to unquoted keys (e.g., key: value -> "key": value)
+    content = re.sub(r'(?m)(?<=[\s{,])([a-zA-Z0-9_]+)(?=\s*:)', r'"\1"', content)
 
-def sync_module(module, git_path, branch):
-    module_path = os.path.join(parent_path, module)
-    conf_path = os.path.join(module_path, "config.json.js")
-    rconf = get_remote_js(git_path, branch)
-    if rconf is None:
-        print(f"[sync_module] Skipping module '{module}' due to invalid config URL.")
-        return False  # 不更新，返回 False
-    lconf = get_local_js(conf_path)
-    update = False
-    if not rconf:
-        return False  # 修改：如果 rconf 无效，也返回 False
-    print(rconf)
-    if not lconf:
-        update = True
-    else:
-        # 修改：使用 packaging.version.parse 替换 LooseVersion
-        if version.parse(rconf["version"]) > version.parse(lconf["version"]):
-            update = True
-    if update:
-        print("updating", git_path)
-        cmd = ""
-        tar_path = os.path.join(module_path, "%s.tar.gz" % module)
-        if os.path.isdir(module_path):
-            #cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin pull && rm -f $module.tar.gz && tar -zcf $module.tar.gz $module"
-            cmd = "cd $module_path && $git_bin reset --hard && $git_bin clean -fdqx && $git_bin fetch --depth 1 && rm -f $module.tar.gz"
-        else:
-            # 修改：添加 --depth 1 和 --branch $branch 以实现浅克隆指定分支
-            cmd = "cd $parent_path && $git_bin clone --depth 1 --branch $branch $git_path $module_path && cd $module_path && tar -zcf $module.tar.gz $module"
-        t = Template(cmd)
-        params = {"parent_path": parent_path, "git_path": git_path, "module_path": module_path, "module": module, "git_bin": git_bin, "branch": branch}
-        s = t.substitute(params)
-        os.system(s)
-        rconf["md5"] = md5sum(tar_path)
-        with codecs.open(conf_path, "w", "utf-8") as fw:
-            json.dump(rconf, fw, sort_keys=True, indent=4, ensure_ascii=False)
-        #os.system("cd %s && chown -R www:www ." % module_path)
-    return update
+    # 6. Remove trailing commas (e.g., "ver": "1.0", } -> "ver": "1.0" })
+    content = re.sub(r',\s*([\]}])', r'\1', content)
+    
+    return content
+
+def load_config_content(content):
+    try:
+        return json.loads(content, strict=False)
+    except Exception:
+        json_str = parse_js_config(content)
+        return json.loads(json_str, strict=False)
 
 def get_config_js(git_path, branch):
+    """Construct raw URL for remote config.json.js"""
     if not git_path:
         print("[get_config_js] Warning: git_source is empty for this module.")
         return None
 
-    # 解析 git_path 以提取 owner 和 repo
-    # 支持格式：
-    # - https://github.com/owner/repo.git
-    # - git@github.com:owner/repo.git
-    # - owner/repo.git 或 owner/repo
-    owner = None
-    repo = None
-
-    # 去除可能的 .git 后缀
     if git_path.endswith(".git"):
         git_path = git_path[:-4]
 
-    # 正则匹配常见格式
     match_https = re.match(r"https?://github\.com/([^/]+)/([^/]+)", git_path)
     match_ssh = re.match(r"git@github\.com:([^/]+)/([^/]+)", git_path)
     match_short = re.match(r"([^/]+)/([^/]+)", git_path)
@@ -127,40 +94,130 @@ def get_config_js(git_path, branch):
         print(f"[get_config_js] Error: Invalid git_source format: {git_path}")
         return None
 
-    # 构建正确的 GitHub raw URL
-    raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/config.json.js"
-    return raw_url
+    return f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/config.json.js"
 
 def get_remote_js(git_path, branch):
+    """Get remote version config"""
     url = get_config_js(git_path, branch)
     if not url:
         return None
+    
     data = http_request(url)
     if not data:
-        print(f"[get_remote_js] Warning: No data received from {url}")
         return None
+    
     try:
-        conf = json.loads(data.decode('utf-8'))
+        content = data.decode('utf-8')
+        return load_config_content(content)
     except Exception as e:
-        print(f"[get_remote_js] Error decoding JSON from {url}: {e}")
-        print(f"[get_remote_js] Raw data: {data}")
+        print(f"[get_remote_js] Error parsing remote config from {url}: {e}")
         return None
-    return conf
 
 def get_local_js(conf_path):
+    """Get local version config"""
     if os.path.isfile(conf_path):
         with codecs.open(conf_path, "r", "utf-8") as fc:
-            conf = json.loads(fc.read())
-            return conf
+            try:
+                content = fc.read()
+                return load_config_content(content)
+            except Exception:
+                return None
     return None
 
-def make_tarfile(output_filename, source_dir):
-    with tarfile.open(output_filename, "w:gz") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
+def sync_module(module, git_path, branch):
+    """Core logic: Git sync only. Package building is handled by trusted deploy build steps."""
+    module_path = os.path.join(parent_path, module)
+    conf_path = os.path.join(module_path, "config.json.js")
 
-def md5sum(full_path):
-    with open(full_path, 'rb') as rf:
-        return hashlib.md5(rf.read()).hexdigest()
+    # 1. Get remote config
+    rconf = get_remote_js(git_path, branch)
+    if rconf is None:
+        print(f"[sync_module] Skipping '{module}' - invalid remote config.")
+        return False
+    
+    # 2. Get local config
+    lconf = get_local_js(conf_path)
+    
+    update = False
+    if not lconf:
+        print(f"[{module}] Local config not found, forcing install.")
+        update = True
+    else:
+        try:
+            # Compare versions
+            if version.parse(rconf["version"]) > version.parse(lconf["version"]):
+                print(f"[{module}] New version found: {rconf['version']} > {lconf['version']}")
+                update = True
+        except Exception as e:
+            print(f"[{module}] Version parse error: {e}, forcing update.")
+            update = True
+
+    if update:
+        print(f"[{module}] Syncing source from {git_path} (Branch: {branch})...")
+        
+        # --- Git Operations ---
+        if os.path.isdir(module_path):
+            # Dir exists: Reset and pull without executing third-party build.sh.
+            git_cmds = [
+                f"cd {module_path}",
+                f"{git_bin} reset --hard",
+                f"{git_bin} clean -fdqx",
+                f"{git_bin} fetch --depth 1 origin {branch}",
+                f"{git_bin} checkout {branch}",
+                f"{git_bin} reset --hard origin/{branch}"
+            ]
+            cmd = " && ".join(git_cmds)
+        else:
+            # Dir does not exist: Clone only. Trusted deploy build steps package later.
+            cmd = f"cd {parent_path} && {git_bin} clone --depth 1 --branch {branch} {git_path} {module_path}"
+        
+        if os.system(cmd) != 0:
+            print(f"[{module}] Git operation failed.")
+            return False
+
+        # --- Update local config.json.js ---
+        try:
+            # Do not trust or reuse remote package md5; trusted build.py updates md5 after packaging.
+            if "md5" in rconf:
+                rconf["md5"] = ""
+                
+            with codecs.open(conf_path, "w", "utf-8") as fw:
+                json.dump(rconf, fw, sort_keys=True, indent=4, ensure_ascii=False)
+            print(f"[{module}] Sync success. Updated to version {rconf['version']}")
+        except Exception as e:
+            print(f"[{module}] Warning: Failed to write config.json.js: {e}")
+
+    return update
+
+def work_modules():
+    """Main loop: Process modules.json"""
+    module_path = os.path.join(curr_path, "modules.json")
+    updated = False
+    
+    if not os.path.exists(module_path):
+        print(f"Error: {module_path} not found.")
+        return False
+
+    with codecs.open(module_path, "r", "utf-8") as fc:
+        try:
+            modules = json.loads(fc.read())
+        except json.JSONDecodeError:
+            print("Error: modules.json is not valid JSON.")
+            return False
+
+    if modules:
+        print(f"Found {len(modules)} modules to process.")
+        for m in modules:
+            if "module" in m:
+                try:
+                    # Default branch is master if not specified
+                    branch = m.get("branch", "master")
+                    if sync_module(m["module"], m["git_source"], branch):
+                        updated = True
+                except Exception:
+                    print(f"Error processing module {m.get('module')}")
+                    traceback.print_exc()
+    return updated
 
 def work_parent():
     ignore_paths = frozenset(["maintain_files", "softcenter", "v2ray"])
@@ -171,27 +228,15 @@ def work_parent():
         if os.path.isdir(path):
             yield fname, path
 
-def parse_js_config(content):
-    # """辅助函数：预处理 .js 文件内容，提取纯 JSON 部分"""
-    # 去除注释（单行 // 和多行 /* */）
-    content = re.sub(r'//.*?$|/\*.*?\*/', '', content, flags=re.MULTILINE | re.DOTALL)
-    # 去除 var ... = 和结尾 ;
-    content = re.sub(r'^\s*(var\s+\w+\s*=\s*)?\{', '{', content)
-    content = re.sub(r';\s*$', '', content)
-    # 如果键没有引号，添加（简单正则替换，假设键是字母数字）
-    content = re.sub(r'(\s*)([a-zA-Z0-9_]+)\s*:', r'\1"\2":', content)
-    return content.strip()
-
 def gen_modules(modules):
     for module, path in work_parent():
         conf = os.path.join(path, "config.json.js")
         m = None
+        raw_content = ""
         try:
             with codecs.open(conf, "r", "utf-8") as fc:
                 raw_content = fc.read()
-                # 预处理为纯 JSON
-                json_content = parse_js_config(raw_content)
-                m = json.loads(json_content)
+                m = load_config_content(raw_content)
                 if m:
                     m["name"] = module
                     if "tar_url" not in m:
@@ -201,20 +246,19 @@ def gen_modules(modules):
         except json.JSONDecodeError as e:
             print(f"[gen_modules] JSON decode error in {conf}: {e}")
             print(f"[gen_modules] Raw content: {raw_content}")
-            # 跳过无效模块，使用默认值
             m = None
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
 
         if not m:
-            m = {"name":module, "title":module, "tar_url": module + "/" + module + ".tar.gz"}
+            m = {"name": module, "title": module, "tar_url": module + "/" + module + ".tar.gz"}
         modules.append(m)
 
 def refresh_gmodules():
-    gmodules = None
     with codecs.open(os.path.join(curr_path, "app.template.json.js"), "r", "utf-8") as fg:
         gmodules = json.loads(fg.read())
         gmodules["apps"] = []
+
     gen_modules(gmodules["apps"])
 
     with codecs.open(os.path.join(curr_path, "config.json.js"), "r", "utf-8") as fc:
@@ -222,10 +266,19 @@ def refresh_gmodules():
         gmodules["version"] = conf["version"]
         gmodules["md5"] = conf["md5"]
 
-        with codecs.open(os.path.join(curr_path, "app.json.js"), "w", "utf-8") as fw:
-            json.dump(gmodules, fw, sort_keys=True, indent=4, ensure_ascii=False)
+    with codecs.open(os.path.join(curr_path, "app.json.js"), "w", "utf-8") as fw:
+        json.dump(gmodules, fw, sort_keys=True, indent=4, ensure_ascii=False)
 
-updated = work_modules()
-if updated:
-    refresh_gmodules()
-    #os.system("chown -R www:www %s/softcenter/app.json.js" % parent_path)
+def main(argv=None):
+    argv = argv or []
+    if argv == ["refresh"]:
+        refresh_gmodules()
+        return
+
+    updated = work_modules()
+    if updated:
+        refresh_gmodules()
+
+if __name__ == "__main__":
+    import sys
+    main(sys.argv[1:])
