@@ -156,7 +156,7 @@ def sync_module(module, git_path, branch):
         print(f"[{module}] Syncing source from {git_path} (Branch: {branch})...")
         
         # --- Git Operations ---
-        if os.path.isdir(module_path):
+        if os.path.isdir(module_path) and os.path.isdir(os.path.join(module_path, ".git")):
             # Dir exists: Reset and pull without executing third-party build.sh.
             git_cmds = [
                 f"cd {module_path}",
@@ -167,6 +167,9 @@ def sync_module(module, git_path, branch):
                 f"{git_bin} reset --hard origin/{branch}"
             ]
             cmd = " && ".join(git_cmds)
+        elif os.path.isdir(module_path) and os.listdir(module_path):
+            print(f"[{module}] Existing directory is not a git checkout: {module_path}")
+            return False
         else:
             # Dir does not exist: Clone only. Trusted deploy build steps package later.
             cmd = f"cd {parent_path} && {git_bin} clone --depth 1 --branch {branch} {git_path} {module_path}"
@@ -233,6 +236,9 @@ def gen_modules(modules):
         conf = os.path.join(path, "config.json.js")
         m = None
         raw_content = ""
+        if not os.path.isfile(conf):
+            print(f"[gen_modules] Skipping {module}: config.json.js not found")
+            continue
         try:
             with codecs.open(conf, "r", "utf-8") as fc:
                 raw_content = fc.read()
