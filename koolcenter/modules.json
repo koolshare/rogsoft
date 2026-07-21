@@ -10,6 +10,7 @@
 {"module": "lookcat", "branch":"main", "git_source": "https://github.com/vj23456/LookCat.git"},
 {"module": "aria2", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_aria2.git"},
 {"module": "linkease", "branch":"master", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
+{"module": "linkeaselite", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_LinkEaseLite.git"},
 {"module": "kaiplus", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_KaiPlus.git"},
 {"module": "xunyou", "branch":"master", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
 {"module": "qyacc", "branch":"main", "git_source": "https://github.com/qiyouacc/qy-koolshare.git"},
