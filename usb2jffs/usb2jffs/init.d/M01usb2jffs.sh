@@ -135,7 +135,7 @@ JFFS2USB(){
 	# 防止用户在路由器开机状态，并且已经替换了JFFS为USB的情况下，再插入一个有.koolshare_jffs目录的USB储存设备导致重复挂载
 	get_current_jffs_device
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "${mounted_nu}" == "2" ]; then
+	if [ "${mounted_nu}" -ge "2" ]; then
 		# echo_date "USB2JFFS：检测到你的USB磁盘${jffs_device}已经挂载在/jffs上了，跳过！"
 		return 1
 	fi
@@ -290,7 +290,7 @@ JFFS2USB(){
 		nvram commit
 
 		# 把原来的jffs分区挂载到cifs
-		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+		if [ "${LINUX_VER}" == "44" -o "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
 			mount -t ubifs ${mtd_disk} /cifs2
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /cifs2
