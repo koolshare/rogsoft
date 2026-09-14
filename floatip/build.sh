@@ -3,7 +3,7 @@
 # build script for rogsoft project
 
 MODULE="floatip"
-VERSION="1.0.10"
+VERSION="1.0.11"
 TITLE="floatip"
 DESCRIPTION="浮动网关"
 HOME_URL="Module_floatip.asp"
