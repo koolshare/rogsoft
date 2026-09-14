@@ -13,6 +13,7 @@
 {"module": "linkease", "branch":"master", "git_source": "https://github.com/koolshare/rogsoft_LinkEase.git"},
 {"module": "linkeaselite", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_LinkEaseLite.git"},
 {"module": "kaiplus", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_KaiPlus.git"},
+{"module": "fastnet", "branch":"main", "git_source": "https://github.com/koolshare/rogsoft_FastNet.git"},
 {"module": "xunyou", "branch":"master", "git_source": "https://github.com/devkoolshare/meilin-armv8.git"},
 {"module": "qyacc", "branch":"main", "git_source": "https://github.com/qiyouacc/qy-koolshare.git"},
 {"module": "phddns", "branch":"master", "git_source": "https://github.com/OrayDev/phddns_for_koolshare.git"},
