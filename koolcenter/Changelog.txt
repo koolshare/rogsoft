@@ -1,5 +1,10 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.57
+   - update	发布最新版软件中心 v2 前端
+   - fix	发布同步以 v2 ASP 为唯一规范产物，并校验 koolcenter/softcenter 目标目录
+   - build	软件中心安装包改为确定性构建，构建异常立即失败
+
 1.9.52
    - update	移除教程功能（tutorials），避免请求超时导致软件中心加载变慢
    - fix	修复安装/卸载弹窗日志与设置页日志不自动滚动到最新行的问题

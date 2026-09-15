@@ -30,17 +30,17 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-11-03_00:07:36",
+            "build_date": "2026-05-14_23:31:40",
             "changelog": "",
             "description": "koolcenter/softcenter 一键来回切换！",
             "home_url": "Module_center.asp",
             "link": "",
-            "md5": "0c092b679cb8f4ad7da357b709b84686",
+            "md5": "c15b83ee95fca773a37ee728f7c83966",
             "name": "center",
             "tags": "辅助 工具",
             "tar_url": "center/center.tar.gz",
             "title": "软件中心一键切换",
-            "version": "2.0"
+            "version": "2.3"
         },
         {
             "author": "sadog",
@@ -58,19 +58,19 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-11-02_23:47:47",
+            "build_date": "2026-02-16_21:42:37",
             "changelog": "",
             "description": "CFE工具箱，查看CFE信息，改机器为国区",
             "home_url": "Module_cfetool.asp",
             "link": "",
-            "md5": "66c7405996f61d27430e7dd381f6d5cc",
+            "md5": "b66f840353b9a741c425611e21499677",
             "name": "cfetool",
             "port": "8083",
             "server": "42.192.18.234",
             "tags": "系统 工具",
             "tar_url": "cfetool/cfetool.tar.gz",
             "title": "CFE工具箱",
-            "version": "4.6"
+            "version": "4.7"
         },
         {
             "author": "freexiaoyao",
@@ -88,17 +88,17 @@
         },
         {
             "author": "xiaobao",
-            "build_date": "2022-07-19_15:44:42",
+            "build_date": "2026-05-20_17:32:20",
             "changelog": "",
             "description": "ddnsto内网穿透",
             "home_url": "Module_ddnsto.asp",
             "link": "https://www.ddnsto.com",
-            "md5": "3c3bd23d7ed6e68b9fadb437baf6398f",
+            "md5": "4d2b096c1f02d9ee9a8e099fe1f65606",
             "name": "ddnsto",
             "tags": "穿透 DDNS",
             "tar_url": "ddnsto/ddnsto.tar.gz",
             "title": "ddnsto",
-            "version": "3.0.3"
+            "version": "4.2.0"
         },
         {
             "author": "xiaobao",
@@ -130,17 +130,17 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-12-24_13:06:23",
+            "build_date": "2026-03-03_09:30:54",
             "changelog": "",
             "description": "将 TCP 连接伪装为 HTTP/HTTPS 协议（NFQUEUE），用于网络流量混淆",
             "home_url": "Module_fakehttp.asp",
             "link": "https://github.com/MikeWang000000/FakeHTTP",
-            "md5": "2251ce54393903b71c9a728a78970637",
+            "md5": "f9ce9138a336f692aee548bc688bb06b",
             "name": "fakehttp",
             "tags": "网络 工具",
             "tar_url": "fakehttp/fakehttp.tar.gz",
             "title": "FakeHTTP 伪装",
-            "version": "1.4"
+            "version": "1.6"
         },
         {
             "author": "sadog",
@@ -172,31 +172,32 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-02-18_15:13:02",
+            "build_date": "2026-03-17_17:36:54",
             "changelog": "",
             "description": "检测软件中心重要文件是否被篡改，如果检测到恶意篡改，将其修复",
             "home_url": "Module_fixit.asp",
             "link": "",
-            "md5": "823a230f2829c667d0a12c74489b0d9b",
+            "md5": "16cc497fd01ac18d7626e9d348badfa1",
             "name": "fixit",
             "tags": "系统 工具",
             "tar_url": "fixit/fixit.tar.gz",
             "title": "安全检查",
-            "version": "1.5"
+            "version": "1.9.2"
         },
         {
             "author": "xiaobao",
-            "build_date": "2025-05-29_15:28:00",
-            "changelog": "",
+            "build_date": "2026-09-14_07:24:32",
+            "changelog": "修复安装时可执行文件名不一致导致的报错",
             "description": "浮动网关",
             "home_url": "Module_floatip.asp",
             "link": "https://www.asusgo.com",
-            "md5": "",
+            "md5": "f52c5b03860996a823be43557710f9e2",
+            "module": "floatip",
             "name": "floatip",
             "tags": "网络",
             "tar_url": "floatip/floatip.tar.gz",
             "title": "floatip",
-            "version": "1.0.9"
+            "version": "1.0.11"
         },
         {
             "author": "clang",
@@ -454,17 +455,17 @@
         },
         {
             "author": "clang",
-            "build_date": "2021-08-20_22:31:26",
+            "build_date": "2024-08-20_15:55:36",
             "changelog": "",
             "description": "从路由器推送状态及通知的工具",
             "home_url": "Module_serverchan.asp",
             "link": "",
-            "md5": "1a31029f482273a8ead2102084228d4d",
+            "md5": "97ff331c7aa458e87a27a1755ba06331",
             "name": "serverchan",
             "tags": "推送",
             "tar_url": "serverchan/serverchan.tar.gz",
             "title": "serverChan微信推送",
-            "version": "1.4.1"
+            "version": "1.4.2"
         },
         {
             "author": "sadog",
@@ -538,17 +539,17 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-02-18_15:55:40",
+            "build_date": "2026-03-03_10:38:24",
             "changelog": "",
             "description": "基于wiregurad协议的零配置内网穿透安全组网工具！",
             "home_url": "Module_tailscale.asp",
             "link": "",
-            "md5": "c7efd35f8679668af4189f80b38c1a0a",
+            "md5": "fb1833a822bf67a53ede6d9ccfc7d401",
             "name": "tailscale",
             "tags": "穿透 VPN",
             "tar_url": "tailscale/tailscale.tar.gz",
             "title": "Tailscale",
-            "version": "2.0.3"
+            "version": "2.0.7"
         },
         {
             "author": "sadog",
@@ -610,7 +611,7 @@
         }
     ],
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master",
-    "md5": "3b62c771542a9c5793bc91c1aadc2573",
+    "md5": "d7356cca631631e9e4418230ca4b5c15",
     "tar_url": "koolcenter/softcenter.tar.gz",
-    "version": "1.9.52"
+    "version": "1.9.57"
 }
