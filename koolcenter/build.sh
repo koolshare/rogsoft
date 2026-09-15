@@ -7,6 +7,7 @@ VERSION=1.9.57
 DIR="$(cd "$(dirname "$0")" && pwd)"
 ME=$(basename "$0")
 PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+cd "${DIR}"
 
 if [ "${ME}" = "build.sh" ];then
 	echo "build error!"

@@ -574,7 +574,7 @@ center_install() {
 		service start_skipd >/dev/null 2>&1
 		sleep 2
 	fi
-	if [ "${KSHOME}" == "jffs" -a -f "/cifs2/ksdb/log" ];then
+	if [ "${KSHOME}" == "jffs" ];then
 		if [ -n "${SOFTVER}" ];then
 			dbus set softcenter_version=${SOFTVER}
 		fi

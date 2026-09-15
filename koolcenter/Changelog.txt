@@ -3,6 +3,7 @@ Koolshare Asuswrt-Merlin koolcenter center Changelog
 1.9.57
    - update	发布最新版软件中心 v2 前端
    - fix	发布同步以 v2 ASP 为唯一规范产物，并校验 koolcenter/softcenter 目标目录
+   - fix	修复未使用 USB2JFFS 时安装后软件中心 dbus 版本未更新
    - build	软件中心安装包改为确定性构建，构建异常立即失败
 
 1.9.52
