@@ -303,7 +303,8 @@ start_usb2jffs(){
 	
 		# 把原来的jffs分区挂载到cifs2
 		echo_date "将${mtd_disk}挂载在/cifs2"
-		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+		umount -l /cifs2 2>/dev/null
+		if [ "${LINUX_VER}" == "44" -o "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
 			mount -t ubifs ${mtd_disk} /cifs2
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /cifs2
@@ -320,7 +321,7 @@ start_usb2jffs(){
 	else
 		echo_date "USB型JFFS挂载失败！！"
 		echo_date "尝试恢复原始挂载方式！"
-		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+		if [ "${LINUX_VER}" == "44" -o "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
 			mount -t ubifs ${mtd_disk} /jffs
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
@@ -343,7 +344,7 @@ stop_usb2jffs(){
 	# 检测是否有USB磁盘挂载在/jffs上
 	get_current_jffs_device
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "$mounted_nu" == "2" ]; then
+	if [ "$mounted_nu" -ge "2" ]; then
 		local usb_path=$(mount | /bin/grep "${jffs_device}" | /bin/grep "/tmp/mnt/" | awk '{print $3}')
 		echo_date "检测到USB磁盘的${usb_path}/.koolshare_jffs挂载在/jffs上"
 	else
@@ -401,7 +402,7 @@ stop_usb2jffs(){
 	if [ "$?" == "0" ]; then
 		echo_date "/jffs卸载成功..."
 		echo_date "将文件系统${mtd_disk}挂载到jffs分区..."
-		if [ "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
+		if [ "${LINUX_VER}" == "44" -o "${LINUX_VER}" == "419" -o "${LINUX_VER}" == "54" ];then
 			mount -t ubifs ${mtd_disk} /jffs
 		else
 			mount -t jffs2 -o rw,noatime ${mtd_disk} /jffs
@@ -444,7 +445,7 @@ sync_usb_mtd(){
 	# 检测是否有USB磁盘挂载在/jffs上
 	get_current_jffs_device
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "${mounted_nu}" == "2" ]; then
+	if [ "${mounted_nu}" -ge "2" ]; then
 		local usb_path=$(mount | /bin/grep "${jffs_device}" | /bin/grep "/tmp/mnt/" | awk '{print $3}')
 		#echo_date "检测到USB磁盘的${usb_path}/.koolshare_jffs挂载在/jffs上"
 	else
@@ -591,7 +592,7 @@ del_sync_job(){
 set_sync_job(){
 	get_current_jffs_device
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "${mounted_nu}" == "2" ]; then
+	if [ "${mounted_nu}" -ge "2" ]; then
 		local usb_path=$(mount | /bin/grep "${jffs_device}" | /bin/grep "/tmp/mnt/" | awk '{print $3}')
 		#echo_date "检测到USB磁盘的${usb_path}/.koolshare_jffs挂载在/jffs上"
 	else
@@ -634,7 +635,7 @@ set_sync_job(){
 set_stop_sync(){
 	get_current_jffs_device
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "${mounted_nu}" == "2" ]; then
+	if [ "${mounted_nu}" -ge "2" ]; then
 		local usb_path=$(mount | /bin/grep "${jffs_device}" | /bin/grep "/tmp/mnt/" | awk '{print $3}')
 		#echo_date "检测到USB磁盘的${usb_path}/.koolshare_jffs挂载在/jffs上"
 	else
@@ -664,7 +665,7 @@ make_backup(){
 	fi
 	
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "${mounted_nu}" != "2" ]; then
+	if [ "${mounted_nu}" -lt "2" ]; then
 		echo_date "错误！没有检测到USB磁盘挂载在/jffs，无法备份！"
 		echo_date "请先挂载USB磁盘到/jffs后再使用本功能！"
 		return 1
@@ -744,7 +745,7 @@ restore_backup(){
 	fi
 	
 	local mounted_nu=$(mount | /bin/grep "${jffs_device}" | grep -E "/tmp/mnt/|/jffs"|/bin/grep -c "/dev/s")
-	if [ "${mounted_nu}" != "2" ]; then
+	if [ "${mounted_nu}" -lt "2" ]; then
 		echo_date "错误！没有检测到USB磁盘挂载在/jffs，无法恢复！"
 		echo_date "请先挂载USB磁盘到/jffs后再使用本功能！"
 		return 1
