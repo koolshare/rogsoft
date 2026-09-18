@@ -1,5 +1,9 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.58
+   - fix	插件详情内容保留可点击链接
+   - fix	首页标签适配窄屏布局，并规范化固件版本元数据
+
 1.9.57
    - update	发布最新版软件中心 v2 前端
    - fix	发布同步以 v2 ASP 为唯一规范产物，并校验 koolcenter/softcenter 目标目录
