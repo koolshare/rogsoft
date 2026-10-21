@@ -1,5 +1,10 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.60
+   - fix	修复 LinkEase Lite 插件图标及带弯引号名称的论坛详情匹配
+   - update	更新首页必装与推荐插件列表
+   - update	优化软件中心版本标识和新版本升级按钮样式
+
 1.9.59
    - update	发布最新版软件中心 v2 前端，优化首次使用引导、首页公告和远程访问展示
    - add	新增论坛内容驱动的首页 Banner 轮播，修复图片白色背景
