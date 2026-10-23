@@ -86,13 +86,15 @@ var dbus = {};
 var _responseLen;
 var noChange = 0;
 var x = 5;
-var params_inp = ['cfddns_email', 'cfddns_akey', 'cfddns_zid', 'cfddns_name', 'cfddns_domain', 'cfddns_ttl', 'cfddns_method_v4', 'cfddns_method_v6'];
+var params_inp = ['cfddns_email', 'cfddns_akey', 'cfddns_zid', 'cfddns_ttl', 'cfddns_method_v4', 'cfddns_method_v6', 'cfddns_records'];
 var params_chk = ['cfddns_enable', 'cfddns_proxied', 'cfddns_ipv6'];
+var MAX_RECORDS = 10;
 
 function init(){
 	show_menu(menu_hook);
 	get_dbus_data();
 	conf2obj();
+	render_records();
 	toggle_func();
 	update_visibility();
 	get_status();
@@ -109,6 +111,130 @@ function conf2obj(){
 			E(params_chk[i]).checked = dbus[params_chk[i]] == "1";
 		}
 	}
+}
+
+function trim_text(val){
+	return (val || "").replace(/^\s+|\s+$/g, "");
+}
+
+function get_fqdn(name, domain){
+	if (name == "@"){
+		return domain;
+	}
+	return name + "." + domain;
+}
+
+function parse_records(raw){
+	var records = [];
+	if (!raw){
+		return records;
+	}
+	var lines = raw.replace(/\\n/g, "\n").replace(/\r/g, "\n").split("\n");
+	for (var i = 0; i < lines.length; i++) {
+		var line = trim_text(lines[i]);
+		if (!line){
+			continue;
+		}
+		var idx = line.indexOf("|");
+		if (idx === -1){
+			continue;
+		}
+		var name = trim_text(line.substring(0, idx));
+		var domain = trim_text(line.substring(idx + 1));
+		if (!name || !domain){
+			continue;
+		}
+		records.push({"name": name, "domain": domain});
+		if (records.length >= MAX_RECORDS){
+			break;
+		}
+	}
+	return records;
+}
+
+function update_record_counter(){
+	var rows = $("#cfddns_records_container .cfddns_record_row").length;
+	E("cfddns_record_count").innerHTML = rows + "/" + MAX_RECORDS;
+	E("add_record_btn").disabled = rows >= MAX_RECORDS;
+}
+
+function add_record_row(name, domain){
+	var rows = $("#cfddns_records_container .cfddns_record_row").length;
+	if (rows >= MAX_RECORDS){
+		alert("最多支持" + MAX_RECORDS + "组域名记录！");
+		return;
+	}
+	var row = document.createElement("div");
+	row.className = "cfddns_record_row";
+	row.style.marginBottom = "6px";
+	row.innerHTML = '<input type="text" maxlength="64" class="input_ss_table cfddns_record_name" style="width:130px;" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="子域名，如 @ 或 www" /> . <input type="text" maxlength="64" class="input_ss_table cfddns_record_domain" style="width:191px;" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="主域名，如 example.com" /> <input type="button" class="ss_btn cfddns_record_remove" style="width:66px;margin-left:6px;padding:4px 0;" value="删除" />';
+	row.getElementsByClassName("cfddns_record_name")[0].value = name || "";
+	row.getElementsByClassName("cfddns_record_domain")[0].value = domain || "";
+	row.getElementsByClassName("cfddns_record_remove")[0].onclick = function(){ remove_record_row(this); };
+	E("cfddns_records_container").appendChild(row);
+	update_record_counter();
+}
+
+function remove_record_row(btn){
+	var rows = $("#cfddns_records_container .cfddns_record_row");
+	if (rows.length <= 1){
+		$(rows[0]).find(".cfddns_record_name").val("");
+		$(rows[0]).find(".cfddns_record_domain").val("");
+		update_record_counter();
+		return;
+	}
+	btn.parentNode.parentNode.removeChild(btn.parentNode);
+	update_record_counter();
+}
+
+function render_records(){
+	var records = parse_records(dbus["cfddns_records"] || "");
+	E("cfddns_records_container").innerHTML = "";
+	if (records.length === 0){
+		add_record_row("", "");
+		return;
+	}
+	for (var i = 0; i < records.length; i++) {
+		add_record_row(records[i].name, records[i].domain);
+	}
+	update_record_counter();
+}
+
+function collect_records(){
+	var records = [];
+	var seen = {};
+	var rows = $("#cfddns_records_container .cfddns_record_row");
+	for (var i = 0; i < rows.length; i++) {
+		var name = trim_text($(rows[i]).find(".cfddns_record_name").val());
+		var domain = trim_text($(rows[i]).find(".cfddns_record_domain").val());
+		if (!name && !domain){
+			continue;
+		}
+		if (!name || !domain){
+			alert("第" + (i + 1) + "组域名未填写完整！");
+			return null;
+		}
+		if (name.indexOf("|") !== -1 || domain.indexOf("|") !== -1){
+			alert("第" + (i + 1) + "组域名包含非法字符“|”！");
+			return null;
+		}
+		var fqdn = get_fqdn(name, domain).toLowerCase();
+		if (seen[fqdn]){
+			alert("存在重复域名记录：" + fqdn);
+			return null;
+		}
+		seen[fqdn] = 1;
+		records.push(name + "|" + domain);
+	}
+	if (records.length === 0){
+		alert("请至少填写1组域名记录！");
+		return null;
+	}
+	if (records.length > MAX_RECORDS){
+		alert("最多支持" + MAX_RECORDS + "组域名记录！");
+		return null;
+	}
+	return records.join("\n");
 }
 
 function get_dbus_data(){
@@ -157,6 +283,11 @@ function get_status1(){
 
 function save(){
 	setInterval("get_status();",2000);
+	var records_data = collect_records();
+	if (records_data === null){
+		return;
+	}
+	E("cfddns_records").value = records_data;
 	var dbus_new = {}
 	$("#show_btn2").trigger("click");
 	// collect data from input and checkbox
@@ -415,11 +546,14 @@ function reload_Soft_Center(){
 													</td>
 												</tr>
 												<tr>
-													<th width="35%">域名(Domain Name)</th>
+													<th width="35%" title="支持最多10组记录，子域名为 @ 时表示主域名">域名记录（最多10组）[?]</th>
 													<td>
-														<input type="text" maxlength="64" id="cfddns_name" name="cfddns_name" class="input_ss_table" style="width:130px;" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="子域名" value="" />
-														.
-														<input type="text" maxlength="64" id="cfddns_domain" name="cfddns_domain" class="input_ss_table" style="width:191px;" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="主域名" value="" />
+														<div id="cfddns_records_container"></div>
+														<div style="margin-top: 4px;">
+															<input type="button" id="add_record_btn" class="ss_btn" style="width:110px;padding:4px 0;" value="+ 添加记录" onclick="add_record_row('', '');" />
+															<span id="cfddns_record_count" style="margin-left: 8px;">0/10</span>
+														</div>
+														<input type="hidden" id="cfddns_records" name="cfddns_records" value="" />
 													</td>
 												</tr>
 												<tr>
@@ -443,13 +577,13 @@ function reload_Soft_Center(){
 												<tr id="cfddns_method_v4_tr">
 													<th title="可自行修改命令行，以获得正确的公网IPv4。如添加 '--interface vlan2' 以指定多播情况下的接口,可以空着">获得IPv4命令(get ip)[?]</th>
 													<td>
-														<input type="text" id="cfddns_method_v4" name="cfddns_method_v6" value="curl -s --interface ppp0 v4.ipip.net" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
+														<input type="text" id="cfddns_method_v4" name="cfddns_method_v4" value="curl ifconfig.me" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
 													</td>
 												</tr>
 												<tr id="cfddns_method_v6_tr" style="visibility: hidden; display: none;">
 													<th title="可自行修改命令行，以获得正确的公网IPv6。如添加 '--interface vlan2' 以指定多播情况下的接口,可以空着">获得IPv6命令(get ip)[?]</th>
 													<td>
-														<input type="text" id="cfddns_method_v6" name="cfddns_method_v6" value="curl -s --interface ppp0 v6.ipip.net" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
+														<input type="text" id="cfddns_method_v6" name="cfddns_method_v6" value="curl -6 ifconfig.me" class="input_ss_table" style="width:98%;" autocomplete="off" autocorrect="off" autocapitalize="off" />
 													</td>
 												</tr>
 											</table>
@@ -491,4 +625,3 @@ function reload_Soft_Center(){
 <div id="footer"></div>
 </body>
 </html>
-
