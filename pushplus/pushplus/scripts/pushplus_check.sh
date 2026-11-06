@@ -141,8 +141,8 @@ if [[ "${pushplus_info_wan}" == "1" ]]; then
     router_wan0_gw=$(nvram get wan0_gw_ifname)
     router_wan0_ip=$(nvram get wan0_ipaddr)
     if [[ "${pushplus_info_pub}" == "1" ]]; then
-        router_wan0_ip4=$(curl -4 --interface ${router_wan0_gw} -s http://api.ip.sb/ip 2>&1)
-        router_wan0_ip6=$(curl -6 --interface ${router_wan0_gw} -s http://api.ip.sb/ip 2>&1)
+        router_wan0_ip4=$(curl -4  -s http://api.ip.sb/ip 2>&1)
+        router_wan0_ip6=$(curl -6  -s http://api.ip.sb/ip 2>&1)
     else
         router_wan0_ip4=${router_wan0_ip}
         router_wan0_ip6=""
@@ -170,7 +170,7 @@ if [[ "${pushplus_info_wan}" == "1" ]]; then
         router_wan1_proto=$(nvram get wan1_proto)
         router_wan1_ip=$(nvram get wan1_ipaddr)
         if [[ "${pushplus_info_pub}" == "1" ]]; then
-            router_wan1_ip4=$(curl -4 --interface ${router_wan1_gw} -s http://api.ip.sb/ip 2>&1)
+            router_wan1_ip4=$(curl -4 -s http://api.ip.sb/ip 2>&1)
             router_wan1_ip6=$(curl -6 --interface ${router_wan1_gw} -s http://api.ip.sb/ip 2>&1)
         else
             router_wan1_ip4=${router_wan1_ip}
@@ -413,7 +413,7 @@ if [[ "${pushplus_info_dhcp}" == "1" ]]; then
 fi
 
 echo '}' >>${pushplus_info_text}
-
+#logger "[pushplus] pushplus_info_text为：${pushplus_info_text}"
 pushplus_send_content=$(jq -c . ${pushplus_info_text})
 pushplus_send_title="${send_title}状态信息"
 
@@ -426,9 +426,12 @@ for nu in ${token_nu}; do
     url="https://www.pushplus.plus/send/${pushplus_config_token}"
     reqstr="curl -H \"content-type:application/json\" -X POST -d '{\"template\":\"route\",\"topic\":\""${pushplus_config_topic}"\",\"channel\":\""${pushplus_config_channel}"\",\"title\":\""${pushplus_send_title}"\",\"content\":"${pushplus_send_content}"}' ${url}"
     result=$(eval ${reqstr})
-    if [[ -n "$(echo $result | grep "success")" ]]; then
-        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启信息推送到 TOKEN No.${nu} 成功！！"
+    [ "${pushplus_info_logger}" == "1"  ]&& logger "[pushplus] reqstr为：${reqstr}"
+    if [[ -n "$(echo $result | grep "请求成功")" ]]; then
+        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启信息推送到 TOKEN No.${nu} 成功！！,返回结果为：${result}"
+    #logger "[pushplus] 返回结果为：${result}"
     else
-        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启信息推送到 TOKEN No.${nu} 失败，请检查网络及配置！"
+        [ "${pushplus_info_logger}" == "1" ] && logger "[pushplus]: 网络重启信息推送到 TOKEN No.${nu} 失败，请检查网络及配置！返回结果为：${result}"
+    #logger "[pushplus] 返回结果为：${result}"
     fi
 done
