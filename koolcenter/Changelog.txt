@@ -1,5 +1,10 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.61
+   - fix	软件目录的插件更新判断与 V1 版本比较逻辑保持一致
+   - fix	软件目录改用 JSONP 加载远程清单，兼容未提供 CORS 的软件源
+   - fix	首页与软件目录复用已安装插件状态，避免目录统计和状态不一致
+
 1.9.60
    - fix	修复 LinkEase Lite 插件图标及带弯引号名称的论坛详情匹配
    - update	更新首页必装与推荐插件列表

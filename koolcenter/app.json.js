@@ -88,17 +88,17 @@
         },
         {
             "author": "xiaobao",
-            "build_date": "2026-05-20_17:32:20",
+            "build_date": "2026-11-05_11:13:45",
             "changelog": "",
             "description": "ddnsto内网穿透",
             "home_url": "Module_ddnsto.asp",
             "link": "https://www.ddnsto.com",
-            "md5": "4d2b096c1f02d9ee9a8e099fe1f65606",
+            "md5": "3b44294344de25be502376ade1aa45f7",
             "name": "ddnsto",
             "tags": "穿透 DDNS",
             "tar_url": "ddnsto/ddnsto.tar.gz",
             "title": "ddnsto",
-            "version": "4.2.0"
+            "version": "4.2.8"
         },
         {
             "author": "xiaobao",
@@ -611,7 +611,7 @@
         }
     ],
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master",
-    "md5": "c0755d4d0d83693ed25c946e247ce512",
+    "md5": "f45f083cdab2d1d314ca089a3ea0cca6",
     "tar_url": "koolcenter/softcenter.tar.gz",
-    "version": "1.9.60"
+    "version": "1.9.61"
 }

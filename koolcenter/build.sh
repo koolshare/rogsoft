@@ -2,7 +2,7 @@
 # build script for rogsoft project
 set -eu
 
-VERSION=1.9.60
+VERSION=1.9.61
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 ME=$(basename "$0")
