@@ -1,5 +1,10 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.62
+   - add	新增 DDNSTO 扫码引导、远程服务发现与域名同步流程
+   - fix	修复 DDNSTO 设备授权、运行时 UID 更新和待确认记录恢复
+   - add	随软件中心发布 DDNSTO 引导及 ShellInABox 状态路由器脚本
+
 1.9.61
    - fix	软件目录的插件更新判断与 V1 版本比较逻辑保持一致
    - fix	软件目录改用 JSONP 加载远程清单，兼容未提供 CORS 的软件源
