@@ -266,14 +266,13 @@ get_mtk_target_power_band(){
 	# Only accept a complete report produced after this query's marker.
 	marker="rog-txpwr:$(date +%s):$$:${iface}"
 	printf '<6>%s\n' "${marker}" > /dev/kmsg || return 1
-	if [ "${mtk_power_model}" = "GS7" ];then
+	if [ "${mtk_power_backend}" = "mwctl" ];then
 		mwctl dev "${iface}" show data_frame_pwr=0-0 >/dev/null 2>&1 || return 1
 	else
 		iwpriv "${iface}" show data_frame_pwr=0-0 >/dev/null 2>&1 || return 1
-		iwpriv "${iface}" show mgmt_frame_pwr >/dev/null 2>&1 || return 1
 	fi
 	for attempt in 1 2 3 4 5;do
-		if result=$(dmesg | LC_ALL=C awk -v marker="${marker}" -v band="${band}" -v model="${mtk_power_model}" '
+		if result=$(dmesg | LC_ALL=C awk -v marker="${marker}" -v band="${band}" '
 			index($0, marker) { fresh = 1; next }
 			!fresh { next }
 			/TX POWER INFO/ { in_band = 0; next }
@@ -284,21 +283,9 @@ get_mtk_target_power_band(){
 				sub(/[[:space:]].*$/, "", value)
 				max = value
 			}
-			max != "" && /\[show_mgmt_frame_power\] Tx_Pwr =/ {
-				value = $0
-				sub(/^.*Tx_Pwr =[[:space:]]*/, "", value)
-				sub(/[[:space:]].*$/, "", value)
-				mgmt = value
-			}
 			END {
 				if (max !~ /^-?[0-9]+(\.[0-9]+)?$/) exit 1
-				if (model == "GS7") {
-					# MT7992 management-power output is not verified as an absolute target.
-					printf "data:%.1f", max
-				} else {
-					if (mgmt !~ /^-?[0-9]+(\.[0-9]+)?$/) exit 1
-					printf "%.1f,%.1f", max, mgmt
-				}
+				printf "data:%.1f", max
 			}');then
 			printf '%s' "${result}"
 			return
@@ -311,8 +298,8 @@ get_mtk_target_power_band(){
 get_mtk_target_power() (
 	mtk_power_model=$(_get_model)
 	case "${mtk_power_model}" in
-		TX-AX6000) mtk_power_5g=rax0 ;;
-		GS7) mtk_power_5g=rai0 ;;
+		TUF-AX6000|TX-AX6000) mtk_power_backend=iwpriv; mtk_power_5g=rax0 ;;
+		GS7) mtk_power_backend=mwctl; mtk_power_5g=rai0 ;;
 		*) printf 'unavailable@@unavailable'; return ;;
 	esac
 	[ -w /dev/kmsg ] || { printf 'unavailable@@unavailable'; return; }

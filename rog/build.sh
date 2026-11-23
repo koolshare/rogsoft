@@ -2,7 +2,7 @@
 
 # build script for rogsoft project
 MODULE="rog"
-VERSION="5.9.16"
+VERSION="5.9.17"
 TITLE="ROG工具箱"
 DESCRIPTION="一些小功能的插件"
 HOME_URL="Module_rog.asp"
@@ -10,7 +10,7 @@ TAGS="系统 工具"
 AUTHOR="sadog"
 
 # Check and include base
-DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
+DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 ME=$(basename "$0")
 PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
 
@@ -24,6 +24,8 @@ do_build() {
 	# prepare to build
 	rm -rf ${DIR}/${MODULE}.tar.gz
 	rm -rf ${DIR}/build && mkdir -p ${DIR}/build
+	# Stamp the version before archiving so package and catalog agree.
+	echo ${VERSION} >${DIR}/${MODULE}/version
 	cp -rf ${DIR}/${MODULE} ${DIR}/build/ && cd ${DIR}/build
 	echo "build ${MODULE} for ${PLATFORM}"
 	echo ${PLATFORM} >${DIR}/build/${MODULE}/.valid
@@ -40,8 +42,7 @@ do_build() {
 	cd ${DIR} && rm -rf ${DIR}/build
 	#-----------------------------------------------------------------------
 	
-	# add version to the package
-	echo ${VERSION} >${MODULE}/version
+	# add version and checksum to the catalog
 	md5value=$(md5sum ${MODULE}.tar.gz | tr " " "\n" | sed -n 1p)
 	cat > ./version <<-EOF
 	${VERSION}
