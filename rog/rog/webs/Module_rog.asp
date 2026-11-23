@@ -47,7 +47,7 @@ var cpu_usage_array = new Array();
 var array_size = 46;
 var refresh_flag=1;
 var mtkPowerModel = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-var mtkWifiPowerSupported = mtkPowerModel === "TX-AX6000" || mtkPowerModel === "TUF-AX6000" || mtkPowerModel === "GS7";
+var mtkWifiPowerSupported = ["TUF-AX4200", "TUF-AX4200Q", "TUF-AX6000", "TX-AX6000", "GS7"].indexOf(mtkPowerModel) !== -1;
 for (i = 0; i < core_num; i++) {
 	cpu_info_old[i] = {
 		total: 0,

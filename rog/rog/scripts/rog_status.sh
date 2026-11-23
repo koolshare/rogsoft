@@ -225,7 +225,7 @@ get_system_info(){
 	kernel_ver=$(uname -r 2>/dev/null)
 	hardware_type=$(uname -m 2>/dev/null)
 
-	if [ "$(nvram get odmpid)" == "RT-AX89X" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" -o "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" -o "$(nvram get odmpid)" == "GS7_Air" -o "$(nvram get odmpid)" == "GS-BE7200X" ];then
+	if get_mtk_power_backend || [ "$(nvram get odmpid)" == "RT-AX89X" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" -o "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" -o "$(nvram get odmpid)" == "GS7_Air" -o "$(nvram get odmpid)" == "GS-BE7200X" ];then
 		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
 		build_date=$(date -D "%a %b %d %H:%M:%S %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
 	else
@@ -295,13 +295,24 @@ get_mtk_target_power_band(){
 	return 1
 }
 
-get_mtk_target_power() (
-	mtk_power_model=$(_get_model)
-	case "${mtk_power_model}" in
-		TUF-AX6000|TX-AX6000) mtk_power_backend=iwpriv; mtk_power_5g=rax0 ;;
-		GS7) mtk_power_backend=mwctl; mtk_power_5g=rai0 ;;
-		*) printf 'unavailable@@unavailable'; return ;;
+# One MTK package contains both query paths; choose only at runtime.
+get_mtk_power_backend(){
+	case "$(_get_model)" in
+		TUF-AX4200|TUF-AX4200Q|TUF-AX6000|TX-AX6000)
+			mtk_power_backend=iwpriv
+			mtk_power_5g=rax0
+			;;
+		GS7)
+			mtk_power_backend=mwctl
+			mtk_power_5g=rai0
+			;;
+		*) return 1 ;;
 	esac
+}
+
+get_mtk_target_power() (
+	get_mtk_power_backend || { printf 'unavailable@@unavailable'; return; }
+
 	[ -w /dev/kmsg ] || { printf 'unavailable@@unavailable'; return; }
 
 	# Both radios share driver query state; reject overlapping requests.
@@ -372,17 +383,22 @@ get_tmp_pwr_qca(){
 }
 
 get_tmp_pwr(){
-	if [ "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "RT-AX57_Go" ];then
-		get_tmp_pwr_mtk
-	elif [ "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" -o "$(nvram get odmpid)" == "GS7_Air" -o "$(nvram get odmpid)" == "GS-BE7200X" ];then
-		get_tmp_pwr_MT7988X
-	elif [ "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" ];then
-		get_tmp_pwr_ipq
-	elif [ "$(nvram get odmpid)" == "RT-AX89X" ];then
-		get_tmp_pwr_qca
-	else
-		get_tmp_pwr_hnd
+	# Reuse the exact-model power backend, including productid-only models.
+	if get_mtk_power_backend;then
+		if [ "${mtk_power_backend}" = "mwctl" ];then
+			get_tmp_pwr_MT7988X
+		else
+			get_tmp_pwr_mtk
+		fi
+		return
 	fi
+	case "$(_get_model)" in
+		RT-AX57_Go) get_tmp_pwr_mtk ;;
+		ZenWiFi_BT8P|GS7_Air|GS-BE7200X) get_tmp_pwr_MT7988X ;;
+		ZenWiFi_BD4|TUF_6500) get_tmp_pwr_ipq ;;
+		RT-AX89X) get_tmp_pwr_qca ;;
+		*) get_tmp_pwr_hnd ;;
+	esac
 }
 
 number_test(){

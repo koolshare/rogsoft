@@ -1,8 +1,12 @@
-ROG Toolbox 5.9.17: MTK power display
+ROG Toolbox 5.9.18: MTK power display
 
 Shared MTK package, selected by exact router model (odmpid, then productid):
   GS7 (Wi-Fi 7): mwctl dev ra0/rai0 show data_frame_pwr=0-0.
-  TUF-AX6000 / TX-AX6000 (Wi-Fi 6): iwpriv ra0/rax0 show data_frame_pwr=0-0.
+  TUF-AX4200 / TUF-AX4200Q / TUF-AX6000 / TX-AX6000 (Wi-Fi 6):
+    iwpriv ra0/rax0 show data_frame_pwr=0-0.
+  Runtime routing is shared by power and temperature queries, including models
+  with an empty odmpid and only productid set. Installation does not select or
+  remove a Wi-Fi generation: the same MTK archive always contains both paths.
   Other models retain the existing status/power path; unverified MTK models
   are not sent a guessed power-query command.
 
@@ -24,15 +28,20 @@ Reliability
 Build / verify
   sh -n rog/rog/scripts/rog_status.sh
   node rog/tests/power-page.js rog/rog/webs/Module_rog.asp
+  python3 rog/tests/power-backend.py
   cd rog && sh build_mtk.sh
   build.sh stamps rog/version before archiving. The archive must contain
-  rog/.valid=mtk and rog/version=5.9.17. rog.tar.gz MD5 must match both the
+  rog/.valid=mtk and rog/version=5.9.18. rog.tar.gz MD5 must match both the
   outer version file and config.json.js.
 
 Live verified on 2026-11-23
   GS7: off@@data:25.5
   TX-AX6000: data:28.0@@data:27.5
   Both original seven-field status APIs remain valid.
+  AX4200 compatibility: ra0/rax0 confirmed from its l1profile; its official
+  show_data_frame_power and mtf_txpower_all_rate_info machine code matches
+  the verified TX-AX6000 driver. Model dispatch and parser tests passed;
+  AX4200 has not been tested on physical hardware in this change.
   Pre-update files and version values are backed up on each router:
     GS7: /koolshare/.rog-power-5.9.17-1795445579/
     TX-AX6000: /koolshare/.rog-power-5.9.17-1795445580/

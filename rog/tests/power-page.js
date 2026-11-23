@@ -46,15 +46,17 @@ assert(p.nodes.rog_wl_power.value.includes('无法读取'));
 assert(p.nodes.rog_wl_power.value.includes('正在查询'));
 p.calls[2].complete();
 assert.equal(p.nodes.rog_wl_power_refresh.disabled, false);
-for (const model of ['TX-AX6000', 'TUF-AX6000']) {
+for (const model of ['TUF-AX4200', 'TUF-AX4200Q', 'TX-AX6000', 'TUF-AX6000']) {
  p = controller(model);
  p.calls[1].success({ result: 'data:28.0@@data:27.5' });
  assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：28.0 dBm；5 GHz：27.5 dBm');
  assert(!p.nodes.rog_wl_power.value.includes('管理帧'));
 }
-p = controller('', 'TUF-AX6000');
-assert.equal(p.calls.length, 2);
-for (const model of ['RT-AX88U', 'TUF-AX4200Q', 'GS7_Air', 'ZenWiFi_BT8P']) {
+for (const product of ['TUF-AX4200', 'TUF-AX4200Q', 'TUF-AX6000', 'TX-AX6000', 'GS7']) {
+ p = controller('', product);
+ assert.equal(p.calls.length, 2, product);
+}
+for (const model of ['RT-AX88U', 'UNKNOWN_MTK', 'GS7_Air', 'ZenWiFi_BT8P']) {
  p = controller(model);
  assert.equal(p.calls.length, 1, model);
  p.calls[0].success({ result: '55°C@@2G/5G@@legacy@@1800@@4.19@@arm@@2026' });
