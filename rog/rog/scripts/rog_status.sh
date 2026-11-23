@@ -297,17 +297,44 @@ get_mtk_target_power_band(){
 
 # One MTK package contains both query paths; choose only at runtime.
 get_mtk_power_backend(){
+	mtk_power_bands=2
+	mtk_power_5g2=
 	case "$(_get_model)" in
-		TUF-AX4200|TUF-AX4200Q|TUF-AX6000|TX-AX6000)
+		TUF-AX4200|TUF-AX4200Q|TUF-AX6000|TX-AX6000|RT-AX57_Go|RT-AX57-Go|"RT-AX57 Go"|PRT-AX57_GO)
 			mtk_power_backend=iwpriv
 			mtk_power_5g=rax0
+			mtk_power_ifnames="ra0 rax0"
 			;;
-		GS7)
+		GS7|GS7_Air|GS7_AIR|"GS7 Air"|GS7_MAGIC|GS-BE7200X)
 			mtk_power_backend=mwctl
 			mtk_power_5g=rai0
+			mtk_power_ifnames="ra0 rai0"
+			;;
+		ZenWiFi_BT8P|BT8P|"ZenWiFi BT8P")
+			mtk_power_backend=mwctl
+			mtk_power_5g=rai0
+			mtk_power_5g2=rax0
+			mtk_power_ifnames="ra0 rai0 rax0"
+			mtk_power_bands=3
 			;;
 		*) return 1 ;;
 	esac
+}
+
+get_mtk_band_label(){
+	local band=$1 nband
+	nband=$(nvram get "wl${band}_nband")
+	case "${nband}" in
+		4) printf '6 GHz'; return ;;
+		2) printf '2.4 GHz'; return ;;
+	esac
+	if [ "${band}" = "0" ];then
+		printf '2.4 GHz'
+	elif [ "${mtk_power_bands}" = "3" ] && [ "$(nvram get wl2_nband)" != "4" ];then
+		printf '5 GHz-%s' "${band}"
+	else
+		printf '5 GHz'
+	fi
 }
 
 format_mtk_power_band(){
@@ -320,17 +347,26 @@ format_mtk_power_band(){
 	esac
 }
 
+format_mtk_power_status(){
+	local band=0 iface separator=
+	for iface in ${mtk_power_ifnames};do
+		printf '%s%s' "${separator}" "$(format_mtk_power_band "$(get_mtk_band_label "${band}")" "$1")"
+		separator='；'
+		band=$((band + 1))
+	done
+}
+
 get_mtk_power_state(){
-	local band iface
-	printf '%s' "$(_get_model)"
-	for band in 0 1;do
-		printf '|%s|%s|%s' "$(nvram get "wl${band}_radio")" \
-			"$(nvram get "wl${band}_channel")" "$(nvram get "wl${band}_txpower")"
-		if [ "${band}" = "0" ];then iface=ra0;else iface=${mtk_power_5g};fi
+	local band=0 iface
+	printf 'mtk-v2|%s|%s' "$(_get_model)" "${mtk_power_ifnames}"
+	for iface in ${mtk_power_ifnames};do
+		printf '|%s|%s|%s|%s' "$(nvram get "wl${band}_radio")" \
+			"$(nvram get "wl${band}_channel")" "$(nvram get "wl${band}_txpower")" "$(nvram get "wl${band}_nband")"
 		iwconfig "${iface}" 2>/dev/null | LC_ALL=C awk '
 			match($0, /Channel:[[:space:]]*[0-9]+|Frequency[=:][[:space:]]*[0-9.]+/) {
 				printf "|%s", substr($0, RSTART, RLENGTH)
 			}'
+		band=$((band + 1))
 	done
 	printf '|%s|%s' "$(nvram get location_code)" "$(nvram get reg_spec)"
 }
@@ -349,7 +385,7 @@ read_mtk_power_cache(){
 
 get_mtk_target_power() (
 	get_mtk_power_backend || return
-	local cache=/tmp/rog_wifi_power.cache now state cached power band0 band1
+	local cache=/tmp/rog_wifi_power.cache now state cached power band=0 iface value separator= complete=1
 	now=$(awk '{printf "%.0f", $1}' /proc/uptime)
 	state=$(get_mtk_power_state)
 	if cached=$(read_mtk_power_cache "${cache}" "${state}" "${now}");then
@@ -357,14 +393,14 @@ get_mtk_target_power() (
 		return
 	fi
 	if [ ! -w /dev/kmsg ];then
-		printf '%s；%s' "$(format_mtk_power_band '2.4 GHz' unavailable)" "$(format_mtk_power_band '5 GHz' unavailable)"
+		format_mtk_power_status unavailable
 		return
 	fi
 
-	# Both bands share driver state. Cache reports so status polling is cheap.
+	# Radios share driver state. Cache reports so status polling is cheap.
 	lock=/tmp/mtk-txpwr-target.lock
 	if ! mkdir "${lock}" 2>/dev/null;then
-		printf '%s；%s' "$(format_mtk_power_band '2.4 GHz' busy)" "$(format_mtk_power_band '5 GHz' busy)"
+		format_mtk_power_status busy
 		return
 	fi
 	trap 'rm -f "${cache}.$$"; rmdir "${lock}"' EXIT
@@ -374,11 +410,16 @@ get_mtk_target_power() (
 		printf '%s' "${cached}"
 		return
 	fi
-	band0=$(get_mtk_target_power_band ra0 0) || band0=unavailable
-	band1=$(get_mtk_target_power_band "${mtk_power_5g}" 1) || band1=unavailable
-	power="$(format_mtk_power_band '2.4 GHz' "${band0}")；$(format_mtk_power_band '5 GHz' "${band1}")"
+	power=
+	for iface in ${mtk_power_ifnames};do
+		value=$(get_mtk_target_power_band "${iface}" "${band}") || value=unavailable
+		power="${power}${separator}$(format_mtk_power_band "$(get_mtk_band_label "${band}")" "${value}")"
+		[ "${value}" != "unavailable" ] || complete=0
+		separator='；'
+		band=$((band + 1))
+	done
 	# Errors are not cached, so the next status request can retry immediately.
-	if [ "${band0}" != "unavailable" ] && [ "${band1}" != "unavailable" ];then
+	if [ "${complete}" = "1" ];then
 		umask 077
 		printf '%s\n' "${now}" "${state}" "${power}" > "${cache}.$$" && mv -f "${cache}.$$" "${cache}"
 	fi
@@ -439,14 +480,36 @@ get_tmp_pwr_qca(){
 	wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_5g1_power_d} / ${interface_5g1_power_p}"
 }
 
+get_mtk_temperature(){
+	local band=0 iface value separator=
+	wl_temp=
+	for iface in ${mtk_power_ifnames};do
+		if [ "$(nvram get "wl${band}_radio")" = "0" ];then
+			value="无线已关闭"
+		else
+			if [ "${mtk_power_backend}" = "mwctl" ];then
+				value=$(mwctl dev "${iface}" stat 2>/dev/null)
+			else
+				value=$(iwpriv "${iface}" stat 2>/dev/null)
+			fi
+			value=$(printf '%s\n' "${value}" | LC_ALL=C awk '
+				/CurrentTemperature/ {
+					sub(/^.*CurrentTemperature[[:space:]]*[:=][[:space:]]*/, "")
+					if (match($0, /^-?[0-9]+/)) print substr($0, RSTART, RLENGTH)
+					exit
+				}')
+			if [ -n "${value}" ];then value="${value}°C";else value="无法读取";fi
+		fi
+		wl_temp="${wl_temp}${separator}$(get_mtk_band_label "${band}")：${value}"
+		separator=' &nbsp;&nbsp;|&nbsp;&nbsp; '
+		band=$((band + 1))
+	done
+}
+
 get_tmp_pwr(){
 	# Reuse the exact-model power backend, including productid-only models.
 	if get_mtk_power_backend;then
-		if [ "${mtk_power_backend}" = "mwctl" ];then
-			get_tmp_pwr_MT7988X
-		else
-			get_tmp_pwr_mtk
-		fi
+		get_mtk_temperature
 		return
 	fi
 	case "$(_get_model)" in

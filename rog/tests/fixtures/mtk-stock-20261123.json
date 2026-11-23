@@ -1,0 +1,237 @@
+{
+  "as_of": "2026-11-23",
+  "scope": "All MTK models in softcenter/softcenter/install.sh plus factory aliases",
+  "firmwares": [
+    {
+      "model": "GS7",
+      "firmware_version": "3.0.0.6.102_58624",
+      "release_date": "2026/10/20",
+      "official_metadata_url": "https://www.asus.com/sg/supportonly/gs7/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/GS7/FW_GS7_300610258624.zip",
+      "archive_sha256": "f7a2d5f55b8cc6c884aa5b9e17e12759ec7c88b776c2adc37f39e18eee79e90e",
+      "driver_sha256": "e57af904309815e9e53ffd526d7e0e821f0028e12f77487763b79a5de83b15cf",
+      "backend": "mwctl",
+      "interfaces": [
+        "ra0",
+        "rai0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 0,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "ZenWiFi_BT8P",
+      "firmware_version": "3.0.0.6.102_58601",
+      "release_date": "2026/10/21",
+      "official_metadata_url": "https://www.asus.com/supportonly/zenwifi%20bt8p/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/ZenWiFi%20BT8P/FW_ZenWiFi_BT8P_300610258601.zip",
+      "archive_sha256": "d3d162f03c98b9ac514fc8e983fddbbef963f53030869ccb1ab68d6412822d97",
+      "driver_sha256": "cec7d31265c9a8e8c6bc53df520a691aaaff4bb6d83718e5c71b2610414bc3c6",
+      "backend": "mwctl",
+      "interfaces": [
+        "ra0",
+        "rai0",
+        "rax0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 0,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "GS7_Air",
+      "firmware_version": "3.0.0.6.102_58892",
+      "release_date": "2026/05/07",
+      "official_metadata_url": "https://www.asus.com.cn/support/api/product.asmx/GetPDBIOS?website=cn&model=ROG%20Strix%20GS7%20Air&cpu=&osid=8",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/GS7%20Air/FW_GS7_Air_300610258892.zip?model=ROG%20Strix%20GS7%20Air",
+      "archive_sha256": "d902f8746dc2c216996db2f42e8cf667f9483454650dac2817f9a17cc51b5c34",
+      "driver_sha256": "b7e9d90adb178497a4279bf9c2e2594c5a1cd9ddfeea5858272782b43c168112",
+      "backend": "mwctl",
+      "interfaces": [
+        "ra0",
+        "rai0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 0,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "GS-BE7200X",
+      "firmware_version": "3.0.0.6.102_58601",
+      "release_date": "2026/10/20",
+      "official_metadata_url": "https://www.asus.com/supportonly/gs-be7200x/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/GS-BE7200X/FW_GS-BE7200X_300610258601.zip",
+      "archive_sha256": "912107e7698b862278eefbaaf27b663988d01ee706aaf4f7498b429f1646d0ab",
+      "driver_sha256": "e57af904309815e9e53ffd526d7e0e821f0028e12f77487763b79a5de83b15cf",
+      "backend": "mwctl",
+      "interfaces": [
+        "ra0",
+        "rai0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 0,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "RT-AX57_Go",
+      "firmware_version": "3.0.0.6.102_57206",
+      "release_date": "2026/10/07",
+      "official_metadata_url": "https://www.asus.com/us/supportonly/rt-ax57%20go/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX57%20Go/FW_RT-AX57_Go_300610257206.zip",
+      "archive_sha256": "ac5ccb8b4d8653245c49e19ce57cac3fc1de7790554b43a2d61643ac39275d58",
+      "driver_sha256": "8dd9ebac996e650d74569cbeb64ca46f023301d4723674b4f9d8d1550a31d331",
+      "backend": "iwpriv",
+      "interfaces": [
+        "ra0",
+        "rax0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 17,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "TUF-AX4200Q",
+      "firmware_version": "3.0.0.4.388_34157",
+      "release_date": "2026/10/21",
+      "official_metadata_url": "https://www.asus.com/mn/supportonly/tuf-ax4200q/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/TUF-AX4200Q/FW_TUF-AX4200Q_300438834157.zip",
+      "archive_sha256": "07d869fc2e724823a68260af39935315714d26cf694b9f03789ed8dd75d7cf1f",
+      "driver_sha256": "a528b39a2ce3875c5453252abe057bbfb0fb5be7ea8b9de439a0568661c0c9b2",
+      "backend": "iwpriv",
+      "interfaces": [
+        "ra0",
+        "rax0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 17,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "TUF-AX6000",
+      "firmware_version": "3.0.0.4.388_34157",
+      "release_date": "2026/10/22",
+      "official_metadata_url": "https://www.asus.com/id/supportonly/tuf-ax6000/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/TUF-AX6000/FW_TUF-AX6000_300438834157.zip",
+      "archive_sha256": "b6325de9ee121b663c5099ae0fb244aec6765618a8a8b222f9f3a20cd0a91beb",
+      "driver_sha256": "6307379e01b98e3fa0568494a132c14099118fe682a8ba03982b53a2793224d3",
+      "backend": "iwpriv",
+      "interfaces": [
+        "ra0",
+        "rax0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 17,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "TUF-AX4200",
+      "firmware_version": "3.0.0.4.388_34157",
+      "release_date": "2026/10/21",
+      "official_metadata_url": "https://www.asus.com/supportonly/tuf-ax4200/helpdesk_bios/",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/TUF-AX4200/FW_TUF-AX4200_300438834157.zip",
+      "archive_sha256": "4fe16ad81b4d031246654e965f69a16d3b0ae37f07399d6c9876222303016d5a",
+      "driver_sha256": "a528b39a2ce3875c5453252abe057bbfb0fb5be7ea8b9de439a0568661c0c9b2",
+      "backend": "iwpriv",
+      "interfaces": [
+        "ra0",
+        "rax0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 17,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    },
+    {
+      "model": "TX-AX6000",
+      "firmware_version": "3.0.0.4.388_34162",
+      "release_date": "2026/10/22",
+      "official_metadata_url": "https://www.asus.com.cn/support/api/product.asmx/GetPDBIOS?website=cn&model=TX-AX6000&cpu=&osid=8",
+      "download_url": "https://dlcdnets.asus.com/pub/ASUS/wireless/TX-AX6000/FW_TX-AX6000_300438834162.zip?model=TX-AX6000",
+      "archive_sha256": "26292236728c37a025e85ce54920d3c06c0cfd5676106133c8df87c8770ce91e",
+      "driver_sha256": "6307379e01b98e3fa0568494a132c14099118fe682a8ba03982b53a2793224d3",
+      "backend": "iwpriv",
+      "interfaces": [
+        "ra0",
+        "rax0"
+      ],
+      "query": "data_frame_pwr=0-0",
+      "show_handler": "show_data_frame_power",
+      "wext_private_args": 17,
+      "machine": "AArch64",
+      "musl_loader": "lib/ld-musl-aarch64.so.1",
+      "mhz_libraries": [
+        "libgcc_s.so.1",
+        "libc.so"
+      ],
+      "mhz_symbols_ok": true,
+      "evidence_level": "official firmware static analysis"
+    }
+  ],
+  "bt8p_compiled_band_defaults": {
+    "wl0_nband": "2",
+    "wl1_nband": "1",
+    "wl2_nband": "1"
+  }
+}

@@ -47,7 +47,7 @@ var cpu_usage_array = new Array();
 var array_size = 46;
 var refresh_flag=1;
 var mtkPowerModel = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-var mtkWifiPowerSupported = ["TUF-AX4200", "TUF-AX4200Q", "TUF-AX6000", "TX-AX6000", "GS7"].indexOf(mtkPowerModel) !== -1;
+var mtkWifiPowerSupported = ["TUF-AX4200", "TUF-AX4200Q", "TUF-AX6000", "TX-AX6000", "RT-AX57_Go", "RT-AX57-Go", "RT-AX57 Go", "PRT-AX57_GO", "GS7", "GS7_Air", "GS7_AIR", "GS7 Air", "GS7_MAGIC", "GS-BE7200X", "ZenWiFi_BT8P", "BT8P", "ZenWiFi BT8P"].indexOf(mtkPowerModel) !== -1;
 for (i = 0; i < core_num; i++) {
 	cpu_info_old[i] = {
 		total: 0,

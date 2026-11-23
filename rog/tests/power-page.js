@@ -43,19 +43,25 @@ assert.equal(p.nodes.rog_wl_power_note.style.display, '');
 p.calls[0].success({ result: '55°C@@5G 46°C@@2.4 GHz：无线已关闭；5 GHz：24.5 dBm@@1800@@5.4.281@@aarch64@@2026' });
 assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：无线已关闭；5 GHz：24.5 dBm');
 assert.equal(p.nodes.rog_kernel.innerHTML, '5.4.281');
-for (const model of ['TUF-AX4200', 'TUF-AX4200Q', 'TX-AX6000', 'TUF-AX6000']) {
+for (const model of ['TUF-AX4200', 'TUF-AX4200Q', 'TX-AX6000', 'TUF-AX6000', 'RT-AX57_Go', 'RT-AX57-Go', 'RT-AX57 Go', 'PRT-AX57_GO', 'GS7_Air', 'GS7_AIR', 'GS7 Air', 'GS7_MAGIC', 'GS-BE7200X']) {
  p = controller(model);
  assert.equal(p.calls.length, 1);
  p.calls[0].success({ result: '55°C@@2G/5G@@2.4 GHz：28.0 dBm；5 GHz：27.5 dBm@@1800@@5.4.246@@aarch64@@2026' });
  assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：28.0 dBm；5 GHz：27.5 dBm');
  assert(!p.nodes.rog_wl_power.value.includes('管理帧'));
 }
-for (const product of ['TUF-AX4200', 'TUF-AX4200Q', 'TUF-AX6000', 'TX-AX6000', 'GS7']) {
+for (const model of ['ZenWiFi_BT8P', 'BT8P', 'ZenWiFi BT8P']) {
+ p = controller(model);
+ assert.equal(p.calls.length, 1);
+ p.calls[0].success({ result: '55°C@@three bands@@2.4 GHz：26.0 dBm；5 GHz-1：27.0 dBm；5 GHz-2：28.0 dBm@@1800@@5.4.281@@aarch64@@2026' });
+ assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：26.0 dBm；5 GHz-1：27.0 dBm；5 GHz-2：28.0 dBm');
+}
+for (const product of ['TUF-AX4200', 'TUF-AX4200Q', 'TUF-AX6000', 'TX-AX6000', 'RT-AX57_Go', 'RT-AX57-Go', 'RT-AX57 Go', 'PRT-AX57_GO', 'GS7', 'GS7_Air', 'GS7_AIR', 'GS7 Air', 'GS7_MAGIC', 'GS-BE7200X', 'ZenWiFi_BT8P', 'BT8P', 'ZenWiFi BT8P']) {
  p = controller('', product);
  assert.equal(p.calls.length, 1, product);
  assert(p.c.mtkWifiPowerSupported);
 }
-for (const model of ['RT-AX88U', 'UNKNOWN_MTK', 'GS7_Air', 'ZenWiFi_BT8P']) {
+for (const model of ['RT-AX88U', 'RT-AX57', 'GS7_PRO', 'UNKNOWN_MTK']) {
  p = controller(model);
  assert.equal(p.calls.length, 1, model);
  p.calls[0].success({ result: '55°C@@2G/5G@@legacy@@1800@@4.19@@arm@@2026' });
