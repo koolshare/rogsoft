@@ -46,6 +46,8 @@ var core_num = '<%cpu_core_num();%>';
 var cpu_usage_array = new Array();
 var array_size = 46;
 var refresh_flag=1;
+var mtkPowerModel = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
+var mtkWifiPowerSupported = mtkPowerModel === "TX-AX6000" || mtkPowerModel === "GS7";
 for (i = 0; i < core_num; i++) {
 	cpu_info_old[i] = {
 		total: 0,
@@ -77,6 +79,13 @@ function init() {
 	}
 	detect_CPU_RAM();
 	get_temperature();
+	if (mtkWifiPowerSupported) {
+		$("#rog_wl_power_label").text("Wi-Fi 发射目标功率");
+		$("#rog_wl_power_tr").show();
+		$("#rog_wl_power_note").show();
+		$("#rog_wl_power_refresh").show().on("click", get_mtk_wifi_power);
+		get_mtk_wifi_power();
+	}
 	showbootTime();
 	showclock();
 	fan_ctrl();
@@ -126,12 +135,14 @@ function get_temperature(){
 		success: function(response){
 			E("rog_cpu_temperature").innerHTML = response.result.split("@@")[0];
 			E("rog_wl_temperature").innerHTML = response.result.split("@@")[1];
-			var pwr = response.result.split("@@")[2];
-			if (pwr){
-				E("rog_wl_power_tr").style.display = "";
-				E("rog_wl_power").innerHTML = pwr;
-			}else{
-				E("rog_wl_power_tr").style.display = "none";
+			if (!mtkWifiPowerSupported) {
+				var pwr = response.result.split("@@")[2];
+				if (pwr){
+					E("rog_wl_power_tr").style.display = "";
+					E("rog_wl_power").innerHTML = pwr;
+				}else{
+					E("rog_wl_power_tr").style.display = "none";
+				}
 			}
 			E("rog_cpu_mhz").innerHTML = Math.round(response.result.split("@@")[3]) + " MHz";
 			E("rog_kernel").innerHTML = response.result.split("@@")[4];
@@ -145,6 +156,45 @@ function get_temperature(){
 		}
 	});
 }
+function format_mtk_power_band(band, value) {
+	var dataOnly = typeof value === "string" && /^data:(-?\d+\.\d)$/.exec(value);
+	if (dataOnly) return band + "：数据帧最高目标 " + dataOnly[1] + " dBm";
+	var match = typeof value === "string" && /^(-?\d+\.\d),(-?\d+\.\d)$/.exec(value);
+	if (match) {
+		return band + "：数据帧最高 " + match[1] + " dBm，管理帧 " + match[2] + " dBm";
+	}
+	if (value === "off") return band + "：无线已关闭";
+	if (value === "busy") return band + "：正在查询，请稍后刷新";
+	return band + "：无法读取";
+}
+
+function get_mtk_wifi_power() {
+	var button = $("#rog_wl_power_refresh");
+	if (button.prop("disabled")) return;
+	button.prop("disabled", true);
+	$("#rog_wl_power").text("正在读取…");
+	var id = parseInt(Math.random() * 100000000);
+	var postData = {"id": id, "method": "rog_status.sh", "params": ["wifi_power"], "fields": ""};
+	$.ajax({
+		type: "POST",
+		url: "/_api/",
+		data: JSON.stringify(postData),
+		dataType: "json",
+		timeout: 20000,
+		success: function(response) {
+			var bands = response && typeof response.result === "string" ? response.result.split("@@") : [];
+			$("#rog_wl_power").text(format_mtk_power_band("2.4 GHz", bands[0]) + "\n" +
+				format_mtk_power_band("5 GHz", bands[1]));
+		},
+		error: function() {
+			$("#rog_wl_power").text("读取失败，请刷新重试");
+		},
+		complete: function() {
+			button.prop("disabled", false);
+		}
+	});
+}
+
 function render_RAM(total, free, used) {
 	var used_percentage = total_MB = free_MB = used_MB = 0;
 	total_MB = Math.round(total / 1024);
@@ -372,8 +422,8 @@ function menu_hook(title, tab) {
 													<td><span id="rog_wl_temperature"></span></td>
 												</tr>
 												<tr id="rog_wl_power_tr" style="display: none;">
-													<th>发射功率</th>
-													<td><span id="rog_wl_power"></span></td>
+													<th id="rog_wl_power_label">发射功率</th>
+													<td><span id="rog_wl_power" style="white-space: pre-line;"></span> <button type="button" id="rog_wl_power_refresh" class="ks_btn" style="display: none;">刷新</button><div id="rog_wl_power_note" style="display: none; font-size: 12px; margin-top: 6px;">无线固件逐速率表的最高目标值，用于前后对比；不是仪器实测功率。</div></td>
 												</tr>
 												<tr>
 													<th>内存使用</th>

@@ -255,10 +255,93 @@ get_tmp_pwr_mtk(){
 	wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G： ${interface_band1_temp_c}"
 }
 
+get_mtk_target_power_band(){
+	local iface=$1 band=$2 marker result attempt
+	if [ "$(nvram get "wl${band}_radio")" = "0" ];then
+		printf 'off'
+		return
+	fi
+	[ -d "/sys/class/net/${iface}" ] || return 1
+
+	# Only accept a complete report produced after this query's marker.
+	marker="rog-txpwr:$(date +%s):$$:${iface}"
+	printf '<6>%s\n' "${marker}" > /dev/kmsg || return 1
+	if [ "${mtk_power_model}" = "GS7" ];then
+		mwctl dev "${iface}" show data_frame_pwr=0-0 >/dev/null 2>&1 || return 1
+	else
+		iwpriv "${iface}" show data_frame_pwr=0-0 >/dev/null 2>&1 || return 1
+		iwpriv "${iface}" show mgmt_frame_pwr >/dev/null 2>&1 || return 1
+	fi
+	for attempt in 1 2 3 4 5;do
+		if result=$(dmesg | LC_ALL=C awk -v marker="${marker}" -v band="${band}" -v model="${mtk_power_model}" '
+			index($0, marker) { fresh = 1; next }
+			!fresh { next }
+			/TX POWER INFO/ { in_band = 0; next }
+			/Channel Band:/ { in_band = index($0, "Band Index: " band ",") != 0 }
+			in_band && index($0, "BandIdx: " band ", Max Base Pwr:") {
+				value = $0
+				sub(/^.*Max Base Pwr:[[:space:]]*/, "", value)
+				sub(/[[:space:]].*$/, "", value)
+				max = value
+			}
+			max != "" && /\[show_mgmt_frame_power\] Tx_Pwr =/ {
+				value = $0
+				sub(/^.*Tx_Pwr =[[:space:]]*/, "", value)
+				sub(/[[:space:]].*$/, "", value)
+				mgmt = value
+			}
+			END {
+				if (max !~ /^-?[0-9]+(\.[0-9]+)?$/) exit 1
+				if (model == "GS7") {
+					# MT7992 management-power output is not verified as an absolute target.
+					printf "data:%.1f", max
+				} else {
+					if (mgmt !~ /^-?[0-9]+(\.[0-9]+)?$/) exit 1
+					printf "%.1f,%.1f", max, mgmt
+				}
+			}');then
+			printf '%s' "${result}"
+			return
+		fi
+		[ "${attempt}" = "5" ] || sleep 1
+	done
+	return 1
+}
+
+get_mtk_target_power() (
+	mtk_power_model=$(_get_model)
+	case "${mtk_power_model}" in
+		TX-AX6000) mtk_power_5g=rax0 ;;
+		GS7) mtk_power_5g=rai0 ;;
+		*) printf 'unavailable@@unavailable'; return ;;
+	esac
+	[ -w /dev/kmsg ] || { printf 'unavailable@@unavailable'; return; }
+
+	# Both radios share driver query state; reject overlapping requests.
+	lock=/tmp/mtk-txpwr-target.lock
+	if ! mkdir "${lock}" 2>/dev/null;then
+		printf 'busy@@busy'
+		return
+	fi
+	trap 'rmdir "${lock}"' EXIT
+	trap 'exit 1' HUP INT TERM
+	band0=$(get_mtk_target_power_band ra0 0) || band0=unavailable
+	band1=$(get_mtk_target_power_band "${mtk_power_5g}" 1) || band1=unavailable
+	printf '%s@@%s' "${band0}" "${band1}"
+)
+
 get_tmp_pwr_MT7988X(){
 	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
-	interface_band0_temp_c=$(mwctl ra0 stat | grep "CurrentTemperature" | awk '{print $3}')°C
-	interface_band1_temp_c=$(mwctl rai0 stat | grep "CurrentTemperature" | awk '{print $3}')°C
+	if [ "$(nvram get wl0_radio)" = "0" ];then
+		interface_band0_temp_c="无线已关闭"
+	else
+		interface_band0_temp_c=$(mwctl ra0 stat | grep "CurrentTemperature" | awk '{print $3}')°C
+	fi
+	if [ "$(nvram get wl1_radio)" = "0" ];then
+		interface_band1_temp_c="无线已关闭"
+	else
+		interface_band1_temp_c=$(mwctl rai0 stat | grep "CurrentTemperature" | awk '{print $3}')°C
+	fi
 	wl_temp="2.4G：${interface_band0_temp_c} ${__spilt__} 5G： ${interface_band1_temp_c}"
 }
 
@@ -325,6 +408,12 @@ number_test(){
 			;;
 	esac
 }
+
+# Wi-Fi 功率按需查询，避免两秒一次的温度轮询请求整张功率表。
+if [ "$#" -eq 2 ] && [ "$2" = "wifi_power" ] && [ "$(number_test "$1")" = "0" ];then
+	http_response "$(get_mtk_target_power)"
+	exit $?
+fi
 
 get_cpu_temp
 get_tmp_pwr
