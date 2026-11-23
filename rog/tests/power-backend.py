@@ -3,6 +3,7 @@
 from pathlib import Path
 import os
 import subprocess
+import tempfile
 
 script = (Path(__file__).resolve().parents[1] / 'rog/scripts/rog_status.sh').read_text()
 
@@ -65,5 +66,64 @@ for band, header in ((0, 'Channel Band: 0:2G, Band Index: 0,'),
         p = subprocess.run(['awk', '-v', 'marker=' + marker, '-v', 'band=' + str(band), parser],
                            input=report, text=True, capture_output=True)
         assert p.returncode != 0 and not p.stdout, (report, p.stdout)
+# Cache is monotonic, expires at 30 seconds and is invalidated by radio state.
+with tempfile.TemporaryDirectory(prefix='rog-power-cache-test-') as temp:
+    cache = Path(temp) / 'cache'
+    value = '2.4 GHz：无线已关闭；5 GHz：25.5 dBm'
+    cache.write_text('100\nstate-a\n' + value + '\n')
+    reader = function('read_mtk_power_cache') + '\nread_mtk_power_cache "$1" "$2" "$3"'
+    for state, now, valid in [('state-a', 100, True), ('state-a', 129, True),
+                              ('state-a', 130, False), ('state-a', 99, False),
+                              ('state-b', 101, False)]:
+        result = subprocess.run(['sh', '-c', reader, 'test', str(cache), state, str(now)],
+                                text=True, capture_output=True)
+        assert (result.returncode == 0) == valid, result
+        assert result.stdout == (value if valid else ''), result.stdout
+    for malformed in ['invalid\nstate-a\nvalue\n', '100\nstate-a\n']:
+        cache.write_text(malformed)
+        result = subprocess.run(['sh', '-c', reader, 'test', str(cache), 'state-a', '101'],
+                                text=True, capture_output=True)
+        assert result.returncode != 0 and not result.stdout
+
+# Verify that real state-key construction notices active-channel and region changes.
+state_stubs = """
+nvram(){
+    case "$2" in
+        odmpid|productid) printf 'GS7' ;;
+        wl0_radio) printf '%s' "$ROG_TEST_RADIO" ;;
+        location_code) printf '%s' "$ROG_TEST_LOCATION" ;;
+    esac
+}
+iwconfig(){ printf 'Mode:Master Channel:%s Access Point: test\\n' "$ROG_TEST_CHANNEL"; }
+"""
+state_program = state_stubs + function('_get_model') + function('get_mtk_power_state') + "\nmtk_power_5g=rai0; get_mtk_power_state"
+keys = []
+for radio, channel, location in [('1', '36', 'XX'), ('0', '36', 'XX'),
+                                  ('1', '100', 'XX'), ('1', '36', 'CN')]:
+    env = dict(os.environ, ROG_TEST_RADIO=radio, ROG_TEST_CHANNEL=channel,
+               ROG_TEST_LOCATION=location)
+    keys.append(subprocess.check_output(['sh', '-c', state_program], env=env, text=True))
+assert len(set(keys)) == 4, keys
+
+# Exercise the real top-level aggregation with hardware-only calls stubbed.
+main = script[script.index('\nget_cpu_temp\nget_tmp_pwr\n'):]
+aggregate_stubs = stubs + "\n" + "\n".join(function(name) for name in (
+    '_get_model', 'get_mtk_power_backend', 'number_test')) + """
+get_cpu_temp(){ cpu_temp='50°C'; }
+get_tmp_pwr(){ wl_temp='2G/5G'; wl_txpwr='legacy'; }
+get_mtk_target_power(){ printf '2.4 GHz：无线已关闭；5 GHz：25.5 dBm'; }
+get_mhz(){ cpu_mhz=1800; }
+get_system_info(){ kernel_ver=5.4; hardware_type=aarch64; build_date=2026; }
+http_response(){ printf '%s' "$1"; }
+"""
+for model in wifi6 + ('GS7', 'RT-AX88U'):
+    env = dict(os.environ, ROG_TEST_ODM=model, ROG_TEST_PRODUCT=model)
+    result = subprocess.check_output(['bash', '-c', aggregate_stubs + main,
+                                      'test', '12345', '2'], env=env, text=True)
+    fields = result.split('@@')
+    assert len(fields) == 7, fields
+    assert fields[2] == ('legacy' if model == 'RT-AX88U' else value), fields
 assert 'mgmt_frame_pwr' not in script
-print('MTK backend: model/alias/productid routing, temperature routing, fresh-band parsing and stale/error rejection passed')
+assert '[ "$2" = "wifi_power" ]' not in script
+
+print('MTK backend: model routing, fresh reports, cache expiry/invalidation and unified seven-field response passed')

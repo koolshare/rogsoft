@@ -310,22 +310,79 @@ get_mtk_power_backend(){
 	esac
 }
 
+format_mtk_power_band(){
+	local label=$1 value=$2
+	case "${value}" in
+		data:*) printf '%s：%s dBm' "${label}" "${value#data:}" ;;
+		off) printf '%s：无线已关闭' "${label}" ;;
+		busy) printf '%s：正在查询，请稍后重试' "${label}" ;;
+		*) printf '%s：无法读取' "${label}" ;;
+	esac
+}
+
+get_mtk_power_state(){
+	local band iface
+	printf '%s' "$(_get_model)"
+	for band in 0 1;do
+		printf '|%s|%s|%s' "$(nvram get "wl${band}_radio")" \
+			"$(nvram get "wl${band}_channel")" "$(nvram get "wl${band}_txpower")"
+		if [ "${band}" = "0" ];then iface=ra0;else iface=${mtk_power_5g};fi
+		iwconfig "${iface}" 2>/dev/null | LC_ALL=C awk '
+			match($0, /Channel:[[:space:]]*[0-9]+|Frequency[=:][[:space:]]*[0-9.]+/) {
+				printf "|%s", substr($0, RSTART, RLENGTH)
+			}'
+	done
+	printf '|%s|%s' "$(nvram get location_code)" "$(nvram get reg_spec)"
+}
+
+read_mtk_power_cache(){
+	local cache=$1 state=$2 now=$3 cached_time cached_state cached_power
+	[ -r "${cache}" ] || return 1
+	{
+		IFS= read -r cached_time && IFS= read -r cached_state && IFS= read -r cached_power
+	} < "${cache}" || return 1
+	case "${cached_time}" in ''|*[!0-9]*) return 1 ;; esac
+	[ "${cached_state}" = "${state}" ] && [ -n "${cached_power}" ] || return 1
+	[ "${now}" -ge "${cached_time}" ] && [ "$((now - cached_time))" -lt 30 ] || return 1
+	printf '%s' "${cached_power}"
+}
+
 get_mtk_target_power() (
-	get_mtk_power_backend || { printf 'unavailable@@unavailable'; return; }
-
-	[ -w /dev/kmsg ] || { printf 'unavailable@@unavailable'; return; }
-
-	# Both radios share driver query state; reject overlapping requests.
-	lock=/tmp/mtk-txpwr-target.lock
-	if ! mkdir "${lock}" 2>/dev/null;then
-		printf 'busy@@busy'
+	get_mtk_power_backend || return
+	local cache=/tmp/rog_wifi_power.cache now state cached power band0 band1
+	now=$(awk '{printf "%.0f", $1}' /proc/uptime)
+	state=$(get_mtk_power_state)
+	if cached=$(read_mtk_power_cache "${cache}" "${state}" "${now}");then
+		printf '%s' "${cached}"
 		return
 	fi
-	trap 'rmdir "${lock}"' EXIT
+	if [ ! -w /dev/kmsg ];then
+		printf '%s；%s' "$(format_mtk_power_band '2.4 GHz' unavailable)" "$(format_mtk_power_band '5 GHz' unavailable)"
+		return
+	fi
+
+	# Both bands share driver state. Cache reports so status polling is cheap.
+	lock=/tmp/mtk-txpwr-target.lock
+	if ! mkdir "${lock}" 2>/dev/null;then
+		printf '%s；%s' "$(format_mtk_power_band '2.4 GHz' busy)" "$(format_mtk_power_band '5 GHz' busy)"
+		return
+	fi
+	trap 'rm -f "${cache}.$$"; rmdir "${lock}"' EXIT
 	trap 'exit 1' HUP INT TERM
+	# A preceding request may have filled the cache while we acquired the lock.
+	if cached=$(read_mtk_power_cache "${cache}" "${state}" "${now}");then
+		printf '%s' "${cached}"
+		return
+	fi
 	band0=$(get_mtk_target_power_band ra0 0) || band0=unavailable
 	band1=$(get_mtk_target_power_band "${mtk_power_5g}" 1) || band1=unavailable
-	printf '%s@@%s' "${band0}" "${band1}"
+	power="$(format_mtk_power_band '2.4 GHz' "${band0}")；$(format_mtk_power_band '5 GHz' "${band1}")"
+	# Errors are not cached, so the next status request can retry immediately.
+	if [ "${band0}" != "unavailable" ] && [ "${band1}" != "unavailable" ];then
+		umask 077
+		printf '%s\n' "${now}" "${state}" "${power}" > "${cache}.$$" && mv -f "${cache}.$$" "${cache}"
+	fi
+	printf '%s' "${power}"
 )
 
 get_tmp_pwr_MT7988X(){
@@ -412,14 +469,12 @@ number_test(){
 	esac
 }
 
-# Wi-Fi 功率按需查询，避免两秒一次的温度轮询请求整张功率表。
-if [ "$#" -eq 2 ] && [ "$2" = "wifi_power" ] && [ "$(number_test "$1")" = "0" ];then
-	http_response "$(get_mtk_target_power)"
-	exit $?
-fi
 
 get_cpu_temp
 get_tmp_pwr
+if get_mtk_power_backend;then
+	wl_txpwr=$(get_mtk_target_power)
+fi
 get_mhz
 get_system_info
 #=================================================

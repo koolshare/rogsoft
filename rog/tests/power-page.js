@@ -30,31 +30,30 @@ function controller(model, product) {
  c.init();
  return { c, calls, nodes };
 }
+assert(!html.includes('rog_wl_power_refresh'));
+assert(!html.includes('get_mtk_wifi_power'));
+assert(!html.includes('"wifi_power"'));
 let p = controller('GS7');
-assert.equal(p.calls.length, 2);
-assert.equal(JSON.parse(p.calls[1].data).params[0], 'wifi_power');
-p.calls[1].success({ result: 'off@@data:25.5' });
+assert.equal(p.calls.length, 1);
+assert.equal(JSON.parse(p.calls[0].data).params[0], 2);
+assert.equal(p.calls[0].timeout, 20000);
+p.calls[0].success({ result: '55°C@@5G 45°C@@2.4 GHz：无线已关闭；5 GHz：25.5 dBm@@1800@@5.4.281@@aarch64@@2026' });
 assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：无线已关闭；5 GHz：25.5 dBm');
 assert.equal(p.nodes.rog_wl_power_note.style.display, '');
-p.calls[0].success({ result: '55°C@@5G 45°C@@@@1800@@5.4.281@@aarch64@@2026' });
-assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：无线已关闭；5 GHz：25.5 dBm');
-p.calls[1].complete();
-p.nodes.rog_wl_power_refresh.click();
-assert.equal(p.calls.length, 3);
-p.calls[2].success({ result: 'unavailable@@busy' });
-assert(p.nodes.rog_wl_power.value.includes('无法读取'));
-assert(p.nodes.rog_wl_power.value.includes('正在查询'));
-p.calls[2].complete();
-assert.equal(p.nodes.rog_wl_power_refresh.disabled, false);
+p.calls[0].success({ result: '55°C@@5G 46°C@@2.4 GHz：无线已关闭；5 GHz：24.5 dBm@@1800@@5.4.281@@aarch64@@2026' });
+assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：无线已关闭；5 GHz：24.5 dBm');
+assert.equal(p.nodes.rog_kernel.innerHTML, '5.4.281');
 for (const model of ['TUF-AX4200', 'TUF-AX4200Q', 'TX-AX6000', 'TUF-AX6000']) {
  p = controller(model);
- p.calls[1].success({ result: 'data:28.0@@data:27.5' });
+ assert.equal(p.calls.length, 1);
+ p.calls[0].success({ result: '55°C@@2G/5G@@2.4 GHz：28.0 dBm；5 GHz：27.5 dBm@@1800@@5.4.246@@aarch64@@2026' });
  assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：28.0 dBm；5 GHz：27.5 dBm');
  assert(!p.nodes.rog_wl_power.value.includes('管理帧'));
 }
 for (const product of ['TUF-AX4200', 'TUF-AX4200Q', 'TUF-AX6000', 'TX-AX6000', 'GS7']) {
  p = controller('', product);
- assert.equal(p.calls.length, 2, product);
+ assert.equal(p.calls.length, 1, product);
+ assert(p.c.mtkWifiPowerSupported);
 }
 for (const model of ['RT-AX88U', 'UNKNOWN_MTK', 'GS7_Air', 'ZenWiFi_BT8P']) {
  p = controller(model);
@@ -62,4 +61,4 @@ for (const model of ['RT-AX88U', 'UNKNOWN_MTK', 'GS7_Air', 'ZenWiFi_BT8P']) {
  p.calls[0].success({ result: '55°C@@2G/5G@@legacy@@1800@@4.19@@arm@@2026' });
  assert.equal(p.nodes.rog_wl_power.innerHTML, 'legacy');
 }
-console.log('ROG power UI: concise values, lower SimpleNote, default query, refresh, polling isolation, model aliases and legacy passed');
+console.log('ROG power UI: one status request, automatic power updates, no refresh button, aliases and legacy passed');

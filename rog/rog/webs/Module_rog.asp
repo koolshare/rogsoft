@@ -82,8 +82,7 @@ function init() {
 	if (mtkWifiPowerSupported) {
 		$("#rog_wl_power_tr").show();
 		$("#rog_wl_power_note").show();
-		$("#rog_wl_power_refresh").show().on("click", get_mtk_wifi_power);
-		get_mtk_wifi_power();
+		$("#rog_wl_power").text("正在读取…");
 	}
 	showbootTime();
 	showclock();
@@ -131,17 +130,20 @@ function get_temperature(){
 		url: "/_api/",
 		data: JSON.stringify(postData),
 		dataType: "json",
+		timeout: 20000,
 		success: function(response){
 			E("rog_cpu_temperature").innerHTML = response.result.split("@@")[0];
 			E("rog_wl_temperature").innerHTML = response.result.split("@@")[1];
-			if (!mtkWifiPowerSupported) {
-				var pwr = response.result.split("@@")[2];
-				if (pwr){
-					E("rog_wl_power_tr").style.display = "";
+			var pwr = response.result.split("@@")[2];
+			if (pwr){
+				E("rog_wl_power_tr").style.display = "";
+				if (mtkWifiPowerSupported) {
+					$("#rog_wl_power").text(pwr);
+				} else {
 					E("rog_wl_power").innerHTML = pwr;
-				}else{
-					E("rog_wl_power_tr").style.display = "none";
 				}
+			}else{
+				E("rog_wl_power_tr").style.display = "none";
 			}
 			E("rog_cpu_mhz").innerHTML = Math.round(response.result.split("@@")[3]) + " MHz";
 			E("rog_kernel").innerHTML = response.result.split("@@")[4];
@@ -152,40 +154,6 @@ function get_temperature(){
 		error: function(){
 			E("rog_cpu_temperature").innerHTML = "获取运行状态失败！";
 			setTimeout("get_temperature();", 5000);
-		}
-	});
-}
-function format_mtk_power_band(band, value) {
-	var match = typeof value === "string" && /^data:(-?\d+\.\d)$/.exec(value);
-	if (match) return band + "：" + match[1] + " dBm";
-	if (value === "off") return band + "：无线已关闭";
-	if (value === "busy") return band + "：正在查询，请稍后刷新";
-	return band + "：无法读取";
-}
-
-function get_mtk_wifi_power() {
-	var button = $("#rog_wl_power_refresh");
-	if (button.prop("disabled")) return;
-	button.prop("disabled", true);
-	$("#rog_wl_power").text("正在读取…");
-	var id = parseInt(Math.random() * 100000000);
-	var postData = {"id": id, "method": "rog_status.sh", "params": ["wifi_power"], "fields": ""};
-	$.ajax({
-		type: "POST",
-		url: "/_api/",
-		data: JSON.stringify(postData),
-		dataType: "json",
-		timeout: 20000,
-		success: function(response) {
-			var bands = response && typeof response.result === "string" ? response.result.split("@@") : [];
-			$("#rog_wl_power").text(format_mtk_power_band("2.4 GHz", bands[0]) + "；" +
-				format_mtk_power_band("5 GHz", bands[1]));
-		},
-		error: function() {
-			$("#rog_wl_power").text("读取失败，请刷新重试");
-		},
-		complete: function() {
-			button.prop("disabled", false);
 		}
 	});
 }
@@ -418,7 +386,7 @@ function menu_hook(title, tab) {
 												</tr>
 												<tr id="rog_wl_power_tr" style="display: none;">
 													<th id="rog_wl_power_label">发射功率</th>
-													<td><span id="rog_wl_power"></span> <button type="button" id="rog_wl_power_refresh" class="ks_btn" style="display: none;">刷新</button></td>
+													<td><span id="rog_wl_power"></span></td>
 												</tr>
 												<tr>
 													<th>内存使用</th>
