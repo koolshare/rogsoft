@@ -159,7 +159,7 @@ install_now(){
 	cp -rf /tmp/${module}/uninstall.sh /koolshare/scripts/uninstall_${module}.sh
 
 	# Permissions
-	chmod 755 /koolshare/bin/${module} >/dev/null 2>&1
+	chmod 755 /koolshare/bin/${module}_bin >/dev/null 2>&1
 	chmod 755 /koolshare/scripts/${module}_*.sh >/dev/null 2>&1
 
 	# make start up script link
@@ -172,7 +172,7 @@ install_now(){
 
 	# dbus value
 	echo_date "设置插件默认参数..."
-	dbus set floatip_client_version=$(/koolshare/bin/floatip -v)
+	dbus set floatip_client_version=$(/koolshare/bin/floatip_bin -v)
 	dbus set floatip_title="$TITLE"
 	dbus set floatip_setip="192.168.50.3/24"
 	dbus set floatip_checkip="192.168.50.2"

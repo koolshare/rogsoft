@@ -14,7 +14,36 @@
 <link rel="stylesheet" type="text/css" href="css/element.css">
 <link rel="stylesheet" type="text/css" href="/device-map/device-map.css">
 <link rel="stylesheet" type="text/css" href="/res/softcenter.css">
+<script>
+(function () {
+	window.__floatip_amd_define_exists = Object.prototype.hasOwnProperty.call(window, "define");
+	window.__floatip_amd_define = window.define;
+	if (window.define && window.define.amd) {
+		window.define = undefined;
+	}
+})();
+</script>
 <script type="text/javascript" src="/js/jquery.js"></script>
+<script>
+(function () {
+	if (window.__floatip_amd_define_exists) {
+		window.define = window.__floatip_amd_define;
+	} else {
+		try {
+			delete window.define;
+		} catch (e) {
+			window.define = undefined;
+		}
+	}
+	try {
+		delete window.__floatip_amd_define;
+		delete window.__floatip_amd_define_exists;
+	} catch (e) {
+		window.__floatip_amd_define = undefined;
+		window.__floatip_amd_define_exists = undefined;
+	}
+})();
+</script>
 <script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/validator.js"></script>

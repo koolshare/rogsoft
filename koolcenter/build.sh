@@ -1,10 +1,13 @@
 #!/bin/sh
 # build script for rogsoft project
-VERSION=1.9.56
+set -eu
 
-DIR="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
+VERSION=1.9.62
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
 ME=$(basename "$0")
 PLATFORM=$(echo "${ME}" | awk -F"." '{print $1}' | sed 's/build_//g')
+cd "${DIR}"
 
 if [ "${ME}" = "build.sh" ];then
 	echo "build error!"
@@ -16,7 +19,7 @@ echo ${VERSION} > ./softcenter/.soft_ver
 echo build version: ${VERSION}
 rm -f ${DIR}/softcenter.tar.gz
 
-python ./gen_install.py stage1
+python3 ./gen_install.py stage1
 
 # --------------------------------------------------------
 rm -rf ${DIR}/build && mkdir -p ${DIR}/build
@@ -31,12 +34,10 @@ cp -rf ${DIR}/../softcenter/softcenter/scripts ${DIR}/build/softcenter/
 cp -rf ${DIR}/../softcenter/softcenter/install.sh ${DIR}/build/softcenter/
 cp -rf ${DIR}/../softcenter/softcenter/res/* ${DIR}/build/softcenter/res
 rm -rf ${DIR}/build/softcenter/res/icon-*.png
-tar -zcf softcenter.tar.gz softcenter
-if [ "$?" = "0" ];then
-	echo "build success!"
-	mv ${DIR}/build/softcenter.tar.gz ${DIR}/
-	cp -rf ${DIR}/softcenter.tar.gz ${DIR}/koolcenter.tar.gz
-fi
+python3 ${DIR}/create_deterministic_tar.py ${DIR}/build/softcenter ${DIR}/build/softcenter.tar.gz
+echo "build success!"
+mv ${DIR}/build/softcenter.tar.gz ${DIR}/
+cp -f ${DIR}/softcenter.tar.gz ${DIR}/koolcenter.tar.gz
 cd ${DIR} && rm -rf ${DIR}/build
 # --------------------------------------------------------
 md5value=$(md5sum softcenter.tar.gz|awk '{print $1}')
@@ -54,7 +55,7 @@ cat > ./config.json.js <<EOF
 }
 EOF
 
-python ./gen_install.py stage2
+python3 ./gen_install.py stage2
 
-cat to_remove.txt|xargs rm -f
-rm to_remove.txt
+xargs rm -f < to_remove.txt
+rm -f to_remove.txt
