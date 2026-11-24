@@ -81,12 +81,12 @@ for model in models:
             lines = subprocess.check_output(['sh', '-c', program], env=env, text=True).splitlines()
             assert lines[0] == lines[1], lines
             assert len(lines) == 3, lines
-            expected = '2.4 GHz：26.0 dBm；5 GHz：27.0 dBm'
+            expected = '2.4 GHz：26.0 dBm / 398.11 mW；5 GHz：27.0 dBm / 501.19 mW'
             count = 2
             if model == 'ZenWiFi_BT8P':
                 count = 2 if radio2 == '0' else 3
-                if band2 == '4': expected = '2.4 GHz：26.0 dBm；5 GHz：27.0 dBm；6 GHz：28.0 dBm'
-                else: expected = '2.4 GHz：26.0 dBm；5 GHz-1：27.0 dBm；5 GHz-2：' + ('无线已关闭' if radio2 == '0' else '28.0 dBm')
+                if band2 == '4': expected = '2.4 GHz：26.0 dBm / 398.11 mW；5 GHz：27.0 dBm / 501.19 mW；6 GHz：28.0 dBm / 630.96 mW'
+                else: expected = '2.4 GHz：26.0 dBm / 398.11 mW；5 GHz-1：27.0 dBm / 501.19 mW；5 GHz-2：' + ('无线已关闭' if radio2 == '0' else '28.0 dBm / 630.96 mW')
             assert lines[0] == expected, (model, lines)
             assert lines[2].count('GHz：') + lines[2].count('GHz-1：') + lines[2].count('GHz-2：') == (3 if model == 'ZenWiFi_BT8P' else 2), lines
             queries = (root / 'queries').read_text().splitlines()

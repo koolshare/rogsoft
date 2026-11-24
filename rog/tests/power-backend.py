@@ -95,7 +95,7 @@ for row in stock['firmwares']:
 # Cache is monotonic, expires at 30 seconds and is invalidated by radio state.
 with tempfile.TemporaryDirectory(prefix='rog-power-cache-test-') as temp:
     cache = Path(temp) / 'cache'
-    value = '2.4 GHz：无线已关闭；5 GHz：25.5 dBm'
+    value = '2.4 GHz：无线已关闭；5 GHz：25.5 dBm / 354.81 mW'
     cache.write_text('100\nstate-a\n' + value + '\n')
     reader = function('read_mtk_power_cache') + '\nread_mtk_power_cache "$1" "$2" "$3"'
     for state, now, valid in [('state-a', 100, True), ('state-a', 129, True),
@@ -137,7 +137,7 @@ aggregate_stubs = stubs + "\n" + "\n".join(function(name) for name in (
     '_get_model', 'get_mtk_power_backend', 'number_test')) + """
 get_cpu_temp(){ cpu_temp='50°C'; }
 get_tmp_pwr(){ wl_temp='2G/5G'; wl_txpwr='legacy'; }
-get_mtk_target_power(){ printf '2.4 GHz：无线已关闭；5 GHz：25.5 dBm'; }
+get_mtk_target_power(){ printf '2.4 GHz：无线已关闭；5 GHz：25.5 dBm / 354.81 mW'; }
 get_mhz(){ cpu_mhz=1800; }
 get_system_info(){ kernel_ver=5.4; hardware_type=aarch64; build_date=2026; }
 http_response(){ printf '%s' "$1"; }

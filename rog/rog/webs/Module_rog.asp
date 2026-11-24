@@ -80,9 +80,7 @@ function init() {
 	detect_CPU_RAM();
 	get_temperature();
 	if (mtkWifiPowerSupported) {
-		$("#rog_wl_power_tr").show();
 		$("#rog_wl_power_note").show();
-		$("#rog_wl_power").text("正在读取…");
 	}
 	showbootTime();
 	showclock();
@@ -138,7 +136,8 @@ function get_temperature(){
 			if (pwr){
 				E("rog_wl_power_tr").style.display = "";
 				if (mtkWifiPowerSupported) {
-					$("#rog_wl_power").text(pwr);
+					E("rog_wl_power").style.whiteSpace = "pre-line";
+					$("#rog_wl_power").text(pwr.split("；").join("\n"));
 				} else {
 					E("rog_wl_power").innerHTML = pwr;
 				}

@@ -338,9 +338,13 @@ get_mtk_band_label(){
 }
 
 format_mtk_power_band(){
-	local label=$1 value=$2
+	local label=$1 value=$2 dbm milliwatts
 	case "${value}" in
-		data:*) printf '%s：%s dBm' "${label}" "${value#data:}" ;;
+		data:*)
+			dbm=${value#data:}
+			milliwatts=$(LC_ALL=C awk -v dbm="${dbm}" 'BEGIN { printf "%.2f", 10^(dbm/10) }')
+			printf '%s：%s dBm / %s mW' "${label}" "${dbm}" "${milliwatts}"
+			;;
 		off) printf '%s：无线已关闭' "${label}" ;;
 		busy) printf '%s：正在查询，请稍后重试' "${label}" ;;
 		*) printf '%s：无法读取' "${label}" ;;
@@ -358,7 +362,7 @@ format_mtk_power_status(){
 
 get_mtk_power_state(){
 	local band=0 iface
-	printf 'mtk-v2|%s|%s' "$(_get_model)" "${mtk_power_ifnames}"
+	printf 'mtk-v3|%s|%s' "$(_get_model)" "${mtk_power_ifnames}"
 	for iface in ${mtk_power_ifnames};do
 		printf '|%s|%s|%s|%s' "$(nvram get "wl${band}_radio")" \
 			"$(nvram get "wl${band}_channel")" "$(nvram get "wl${band}_txpower")" "$(nvram get "wl${band}_nband")"
