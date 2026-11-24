@@ -47,7 +47,7 @@ ensure_defaults() {
 	[ -z "${fakehttp_enable}" ] && dbus set fakehttp_enable="0"
 	[ -z "${fakehttp_alliface}" ] && dbus set fakehttp_alliface="0"
 	[ -z "${fakehttp_iface}" ] && dbus set fakehttp_iface="ppp0"
-	[ -z "${fakehttp_http_host}" ] && dbus set fakehttp_http_host="www.example.com"
+	[ -z "${fakehttp_http_host}" ] && dbus set fakehttp_http_host=""
 	[ -z "${fakehttp_https_host}" ] && dbus set fakehttp_https_host=""
 	[ -z "${fakehttp_payload}" ] && dbus set fakehttp_payload=""
 
@@ -217,8 +217,8 @@ start_fakehttp() {
 	https_hosts="$(normalize_hosts "${fakehttp_https_host}")"
 	payloads="$(normalize_hosts "${fakehttp_payload}")"
 
-	if [ -z "${http_hosts}" ]; then
-		echo_date "配置错误：HTTP Host 不能为空（-h）" >>"${LOG_FILE}"
+	if [ -z "${http_hosts}" ] && [ -z "${https_hosts}" ] && [ -z "${payloads}" ]; then
+		echo_date "配置错误：HTTP Host、HTTPS Host、Payload 不能同时为空" >>"${LOG_FILE}"
 		return 1
 	fi
 

@@ -103,7 +103,7 @@ function E(id){ return document.getElementById(id); }
 function fill_form(){
 	E("fakehttp_alliface").checked = (dbus["fakehttp_alliface"] == "1");
 	E("fakehttp_iface").value = (dbus["fakehttp_iface"] && dbus["fakehttp_iface"] != "null") ? dbus["fakehttp_iface"] : "ppp0";
-	E("fakehttp_http_host").value = (dbus["fakehttp_http_host"] && dbus["fakehttp_http_host"] != "null") ? dbus["fakehttp_http_host"] : "www.example.com";
+	E("fakehttp_http_host").value = (dbus["fakehttp_http_host"] && dbus["fakehttp_http_host"] != "null") ? dbus["fakehttp_http_host"] : "";
 	E("fakehttp_https_host").value = (dbus["fakehttp_https_host"] && dbus["fakehttp_https_host"] != "null") ? dbus["fakehttp_https_host"] : "";
 	E("fakehttp_payload").value = (dbus["fakehttp_payload"] && dbus["fakehttp_payload"] != "null") ? dbus["fakehttp_payload"] : "";
 
@@ -146,8 +146,8 @@ function apply_config(enable){
 	var httpsHost = $.trim(E("fakehttp_https_host").value || "");
 	var payload = $.trim(E("fakehttp_payload").value || "");
 
-	if (!httpHost) {
-		alert("HTTP Host 不能为空（-h）！");
+	if (!httpHost && !httpsHost && !payload) {
+		alert("HTTP Host、HTTPS Host、Payload 不能同时为空！");
 		return;
 	}
 	if (alliface != "1" && !iface) {
@@ -361,7 +361,7 @@ function check_status(){
 												<td><span id="fakehttp_status">加载中...</span></td>
 											</tr>
 											<tr>
-												<th>HTTP Host（必填）</th>
+												<th>HTTP Host（默认）</th>
 												<td><textarea id="fakehttp_http_host" class="input_ss_table host_area" placeholder="每行一个 host，等价于多次 -h 参数，例如：
 												www.example.com
 												www.google.com" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></td>
