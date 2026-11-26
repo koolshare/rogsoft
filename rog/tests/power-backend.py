@@ -64,8 +64,8 @@ for model, temperature in (('UNKNOWN_MTK', 'hnd'), ('RT-AX88U', 'hnd'),
     actual = subprocess.check_output(['sh', '-c', routing], env=env, text=True)
     assert actual == 'unsupported||temperature:' + temperature, actual
 
-start = script.index("-v band=\"${band}\" '\n", script.index('get_mtk_target_power_band(){'))
-start += len("-v band=\"${band}\" '\n")
+start = script.index('awk -v marker=', script.index('get_mtk_target_power_band(){'))
+start = script.index(" '\n", start) + len(" '\n")
 parser = script[start:script.index("');then", start)]
 old = 'Band Index: 1, Channel Band: 1:5G\nBandIdx: 1, Max Base Pwr: 99 dbm\n'
 marker = 'rog-test-fresh'
@@ -83,6 +83,37 @@ for band, header in ((0, 'Channel Band: 0:2G, Band Index: 0,'),
         p = subprocess.run(['awk', '-v', 'marker=' + marker, '-v', 'band=' + str(band), parser],
                            input=report, text=True, capture_output=True)
         assert p.returncode != 0 and not p.stdout, (report, p.stdout)
+
+# GS7 logs rates in half-dBm units. Its summary can underreport the table.
+rate_rows = (
+    '\u200b  [CCK_01M]: 0x3c (60)\n'
+    '\u200b  [OFDM_06M]: 0x35 (53)\n'
+    '\u200b  [HT20_M00]: 0x33 (51)\n'
+    '\u200b  [VHT20_M00]: 0x32 (50)   [VHT40_M00]: 0x33 (51)\n'
+    '\u200b  [EHT996X3_484_M15]: 0x7f (127)\n'
+    '\u200b  [MAX][Bound]: 0x7f (127)\n'
+    '\u200b  [MIN][Bound]: 0xffffff80 (-128)\n'
+)
+for band, label, mwctl_max in ((0, '0:2G', '30.0'), (1, '1:5G', '26.5'), (2, '2:6G', '25.5')):
+    report = (f'{marker}\nTX POWER INFO\nBand Index: {band}, Channel Band: {label}\n'
+              f'{rate_rows}[HE20_M00]: 0x33 (51)\nBandIdx: {band}, Max Base Pwr: 25.5 dbm\n')
+    for backend, expected in (('mwctl', mwctl_max), ('iwpriv', '25.5')):
+        command = ['awk', '-v', 'marker=' + marker, '-v', 'band=' + str(band),
+                   '-v', 'backend=' + backend, parser]
+        p = subprocess.run(command, input=old + report, text=True, capture_output=True)
+        assert p.returncode == 0 and p.stdout == 'data:' + expected, p
+        incomplete = report.rsplit('BandIdx:', 1)[0]
+        p = subprocess.run(command, input=incomplete, text=True, capture_output=True)
+        assert p.returncode != 0 and not p.stdout, p
+
+report = (f'{marker}\nBand Index: 0, Channel Band: 0:2G\n[OFDM_06M]: 0x60 (96)\n'
+          'TX POWER INFO\nBand Index: 1, Channel Band: 1:5G\n'
+          '[VHT20_M00]: 0x32 (50)   [VHT40_M00]: 0x36 (54)\n'
+          'BandIdx: 1, Max Base Pwr: 25.5 dbm\n')
+command = ['awk', '-v', 'marker=' + marker, '-v', 'band=1', '-v', 'backend=mwctl', parser]
+p = subprocess.run(command, input=report, text=True, capture_output=True)
+assert p.returncode == 0 and p.stdout == 'data:27.0', p
+
 # Cross-check runtime profiles against extracted latest-stock-firmware metadata.
 stock = json.loads((Path(__file__).resolve().parent / 'fixtures/mtk-stock-20261123.json').read_text())
 profile_probe = stubs + function('_get_model') + function('get_mtk_power_backend') + "\nget_mtk_power_backend && printf '%s|%s|%s' \"${mtk_power_backend}\" \"${mtk_power_ifnames}\" \"${mtk_power_bands}\""

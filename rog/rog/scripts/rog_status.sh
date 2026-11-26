@@ -272,19 +272,42 @@ get_mtk_target_power_band(){
 		iwpriv "${iface}" show data_frame_pwr=0-0 >/dev/null 2>&1 || return 1
 	fi
 	for attempt in 1 2 3 4 5;do
-		if result=$(dmesg | LC_ALL=C awk -v marker="${marker}" -v band="${band}" '
+		if result=$(dmesg | LC_ALL=C awk -v marker="${marker}" -v band="${band}" -v backend="${mtk_power_backend}" '
 			index($0, marker) { fresh = 1; next }
 			!fresh { next }
 			/TX POWER INFO/ { in_band = 0; next }
-			/Channel Band:/ { in_band = index($0, "Band Index: " band ",") != 0 }
+			/Channel Band:/ {
+				in_band = index($0, "Band Index: " band ",") != 0
+				is_2g = $0 ~ /:2G/
+				is_6g = $0 ~ /:6G/
+				rate_max = ""
+				next
+			}
+			in_band && backend == "mwctl" {
+				line = $0
+				while (match(line, /\[(CCK|OFDM|HT|VHT|HE|EHT)[A-Z0-9_]*\]:[[:space:]]*0x[[:xdigit:]]+[[:space:]]*\(-?[0-9]+\)/)) {
+					rate = substr(line, RSTART, RLENGTH)
+					line = substr(line, RSTART + RLENGTH)
+					if ((!is_2g && rate ~ /^\[CCK_/) ||
+					    (is_6g && rate ~ /^\[(OFDM|HT|VHT)/)) continue
+					sub(/^.*\(/, "", rate)
+					sub(/\)$/, "", rate)
+					rate += 0
+					if (rate > -128 && rate < 127 && (rate_max == "" || rate > rate_max))
+						rate_max = rate
+				}
+			}
 			in_band && index($0, "BandIdx: " band ", Max Base Pwr:") {
 				value = $0
 				sub(/^.*Max Base Pwr:[[:space:]]*/, "", value)
 				sub(/[[:space:]].*$/, "", value)
-				max = value
+				complete = value ~ /^-?[0-9]+(\.[0-9]+)?$/
+				# The Wi-Fi 7 summary can miss higher entries in its own rate table.
+				max = rate_max == "" ? value : rate_max / 2
+				in_band = 0
 			}
 			END {
-				if (max !~ /^-?[0-9]+(\.[0-9]+)?$/) exit 1
+				if (!complete) exit 1
 				printf "data:%.1f", max
 			}');then
 			printf '%s' "${result}"
@@ -362,7 +385,7 @@ format_mtk_power_status(){
 
 get_mtk_power_state(){
 	local band=0 iface
-	printf 'mtk-v3|%s|%s' "$(_get_model)" "${mtk_power_ifnames}"
+	printf 'mtk-v4|%s|%s' "$(_get_model)" "${mtk_power_ifnames}"
 	for iface in ${mtk_power_ifnames};do
 		printf '|%s|%s|%s|%s' "$(nvram get "wl${band}_radio")" \
 			"$(nvram get "wl${band}_channel")" "$(nvram get "wl${band}_txpower")" "$(nvram get "wl${band}_nband")"
