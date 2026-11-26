@@ -130,31 +130,31 @@
         },
         {
             "author": "sadog",
-            "build_date": "2026-03-03_09:30:54",
+            "build_date": "2026-11-25_22:45:57",
             "changelog": "",
             "description": "将 TCP 连接伪装为 HTTP/HTTPS 协议（NFQUEUE），用于网络流量混淆",
             "home_url": "Module_fakehttp.asp",
             "link": "https://github.com/MikeWang000000/FakeHTTP",
-            "md5": "f9ce9138a336f692aee548bc688bb06b",
+            "md5": "69402bf4dd6dce2e4fb093d6842fecb4",
             "name": "fakehttp",
             "tags": "网络 工具",
             "tar_url": "fakehttp/fakehttp.tar.gz",
             "title": "FakeHTTP 伪装",
-            "version": "1.6"
+            "version": "1.7"
         },
         {
             "author": "sadog",
-            "build_date": "2025-12-23_23:23:02",
+            "build_date": "2026-11-25_22:45:57",
             "changelog": "",
             "description": "将 UDP 流量伪装为 SIP 协议（NFQUEUE），用于网络流量混淆",
             "home_url": "Module_fakesip.asp",
             "link": "https://github.com/MikeWang000000/FakeSIP",
-            "md5": "59c18062a2f116f857ddb67d0b6236c6",
+            "md5": "7ac9b30dd68fa9e6f2a94a8ac623c026",
             "name": "fakesip",
             "tags": "网络 工具",
             "tar_url": "fakesip/fakesip.tar.gz",
             "title": "FakeSIP 伪装",
-            "version": "1.1"
+            "version": "1.3"
         },
         {
             "author": "sadog",
@@ -427,17 +427,17 @@
         },
         {
             "author": "sadog",
-            "build_date": "2025-11-26_01:15:19",
+            "build_date": "2026-11-24_21:38:22",
             "changelog": "",
             "description": "一些小功能的插件",
             "home_url": "Module_rog.asp",
             "link": "",
-            "md5": "e1ae0494fa6a3b42d5b4da3de1cf521f",
+            "md5": "ea879e03227068b627393262aabf185f",
             "name": "rog",
             "tags": "系统 工具",
             "tar_url": "rog/rog.tar.gz",
             "title": "ROG工具箱",
-            "version": "5.9.14"
+            "version": "5.9.21"
         },
         {
             "author": "囍冯总囍",
@@ -611,7 +611,7 @@
         }
     ],
     "home_url": "https://raw.githubusercontent.com/koolshare/koolshare.github.io/master",
-    "md5": "efa3f4aef4c1aefcead6e20bca9ac740",
+    "md5": "bf2aeb52c994ae8027a4e1d8c175b71e",
     "tar_url": "koolcenter/softcenter.tar.gz",
-    "version": "1.9.62"
+    "version": "1.9.63"
 }
