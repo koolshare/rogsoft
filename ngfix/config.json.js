@@ -1,6 +1,6 @@
 {
-"version":"1.9",
-"md5":"0b18ac0f45c1a0ec8f971c4fc6518af8",
+"version":"2.3",
+"md5":"db80654db61a30a64f99999662cb223b",
 "home_url":"Module_ngfix.asp",
 "title":"RAX80 Toolbox",
 "description":"帮助RAX80刷回网件原厂固件，修复RAX80网件原厂分区",
@@ -8,5 +8,5 @@
 "author":"sadog",
 "link":"",
 "changelog":"",
-"build_date":"2022-01-13_09:31:16"
+"build_date":"2026-11-26_09:34:04"
 }

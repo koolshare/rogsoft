@@ -1,5 +1,8 @@
 Koolshare Asuswrt-Merlin ngfix Changelog for HND/AXHND platform
 ===========================================
 
+2.3
+   - fix	恢复 RAX80 原厂 MTD 分区修复模板。
+
 1.0
    - add	添加RAX80 Toolbox插件。
