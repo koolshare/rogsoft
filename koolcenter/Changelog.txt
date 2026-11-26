@@ -1,5 +1,10 @@
 Koolshare Asuswrt-Merlin koolcenter center Changelog
 ===========================================
+1.9.63
+   - fix	DDNSTO 服务配置改用扫码签名接口，避免正式站跨站 Cookie 会话失效
+   - fix	修复服务记录新增、域名同步、账号不一致和待核对记录恢复流程
+   - update	DDNSTO 正式 iframe 切换至 web.ddnsto.com，并增强路由器端记录持久化保护
+
 1.9.62
    - add	新增 DDNSTO 扫码引导、远程服务发现与域名同步流程
    - fix	修复 DDNSTO 设备授权、运行时 UID 更新和待确认记录恢复
