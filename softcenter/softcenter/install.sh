@@ -275,6 +275,41 @@ check_device(){
 	fi
 }
 
+can_install_system_jffs(){
+	# JFFS2 can report free bytes while having no erase block available for
+	# garbage collection.  Leave enough room for copy-on-write updates and
+	# verify that the original JFFS is actually writable before mirroring an
+	# installation from USB2JFFS.
+	local TARGET=$1
+	local PAYLOAD=$2
+	local PAYLOAD_KB=$(du -sk "${PAYLOAD}" 2>/dev/null | awk '{print $1}')
+	local AVAILABLE_KB=$(df -k "${TARGET}" 2>/dev/null | awk 'NR == 2 {print $4}')
+	local REQUIRED_KB=""
+	local PROBE="${TARGET}/.softcenter-write-test.$$"
+
+	if [ -z "${PAYLOAD_KB}" -o -z "${AVAILABLE_KB}" ];then
+		return 1
+	fi
+	REQUIRED_KB=$((PAYLOAD_KB * 2 + 4096))
+	if [ "${AVAILABLE_KB}" -lt "${REQUIRED_KB}" ];then
+		return 1
+	fi
+	if ! mkdir "${PROBE}" >/dev/null 2>&1;then
+		return 1
+	fi
+	if ! echo "rwTest=OK" > "${PROBE}/rw_test.txt" 2>/dev/null;then
+		rm -rf "${PROBE}" >/dev/null 2>&1
+		return 1
+	fi
+	sync
+	if [ "$(cat "${PROBE}/rw_test.txt" 2>/dev/null)" != "rwTest=OK" ];then
+		rm -rf "${PROBE}" >/dev/null 2>&1
+		return 1
+	fi
+	rm -rf "${PROBE}" >/dev/null 2>&1
+	[ ! -e "${PROBE}" ]
+}
+
 ks_debug(){
 	# detect if socat running correct
 	local PID_TMP=$(ps | grep -E "socat" | grep 3032 | grep tmp | awk '{print $1}')
@@ -653,7 +688,11 @@ install_now(){
 		center_install jffs
 		echo_date "----------------------------------------------------------------"
 		echo_date "------------------ 更新软件中心到系统 JFFS（/cifs2）----------------"
-		center_install cifs2
+		if can_install_system_jffs /cifs2 /tmp/${module};then
+			center_install cifs2
+		else
+			echo_date "系统 JFFS 可用空间或写入状态不足，保留原系统副本并跳过本次镜像更新！"
+		fi
 		echo_date "----------------------------------------------------------------"
 	else
 		echo_date "------------------ 更新软件中心到系统 JFFS（/jffs）-----------------"
