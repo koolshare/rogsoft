@@ -1,42 +1,30 @@
 #!/bin/bash
+# Compatibility entry point for building the HND checkout in place.
+set -eo pipefail
 
-#CURR_PATH=$(pwd)
-CURR_PATH="$( cd "$( dirname "$BASH_SOURCE[0]" )" && pwd )"
-SOFT_PATH=$(dirname $CURR_PATH)
-cd ${SOFT_PATH}
-
-modules=$(find . -maxdepth 1 -type d | grep -iv "\.\/\."|sed 's/.\///g'|sed '/\./d')
-for module in ${modules}; do
-	echo build module: ${module}
-	
-	if [ "${module}" = "koolcenter" ];then
-		cd ${SOFT_PATH}/${module}
-		
-		echo "add .valid to ${module}"
-		echo hnd >${SOFT_PATH}/${module}/softcenter/.valid
-
-		echo "build ${module}"
-		sh build.sh
-		continue
-	fi
-	
-	if [ -f ${SOFT_PATH}/${module}/build.sh ];then
-		cd ${SOFT_PATH}/${module}
-		
-		echo "add .valid to ${module}"
-		echo hnd >${SOFT_PATH}/${module}/${module}/.valid
-
-		echo "build ${module}"
-		sh build.sh
-	elif [ -f ${SOFT_PATH}/${module}/build.py ];then
-		cd ${SOFT_PATH}/${module}
-		
-		echo "add .valid to ${module}"
-		echo hnd >${SOFT_PATH}/${module}/${module}/.valid
-
-		echo "build ${module}"
-		python build.py
-	else
-		echo "${module}: this module do not have build.sh script!"
-	fi
+root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
+SCRIPT_DIR=
+candidates=("$root/../asusgo-build" "$root/../../asusgo-build")
+if [[ -n ${ASUSGO_BUILD_ROOT:-} ]]; then candidates=("$ASUSGO_BUILD_ROOT"); fi
+for tools in "${candidates[@]}"; do
+    if [[ -f $tools/build.py && -f $tools/lib/plugin_runtime.py && -f $tools/lib/platform-deploy.sh ]]; then
+        SCRIPT_DIR=$(cd -- "$tools" && pwd -P)
+        break
+    fi
 done
+if [[ -z ${SCRIPT_DIR:-} ]]; then
+    printf '请将 ASUSGO_BUILD_ROOT 指向新版 asusgo-build 工具目录。\n' >&2
+    exit 1
+fi
+TOOL_PATH=$SCRIPT_DIR
+. "$SCRIPT_DIR/lib/platform-deploy.sh"
+
+load_platform_profile rogsoft
+GIT_PATH=$root
+acquire_workspace_lock "$GIT_PATH" "${0##*/}"
+RULE_ICON_DIR=$(mktemp -d)
+trap 'rm -rf -- "$RULE_ICON_DIR"' EXIT
+rebuild_prepare
+rebuild_modules
+rebuild_platform_center softcenter
+rebuild_platform_center koolcenter
