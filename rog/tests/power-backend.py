@@ -168,14 +168,15 @@ aggregate_stubs = stubs + "\n" + "\n".join(function(name) for name in (
     '_get_model', 'get_mtk_power_backend', 'number_test')) + """
 get_cpu_temp(){ cpu_temp='50°C'; }
 get_tmp_pwr(){ wl_temp='2G/5G'; wl_txpwr='legacy'; }
-get_mtk_target_power(){ printf '2.4 GHz：无线已关闭；5 GHz：25.5 dBm / 354.81 mW'; }
+get_mtk_target_power(){ wl_txpwr='2.4 GHz：无线已关闭；5 GHz：25.5 dBm / 354.81 mW'; }
+refresh_status_samples(){ :; }
 get_mhz(){ cpu_mhz=1800; }
 get_system_info(){ kernel_ver=5.4; hardware_type=aarch64; build_date=2026; }
 http_response(){ printf '%s' "$1"; }
 """
 for model in wifi6 + wifi7 + triband + ('RT-AX88U',):
     env = dict(os.environ, ROG_TEST_ODM=model, ROG_TEST_PRODUCT=model)
-    result = subprocess.check_output(['bash', '-c', aggregate_stubs + main,
+    result = subprocess.check_output(['sh', '-c', aggregate_stubs + main,
                                       'test', '12345', '2'], env=env, text=True)
     fields = result.split('@@')
     assert len(fields) == 7, fields

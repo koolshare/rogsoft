@@ -77,8 +77,8 @@ function init() {
 		$("#warn_msg_1").show();
 		return false;
 	}
-	detect_CPU_RAM();
 	get_temperature();
+	detect_CPU_RAM();
 	if (mtkWifiPowerSupported) {
 		$("#rog_wl_power_note").show();
 	}
@@ -105,7 +105,6 @@ function get_dbus_data(){
 		type: "GET",
 		url: "/_api/rog_",
 		dataType: "json",
-		async: false,
 		success: function(data) {
 			dbus = data.result[0];
 			conf2obj();
@@ -119,6 +118,10 @@ function conf2obj(){
 		}
 	}
 }
+function retry_temperature(){
+	E("rog_cpu_temperature").innerHTML = "获取运行状态失败！";
+	setTimeout(get_temperature, 5000);
+}
 function get_temperature(){
 	var id = parseInt(Math.random() * 100000000);
 	var postData = {"id": id, "method": "rog_status.sh", "params":[2], "fields": ""};
@@ -130,9 +133,15 @@ function get_temperature(){
 		dataType: "json",
 		timeout: 20000,
 		success: function(response){
-			E("rog_cpu_temperature").innerHTML = response.result.split("@@")[0];
-			E("rog_wl_temperature").innerHTML = response.result.split("@@")[1];
-			var pwr = response.result.split("@@")[2];
+			var result = response && response.result;
+			var fields = typeof result === "string" ? result.split("@@") : [];
+			if (fields.length !== 7) {
+				retry_temperature();
+				return;
+			}
+			E("rog_cpu_temperature").innerHTML = fields[0];
+			E("rog_wl_temperature").innerHTML = fields[1];
+			var pwr = fields[2];
 			if (pwr){
 				E("rog_wl_power_tr").style.display = "";
 				if (mtkWifiPowerSupported) {
@@ -144,16 +153,14 @@ function get_temperature(){
 			}else{
 				E("rog_wl_power_tr").style.display = "none";
 			}
-			E("rog_cpu_mhz").innerHTML = Math.round(response.result.split("@@")[3]) + " MHz";
-			E("rog_kernel").innerHTML = response.result.split("@@")[4];
-			E("rog_systype").innerHTML = response.result.split("@@")[5];
-			E("rog_build_time").innerHTML = response.result.split("@@")[6];
-			setTimeout("get_temperature();", 2000);
+			var mhz = Number(fields[3]);
+			E("rog_cpu_mhz").innerHTML = mhz > 0 && isFinite(mhz) ? Math.round(mhz) + " MHz" : "—";
+			E("rog_kernel").innerHTML = fields[4];
+			E("rog_systype").innerHTML = fields[5];
+			E("rog_build_time").innerHTML = fields[6];
+			setTimeout(get_temperature, 2000);
 		},
-		error: function(){
-			E("rog_cpu_temperature").innerHTML = "获取运行状态失败！";
-			setTimeout("get_temperature();", 5000);
-		}
+		error: retry_temperature
 	});
 }
 
@@ -197,18 +204,19 @@ function detect_CPU_RAM() {
 			makeRequest.start('/cpu_ram_status.asp', function(xhr) {
 				//render_CPU(cpuInfo);
 				render_RAM(memInfo.total, memInfo.free, memInfo.used);
-				setTimeout("detect_CPU_RAM();", 2000);
-			}, function() {});
+				setTimeout(detect_CPU_RAM, 2000);
+			}, function() { setTimeout(detect_CPU_RAM, 5000); });
 		});
 	} else {
 		$.ajax({
 			url: '/cpu_ram_status.asp',
 			dataType: 'script',
-			error: detect_CPU_RAM,
+			timeout: 5000,
+			error: function() { setTimeout(detect_CPU_RAM, 5000); },
 			success: function(data) {
 				//render_CPU(cpuInfo);
 				render_RAM(memInfo.total, memInfo.free, memInfo.used);
-				setTimeout("detect_CPU_RAM();", 2000);
+				setTimeout(detect_CPU_RAM, 2000);
 			}
 		});
 	}

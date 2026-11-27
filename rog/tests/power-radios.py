@@ -13,11 +13,12 @@ def function(name):
 functions = '\n'.join(function(n) for n in (
     '_get_model', 'get_mtk_power_backend', 'get_mtk_band_label', 'format_mtk_power_band',
     'format_mtk_power_status', 'get_mtk_power_state', 'read_mtk_power_cache',
-    'get_mtk_target_power_band', 'get_mtk_temperature'))
-start = source.index('get_mtk_target_power() (')
-functions += '\n' + source[start:source.index('\n)\n', start) + 3]
+    'get_mtk_target_power_band', 'read_mtk_temperature', 'get_mtk_temperature', 'status_uptime',
+    'write_status_cache', 'sample_status_with_lock', 'start_status_sample', 'refresh_mtk_target_power',
+    'get_mtk_target_power', 'refresh_status_samples'))
 functions = functions.replace('/dev/kmsg', '${ROG_TEST_ROOT}/kmsg')
 functions = functions.replace('/sys/class/net/', '${ROG_TEST_ROOT}/net/')
+functions = functions.replace('/tmp/rog_wifi_temperature.cache', '${ROG_TEST_ROOT}/temperature')
 functions = functions.replace('/tmp/rog_wifi_power.cache', '${ROG_TEST_ROOT}/cache')
 functions = functions.replace('/tmp/mtk-txpwr-target.lock', '${ROG_TEST_ROOT}/lock')
 
@@ -44,6 +45,8 @@ fixture_cli(){
         printf 'CurrentTemperature = %s\n' "$((40+b))"
         return
     fi
+    # Hold the first refresh long enough for the next poll to see the lock.
+    sleep 0.08
     printf '%s %s\n' "$method" "$iface" >> "$ROG_TEST_ROOT/queries"
     printf '\nBand Index: %s, Channel Band: 1:5G\n=== BandIdx: %s, Max Base Pwr: %s dbm ===\n' "$b" "$b" "$((26+b))" >> "$ROG_TEST_ROOT/kmsg"
 }
@@ -59,10 +62,16 @@ mwctl(){
 '''
 program = stubs + '\n' + functions + '''
 get_mtk_power_backend
+get_mtk_temperature
 get_mtk_target_power
-printf '\\n'
+printf '%s\\n' "$wl_txpwr"
+refresh_status_samples
 get_mtk_target_power
-printf '\\n'
+printf '%s\\n' "$wl_txpwr"
+refresh_status_samples
+wait
+get_mtk_target_power
+printf '%s\\n' "$wl_txpwr"
 get_mtk_temperature
 printf '%s\\n' "$wl_temp"
 '''
@@ -79,18 +88,18 @@ for model in models:
             env = dict(os.environ, ROG_TEST_ROOT=folder, ROG_TEST_MODEL=model,
                        ROG_TEST_RADIO2=radio2, ROG_TEST_BAND2=band2)
             lines = subprocess.check_output(['sh', '-c', program], env=env, text=True).splitlines()
-            assert lines[0] == lines[1], lines
-            assert len(lines) == 3, lines
+            assert len(lines) == 4, lines
+            assert lines[0] == lines[1] and '正在查询…' in lines[0], lines
             expected = '2.4 GHz：26.0 dBm / 398.11 mW；5 GHz：27.0 dBm / 501.19 mW'
             count = 2
             if model == 'ZenWiFi_BT8P':
                 count = 2 if radio2 == '0' else 3
                 if band2 == '4': expected = '2.4 GHz：26.0 dBm / 398.11 mW；5 GHz：27.0 dBm / 501.19 mW；6 GHz：28.0 dBm / 630.96 mW'
                 else: expected = '2.4 GHz：26.0 dBm / 398.11 mW；5 GHz-1：27.0 dBm / 501.19 mW；5 GHz-2：' + ('无线已关闭' if radio2 == '0' else '28.0 dBm / 630.96 mW')
-            assert lines[0] == expected, (model, lines)
-            assert lines[2].count('GHz：') + lines[2].count('GHz-1：') + lines[2].count('GHz-2：') == (3 if model == 'ZenWiFi_BT8P' else 2), lines
+            assert lines[2] == expected, (model, lines)
+            assert lines[3].count('GHz：') + lines[3].count('GHz-1：') + lines[3].count('GHz-2：') == (3 if model == 'ZenWiFi_BT8P' else 2), lines
             queries = (root / 'queries').read_text().splitlines()
-            assert len(queries) == count, queries  # Second request must use the cache.
+            assert len(queries) == count, queries  # Overlapping polls can only start one driver query per band.
             wifi6 = model.startswith('TUF-') or model.startswith('TX-') or model.startswith('RT-')
             method = 'iwpriv' if wifi6 else 'mwctl'
             interfaces = ['ra0', 'rax0' if wifi6 else 'rai0'] + (['rax0'] if count == 3 else [])

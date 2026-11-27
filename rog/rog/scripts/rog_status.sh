@@ -2,17 +2,18 @@
 
 #alias echo_date='echo $(date +%Y年%m月%d日\ %X)'
 export KSROOT=/koolshare
-source $KSROOT/scripts/base.sh
+. "$KSROOT/scripts/base.sh"
 #=================================================
 
+mhz_cache_to_refresh=
+mtk_cache_to_refresh=
+mtk_state_to_refresh=
+
 _get_model(){
-	local odmpid=$(nvram get odmpid)
-	local MODEL=$(nvram get productid)
-	if [ -n "${odmpid}" ];then
-		echo "${odmpid}"
-	else
-		echo "${MODEL}"
-	fi
+	local model
+	model=$(nvram get odmpid)
+	[ -n "$model" ] || model=$(nvram get productid)
+	printf '%s\n' "$model"
 }
 
 get_cpu_temp(){
@@ -96,6 +97,7 @@ get_sta_info(){
 get_tmp_pwr_hnd(){
 	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
 	local model=$(_get_model)
+	local interface_band0_isup interface_band1_isup interface_band2_isup interface_band3_isup
 
 	# 1. get wireless eth info
 	if [ "${model}" == "RAX80" -o "${model}" == "RAX50" -o "${model}" == "RAX70" ];then
@@ -107,10 +109,10 @@ get_tmp_pwr_hnd(){
 		get_sta_info
 	fi
 
-	interface_band0_isup=$(wl -i ${interface_band0} isup)
-	interface_band1_isup=$(wl -i ${interface_band1} isup)
-	interface_band2_isup=$(wl -i ${interface_band2} isup)
-	interface_band3_isup=$(wl -i ${interface_band3} isup)
+	[ -z "$interface_band0" ] || interface_band0_isup=$(wl -i "$interface_band0" isup 2>/dev/null)
+	[ -z "$interface_band1" ] || interface_band1_isup=$(wl -i "$interface_band1" isup 2>/dev/null)
+	[ -z "$interface_band2" ] || interface_band2_isup=$(wl -i "$interface_band2" isup 2>/dev/null)
+	[ -z "$interface_band3" ] || interface_band3_isup=$(wl -i "$interface_band3" isup 2>/dev/null)
 
 	# band0 info
 	if [ "${interface_band0_isup}" == "1" ];then
@@ -214,18 +216,87 @@ get_tmp_pwr_hnd(){
 		fi
 	fi
 }
-get_mhz(){
-	cpu_mhz="null"
-	if [ -x "/koolshare/bin/mhz" ];then
-		cpu_mhz=$(/koolshare/bin/mhz -c)
+status_uptime(){
+	local seconds
+	IFS=' ' read -r seconds _ < /proc/uptime || return 1
+	printf '%s' "${seconds%%.*}"
+}
+
+write_status_cache(){
+	local cache=$1 tmp=$1.$$
+	shift
+	if (umask 077; printf '%s\n' "$@" > "$tmp") && mv -f "$tmp" "$cache"; then
+		return
 	fi
+	rm -f "$tmp"
+	return 1
+}
+
+sample_status_with_lock(){
+	(
+		status_sample_lock=$1
+		shift
+		mkdir "$status_sample_lock" 2>/dev/null || exit 1
+		trap 'rmdir "$status_sample_lock"' 0
+		trap 'exit 1' HUP INT TERM
+		"$@"
+	)
+}
+
+start_status_sample(){
+	# BusyBox ash can retain the result pipe when a function is
+	# backgrounded directly. Redirect an explicit subshell instead.
+	( sample_status_with_lock "$@" ) </dev/null >/dev/null 2>&1 &
+}
+
+read_mhz_cache(){
+	local cache=$1 now=$2 max_age=$3 sampled value
+	[ -r "$cache" ] || return 1
+	IFS=' ' read -r sampled value < "$cache" || return 1
+	case "$sampled" in ''|*[!0-9]*) return 1 ;; esac
+	[ "$now" -ge "$sampled" ] && [ "$((now - sampled))" -lt "$max_age" ] || return 1
+	printf '%s' "$value"
+}
+
+refresh_mhz_cache(){
+	local cache=$1 now mhz
+	now=$(status_uptime) || return
+	read_mhz_cache "$cache" "$now" 30 >/dev/null && return
+	mhz=$(/koolshare/bin/mhz -c 2>/dev/null | LC_ALL=C awk '
+		/^[0-9]+(\.[0-9]+)?$/ && $0 + 0 > 0 {print; exit}')
+	write_status_cache "$cache" "$now ${mhz:-null}"
+}
+
+get_mhz(){
+	local file khz cache=/tmp/rog_cpu_mhz.cache now
+	cpu_mhz=null
+	for file in /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq \
+	            /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; do
+		[ -r "$file" ] && IFS= read -r khz < "$file" || continue
+		case "$khz" in ''|*[!0-9]*) continue ;; esac
+		[ "$khz" -gt 0 ] || continue
+		cpu_mhz=$(((khz + 500) / 1000))
+		return
+	done
+
+	[ -x /koolshare/bin/mhz ] || return
+	now=$(status_uptime) || return
+	if cpu_mhz=$(read_mhz_cache "$cache" "$now" 30); then return; fi
+	cpu_mhz=$(read_mhz_cache "$cache" "$now" 120) || cpu_mhz=null
+	# The measurement binary runs a benchmark even for a status request.
+	mhz_cache_to_refresh=$cache
 }
 
 get_system_info(){
 	kernel_ver=$(uname -r 2>/dev/null)
 	hardware_type=$(uname -m 2>/dev/null)
 
-	if get_mtk_power_backend || [ "$(nvram get odmpid)" == "RT-AX89X" -o "$(nvram get odmpid)" == "TUF-AX4200Q" -o "$(nvram get odmpid)" == "TX-AX6000" -o "$(nvram get odmpid)" == "ZenWiFi_BD4" -o "$(nvram get odmpid)" == "TUF_6500" -o "$(nvram get odmpid)" == "GS7" -o "$(nvram get odmpid)" == "ZenWiFi_BT8P" -o "$(nvram get odmpid)" == "GS7_Air" -o "$(nvram get odmpid)" == "GS-BE7200X" ];then
+	local short_date=0
+	case "$(nvram get odmpid)" in
+		RT-AX89X|TUF-AX4200Q|TX-AX6000|ZenWiFi_BD4|TUF_6500|GS7|ZenWiFi_BT8P|GS7_Air|GS-BE7200X) short_date=1 ;;
+		*) if get_mtk_power_backend; then short_date=1; fi ;;
+	esac
+	if [ "$short_date" = 1 ];then
 		build_date_cst=$(uname -v | awk '{print $(NF-5),$(NF-4),$(NF-3),$(NF-2),$NF}')
 		build_date=$(date -D "%a %b %d %H:%M:%S %Y" -d "${build_date_cst}" +"%Y-%m-%d %H:%M:%S")
 	else
@@ -369,7 +440,7 @@ format_mtk_power_band(){
 			printf '%s：%s dBm / %s mW' "${label}" "${dbm}" "${milliwatts}"
 			;;
 		off) printf '%s：无线已关闭' "${label}" ;;
-		busy) printf '%s：正在查询，请稍后重试' "${label}" ;;
+		busy) printf '%s：正在查询…' "${label}" ;;
 		*) printf '%s：无法读取' "${label}" ;;
 	esac
 }
@@ -399,59 +470,91 @@ get_mtk_power_state(){
 }
 
 read_mtk_power_cache(){
-	local cache=$1 state=$2 now=$3 cached_time cached_state cached_power
+	local cache=$1 state=$2 now=$3 max_age=${4:-30} cached_time cached_state cached_power
 	[ -r "${cache}" ] || return 1
 	{
 		IFS= read -r cached_time && IFS= read -r cached_state && IFS= read -r cached_power
 	} < "${cache}" || return 1
 	case "${cached_time}" in ''|*[!0-9]*) return 1 ;; esac
 	[ "${cached_state}" = "${state}" ] && [ -n "${cached_power}" ] || return 1
-	[ "${now}" -ge "${cached_time}" ] && [ "$((now - cached_time))" -lt 30 ] || return 1
+	[ "${now}" -ge "${cached_time}" ] && [ "$((now - cached_time))" -lt "$max_age" ] || return 1
 	printf '%s' "${cached_power}"
 }
 
-get_mtk_target_power() (
-	get_mtk_power_backend || return
-	local cache=/tmp/rog_wifi_power.cache now state cached power band=0 iface value separator= complete=1
-	now=$(awk '{printf "%.0f", $1}' /proc/uptime)
-	state=$(get_mtk_power_state)
-	if cached=$(read_mtk_power_cache "${cache}" "${state}" "${now}");then
-		printf '%s' "${cached}"
-		return
-	fi
-	if [ ! -w /dev/kmsg ];then
-		format_mtk_power_status unavailable
-		return
-	fi
-
-	# Radios share driver state. Cache reports so status polling is cheap.
-	lock=/tmp/mtk-txpwr-target.lock
-	if ! mkdir "${lock}" 2>/dev/null;then
-		format_mtk_power_status busy
-		return
-	fi
-	trap 'rm -f "${cache}.$$"; rmdir "${lock}"' EXIT
-	trap 'exit 1' HUP INT TERM
-	# A preceding request may have filled the cache while we acquired the lock.
-	if cached=$(read_mtk_power_cache "${cache}" "${state}" "${now}");then
-		printf '%s' "${cached}"
-		return
-	fi
-	power=
-	for iface in ${mtk_power_ifnames};do
-		value=$(get_mtk_target_power_band "${iface}" "${band}") || value=unavailable
-		power="${power}${separator}$(format_mtk_power_band "$(get_mtk_band_label "${band}")" "${value}")"
-		[ "${value}" != "unavailable" ] || complete=0
+refresh_mtk_target_power(){
+	local cache=$1 state=${2:-} now band=0 iface value power= separator= complete=1
+	[ -n "$state" ] || state=$(get_mtk_power_state)
+	now=$(status_uptime) || return
+	# A preceding request may have filled the cache before this worker got the lock.
+	read_mtk_power_cache "$cache" "$state" "$now" >/dev/null && return
+	read_mtk_power_cache "$cache.retry" "$state" "$now" 10 >/dev/null && return
+	for iface in $mtk_power_ifnames; do
+		value=$(get_mtk_target_power_band "$iface" "$band") || value=unavailable
+		power="$power$separator$(format_mtk_power_band "$(get_mtk_band_label "$band")" "$value")"
+		[ "$value" != unavailable ] || complete=0
 		separator='；'
 		band=$((band + 1))
 	done
-	# Errors are not cached, so the next status request can retry immediately.
-	if [ "${complete}" = "1" ];then
-		umask 077
-		printf '%s\n' "${now}" "${state}" "${power}" > "${cache}.$$" && mv -f "${cache}.$$" "${cache}"
+	now=$(status_uptime) || return
+	if [ "$complete" = 1 ]; then
+		write_status_cache "$cache" "$now" "$state" "$power"
+	else
+		# Leave the last successful report available and cool down failed queries.
+		write_status_cache "$cache.retry" "$now" "$state" "$power"
 	fi
-	printf '%s' "${power}"
-)
+}
+
+get_mtk_target_power(){
+	local cache=/tmp/rog_wifi_power.cache now state cached retry
+	wl_txpwr=
+	now=$(status_uptime) || return
+	if [ ! -r "$cache" ] && [ ! -r "$cache.retry" ] && [ -w /dev/kmsg ]; then
+		# No prior state to validate. Let the sampler read the active channel.
+		mtk_cache_to_refresh=$cache
+		mtk_state_to_refresh=
+		wl_txpwr=$(format_mtk_power_status busy)
+		return
+	fi
+	# iwconfig and temperature stat can stall behind a driver power report.
+	state=$(sample_status_with_lock /tmp/mtk-txpwr-target.lock get_mtk_power_state) || {
+		wl_txpwr=$(format_mtk_power_status busy)
+		return
+	}
+	if cached=$(read_mtk_power_cache "$cache" "$state" "$now"); then
+		wl_txpwr=$cached
+		return
+	fi
+
+	if [ ! -w /dev/kmsg ]; then
+		wl_txpwr=$(format_mtk_power_status unavailable)
+		return
+	fi
+	retry=$(read_mtk_power_cache "$cache.retry" "$state" "$now" 10)
+	if [ -z "$retry" ]; then
+		mtk_cache_to_refresh=$cache
+		mtk_state_to_refresh=$state
+	fi
+	# Only reuse a previous value when it describes the current radio state.
+	if cached=$(read_mtk_power_cache "$cache" "$state" "$now" 120); then
+		wl_txpwr=$cached
+	elif [ -n "$retry" ]; then
+		wl_txpwr=$retry
+	else
+		wl_txpwr=$(format_mtk_power_status busy)
+	fi
+}
+
+refresh_status_samples(){
+	if [ -n "$mtk_cache_to_refresh" ]; then
+		start_status_sample /tmp/mtk-txpwr-target.lock refresh_mtk_target_power \
+			"$mtk_cache_to_refresh" "$mtk_state_to_refresh"
+		mtk_cache_to_refresh=
+	fi
+	if [ -n "$mhz_cache_to_refresh" ]; then
+		start_status_sample "$mhz_cache_to_refresh.lock" refresh_mhz_cache "$mhz_cache_to_refresh"
+		mhz_cache_to_refresh=
+	fi
+}
 
 get_tmp_pwr_MT7988X(){
 	local __spilt__="&nbsp;&nbsp;|&nbsp;&nbsp"
@@ -507,9 +610,8 @@ get_tmp_pwr_qca(){
 	wl_txpwr="2.4G：${interface_2g_power_d} / ${interface_2g_power_p} <br /> 5G：&nbsp;&nbsp;&nbsp;${interface_5g1_power_d} / ${interface_5g1_power_p}"
 }
 
-get_mtk_temperature(){
-	local band=0 iface value separator=
-	wl_temp=
+read_mtk_temperature(){
+	local band=0 iface value separator= temperature=
 	for iface in ${mtk_power_ifnames};do
 		if [ "$(nvram get "wl${band}_radio")" = "0" ];then
 			value="无线已关闭"
@@ -527,10 +629,27 @@ get_mtk_temperature(){
 				}')
 			if [ -n "${value}" ];then value="${value}°C";else value="无法读取";fi
 		fi
-		wl_temp="${wl_temp}${separator}$(get_mtk_band_label "${band}")：${value}"
+		temperature="${temperature}${separator}$(get_mtk_band_label "${band}")：${value}"
 		separator=' &nbsp;&nbsp;|&nbsp;&nbsp; '
 		band=$((band + 1))
 	done
+	printf '%s' "$temperature"
+}
+
+get_mtk_temperature(){
+	local cache=/tmp/rog_wifi_temperature.cache now state="$mtk_power_ifnames" band=0 iface
+	for iface in $mtk_power_ifnames; do
+		state="$state|$(nvram get "wl${band}_radio")"
+		band=$((band + 1))
+	done
+	now=$(status_uptime) || now=0
+	if wl_temp=$(sample_status_with_lock /tmp/mtk-txpwr-target.lock read_mtk_temperature); then
+		write_status_cache "$cache" "$now" "$state" "$wl_temp"
+		return
+	fi
+	# A concurrent power query owns the radio. Use the last temperature
+	# only if it describes the same set of enabled radios.
+	wl_temp=$(read_mtk_power_cache "$cache" "$state" "$now" 15) || wl_temp='正在查询…'
 }
 
 get_tmp_pwr(){
@@ -563,17 +682,21 @@ number_test(){
 get_cpu_temp
 get_tmp_pwr
 if get_mtk_power_backend;then
-	wl_txpwr=$(get_mtk_target_power)
+	get_mtk_target_power
 fi
 get_mhz
 get_system_info
 #=================================================
 
-# when called by web (two args, $2 is pure nu)，run http_response
-if [ $# == 2 -a $(number_test $1) == 0 ];then
-	http_response "${cpu_temp}@@${wl_temp}@@${wl_txpwr}@@${cpu_mhz}@@${kernel_ver}@@${hardware_type}@@${build_date}"
+# httpdb passes a numeric request ID and the status action.
+status_result="${cpu_temp}@@${wl_temp}@@${wl_txpwr}@@${cpu_mhz}@@${kernel_ver}@@${hardware_type}@@${build_date}"
+if [ "$#" -eq 2 ] && [ "$(number_test "$1")" = 0 ];then
+	http_response "$status_result"
+elif [ "$#" -eq 0 ];then
+	printf '%s\n' "$status_result"
+else
+	exit 0
 fi
 
-if [ $# == 0 ];then
-	echo "${cpu_temp}@@${wl_temp}@@${wl_txpwr}@@${cpu_mhz}@@${kernel_ver}@@${hardware_type}@@${build_date}"
-fi
+# Respond before starting expensive driver and benchmark work.
+refresh_status_samples

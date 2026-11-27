@@ -10,7 +10,7 @@ assert(html.includes('<th id="rog_wl_power_label">发射功率</th>'));
 assert(html.includes('<tr id="rog_wl_power_tr" style="display: none;">'));
 assert(html.includes('<span id="rog_wl_power"></span>'));
 function controller(model, product) {
- const nodes = {}, calls = [];
+ const nodes = {}, calls = [], timers = [];
  function elt(id) {
   return nodes[id] || (nodes[id] = {
    style: id === 'rog_wl_power_tr' ? { display: 'none' } : {}, value: '',
@@ -22,7 +22,7 @@ function controller(model, product) {
  }
  function $(s) { return elt(s.slice(1)); }
  $.ajax = x => calls.push(x);
- const c = { $, E: elt, setTimeout() {}, window: { location: { href: 'http://router/Module_rog.asp' } } };
+ const c = { $, E: elt, setTimeout(fn, delay) { timers.push([fn, delay]); }, window: { location: { href: 'http://router/Module_rog.asp' } } };
  vm.createContext(c);
  const js = source.replace(/<%cpu_core_num\(\);%>/g, '4')
   .replace(/<% nvram_get\("odmpid"\); %>/g, model)
@@ -31,7 +31,7 @@ function controller(model, product) {
  vm.runInContext(js, c);
  ['show_menu', 'set_skin', 'detect_CPU_RAM', 'showbootTime', 'showclock', 'fan_ctrl'].forEach(k => c[k] = () => {});
  c.init();
- return { c, calls, nodes };
+ return { c, calls, nodes, timers };
 }
 assert(!html.includes('rog_wl_power_refresh'));
 assert(!html.includes('get_mtk_wifi_power'));
@@ -42,6 +42,13 @@ assert.equal(JSON.parse(p.calls[0].data).params[0], 2);
 assert.equal(p.calls[0].timeout, 20000);
 assert(!p.nodes.rog_wl_power_tr);
 assert(!p.nodes.rog_wl_power);
+p.calls[0].success({ result: '55°C@@5G 45°C@@5 GHz：正在查询…@@null@@5.4.281@@aarch64@@2026' });
+assert.equal(p.nodes.rog_cpu_temperature.innerHTML, '55°C');
+assert.equal(p.nodes.rog_cpu_mhz.innerHTML, '—');
+assert.equal(p.nodes.rog_wl_power.value, '5 GHz：正在查询…');
+assert.deepEqual(p.timers.pop(), [p.c.get_temperature, 2000]);
+p.calls[0].success({ result: -1 });
+assert.deepEqual(p.timers.pop(), [p.c.get_temperature, 5000]);
 p.calls[0].success({ result: '55°C@@5G 45°C@@2.4 GHz：无线已关闭；5 GHz：25.5 dBm / 354.81 mW@@1800@@5.4.281@@aarch64@@2026' });
 assert.equal(p.nodes.rog_wl_power.value, '2.4 GHz：无线已关闭\n5 GHz：25.5 dBm / 354.81 mW');
 assert.equal(p.nodes.rog_wl_power_note.style.display, '');
