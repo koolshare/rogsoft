@@ -268,17 +268,8 @@ refresh_mhz_cache(){
 }
 
 get_mhz(){
-	local file khz cache=/tmp/rog_cpu_mhz.cache now
+	local cache=/tmp/rog_cpu_mhz.cache now
 	cpu_mhz=null
-	for file in /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq \
-	            /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; do
-		[ -r "$file" ] && IFS= read -r khz < "$file" || continue
-		case "$khz" in ''|*[!0-9]*) continue ;; esac
-		[ "$khz" -gt 0 ] || continue
-		cpu_mhz=$(((khz + 500) / 1000))
-		return
-	done
-
 	[ -x /koolshare/bin/mhz ] || return
 	now=$(status_uptime) || return
 	if cpu_mhz=$(read_mhz_cache "$cache" "$now" 30); then return; fi
