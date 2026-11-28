@@ -354,6 +354,31 @@ ks_debug(){
 	fi
 }
 
+# Seed each installation root independently; firmware may use a more specific HND tag.
+seed_platform_marker() (
+	target="$2/.valid"
+	exec 8<"$2" || exit 1
+	flock 8 || exit 1
+	if [ -e "$target" ]; then
+		[ -f "$target" ] || exit 1
+		grep -q '[^[:space:]]' "$target" && exit 0
+		[ "$?" -eq 1 ] || exit 1
+	fi
+
+	[ -f "$1" ] || exit 1
+	tag=$(cat "$1") || exit 1
+	case "$tag" in
+		hnd|hnd_v7|hnd_v8|mtk|qca|ipq32|ipq64) ;;
+		*) exit 1 ;;
+	esac
+	umask 022
+	tmp="$target.new.$$"
+	set -C
+	exec 9>"$tmp" || exit 1
+	trap 'rm -f "$tmp"' 0
+	printf '%s\n' "$tag" >&9 && mv -f "$tmp" "$target"
+)
+
 center_install() {
 	local KSHOME=$1
 
@@ -485,6 +510,8 @@ center_install() {
 	#cp -rf /tmp/${module}/perp /${KSHOME}/.koolshare/
 	#cp -rf /tmp/${module}/scripts /${KSHOME}/.koolshare/
 	cp -rf /tmp/${module}/.soft_ver /${KSHOME}/.koolshare/
+	seed_platform_marker "/tmp/${module}/.valid" "/${KSHOME}/.koolshare" ||
+		echo_date "未能补齐 /${KSHOME}/.koolshare/.valid，请检查包内平台标记和目标目录。"
 
 	echo_date "文件复制结束，开始创建相关的软连接..."
 	
