@@ -369,7 +369,7 @@ center_install() {
 	nvram set 3rd-party=merlin
 	nvram commit
 
-	local CENTER_TYPE_1=$(cat /tmp/${module}/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+	local CENTER_TYPE_1=$("/tmp/${module}/bin/sc-endpoint" old-page "/tmp/${module}/webs/Module_Softcenter.asp")
 	if [ -z "${CENTER_TYPE_1}" ];then
 		echo_date "准备安装软件中心：koolcenter ..."
 	else
@@ -431,7 +431,7 @@ center_install() {
 
 	# which center
 	if [ -f "/${KSHOME}/.koolshare/webs/Module_Softcenter.asp" ];then
-		local CENTER_TYPE_2=$(cat /${KSHOME}/.koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+		local CENTER_TYPE_2=$("/tmp/${module}/bin/sc-endpoint" old-page "/${KSHOME}/.koolshare/webs/Module_Softcenter.asp")
 		if [ -z "${CENTER_TYPE_2}" -a -z "${CENTER_TYPE_1}" ];then
 			echo_date "检测到当前软件中心为koolcenter，继续安装koolcenter！"
 		elif [ -z "${CENTER_TYPE_2}" -a -n "${CENTER_TYPE_1}" ];then
@@ -591,6 +591,7 @@ center_install() {
 		/usr/bin/dbus set softcenter_installing_tar_url=""
 		/usr/bin/dbus set softcenter_installing_version=""
 		/usr/bin/dbus set softcenter_installing_md5=""
+		/usr/bin/dbus remove softcenter_installing_source_url
 	fi
 
 	local SOFTVER=$(cat /tmp/${module}/.soft_ver)
@@ -598,7 +599,11 @@ center_install() {
 		killall skipd >/dev/null 2>&1
 		kill -9 $(pidof skipd) >/dev/null 2>&1
 		/usr/bin/skipd -d /cifs2/ksdb >/dev/null 2>&1 &
+		local cifs_skipd=$!
 		sleep 2
+		if kill -0 "$cifs_skipd" 2>/dev/null; then
+			/cifs2/.koolshare/bin/sc-endpoint init >/dev/null || logger -t softcenter "CIFS2 endpoint initialization deferred"
+		fi
 		if [ -n "${SOFTVER}" ];then
 			dbus set softcenter_version=${SOFTVER}
 		fi
@@ -613,6 +618,19 @@ center_install() {
 		if [ -n "${SOFTVER}" ];then
 			dbus set softcenter_version=${SOFTVER}
 		fi
+	fi
+
+	if [ "${KSHOME}" = jffs ]; then
+		/koolshare/bin/sc-endpoint init >/dev/null || logger -t softcenter "Endpoint initialization deferred"
+		/koolshare/bin/sc-endpoint notify
+		# The supervisor reopens the new binary. An unchanged service keeps its connections.
+		local hp parent
+		for hp in $(pidof httpdb); do
+			parent=$(awk '/^PPid:/ {print $2}' "/proc/$hp/status")
+			[ "$(cat "/proc/$parent/comm" 2>/dev/null)" = perpd ] || continue
+			cmp -s "/proc/$hp/exe" /koolshare/bin/httpdb
+			[ "$?" = 1 ] && kill -TERM "$hp"
+		done
 	fi
 
 	# run something after install
@@ -642,33 +660,6 @@ exit_install(){
 	esac
 }
 
-set_url(){
-	local LINUX_VER=$(uname -r | awk -F"." '{print $1$2}')
-	if [ "${LINUX_VER}" -ge "41" ];then
-		local SC_URL=https://rogsoft.ddnsto.com
-	fi
-	if [ "${LINUX_VER}" -eq "26" ];then
-		local SC_URL=https://armsoft.ddnsto.com
-	fi
-	local RO_MODEL=$(nvram get odmpid)
-	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" -o "${RO_MODEL}" == "GS7" -o "${RO_MODEL}" == "ZenWiFi_BT8P" -o "${RO_MODEL}" == "GS7_Air" -o "${RO_MODEL}" == "GS-BE7200X" ];then
-		local SC_URL=https://mtksoft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "ZenWiFi_BD4" ];then
-		local SC_URL=https://ipq32soft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "TUF_6500" ];then
-		local SC_URL=https://ipq64soft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "RT-AX89X" ];then
-		local SC_URL=https://qcasoft.ddnsto.com
-	fi
-	local SC_URL_NVRAM=$(nvram get sc_url)
-	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
-		nvram set sc_url=${SC_URL}
-		nvram commit
-	fi
-}
 
 platform_test(){
 	local LINUX_VER=$(uname -r|awk -F"." '{print $1$2}')
@@ -705,7 +696,6 @@ install_now(){
 install(){
 	get_model
 	get_fw_type
-	set_url
 	platform_test
 	install_now
 }

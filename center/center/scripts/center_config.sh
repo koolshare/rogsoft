@@ -1,4 +1,12 @@
 #!/bin/sh
+# Falling back to the historical catalog path keeps the switcher usable after a downgrade.
+legacy_page() {
+	if [ -x /koolshare/bin/sc-endpoint ]; then
+		/koolshare/bin/sc-endpoint old-page "$1"
+	else
+		grep -Fo "/softcenter/app.json.js" "$1" | head -n1
+	fi
+}
 
 # use this scripts to switch between softcenter and koolcenter
 
@@ -70,7 +78,7 @@ switch_new(){
 switch_center(){
 	if [ -f /jffs/.koolshare/webs/Module_Softcenter_old.asp -a -f /jffs/.koolshare/.soft_ver_old ];then
 		switch_old jffs
-		CENTER_TYPE=$(cat /koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+		CENTER_TYPE=$(legacy_page /koolshare/webs/Module_Softcenter.asp)
 		if [ -z "$CENTER_TYPE" ];then
 			return 1
 		else
@@ -78,7 +86,7 @@ switch_center(){
 		fi
 	elif [ -f /jffs/.koolshare/webs/Module_Softcenter_new.asp -a -f /jffs/.koolshare/.soft_ver_new ];then
 		switch_new jffs
-		CENTER_TYPE=$(cat /koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+		CENTER_TYPE=$(legacy_page /koolshare/webs/Module_Softcenter.asp)
 		if [ -z "$CENTER_TYPE" ];then
 			return 0
 		else
@@ -146,13 +154,14 @@ if [ $# == 2 -a $(number_test $1) == 0 ];then
 	if [ "$?" == "0" ];then
 		http_response "$1"
 	else
-		CENTER_TYPE=$(cat /koolshare/webs/Module_Softcenter.asp | grep -Eo "/softcenter/app.json.js")
+		CENTER_TYPE=$(legacy_page /koolshare/webs/Module_Softcenter.asp)
 		if [ -z "$CENTER_TYPE" ];then
 			http_response "错误：没有检测到softcenter，不切换！"
 		else
 			http_response "错误：没有检测到koolcenter，不切换！"
 		fi
 	fi
+	[ ! -x /koolshare/bin/sc-endpoint ] || /koolshare/bin/sc-endpoint notify
 	set_skin
 	exit 0
 fi
@@ -162,5 +171,6 @@ if [ $# == 1 -a "$1" == "remove" ];then
 	exit 0
 fi
 
-switch_center
+switch_center || exit 1
+[ ! -x /koolshare/bin/sc-endpoint ] || /koolshare/bin/sc-endpoint notify
 

@@ -1,0 +1,92 @@
+#!/bin/sh
+# Shared repository address for the software center. BusyBox ash.
+PATH=/koolshare/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+platform() {
+    case "$0" in
+        /cifs2/.koolshare/bin/sc-endpoint) mark=/cifs2/.koolshare/.valid ;;
+        *) mark=/koolshare/.valid ;;
+    esac
+    tag=$(cat "$mark" 2>/dev/null)
+    case "$tag" in
+        hnd|hnd_v7|hnd_v8) echo rogsoft; return ;;
+        mtk|qca|ipq32|ipq64) echo "${tag}soft"; return ;;
+        arm384|arm) echo armsoft; return ;;
+    esac
+    model=$(nvram get odmpid)
+    [ -n "$model" ] || model=$(nvram get productid)
+    case "$model" in
+        GS7|GS7_Air|GS-BE7200X|TX-AX6000|TUF-AX4200Q|RT-AX57_Go|ZenWiFi_BT8P) echo mtksoft ;;
+        RT-AX89X) echo qcasoft ;;
+        ZenWiFi_BD4) echo ipq32soft ;;
+        TUF_6500|TUF-BE6500) echo ipq64soft ;;
+        RT-BE88U|RT-AC86U|GT-AC5300) echo rogsoft ;;
+        *) return 1 ;;
+    esac
+}
+valid_url() {
+    case "$1" in http://*|https://*) ;; *) return 1 ;; esac
+    authority=${1#*://}; authority=${authority%%/*}
+    [ -n "$authority" ] || return 1
+    case "$1" in *[[:space:][:cntrl:]]*|*'@'*|*'?'*|*'#'*|*'\'*|*/../*|*/..) return 1 ;; esac
+}
+case "$1" in
+    platform) platform; exit $? ;;
+    old-page)
+        [ -r "$2" ] || exit 1
+        if grep -Fq 'sc-endpoint-v1 koolcenter' "$2"; then exit 0; fi
+        if grep -Fq 'sc-endpoint-v1 softcenter' "$2" || grep -Fq '/softcenter/app.json.js' "$2"; then
+            echo softcenter
+        fi
+        exit 0 ;;
+    notify)
+        marker=/koolshare/.sc_endpoint_default
+        if "$0" capable; then
+            if [ "$(cat "$marker" 2>/dev/null)" != cdn ]; then
+                (umask 022; printf 'cdn\n' > "$marker.new.$$" && mv -f "$marker.new.$$" "$marker") || exit 1
+            fi
+        else
+            rm -f "$marker"
+        fi
+        [ ! -x /koolshare/cdn/endpoint.sh ] || /koolshare/cdn/endpoint.sh boot
+        exit $? ;;
+    capable)
+        grep -Fq 'sc-endpoint-v1' /koolshare/webs/Module_Softcenter.asp &&
+        grep -Fq '/koolshare/bin/sc-endpoint' /koolshare/scripts/ks_app_install.sh &&
+        grep -Fq '/koolshare/bin/sc-endpoint' /koolshare/bin/kscore.sh
+        exit $? ;;
+    get|init|direct|cdn) ;;
+    *) exit 2 ;;
+esac
+umask 077
+state=/tmp/.sc-endpoint
+mkdir -p "$state" || exit 1
+exec 8>"$state/lock" || exit 1
+flock 8 || exit 1
+pidof skipd >/dev/null || exit 1
+value=$(dbus get softcenter_home_url) || exit 1
+repo=$(platform) || repo=''
+if [ -n "$repo" ] && [ "$(dbus get softcenter_repo)" != "$repo" ]; then
+    dbus set "softcenter_repo=$repo" || exit 1
+fi
+case "$1" in
+    get|init)
+        if [ -n "$value" ]; then
+            valid_url "$value" || exit 1
+            printf '%s\n' "$value"; exit 0
+        fi
+        mode=$(dbus get cdn_mode) || exit 1
+        [ "$mode" = direct ] || mode=cdn ;;
+    *)
+        [ -z "$(dbus get softcenter_installing_name)" ] &&
+        [ -z "$(dbus get softcenter_installing_todo)" ] || exit 1
+        mode=$1 ;;
+esac
+[ -n "$repo" ] || exit 1
+case "$mode:$repo" in
+    direct:*|*:armsoft) target="https://$repo.ddnsto.com" ;;
+    *) target="https://asusgo.koolcenter.com/$repo" ;;
+esac
+if [ "$value" != "$target" ]; then dbus set "softcenter_home_url=$target" || exit 1; fi
+[ "$(dbus get softcenter_home_url)" = "$target" ] || exit 1
+printf '%s\n' "$target"

@@ -287,18 +287,19 @@ String.prototype.myReplace = function(f, e){
 }
 
 var ro_model = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
-if ( ro_model == "TX-AX6000" || ro_model == "TUF-AX4200Q"  || ro_model == "RT-AX57_Go" || ro_model == "GS7" || ro_model == "ZenWiFi_BT8P" || ro_model == "GS7_Air" || ro_model == "GS-BE7200X" ){
-	var SOFT_ARCH = "mtksoft"
-}else if(ro_model == "ZenWiFi_BD4"){
-	var SOFT_ARCH = "ipq32soft"
-}else if(ro_model == "TUF_6500"){
-	var SOFT_ARCH = "ipq64soft"
-}else if(ro_model == "RT-AX89X"){
-	var SOFT_ARCH = "qcasoft"
-}else{
-	var SOFT_ARCH = "rogsoft"
+// sc-endpoint-v1 softcenter
+function repoUrl(path) {
+    var base = db_softcenter_["softcenter_home_url"] || "";
+    return base ? base.replace(/\/+$/, "") + "/" + path.replace(/^\/+/, "") : "";
 }
-
+function changeRepo(mode) {
+    $.ajax({type: "POST", url: "/_api/", contentType: "application/json", dataType: "json",
+        data: JSON.stringify({id: Math.floor(Math.random()*100000000), method: "ks_endpoint.sh", params: [mode], fields: {}})
+    }).done(function(reply) {
+        if (reply.result === "ok") window.location.reload();
+        else alert("切换未完成，请检查软件中心是否正在安装插件。");
+    }).fail(function() { alert("软件中心未响应。"); });
+}
 function checkField(o, f, d) {
 	if (typeof o[f] == "undefined") {
 		o[f] = d;
@@ -307,10 +308,10 @@ function checkField(o, f, d) {
 }
 function appPostScript(moduleInfo, script) {
 	var data = {};
-	data["softcenter_home_url"] = "https://" + SOFT_ARCH + ".ddnsto.com";
 	data["softcenter_installing_todo"] = moduleInfo.name;
 	data["softcenter_installing_title"] = moduleInfo.title;
 	if (script == "ks_app_install.sh") {
+		data["softcenter_installing_source_url"] = db_softcenter_["softcenter_home_url"];
 		data["softcenter_installing_tar_url"] = moduleInfo.tar_url;
 		data["softcenter_installing_md5"] = moduleInfo.md5;
 		data["softcenter_installing_version"] = moduleInfo.version;
@@ -431,9 +432,10 @@ function renderView(apps) {
 	$('.show-uninstall-btn').val('未安装(' + uninstallCount + ')');
 }
 function getRemoteData() {
-	var json_app = '/softcenter/app.json.js'
+	var json_app = ro_model === "ZenWiFi_BD4" ? "/softcenter/app_nousb.json.js" : "/softcenter/app.json.js";
 	
-	var remoteURL = db_softcenter_["softcenter_home_url"] + json_app;
+	var remoteURL = repoUrl(json_app);
+	if (!remoteURL) return $.Deferred().reject().promise();
 	return $.ajax({
 		url: remoteURL,
 		method: 'GET',
@@ -532,7 +534,7 @@ function init(cb) {
 				// 如果已安装的插件,那图标必定在 /koolshare/res 目录, 通过 /res/icon-{name}.png 请求路径得到图标
 				// 如果是未安装的插件,则必定在 https://rogsoft.ddnsto.com/{name}/{name}/icon-{name}.png
 				// TODO 如果因为一些错误导致没有图标, 有可能显示一张默认图标吗?
-				item.icon = parseInt(item.install, 10) !== 0 ? ('/res/icon-' + item.name + '.png') : ('https://' + SOFT_ARCH + '.ddnsto.com' + new Array(3).join('/softcenter') + '/res/icon-' + item.name + '.png');
+				item.icon = parseInt(item.install, 10) !== 0 ? ('/res/icon-' + item.name + '.png') : repoUrl('/softcenter/softcenter/res/icon-' + item.name + '.png');
 			});
 			return result;
 		};
@@ -576,7 +578,6 @@ $(function() {
 		cache: false,
 		success: function(response) {
 			db_softcenter_ = response.result[0];
-			db_softcenter_["softcenter_home_url"] = "https://" + SOFT_ARCH + ".ddnsto.com";
 			if (!db_softcenter_["softcenter_version"]) {
 				db_softcenter_["softcenter_version"] = "0.0";
 			}
@@ -669,8 +670,9 @@ function menu_hook() {
 	tablink[tablink.length - 1] = new Array("", "Module_Softcenter.asp", "Module_Softsetting.asp");
 }
 function notice_show() {
+	if (!repoUrl('/')) return;
 	$.ajax({
-		url: 'https://' + SOFT_ARCH + '.ddnsto.com/softcenter/push_message.json.js',
+		url: repoUrl('/softcenter/push_message.json.js'),
 		type: 'GET',
 		dataType: 'jsonp',
 		success: function(res) {
@@ -928,7 +930,7 @@ function ks_online() {
 																					</li>
 																					<li>
 																						<h5>当前版本：<span id="spnCurrVersion"></span>&nbsp;&nbsp;&nbsp;&nbsp;在线版本：<span id="spnOnlineVersion"></span>
-																						<input type="button" id="updateBtn" value="更新" style="display:none" /></h5>
+																						<input type="button" value="使用官方直连" onclick="changeRepo('direct')" /> <input type="button" value="使用 CDN" onclick="changeRepo('cdn')" /> <input type="button" id="updateBtn" value="更新" style="display:none" /></h5>
 																					</li>
 																				</ul>
 																			</td>

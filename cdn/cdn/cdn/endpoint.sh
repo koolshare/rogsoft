@@ -26,12 +26,13 @@ case "$platform" in
 esac
 direct="https://$repo.ddnsto.com"
 edge="https://asusgo.koolcenter.com/$repo"
-native=$(cat /koolshare/.sc_endpoint_default 2>/dev/null)
-case "$native" in direct|cdn) ;; *) native= ;; esac
+manager=/koolshare/bin/sc-endpoint
+native=
+if [ -x "$manager" ] && "$manager" capable; then native=cdn; fi
 
 read_config() {
-    nv=$(nvram get sc_url) && db=$(dbus get softcenter_home_url) &&
-        pref=$(dbus get cdn_mode)
+    db=$(dbus get softcenter_home_url) && pref=$(dbus get cdn_mode) || return 1
+    if [ -n "$native" ]; then nv=$db; else nv=$(nvram get sc_url) || return 1; fi
 }
 center_type() {
     if [ ! -r "$page" ]; then
@@ -52,6 +53,7 @@ url_for() {
 }
 known_pair() {
     [ -n "$repo" ] || return 1
+    [ -z "$native" ] || return 0
     for addr in "$nv" "$db"; do
         case "$addr" in ''|"$direct"|"$edge") ;; *) return 1 ;; esac
     done
@@ -95,12 +97,12 @@ status() {
         case "$shown" in
             "$edge") active=cdn; button=direct ;;
             "$direct") active=direct; button=cdn ;;
-            *) detail="尚无软件中心地址"; button=direct ;;
+            *) detail="当前软件中心地址：${shown:-未设置}"; button=direct ;;
         esac
-        if [ "$pref" = cdn ] && [ "$shown" != "$edge" ]; then
+        if [ -z "$native" ] && [ "$pref" = cdn ] && [ "$shown" != "$edge" ]; then
             detail="已选 CDN，等待恢复。"; button=direct
         fi
-        if [ "$pref" = direct ] && [ "$shown" != "$direct" ]; then
+        if [ -z "$native" ] && [ "$pref" = direct ] && [ "$shown" != "$direct" ]; then
             detail="已选直连，等待恢复。"; button=direct
         fi
         if [ -n "$db" ] && [ "$db" != "$shown" ]; then
@@ -234,6 +236,13 @@ choose() {
     busy && fail "软件中心刚开始安装或卸载，请稍后重试。"
     read_config && known_pair || fail "检测到服务器配置变化，请刷新后重试。"
     [ "$(center_type)" = "$kind" ] || fail "活动软件中心已改变，请刷新后重试。"
+    if [ -n "$native" ]; then
+        "$manager" capable && "$manager" "$mode" >/dev/null || fail "地址保存失败，请刷新状态。"
+        schedule "" || fail "地址已保存，旧兼容任务清理失败。"
+        dbus set "cdn_mode=$mode" || fail "地址已保存，模式偏好保存失败。"
+        note "已切换到 $(url_for "$mode")。请重新打开软件中心页面。"
+        return 0
+    fi
     if [ -z "$(dbus get cdn_original)" ]; then
         dbus set "cdn_original=$nv|$db" || fail "保存原配置失败。"
     fi
@@ -270,13 +279,8 @@ reconcile() {
 }
 remove_settings() {
     original=$(dbus get cdn_original)
-    if known_pair && [ -n "$pref" ] && [ -n "$original" ]; then
-        if [ -n "$native" ]; then
-            target=$(url_for "$native")
-            set_pair "$target" "$target" || return 1
-        else
-            set_pair "${original%%|*}" "${original#*|}" || return 1
-        fi
+    if [ -z "$native" ] && known_pair && [ -n "$pref" ] && [ -n "$original" ]; then
+        set_pair "${original%%|*}" "${original#*|}" || return 1
     fi
     schedule "" || return 1
     dbus remove cdn_mode && dbus remove cdn_original || return 1
@@ -316,7 +320,11 @@ case "$1" in
     direct|cdn) choose "$1" ;;
     reconcile|install-event) reconcile ;;
     watchdog) ensure_watch "$pref"; reconcile ;;
-    boot) schedule "$pref" && reconcile ;;
+    boot)
+        if [ -z "$native" ] && [ "$(cat /koolshare/.sc_endpoint_default 2>/dev/null)" = cdn ]; then
+            rm -f /koolshare/.sc_endpoint_default
+        fi
+        schedule "$pref" && reconcile ;;
     remove) remove_settings ;;
     *) exit 1 ;;
 esac

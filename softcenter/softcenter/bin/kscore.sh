@@ -140,33 +140,6 @@ set_value(){
 	nvram commit
 }
 
-set_url(){
-	local LINUX_VER=$(uname -r | awk -F"." '{print $1$2}')
-	if [ "${LINUX_VER}" -ge "41" ];then
-		local SC_URL=https://rogsoft.ddnsto.com
-	fi
-	if [ "${LINUX_VER}" -eq "26" ];then
-		local SC_URL=https://armsoft.ddnsto.com
-	fi
-	local RO_MODEL=$(nvram get odmpid)
-	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" -o "${RO_MODEL}" == "GS7" -o "${RO_MODEL}" == "ZenWiFi_BT8P" -o "${RO_MODEL}" == "GS7_Air" -o "${RO_MODEL}" == "GS-BE7200X" ];then
-		local SC_URL=https://mtksoft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "ZenWiFi_BD4" ];then
-		local SC_URL=https://ipq32soft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "TUF_6500" ];then
-		local SC_URL=https://ipq64soft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "RT-AX89X" ];then
-		local SC_URL=https://qcasoft.ddnsto.com
-	fi
-	local SC_URL_NVRAM=$(nvram get sc_url)
-	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
-		nvram set sc_url=${SC_URL}
-		nvram commit
-	fi
-}
 
 set_skin(){
 	# new nethod: use nvram value to set skin
@@ -239,7 +212,7 @@ init_core(){
 	set_value
 
 	# set koolcenter url
-	set_url
+	/koolshare/bin/sc-endpoint init >/dev/null || logger -t softcenter "Endpoint initialization deferred"
 
 	# set UI
 	set_skin

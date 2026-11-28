@@ -38,6 +38,10 @@ detect_httpdb(){
 start(){
 	detect_skipd
 	detect_httpdb
+	if [ -x /koolshare/bin/sc-endpoint ]; then
+		/koolshare/bin/sc-endpoint init >/dev/null || _LOG "[软件中心] 软件源未就绪"
+		/koolshare/bin/sc-endpoint notify
+	fi
 }
 
 start

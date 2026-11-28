@@ -19,7 +19,6 @@ source /koolshare/scripts/base.sh
 eval $(dbus export softcenter_installing_)
 LOG_FILE=/tmp/upload/soft_install_log.txt
 LOG_FILE_BACKUP=/tmp/upload/soft_install_log_backup.txt
-URL_SPLIT="/"
 
 set_skin(){
 	UI_TYPE=ASUSWRT
@@ -53,6 +52,7 @@ quit_ks_install(){
 	dbus set softcenter_installing_title=""
 	dbus set softcenter_installing_name=""
 	dbus set softcenter_installing_tar_url=""
+	dbus remove softcenter_installing_source_url
 	dbus set softcenter_installing_version=""
 	dbus set softcenter_installing_md5=""
 	echo_date "============================= end ================================="
@@ -74,35 +74,14 @@ jffs_space(){
 }
 
 install_ks_module() {
-	# 0. if under koolcenter, dbus value of softcenter_home_url is not defined by default
-	local LINUX_VER=$(uname -r | awk -F"." '{print $1$2}')
-	if [ "${LINUX_VER}" -ge "41" ];then
-		local SC_URL=https://rogsoft.ddnsto.com
-	fi
-	if [ "${LINUX_VER}" -eq "26" ];then
-		local SC_URL=https://armsoft.ddnsto.com
-	fi
-	local RO_MODEL=$(nvram get odmpid)
-	if [ "${RO_MODEL}" == "TX-AX6000" -o "${RO_MODEL}" == "TUF-AX4200Q" -o "${RO_MODEL}" == "RT-AX57_Go" -o "${RO_MODEL}" == "GS7" -o "${RO_MODEL}" == "ZenWiFi_BT8P" -o "${RO_MODEL}" == "GS7_Air" -o "${RO_MODEL}" == "GS-BE7200X" ];then
-		local SC_URL=https://mtksoft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "ZenWiFi_BD4" ];then
-		local SC_URL=https://ipq32soft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "TUF_6500" ];then
-		local SC_URL=https://ipq64soft.ddnsto.com
-	fi
-	if [ "${RO_MODEL}" == "RT-AX89X" ];then
-		local SC_URL=https://qcasoft.ddnsto.com
-	fi
-	local SC_URL_NVRAM=$(nvram get sc_url)
-	if [ -z "${SC_URL_NVRAM}" -o "${SC_URL_NVRAM}" != "${SC_URL}" ];then
-		nvram set sc_url=${SC_URL}
-		nvram commit
-	fi
-	local softcenter_home_url=$(dbus get softcenter_home_url)
-	if [ -z "${softcenter_home_url}" ];then
-		local softcenter_home_url=${SC_URL}
+	local softcenter_home_url
+	softcenter_home_url=$(/koolshare/bin/sc-endpoint get) || { echo_date "无法读取软件中心地址"; quit_ks_install; return 1; }
+
+	local selected_source
+	selected_source=$(dbus get softcenter_installing_source_url)
+	if [ -n "$selected_source" ] && [ "${selected_source%/}" != "${softcenter_home_url%/}" ]; then
+		echo_date "软件中心地址已变更，请刷新目录后重新安装。"
+		quit_ks_install
 	fi
 
 	# 1. before install, detect if some value (passed from web) exist.
@@ -179,18 +158,24 @@ install_ks_module() {
 	
 	# 7. 开始下载
 	local FNAME=$(basename ${softcenter_installing_tar_url})
-	local TAR_URL=${softcenter_home_url}${URL_SPLIT}${softcenter_installing_tar_url}
+	local TAR_URL base="$softcenter_home_url"
+	while [ "${base%/}" != "$base" ]; do base=${base%/}; done
+	case "$softcenter_installing_tar_url" in
+		https://*|http://*) TAR_URL="$softcenter_installing_tar_url" ;;
+		//*) echo_date "无效的安装包地址"; quit_ks_install; return 1 ;;
+		*) TAR_URL="$base/${softcenter_installing_tar_url#/}" ;;
+	esac
 	echo_date "插件【${softcenter_installing_name}】的压缩包正在下载中，请稍候..."
-	### echo_date "下载地址：${softcenter_home_url}${URL_SPLIT}${softcenter_installing_tar_url}"
+	### echo_date "下载地址：$TAR_URL"
 	cd /tmp
-	wget -t 2 -T 20 --dns-timeout=15 --no-check-certificate ${TAR_URL}
+	wget -t 2 -T 20 --dns-timeout=15 --no-check-certificate "${TAR_URL}"
 	RETURN_CODE=$?
 	if [ "$RETURN_CODE" != "0" ]; then
 		echo_date "-------------------------------------------------------------------"
 		echo_date "压缩包下载错误，错误代码：$RETURN_CODE"
 		echo_date "出现该错误一般是本地网络问题，比如本地DNS无法解析软件中心域名等..."
 		echo_date "建议关闭代理、更换路由器DNS后再试，或者使用下方提供的插件地址手动下载后离线安装。"
-		echo_date "下载地址：${softcenter_home_url}${URL_SPLIT}${softcenter_installing_tar_url}"
+		echo_date "下载地址：$TAR_URL"
 		echo_date "-------------------------------------------------------------------"
 		echo_date "退出本次在线安装！"
 		quit_ks_install
@@ -207,7 +192,7 @@ install_ks_module() {
 		echo_date "插件【${softcenter_installing_name}】在线版本md5：${softcenter_installing_md5}"
 		echo_date "插件【${softcenter_installing_name}】下载版本md5：${md5sum_gz}"
 		echo_date "建议重启/重置路由器后重试，或者使用下方提供的插件地址手动下载后离线安装。"
-		echo_date "下载地址：${softcenter_home_url}${URL_SPLIT}${softcenter_installing_tar_url}"
+		echo_date "下载地址：$TAR_URL"
 		echo_date "-------------------------------------------------------------------"
 		echo_date "退出本次在线安装！"
 		quit_ks_install

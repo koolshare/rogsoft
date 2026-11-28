@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 # build script for rogsoft project
 
 MODULE="center"
-VERSION="2.3"
+VERSION="2.4"
 TITLE="软件中心一键切换"
 DESCRIPTION="koolcenter/softcenter 一键来回切换！"
 HOME_URL="Module_center.asp"
@@ -24,7 +26,7 @@ soft_folder=$(dirname $DIR/../koolcenter/softcenter/res/soft-v*/assets)
 
 cp $DIR/../koolcenter/softcenter/webs/Module_Softcenter.asp $DIR/center/webs/Module_Softcenter_new.asp
 cp -rf $soft_folder $DIR/center/res/
-cp $DIR/../koolcenter/softcenter/scripts/ks_home_status.sh $DIR/center/scripts/
+cp $DIR/../softcenter/softcenter/scripts/ks_home_status.sh $DIR/center/scripts/
 echo ${kool_ver} >$DIR/center/.soft_ver_new
 
 cp $DIR/../softcenter/softcenter/webs/Module_Softcenter.asp $DIR/center/webs/Module_Softcenter_old.asp

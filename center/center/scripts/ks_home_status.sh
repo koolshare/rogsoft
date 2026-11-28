@@ -23,6 +23,7 @@ _get_mac(){
 }
 
 get_current_jffs_status(){
+  sync
   local cur_patition=$(df | /bin/grep /jffs)
   if [ -n "${cur_patition}" ];then
     JFFS_USED=$(echo ${cur_patition} | awk '{print $3}')
