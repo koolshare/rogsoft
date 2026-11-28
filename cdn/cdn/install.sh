@@ -7,6 +7,12 @@ mkdir -p /koolshare/cdn
 copy_file() {
     cp "$1" "$2.cdn-new" && chmod "$3" "$2.cdn-new" && mv -f "$2.cdn-new" "$2"
 }
+package_tag=$(cat "$src/.valid" 2>/dev/null) || { echo "CDN 插件包缺少平台标记"; exit 1; }
+case "$package_tag" in
+    hnd|mtk|qca|ipq32|ipq64) ;;
+    *) echo "CDN 插件包的平台标记无效：$package_tag"; exit 1 ;;
+esac
+copy_file "$src/.valid" /koolshare/cdn/platform 644
 copy_file "$src/bin/cdn-watch" /koolshare/cdn/cdn-watch 755
 copy_file "$src/cdn/endpoint.sh" /koolshare/cdn/endpoint.sh 755
 copy_file "$src/scripts/cdn_config.sh" /koolshare/scripts/cdn_config.sh 755
