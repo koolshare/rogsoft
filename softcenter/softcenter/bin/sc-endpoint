@@ -7,7 +7,7 @@ platform() {
         /cifs2/.koolshare/bin/sc-endpoint) mark=/cifs2/.koolshare/.valid ;;
         *) mark=/koolshare/.valid ;;
     esac
-    tag=$(cat "$mark" 2>/dev/null)
+    tag=$(sed 's/^[[:space:]]*//;s/[[:space:]]*$//' "$mark" 2>/dev/null)
     case "$tag" in
         hnd|hnd_v7|hnd_v8) echo rogsoft; return ;;
         mtk|qca|ipq32|ipq64) echo "${tag}soft"; return ;;
@@ -21,7 +21,15 @@ platform() {
         ZenWiFi_BD4) echo ipq32soft ;;
         TUF_6500|TUF-BE6500) echo ipq64soft ;;
         RT-BE88U|RT-AC86U|GT-AC5300) echo rogsoft ;;
-        *) return 1 ;;
+        *)
+            # An old firmware may have no marker and a model outside this table.
+            [ -z "$tag" ] || return 1
+            pkg=$(cat "${mark%/.valid}/cdn/platform" 2>/dev/null) || return 1
+            case "$pkg" in
+                hnd) echo rogsoft ;;
+                mtk|qca|ipq32|ipq64) echo "${pkg}soft" ;;
+                *) return 1 ;;
+            esac ;;
     esac
 }
 valid_url() {

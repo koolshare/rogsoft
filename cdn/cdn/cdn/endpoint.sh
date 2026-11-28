@@ -18,17 +18,39 @@ fail() {
     printf '%s\n' "$1"
     exit 1
 }
-platform=$(cat /koolshare/.valid 2>/dev/null)
-case "$platform" in
-    hnd|hnd_v7|hnd_v8) repo=rogsoft ;;
-    mtk|qca|ipq32|ipq64) repo=${platform}soft ;;
-    *) repo= ;;
-esac
-direct="https://$repo.ddnsto.com"
-edge="https://asusgo.koolcenter.com/$repo"
 manager=/koolshare/bin/sc-endpoint
 native=
 if [ -x "$manager" ] && "$manager" capable; then native=cdn; fi
+
+# Package tags are stamped by the builder. Old centers may lack a system tag.
+repo_for_tag() {
+    case "$1" in
+        hnd|hnd_v7|hnd_v8) printf '%s' rogsoft ;;
+        mtk|qca|ipq32|ipq64) printf '%ssoft' "$1" ;;
+        *) return 1 ;;
+    esac
+}
+package_tag=$(cat /koolshare/cdn/platform 2>/dev/null)
+system_tag=$(sed 's/^[[:space:]]*//;s/[[:space:]]*$//' /koolshare/.valid 2>/dev/null)
+repo=$(repo_for_tag "$package_tag")
+platform_error=
+if [ -z "$repo" ]; then
+    platform_error="插件平台标记缺失或无效，请从本机的软件中心重新安装。"
+elif [ -n "$system_tag" ]; then
+    system_repo=$(repo_for_tag "$system_tag")
+    if [ "$system_repo" != "$repo" ]; then
+        platform_error="平台标记不匹配：系统 $system_tag，插件包 $package_tag。已暂停线路切换。"
+    fi
+fi
+if [ -z "$platform_error" ] && [ -n "$native" ]; then
+    managed_repo=$("$manager" platform)
+    if [ "$managed_repo" != "$repo" ]; then
+        platform_error="软件中心平台 ${managed_repo:-未识别} 与插件包 $package_tag 不一致。已暂停线路切换。"
+    fi
+fi
+[ -z "$platform_error" ] || repo=
+direct="https://$repo.ddnsto.com"
+edge="https://asusgo.koolcenter.com/$repo"
 
 read_config() {
     db=$(dbus get softcenter_home_url) && pref=$(dbus get cdn_mode) || return 1
@@ -86,7 +108,7 @@ status() {
     shown=${nv:-未设置}
     detail=
     if [ -z "$repo" ]; then
-        detail="无法识别平台标记 $platform"
+        detail="$platform_error"
     elif [ "$kind" = legacy ]; then
         active=direct
         detail="此版本 softcenter 仅支持直连。请用 center 切换至 koolcenter 以启用 CDN。"
@@ -224,6 +246,7 @@ schedule() {
 }
 choose() {
     mode=$1
+    [ -z "$platform_error" ] || fail "$platform_error"
     known_pair || fail "平台或现有服务器不在本平台支持范围，已保留原配置。"
     [ "$kind" != unknown ] || fail "未识别活动页面，已保留原配置。"
     if [ "$mode" = cdn ] && [ "$kind" = legacy ]; then
@@ -315,6 +338,12 @@ kind=$(center_type)
 # Bound the volatile log, including after long-running reconcile jobs.
 if [ -f "$state/log" ] && [ "$(wc -l < "$state/log")" -gt 64 ]; then
     tail -n 24 "$state/log" > "$state/log.trim" && mv "$state/log.trim" "$state/log"
+fi
+# An old preference must not start the watcher for a mismatched package.
+if [ -n "$platform_error" ]; then
+    case "$1" in
+        boot|watchdog|reconcile|install-event) schedule ""; exit $? ;;
+    esac
 fi
 case "$1" in
     direct|cdn) choose "$1" ;;
