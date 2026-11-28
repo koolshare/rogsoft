@@ -288,6 +288,18 @@ String.prototype.myReplace = function(f, e){
 
 var ro_model = '<% nvram_get("odmpid"); %>' || '<% nvram_get("productid"); %>';
 // sc-endpoint-v1 softcenter
+function isNewerVersion(current, remote) {
+    var local = String(current || ""), online = String(remote || "");
+    if (!online || local === online) return false;
+    var dotted = /^\d+(?:\.\d+)*$/;
+    if (!dotted.test(local) || !dotted.test(online)) return true;
+    var left = local.split("."), right = online.split(".");
+    for (var i = 0; i < Math.max(left.length, right.length); i++) {
+        var diff = Number(right[i] || 0) - Number(left[i] || 0);
+        if (diff !== 0) return diff > 0;
+    }
+    return false;
+}
 function repoUrl(path) {
     var base = db_softcenter_["softcenter_home_url"] || "";
     return base ? base.replace(/\/+$/, "") + "/" + path.replace(/^\/+/, "") : "";
@@ -446,7 +458,7 @@ function getRemoteData() {
 function softceterInitData(data) {
 	var remoteData = data;
 	$("#spnOnlineVersion").html("<em>" + remoteData.version + "</em>");
-	if (remoteData.version != db_softcenter_["softcenter_version"]) {
+	if (isNewerVersion(db_softcenter_["softcenter_version"], remoteData.version)) {
 		$("#updateBtn").show();
 		$("#updateBtn").click(function() {
 			var moduleInfo = {
@@ -503,7 +515,7 @@ function init(cb) {
 			$.each(remoteData, function(i, app) {
 				var name = app.name;
 				var oldApp = localData[name] || {};
-				var install = (parseInt(oldApp.install, 10) === 1 && app.version !== oldApp.version) ? 2 : oldApp.install || "0";
+				var install = (parseInt(oldApp.install, 10) === 1 && isNewerVersion(oldApp.version, app.version)) ? 2 : oldApp.install || "0";
 				if(ro_model == "ZenWiFi_XD4" || ro_model == "RT-AX56U_V2"){
 					var usb_app = usb_apps.includes(name);
 					if(usb_app == false){

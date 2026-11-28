@@ -126,11 +126,13 @@ install_ks_module() {
 
 	# 5. 比较版本号
 	local OLD_VERSION=$(dbus get softcenter_module_${softcenter_installing_todo}_version)
-	[ -z "${OLD_VERSION}" ] && OLD_VERSION=0
-	local CMP=$(versioncmp ${softcenter_installing_version} ${OLD_VERSION})
-	if [ "${softcenter_installing_todo}" == "softcenter" ]; then
-		local CMP="-1"
+	if [ "$softcenter_installing_todo" = softcenter ]; then
+		OLD_VERSION=$(cat /koolshare/.soft_ver)
 	fi
+	[ -n "$OLD_VERSION" ] || OLD_VERSION=0
+	local CMP=$(versioncmp "$softcenter_installing_version" "$OLD_VERSION")
+	# Keep the explicit same-version center repair while rejecting older catalog entries.
+	if [ "$softcenter_installing_todo" = softcenter ] && [ "$CMP" = 0 ]; then CMP=-1; fi
 	if [ "${CMP}" != "-1" ]; then
 		echo_date "-------------------------------------------------------------------"
 		echo_date "插件【${softcenter_installing_name}】本地版本号已经是最新版本，无须更新！"
